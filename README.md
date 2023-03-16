@@ -28,19 +28,18 @@ To migrate an instance from Vortex to MO2, for example, follow these steps:
 Create your translation for your desired language from en-US.json under <Path to MMM>/data/locales and give it a proper name: for example: "en-US.json" or "de-DE.json". Send it to me (cutleast@gmail.com) and I will add it as soon as I can.
 
 ### 2. Feedback (Suggestions/Issues)
-If you encountered an issue/error, tell me and send me the error message. And if you have a suggestion to improve or add something: tell me!
+If you encountered an issue/error or have a suggestion, create a issue with sufficient information.
 
 ### 3. Code contributions
-1. Install Python 3.10
-1.1 Make sure that you add it to PATH!
+1. Install Python 3.10 (Make sure that you add it to PATH!)
 2. Clone repository
 3. Open terminal in repository folder
-4. Type in following command to set up virtual environment
-  python -m venv venv
-5. Activate virtual environment by typing
-  venv\Scripts\activate
-6. Run setup_venv.bat by typing
-  setup_venv.bat
+4. Type in following command to set up virtual environment:
+	`python -m venv venv`
+5. Activate virtual environment by typing:
+	`venv\Scripts\activate`
+6. Run setup_venv.bat by typing:
+	`setup_venv.bat`
 
 # Credits
 - Code by Cutleast ([GitHub](https://github.com/Cutleast) | [NexusMods](https://www.nexusmods.com/users/65733731))
