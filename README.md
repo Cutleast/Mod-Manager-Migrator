@@ -2,7 +2,7 @@
 **This is in a very early Alpha stage and issues/errors are very likely to occur! Use at your own risk!**
 
 # Description
-This is a tool for migrating modding instances between various mod managers (currently only Vortex to MO2). This program is in a very early Alpha stage and feedback is crucial for me to continue developing. Currently only Skyrim SE from Vortex to ModOrganizer 2 (MO2) is supported with support for more games and mod managers planned.
+This is a tool for migrating modding instances between various mod managers (currently only Vortex to MO2). This program is in a very early Alpha stage and feedback is crucial for me to continue developing. Currently only Skyrim SE from Vortex to ModOrganizer 2 (MO2) is supported with support for more games and mod managers planned. **Only Windows is supported!**
 
 # Features
 - create mod order from Vortex conflict rules
@@ -31,7 +31,16 @@ Create your translation for your desired language from en-US.json under <Path to
 If you encountered an issue/error, tell me and send me the error message. And if you have a suggestion to improve or add something: tell me!
 
 ### 3. Code contributions
-Check out the [GitHub repository](https://github.com/Cutleast/Mod-Manager-Migrator) and make a pull request with your additions/modifications.
+1. Install Python 3.10
+1.1 Make sure that you add it to PATH!
+2. Clone repository
+3. Open terminal in repository folder
+4. Type in following command to set up virtual environment
+  python -m venv venv
+5. Activate virtual environment by typing
+  venv\Scripts\activate
+6. Run setup_venv.bat by typing
+  setup_venv.bat
 
 # Credits
 - Code by Cutleast ([GitHub](https://github.com/Cutleast) | [NexusMods](https://www.nexusmods.com/users/65733731))
