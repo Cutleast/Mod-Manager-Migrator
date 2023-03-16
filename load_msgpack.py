@@ -1,0 +1,19 @@
+import msgpack
+
+filename = "vortex.deployment.msgpack"
+
+#with open(filename, 'rb') as file:
+#    data = msgpack.load(file)
+#
+#print(data.keys())
+#for key, value in data.items():
+#    if key != "files":
+#        print(f"{key}: {value}")
+#print(data['files'][0])
+
+
+
+test_list = ['interface\\levelupmenu.swf', 'interface\\giftmenu.swf', 'interface\\bookmenu.swf', 'interface\\favoritesmenu.swf', 'interface\\inventorymenu.swf', 'interface\\cursormenu.swf', 'interface\\containermenu.swf', 'interface\\exported\\tutorialmenu.gfx', 'interface\\craftingmenu.swf', 'interface\\skyui\\buttonart.swf', 'interface\\skyui\\icons_category_psychosteve.swf', 'interface\\skyui\\inventorylists.swf', 'interface\\skyui\\skyui_splash.swf', 'interface\\lockpickingmenu.swf', 'interface\\magicmenu.swf', 'interface\\map.swf', 'interface\\messagebox.swf', 'interface\\translate_english.txt', 'interface\\trainingmenu.swf', 'interface\\dialoguemenu.swf', 'interface\\TrueDirectionalMovement\\TDM_TargetLock.swf', 'interface\\sleepwaitmenu.swf', 'textures\\interface\\intconstellationimages.dds', 'textures\\interface\\intfullnebulapanarama01.dds', 'textures\\interface\\intfullnebulapanarama02.dds', 'textures\\interface\\intperklines.dds', 'textures\\interface\\intperkstars01.dds', 'textures\\interface\\intstarstile03.dds', 'textures\\interface\\intstarstile02.dds', 'textures\\interface\\intstarstile01.dds', 'interface\\bartermenu.swf', 'interface\\exported\\racesex_menu.gfx', 'interface\\TrueDirectionalMovement\\TDM_Boss.swf', 'sound\\fx\\ui\\ui_objective_new_02.wav', 'sound\\fx\\ui\\ui_menu_cancel.wav', 'sound\\fx\\ui\\ui_menu_ok.wav', 'sound\\fx\\ui\\journal\\open\\ui_inventory_open_03.wav', 'sound\\fx\\ui\\ui_quest_active.wav', 'sound\\fx\\ui\\journal\\open\\ui_inventory_open_01.wav', 'sound\\fx\\ui\\ui_quest_new.wav', 'sound\\fx\\ui\\ui_quest_inactive.wav', 'sound\\fx\\ui\\ui_skill_increase.wav', 'sound\\fx\\ui\\ui_shoutlearn_single_01.wav', 'sound\\fx\\ui\\ui_sneakattack_01.wav', 'sound\\fx\\ui\\skills\\glow\\ui_skills_glow_04.wav', 'sound\\fx\\ui\\ui_objective_new_03.wav', 'sound\\fx\\ui\\ui_objective_new_01.wav', 'sound\\fx\\ui\\ui_quest_update.wav', 'sound\\fx\\ui\\skills\\glow\\ui_skills_glow_02.wav', 'sound\\fx\\ui\\smithing\\ui_smithing_creategeneric_01.wav', 'sound\\fx\\ui\\smithing\\ui_smithing_creategeneric_02.wav', 'sound\\fx\\ui\\smithing\\ui_improveweapon.wav', 'sound\\fx\\ui\\smithing\\ui_smithing_improveweapon_02.wav', 'sound\\fx\\ui\\smithing\\ui_smithing_improvearmor_02.wav', 'sound\\fx\\ui\\smithing\\ui_smithing_improveweapon_01.wav', 'sound\\fx\\ui\\smithing\\ui_smithing_improvearmor_01.wav', 'meshes\\interface\\intperkskydome.nif', 'textures\\interface\\bg_stars.dds', 'sound\\fx\\ui\\skills\\glow\\ui_skills_glow_01.wav', 'sound\\fx\\ui\\ui_levelup.wav', 'sound\\fx\\ui\\journal\\close\\ui_inventory_close_03.wav', 'sound\\fx\\ui\\journal\\close\\ui_inventory_close_01.wav', 'sound\\fx\\ui\\journal\\close\\ui_inventory_close_02.wav', 'sound\\fx\\ui\\journal\\open\\ui_inventory_open_02.wav', 'sound\\fx\\ui\\skills\\glow\\ui_skills_glow_03.wav', 'sound\\fx\\ui\\smithing\\ui_improvearmor.wav', 'sound\\fx\\ui\\focus\\ui_general_focus_01.wav', 'sound\\fx\\ui\\blade\\open\\ui_menu_blade_open_01.wav', 'sound\\fx\\ui\\blade\\close\\ui_menu_blade_close_01.wav', 'interface\\hudmenu.swf', 'interface\\loadingmenu.swf', 'interface\\startmenu.swf', 'interface\\loadwaitspinner.swf', 'interface\\tweenmenu.swf', 'interface\\statsmenu.swf', 'interface\\quest_journal.swf', 'interface\\skyui\\configpanel.swf', 'interface\\skyui\\mapmarkerart.swf', 'interface\\skyhud\\compassmarkerart.swf', 'interface\\skyui\\itemcard.swf', 'interface\\skyui\\bottombar.swf']
+test_file = "interface\\bartermenu.swf"
+
+print(test_file in test_list)
