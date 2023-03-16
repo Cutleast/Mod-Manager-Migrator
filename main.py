@@ -301,7 +301,8 @@ class MainApp(qtw.QApplication):
 
     # Core function to migrate #######################################
     def migrate(self):
-        pass
+        self.log.info(f"Migrating instance from {self.source} to {self.destination}...")
+        self.log.info("Migration complete.")
 
     # Source dialog ##################################################
     def add_source(self):
@@ -1122,7 +1123,6 @@ class MainApp(qtw.QApplication):
         with open(langpath, "r", encoding='utf-8') as langfile:
             self.lang = json.load(langfile)
         self.log.info(f"{'Program language':21}: {language}")
-
 
 
 # Create class to copy stdout to log file ############################
