@@ -19,9 +19,13 @@ This is a tool for migrating modding instances between various mod managers (cur
 To migrate an instance from Vortex to MO2, for example, follow these steps:
 1. Start Vortex and make sure that the profile you want to migrate is deployed.
 2. Close Vortex and start MMM (Mod Manager Migrator).
-3. Click on "Add source", select Vortex and click on "Next"
+3. Click on "Add source", select Vortex and click on "Next".
 4. Select the staging folder of Vortex and click on "Done".
-5. Click on "Add destination", select MO2 and... (WIP)
+5. Click on "Add destination", select MO2 and click on "Next".
+6. Set paths name as you like it and click on "Done".
+7. Click on "Migrate" and wait for it to finish.
+8. After migration is done, open Vortex and purge game folder.
+9. Close Vortex, open it never again and you're done!
 
 # Contributing
 ### 1. Translations
