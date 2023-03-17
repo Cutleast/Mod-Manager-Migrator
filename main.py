@@ -11,11 +11,13 @@ import json
 import logging
 import os
 import platform
+import shutil
 import sys
 import threading
 import time
 import traceback
 from locale import getlocale
+from shutil import disk_usage
 from typing import Callable
 
 import darkdetect
@@ -35,7 +37,7 @@ LOG_LEVELS = {
 }
 SUPPORTED_MODMANAGERS = [
     "Vortex",
-    "ModOrganizer 2 (MO2)"
+    "ModOrganizer"
 ]
 
 
@@ -49,7 +51,7 @@ class MainApp(qtw.QApplication):
 
         # Initialize variables #######################################
         self.version = "1.0"
-        self.name = f"Modmanager Migration Tool"
+        self.name = f"Mod Manager Migrator"
         # check if compiled with nuitka (or in general)
         self.compiled = ("__compiled__" in globals()) or (sys.argv[0].endswith('.exe'))
         self._imgdata = None
@@ -60,7 +62,8 @@ class MainApp(qtw.QApplication):
         self.source = None
         self.destination = None
         self.stagefile = None
-        self.modinstance = None # VortexInstance or MO2Instance
+        self.src_modinstance = None # VortexInstance or MO2Instance
+        self.dst_modinstance = None # VortexInstance or MO2Instance
         self.load_order = []
         self.start_date = time.strftime("%d.%m.%Y")
         self.start_time = time.strftime("%H:%M:%S")
@@ -237,7 +240,7 @@ class MainApp(qtw.QApplication):
         self.mainlayout.setRowStretch(1, 1)
         self.mainlayout.setRowStretch(0, 0)
         self.mainlayout.setColumnStretch(0, 1)
-        self.mainlayout.setColumnStretch(1, 1)
+        self.mainlayout.setColumnStretch(2, 1)
         self.mainframe.setLayout(self.mainlayout)
         self.root.setCentralWidget(self.mainframe)
 
@@ -245,19 +248,26 @@ class MainApp(qtw.QApplication):
         self.src_button = qtw.QPushButton(self.lang['select_source'])
         self.src_button.clicked.connect(self.add_source)
         self.mainlayout.addWidget(self.src_button, 0, 0)
+        # Create migrate button
+        self.mig_button = qtw.QPushButton("Migrate")
+        self.mig_button.setIcon(qta.icon('fa5s.chevron-right', color=self.theme['text_color']))
+        self.mig_button.setLayoutDirection(qtc.Qt.LayoutDirection.RightToLeft)
+        self.mig_button.clicked.connect(self.migrate)
+        self.mig_button.setDisabled(True)
+        self.mainlayout.addWidget(self.mig_button, 0, 1)
         # Create destination button
         self.dst_button = qtw.QPushButton(self.lang['select_destination'])
         self.dst_button.clicked.connect(self.add_destination)
         self.dst_button.setDisabled(True)
-        self.mainlayout.addWidget(self.dst_button, 0, 1)
-        # Create migrate button
-        self.mig_button = qtw.QPushButton("Migrate")
-        self.mig_button.clicked.connect(self.migrate)
-        self.mig_button.setDisabled(True)
-        self.mainlayout.addWidget(self.mig_button, 0, 2)
+        self.mainlayout.addWidget(self.dst_button, 0, 2)
+
+        # Add right arrow icon
+        label = qtw.QLabel()
+        label.setPixmap(qta.icon('fa5s.chevron-right', color=self.theme['text_color']).pixmap(120, 120))
+        self.mainlayout.addWidget(label, 1, 1)
 
         # Show window maximized
-        self.root.resize(1000, 600)
+        #self.root.resize(1000, 600)
         self.root.showMaximized()
 
     def __repr__(self):
@@ -302,7 +312,44 @@ class MainApp(qtw.QApplication):
     # Core function to migrate #######################################
     def migrate(self):
         self.log.info(f"Migrating instance from {self.source} to {self.destination}...")
+
+        # Calculate free and required disk space
+        self.fspace = 0 # free space
+        self.rspace = 0 # required space
+        def process():
+            self.fspace = disk_usage(os.path.splitdrive(self.dst_modinstance.paths['instance_path'])[0])[2]
+            self.rspace = self.src_modinstance.get_size()
+            self.log.debug(f"Free space: {core.get_size(self.fspace)} | Required space: {core.get_size(self.rspace)}")
+        loadingdialog = LoadingDialog(self.root, self, lambda p: process(), self.lang['calc_size'])
+        loadingdialog.exec()
+
+        # Check if there is enough free space
+        if self.fspace <= self.rspace:
+            self.log.error(f"Migration failed: not enough free space!")
+            qtw.QMessageBox.critical(
+                self.root,
+                self.lang['error'],
+                self.lang['enough_space_text'].replace(
+                    'FREE_SPACE', core.get_size(self.fspace)).replace(
+                    'REQUIRED_SPACE', core.get_size(self.rspace)))
+            return
+
+        # Create destination mod instance with ini files and loadorder
+        self.dst_modinstance.loadorder = self.src_modinstance.get_loadorder()
+        self.dst_modinstance.create_instance()
+
+        # Copy mods to new instance
+        def process(psignal: qtc.Signal):
+            for c, mod in enumerate(self.src_modinstance.mods):
+                psignal.emit({'value': c, 'max': len(self.src_modinstance.mods), 'text': self.lang['copying_mod'].replace("[MOD]", f"'{os.path.basename(mod)}'")})
+                self.dst_modinstance.import_mod(mod)
+        loadingdialog = LoadingDialog(self.root, self, process, self.lang['migrating_instance'])
+        loadingdialog.exec()
+
+        # Copy downloads if given to new instance
+
         self.log.info("Migration complete.")
+        qtw.QMessageBox.information(self.root, self.lang['success'], self.lang['migration_complete'])
 
     # Source dialog ##################################################
     def add_source(self):
@@ -387,34 +434,38 @@ class MainApp(qtw.QApplication):
         self.src_vortex_widget = qtw.QWidget()
         self.src_vortex_widget.hide()
         layout.addWidget(self.src_vortex_widget)
+
         # Create layout
-        self.vortex_layout = qtw.QVBoxLayout()
-        self.src_vortex_widget.setLayout(self.vortex_layout)
+        self.src_vortex_layout = qtw.QGridLayout()
+        self.src_vortex_widget.setLayout(self.src_vortex_layout)
+
         # Add label with instruction
-        label = qtw.QLabel()
-        label.setText(self.lang['select_src_instance_text'])
+        label = qtw.QLabel(self.lang['select_src_instance_text'])
         label.setObjectName("titlelabel")
         label.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
-        self.vortex_layout.addWidget(label)
+        self.src_vortex_layout.addWidget(label, 0, 0, 1, 3)
+
         # Add label with notice for Vortex users
-        label = qtw.QLabel()
+        label = qtw.QLabel(self.lang['vortex_notice'])
         label.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
-        label.setText(self.lang['vortex_notice'])
-        self.vortex_layout.addWidget(label)
+        self.src_vortex_layout.addWidget(label, 1, 0, 1, 3)
+
         # Add lineedit for staging path
-        self.staging_box = qtw.QLineEdit()
-        self.vortex_layout.addWidget(self.staging_box)
+        label = qtw.QLabel(self.lang['staging_folder'])
+        self.src_vortex_layout.addWidget(label, 2, 0)
+        self.src_stagefolder_box = qtw.QLineEdit()
+        self.src_vortex_layout.addWidget(self.src_stagefolder_box, 2, 1)
         # Bind staging path to next/done button
-        def on_edit(text: str):
+        def on_stagefolder_edit(text: str):
             # Enable button if path is valid
             if os.path.isdir(text):
                 self.src_next_button.setDisabled(False)
             # Disable it otherwise
             else:
                 self.src_next_button.setDisabled(True)
-        self.staging_box.textChanged.connect(on_edit)
+        self.src_stagefolder_box.textChanged.connect(on_stagefolder_edit)
         # Add browse function
-        def browse():
+        def browse_stagefolder():
             file_dialog = qtw.QFileDialog(self.source_dialog)
             file_dialog.setWindowTitle(self.lang['browse'])
             file_dialog.setDirectory(os.path.join(os.getenv('APPDATA'), 'Vortex', 'skyrimse'))
@@ -422,12 +473,42 @@ class MainApp(qtw.QApplication):
             if file_dialog.exec():
                 folder = file_dialog.selectedFiles()[0]
                 folder = os.path.normpath(folder)
-                self.staging_box.setText(folder)
+                self.src_stagefolder_box.setText(folder)
         # Add browse button
         button = qtw.QPushButton()
         button.setText(self.lang['browse'])
-        button.clicked.connect(browse)
-        self.vortex_layout.addWidget(button)
+        button.clicked.connect(browse_stagefolder)
+        self.src_vortex_layout.addWidget(button, 2, 2)
+
+        # Add lineedit for optional download path
+        label = qtw.QLabel(self.lang['optional_download_path'])
+        self.src_vortex_layout.addWidget(label, 3, 0)
+        self.src_dlpath_box = qtw.QLineEdit()
+        self.src_vortex_layout.addWidget(self.src_dlpath_box, 3, 1)
+        # Bind staging path to next/done button
+        def on_dlpath_edit(text: str):
+            # Enable button if path is valid or empty
+            if os.path.isdir(text) or (not text.strip()):
+                self.src_next_button.setDisabled(False)
+            # Disable it otherwise
+            else:
+                self.src_next_button.setDisabled(True)
+        self.src_dlpath_box.textChanged.connect(on_dlpath_edit)
+        # Add browse function
+        def browse_dlpath():
+            file_dialog = qtw.QFileDialog(self.source_dialog)
+            file_dialog.setWindowTitle(self.lang['browse'])
+            file_dialog.setDirectory(os.path.join(os.getenv('APPDATA'), 'Vortex', 'skyrimse'))
+            file_dialog.setFileMode(qtw.QFileDialog.FileMode.Directory)
+            if file_dialog.exec():
+                folder = file_dialog.selectedFiles()[0]
+                folder = os.path.normpath(folder)
+                self.src_dlpath_box.setText(folder)
+        # Add browse button
+        button = qtw.QPushButton()
+        button.setText(self.lang['browse'])
+        button.clicked.connect(browse_dlpath)
+        self.src_vortex_layout.addWidget(button, 3, 2)
         ##############################################################
         
         # Add spacing
@@ -538,17 +619,19 @@ class MainApp(qtw.QApplication):
         instance_data = {} # keys: name, paths, mods, loadorder, custom executables
         
         if self.source == 'Vortex':
-            instance_data['name'] = ""
+            instance_data['name'] = "Migrated Vortex Instance"
             self.log.debug("Loading active Vortex profile...")
             instance_data['paths'] = {
-                'staging_folder': self.staging_box.text(),
+                'staging_folder': self.src_stagefolder_box.text(),
+                'instance_path': self.src_stagefolder_box.text(),
+                'download_path': self.src_dlpath_box.text(),
                 'skyrim_ini': os.path.join(self.doc_path, 'Skyrim.ini'),
                 'skyrim_prefs_ini': os.path.join(self.doc_path, 'SkyrimPrefs.ini')
             }
             stagefile = os.path.join(instance_data['paths']['staging_folder'], 'vortex.deployment.msgpack')
             if os.path.isfile(stagefile):
                 instance_data['paths']['stagefile'] = stagefile
-                self.modinstance = core.VortexInstance(self, instance_data)
+                self.src_modinstance = core.VortexInstance(self, instance_data)
                 #self.stagefile = StageFile(stagefile)
                 #self.stagefile.parse_file()
                 #self.stagefile.get_modlist()
@@ -557,7 +640,7 @@ class MainApp(qtw.QApplication):
                 return
             #instance_data['mods'] = self.stagefile.mods
             self.log.debug(f"Staging folder: {instance_data['paths']['staging_folder']}")
-        elif self.source == 'ModOrganizer 2 (MO2)':
+        elif self.source == 'ModOrganizer':
             instance_data['name'] = self.instances_box.currentItem().text()
             self.log.debug(f"Loading mod instance '{instance_data['name']}'...")
             self.log.debug(f"Mod manager: {self.source}")
@@ -575,7 +658,7 @@ class MainApp(qtw.QApplication):
             # Get mods from mods folder
             mods = [os.path.join(instance_path, 'mods', mod) for mod in os.listdir(os.path.join(instance_path, 'mods')) if os.path.isdir(os.path.join(instance_path, 'mods', mod))]
             instance_data['mods'] = mods
-            self.modinstance = core.MO2Instance(self, instance_data)
+            self.src_modinstance = core.MO2Instance(self, instance_data)
             self.log.debug(f"Instance path: {instance_data['paths']['instance_path']}")
         else:
             raise Exception(f"Mod manager '{self.source}' is unsupported!")
@@ -596,11 +679,11 @@ class MainApp(qtw.QApplication):
         manager_label = qtw.QLabel()
         manager_label.setText(self.source)
         self.source_layout.addWidget(manager_label, 0, 1)
-        if self.modinstance.name:
+        if self.src_modinstance.name:
             # Add label with instance name
             label = qtw.QLabel(f"{self.lang['instance_name']}:")
             self.source_layout.addWidget(label, 1, 0)
-            instance_label = qtw.QLabel(self.modinstance.name)
+            instance_label = qtw.QLabel(self.src_modinstance.name)
             self.source_layout.addWidget(instance_label, 1, 1)
         # Add label with instance paths
         label = qtw.QLabel(self.lang['paths'])
@@ -609,14 +692,15 @@ class MainApp(qtw.QApplication):
         paths_label.setTextInteractionFlags(qtc.Qt.TextInteractionFlag.TextSelectableByMouse)
         paths_label.setCursor(qtg.QCursor(qtc.Qt.CursorShape.IBeamCursor))
         paths = ""
-        for pathname, path in self.modinstance.paths.items():
-            paths += f"\n{pathname}: {path}"
+        for pathname, path in self.src_modinstance.paths.items():
+            if path.strip():
+                paths += f"\n{pathname}: {path}"
         paths_label.setText(paths.strip())
         self.source_layout.addWidget(paths_label, 2, 1)
         # Add label with number of mods
         label = qtw.QLabel("Mods:")
         self.source_layout.addWidget(label, 3, 0)
-        mod_label = qtw.QLabel(str(len(self.modinstance.mods)))
+        mod_label = qtw.QLabel(str(len(self.src_modinstance.mods)))
         self.source_layout.addWidget(mod_label, 3, 1)
         ##############################################################
 
@@ -635,7 +719,7 @@ class MainApp(qtw.QApplication):
         self.destination_dialog.setWindowIcon(self.root.windowIcon())
         self.destination_dialog.setModal(True)
         self.destination_dialog.setObjectName("root")
-        #self.destination_dialog.setMinimumWidth(1000)
+        self.destination_dialog.setMinimumWidth(1000)
         self.destination_dialog.closeEvent = self.cancel_dst
         layout = qtw.QVBoxLayout(self.destination_dialog)
         self.destination_dialog.setLayout(layout)
@@ -720,14 +804,112 @@ class MainApp(qtw.QApplication):
         label = qtw.QLabel(self.lang['instance_name'])
         copy_mode_layout.addWidget(label, 0, 0)
         self.dst_name_box = qtw.QLineEdit()
-        self.dst_name_box.setText(self.modinstance.name)
+        self.dst_name_box.setText(self.src_modinstance.name)
         copy_mode_layout.addWidget(self.dst_name_box, 0, 1)
         
         # Add inputbox for instance path
         label = qtw.QLabel(self.lang['instance_path'])
         copy_mode_layout.addWidget(label, 1, 0)
         self.dst_path_box = qtw.QLineEdit()
+        self.dst_path_box.setText(os.path.join(os.getenv('LOCALAPPDATA'), self.destination, self.dst_name_box.text()))
         copy_mode_layout.addWidget(self.dst_path_box, 1, 1)
+        def browse_path():
+            file_dialog = qtw.QFileDialog(self.destination_dialog)
+            file_dialog.setWindowTitle(self.lang['browse'])
+            #file_dialog.setDirectory(os.path.join(os.getenv('LOCALAPPDATA'), self.destination, self.dst_name_box.text(), 'downloads'))
+            file_dialog.setDirectory(self.dst_path_box.text())
+            file_dialog.setFileMode(qtw.QFileDialog.FileMode.Directory)
+            if file_dialog.exec():
+                folder = file_dialog.selectedFiles()[0]
+                folder = os.path.normpath(folder)
+                self.dst_path_box.setText(folder)
+                self.dst_dlpath_box.setText(os.path.join(folder, 'downloads'))
+                self.dst_modspath_box.setText(os.path.join(folder, 'mods'))
+                self.dst_profilespath_box.setText(os.path.join(folder, 'profiles'))
+                self.dst_overwritepath_box.setText(os.path.join(folder, 'overwrite'))
+        browse_button = qtw.QPushButton(self.lang['browse'])
+        browse_button.clicked.connect(browse_path)
+        copy_mode_layout.addWidget(browse_button, 1, 2)
+
+        # Add inputbox for downloads path
+        label = qtw.QLabel(self.lang['download_path'])
+        copy_mode_layout.addWidget(label, 2, 0)
+        self.dst_dlpath_box = qtw.QLineEdit()
+        self.dst_dlpath_box.setText(os.path.join(self.dst_path_box.text(), 'downloads'))
+        copy_mode_layout.addWidget(self.dst_dlpath_box, 2, 1)
+        def browse_dlpath():
+            file_dialog = qtw.QFileDialog(self.destination_dialog)
+            file_dialog.setWindowTitle(self.lang['browse'])
+            #file_dialog.setDirectory(os.path.join(os.getenv('LOCALAPPDATA'), self.destination, self.dst_name_box.text(), 'downloads'))
+            file_dialog.setDirectory(self.dst_dlpath_box.text())
+            file_dialog.setFileMode(qtw.QFileDialog.FileMode.Directory)
+            if file_dialog.exec():
+                folder = file_dialog.selectedFiles()[0]
+                folder = os.path.normpath(folder)
+                self.dst_dlpath_box.setText(folder)
+        browse_button = qtw.QPushButton(self.lang['browse'])
+        browse_button.clicked.connect(browse_dlpath)
+        copy_mode_layout.addWidget(browse_button, 2, 2)
+
+        # Add inputbox for mods path
+        label = qtw.QLabel(self.lang['mods_path'])
+        copy_mode_layout.addWidget(label, 3, 0)
+        self.dst_modspath_box = qtw.QLineEdit()
+        self.dst_modspath_box.setText(os.path.join(self.dst_path_box.text(), 'mods'))
+        copy_mode_layout.addWidget(self.dst_modspath_box, 3, 1)
+        def browse_modspath():
+            file_dialog = qtw.QFileDialog(self.destination_dialog)
+            file_dialog.setWindowTitle(self.lang['browse'])
+            #file_dialog.setDirectory(os.path.join(os.getenv('LOCALAPPDATA'), self.destination, self.dst_name_box.text(), 'mods'))
+            file_dialog.setDirectory(self.dst_modspath_box.text())
+            file_dialog.setFileMode(qtw.QFileDialog.FileMode.Directory)
+            if file_dialog.exec():
+                folder = file_dialog.selectedFiles()[0]
+                folder = os.path.normpath(folder)
+                self.dst_modspath_box.setText(folder)
+        browse_button = qtw.QPushButton(self.lang['browse'])
+        browse_button.clicked.connect(browse_modspath)
+        copy_mode_layout.addWidget(browse_button, 3, 2)
+
+        # Add inputbox for profiles path
+        label = qtw.QLabel(self.lang['profiles_path'])
+        copy_mode_layout.addWidget(label, 4, 0)
+        self.dst_profilespath_box = qtw.QLineEdit()
+        self.dst_profilespath_box.setText(os.path.join(self.dst_path_box.text(), 'profiles'))
+        copy_mode_layout.addWidget(self.dst_profilespath_box, 4, 1)
+        def browse_profilespath():
+            file_dialog = qtw.QFileDialog(self.destination_dialog)
+            file_dialog.setWindowTitle(self.lang['browse'])
+            #file_dialog.setDirectory(os.path.join(os.getenv('LOCALAPPDATA'), self.destination, self.dst_name_box.text(), 'profiles'))
+            file_dialog.setDirectory(self.dst_profilespath_box.text())
+            file_dialog.setFileMode(qtw.QFileDialog.FileMode.Directory)
+            if file_dialog.exec():
+                folder = file_dialog.selectedFiles()[0]
+                folder = os.path.normpath(folder)
+                self.dst_profilespath_box.setText(folder)
+        browse_button = qtw.QPushButton(self.lang['browse'])
+        browse_button.clicked.connect(browse_profilespath)
+        copy_mode_layout.addWidget(browse_button, 4, 2)
+
+        # Add inputbox for overwrite path
+        label = qtw.QLabel(self.lang['overwrite_path'])
+        copy_mode_layout.addWidget(label, 5, 0)
+        self.dst_overwritepath_box = qtw.QLineEdit()
+        self.dst_overwritepath_box.setText(os.path.join(self.dst_path_box.text(), 'overwrite'))
+        copy_mode_layout.addWidget(self.dst_overwritepath_box, 5, 1)
+        def browse_overwritepath():
+            file_dialog = qtw.QFileDialog(self.destination_dialog)
+            file_dialog.setWindowTitle(self.lang['browse'])
+            #file_dialog.setDirectory(os.path.join(os.getenv('LOCALAPPDATA'), self.destination, self.dst_name_box.text(), 'overwrite'))
+            file_dialog.setDirectory(self.dst_overwritepath_box.text())
+            file_dialog.setFileMode(qtw.QFileDialog.FileMode.Directory)
+            if file_dialog.exec():
+                folder = file_dialog.selectedFiles()[0]
+                folder = os.path.normpath(folder)
+                self.dst_overwritepath_box.setText(folder)
+        browse_button = qtw.QPushButton(self.lang['browse'])
+        browse_button.clicked.connect(browse_overwritepath)
+        copy_mode_layout.addWidget(browse_button, 5, 2)
 
         # Add widget for hardlink mode
         hardlink_mode_widget = qtw.QWidget()
@@ -804,7 +986,7 @@ class MainApp(qtw.QApplication):
         self.dst_back_button.clicked.disconnect(self.dst_first_page)
 
         # Update next button
-        #self.dst_next_button.clicked.disconnect(self.finish_dst)
+        self.dst_next_button.clicked.disconnect(self.finish_dst)
         self.dst_next_button.setText(self.lang['next'])
         self.dst_next_button.clicked.connect(self.dst_last_page)
         self.dst_next_button.setIcon(qta.icon('fa5s.chevron-right', color=self.theme['text_color']))
@@ -824,7 +1006,7 @@ class MainApp(qtw.QApplication):
         # Bind next button to done
         self.dst_next_button.clicked.disconnect(self.dst_last_page)
         self.dst_next_button.setText(self.lang['done'])
-        #self.dst_next_button.clicked.connect(self.finish_dst)
+        self.dst_next_button.clicked.connect(self.finish_dst)
         self.dst_next_button.setIcon(qtg.QIcon())
 
         # Bind back button to previous page
@@ -835,6 +1017,90 @@ class MainApp(qtw.QApplication):
         size = self.destination_dialog.sizeHint()
         size.setWidth(self.destination_dialog.width())
         self.destination_dialog.resize(size)
+    
+    def finish_dst(self):
+        # Create destination instance
+        if self.destination == 'Vortex':
+            instance_data = {
+                'name': "",
+                'paths': {
+                    'staging_folder': ""
+                }
+            }
+            self.dst_modinstance = core.VortexInstance(self, instance_data)
+        elif self.destination == 'ModOrganizer':
+            instance_data = {
+                'name': self.dst_name_box.text(),
+                'paths': {
+                    'instance_path': self.dst_path_box.text(),
+                    'download_path': self.dst_dlpath_box.text(),
+                    'mods_path': self.dst_modspath_box.text(),
+                    'profiles_path': self.dst_profilespath_box.text(),
+                    'overwrite_path': self.dst_overwritepath_box.text()
+                },
+                'mods': self.src_modinstance.mods
+            }
+            self.dst_modinstance = core.MO2Instance(self, instance_data)
+
+        # Create destination widget with instance details ############
+        self.destination_widget = qtw.QWidget()
+        self.destination_widget.setObjectName("panel")
+        self.mainlayout.addWidget(self.destination_widget, 1, 2)
+        # Create layout
+        self.destination_layout = qtw.QGridLayout()
+        self.destination_layout.setAlignment(qtc.Qt.AlignmentFlag.AlignTop)
+        self.destination_widget.setLayout(self.destination_layout)
+        self.destination_layout.setColumnStretch(1, 1)
+        # Add label with mod manager name
+        label = qtw.QLabel()
+        label.setText(f"{self.lang['mod_manager']}:")
+        self.destination_layout.addWidget(label, 0, 0)
+        manager_label = qtw.QLabel()
+        manager_label.setText(self.destination)
+        self.destination_layout.addWidget(manager_label, 0, 1)
+        # Add label with instance name
+        label = qtw.QLabel(f"{self.lang['instance_name']}:")
+        self.destination_layout.addWidget(label, 1, 0)
+        instance_label = qtw.QLabel(self.dst_modinstance.name)
+        self.destination_layout.addWidget(instance_label, 1, 1)
+        
+        # Add label with instance path
+        label = qtw.QLabel(f"{self.lang['instance_path']}:")
+        self.destination_layout.addWidget(label, 2, 0)
+        path_label = qtw.QLabel(self.dst_modinstance.paths['instance_path'])
+        self.destination_layout.addWidget(path_label, 2, 1)
+
+        # Add label with downloads path
+        label = qtw.QLabel(f"{self.lang['download_path']}:")
+        self.destination_layout.addWidget(label, 3, 0)
+        dlpath_label = qtw.QLabel(self.dst_modinstance.paths['download_path'])
+        self.destination_layout.addWidget(dlpath_label, 3, 1)
+
+        # Add label with mods path
+        label = qtw.QLabel(f"{self.lang['mods_path']}:")
+        self.destination_layout.addWidget(label, 4, 0)
+        modpath_label = qtw.QLabel(self.dst_modinstance.paths['mods_path'])
+        self.destination_layout.addWidget(modpath_label, 4, 1)
+
+        # Add label with profiles path
+        label = qtw.QLabel(f"{self.lang['profiles_path']}:")
+        self.destination_layout.addWidget(label, 5, 0)
+        profilespath_label = qtw.QLabel(self.dst_modinstance.paths['profiles_path'])
+        self.destination_layout.addWidget(profilespath_label, 5, 1)
+
+        # Add label with overwrite path
+        label = qtw.QLabel(f"{self.lang['overwrite_path']}:")
+        self.destination_layout.addWidget(label, 6, 0)
+        overwritepath_label = qtw.QLabel(self.dst_modinstance.paths['overwrite_path'])
+        self.destination_layout.addWidget(overwritepath_label, 6, 1)
+        ##############################################################
+
+        # Disable add source button
+        self.dst_button.setDisabled(True)
+        self.mig_button.setDisabled(False)
+
+        # Close dialog
+        self.destination_dialog.accept()
     
     # Settings functions #############################################
     def open_settings(self):

@@ -1,5 +1,6 @@
 {
     "error": "Error",
+    "success": "Success",
     "error_text": "An error occured:",
     "show_details": "Show details...",
     "hide_details": "Hide details...",
@@ -42,13 +43,23 @@
     "select_dst_instance_text": "Configure the instance according to your wishes.",
     "loading_instances": "Loading instances...",
     "error_no_instances": "Found no instances!",
-    "vortex_notice": "Only the active profile can be migrated from Vortex.\nAlso, make sure that the profile is currently deployed.\nSelect the staging folder from Vortex below.",
+    "vortex_notice": "Only the active profile can be migrated from Vortex.\nAlso, make sure that the profile is currently deployed.\nSelect the staging folder from Vortex below.\nAfter migrating, please purge the game folder in Vortex.",
     "mod_manager": "Mod manager",
     "instance_name": "Instance name",
     "instance_path": "Instance path",
+    "download_path": "Instance download path",
+    "optional_download_path": "Download path (optional)",
+    "mods_path": "Instance mods folder",
+    "profiles_path": "Instance profiles folder",
+    "overwrite_path": "Instance overwrite folder",
     "staging_folder": "Vortex staging folder",
     "paths": "Paths",
     "invalid_staging_folder": "Invalid staging folder. Make sure that you select a valid staging folder and the profile has been deployed.",
     "copy_mode": "Copy mode",
-    "hardlink_mode": "Hardlink mode"
+    "hardlink_mode": "Hardlink mode",
+    "calc_size": "Calculate required disk space...",
+    "enough_space_text": "Before migrating, make sure you have enough free space ([FREE_SPACE]).\nRequired for the instance: [REQUIRED_SPACE]",
+    "migrating_instance": "Migrating instance...",
+    "migration_complete": "Instance successfully migrated.",
+    "copying_mod": "Copying mod [MOD]..."
 }

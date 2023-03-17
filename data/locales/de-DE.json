@@ -1,5 +1,6 @@
 {
     "error": "Fehler",
+    "success": "Erfolgreich",
     "error_text": "Ein Fehler ist aufgetreten:",
     "show_details": "Details anzeigen...",
     "hide_details": "Details verstecken...",
@@ -42,13 +43,23 @@
     "select_dst_instance_text": "Konfigurieren Sie die Instanz\nnach Ihren Wünschen.",
     "loading_instances": "Instanzen werden geladen...",
     "error_no_instances": "Keine Instanzen gefunden!",
-    "vortex_notice": "Von Vortex kann nur das aktive Profil migriert werden.\nStellen Sie zudem sicher, dass das Profil zurzeit deployed ist.\nWählen Sie unten den Staging Folder von Vortex aus.",
+    "vortex_notice": "Von Vortex kann nur das aktive Profil migriert werden.\nStellen Sie zudem sicher, dass das Profil zurzeit deployed ist.\nWählen Sie unten den Staging Folder von Vortex aus.\nNach dem Migrieren bitte in Vortex den Spielordner purgen.",
     "mod_manager": "Modmanager",
     "instance_name": "Name der Instanz",
     "instance_path": "Pfad der Instanz",
+    "download_path": "Downloadpfad der Instanz",
+    "optional_download_path": "Downloadordner (Optional)",
+    "mods_path": "Modordner der Instanz",
+    "profiles_path": "Profilordner der Instanz",
+    "overwrite_path": "Overwrite-Ordner der Instanz",
     "staging_folder": "Vortex Staging Folder",
     "paths": "Pfade",
     "invalid_staging_folder": "Ungültiger Staging Folder. Stellen Sie sicher, dass Sie einen gültigen Staging Folder auswählen und das Profil deployed wurde.",
     "copy_mode": "Kopiermodus",
-    "hardlink_mode": "Hardlink-Modus"
+    "hardlink_mode": "Hardlink-Modus",
+    "calc_size": "Berechne benötigten Speicherplatz...",
+    "enough_space_text": "Stellen Sie vor dem Migrieren sicher, dass Sie über genügend freien Speicher ([FREE_SPACE]) verfügen.\nFür die Instanz benötigt: [REQUIRED_SPACE]",
+    "migrating_instance": "Instanz wird migriert...",
+    "migration_complete": "Instanz erfolgreich migriert.",
+    "copying_mod": "Kopiere Mod [MOD]..."
 }

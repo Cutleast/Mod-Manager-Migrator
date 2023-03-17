@@ -261,8 +261,6 @@ QComboBox:editable {
     border-bottom: 1px solid <accent_color>;
 }
 QComboBox::drop-down {
-    background-color: <secondary_bg>;
-
     subcontrol-origin: padding;
     subcontrol-position: right;
 
@@ -276,6 +274,9 @@ QComboBox::down-arrow {
     width: 24px;
     height: 24px;
     color: <text_color>;
+}
+QComboBox:hover {
+    background-color: <tertiary_bg>;
 }
 QComboBox QAbstractItemView {
     border-radius: 4px;
