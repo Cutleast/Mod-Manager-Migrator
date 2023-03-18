@@ -8,6 +8,8 @@
 # Description
 This is a tool for migrating modding instances between various mod managers (currently only Vortex to MO2). This program is in a very early Alpha stage and feedback is crucial for me to continue developing. Currently only Skyrim SE from Vortex to ModOrganizer 2 (MO2) is supported with support for more games and mod managers planned. **Only Windows is supported!**
 
+<a href="https://www.nexusmods.com/skyrimspecialedition/mods/87160"><img src="/misc_assets/GiO_NM.png" height="60px" />
+	
 # Features
 - create mod order from Vortex conflict rules
 - fully automated migration
