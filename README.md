@@ -14,13 +14,13 @@ MMM - for a better modding environment.
 </p>
 
 
-# WARNING!!!
+# ❗WARNING!!!
 **This is in a very early Alpha stage and issues/errors are very likely to occur! Use at your own risk!**
 
-# Description
+# 📄Description
 This is a tool for migrating modding instances between various mod managers (currently only Vortex to MO2). This program is in a very early Alpha stage and feedback is crucial for me to continue developing. Currently only Skyrim SE from Vortex to ModOrganizer 2 (MO2) is supported with support for more games and mod managers planned. **Only Windows is supported!**
 
-# Features
+# 🕹Features
 - create mod order from Vortex conflict rules
 - fully automated migration
 - new instance is customizable
@@ -31,7 +31,7 @@ This is a tool for migrating modding instances between various mod managers (cur
 - support for more games (suggestions are welcome)
 - support for more mod managers (suggestions are also welcome)
 
-# Usage
+# 🔧Usage
 To migrate an instance from Vortex to MO2, for example, follow these steps:
 1. Start Vortex and make sure that the profile you want to migrate is deployed.
 2. Close Vortex and start MMM (Mod Manager Migrator).
@@ -43,7 +43,7 @@ To migrate an instance from Vortex to MO2, for example, follow these steps:
 8. After migration is done, open Vortex and purge game folder.
 9. Close Vortex, open it never again and you're done!
 
-# Contributing
+# 🫶Contributing
 ### 1. Translations
 Create your translation for your desired language from en-US.json under <Path to MMM>/data/locales and give it a proper name: for example: "en-US.json" or "de-DE.json". Send it to me (cutleast@gmail.com) and I will add it as soon as I can.
 
@@ -61,7 +61,7 @@ If you encountered an issue/error or have a suggestion, create a issue with suff
 6. Run setup_venv.bat by typing:
 	`setup_venv.bat`
 
-# Credits
+# 🔗Credits
 - Code by Cutleast ([GitHub](https://github.com/Cutleast) | [NexusMods](https://www.nexusmods.com/users/65733731))
 - Program icon and idea by Wuerfelhusten ([NexusMods](https://www.nexusmods.com/users/122160268))
 - Qt by The [Qt Company Ltd](https://qt.io)
