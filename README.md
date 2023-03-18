@@ -3,15 +3,14 @@
   <img alt="" src="data/icons/mmm.svg" width=256 height=256>
 </picture>
 </p>
-<br>
-<strong>
 <p align="center">
 <picture>
-  <img alt="" src="misc_assets/HeadLineGH.svg" width=256 height=256>
+  <img alt="" src="misc_assets/HeadLineGH.svg" width=512>
 </picture>
-</strong>
 <br>
-<a href="https://www.nexusmods.com/skyrimspecialedition/mods/87160"><img src="/misc_assets/GiO_NM.png" height="60px" />
+<a href="https://www.nexusmods.com/skyrimspecialedition/mods/87160"><img src="/misc_assets/GiO_NM.png" height="60px"/> </a>
+<br>
+MMM - for a better modding environment.
 </p>
 
 
