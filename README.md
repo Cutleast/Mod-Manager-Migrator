@@ -1,5 +1,5 @@
 <picture>
-  <img alt="" src="data/icons/mmt.svg" width=400 height=400>
+  <img alt="" src="data/icons/mmm.svg" width=400 height=400>
 </picture>
 
 # WARNING!!!
