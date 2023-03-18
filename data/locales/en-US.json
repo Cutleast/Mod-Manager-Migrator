@@ -61,5 +61,7 @@
     "enough_space_text": "Before migrating, make sure you have enough free space ([FREE_SPACE]).\nRequired for the instance: [REQUIRED_SPACE]",
     "migrating_instance": "Migrating instance...",
     "migration_complete": "Instance successfully migrated.",
-    "copying_mod": "Copying mod [MOD]..."
+    "copying_mod": "Copying mod [MOD]...",
+    "copying_download": "Copying download [NAME]...",
+    "sorting_loadorder": "Sorting loadorder..."
 }

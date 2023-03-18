@@ -3,7 +3,7 @@ import msgpack
 import os
 import winreg
 import shutil
-from fnmatch import fnmatch
+#from fnmatch import fnmatch
 
 
 # Create class for modding instance ##################################
@@ -24,7 +24,7 @@ class ModInstance:
     def __repr__(self):
         return "ModInstance"
     
-    def get_loadorder(self):
+    def get_loadorder(self, psignal=None):
         """
         Returns loadorder.
         """
@@ -45,17 +45,23 @@ class ModInstance:
 
         return self.size
     
+    def get_mod_metadata(self, modname: str):
+        """
+        Gets mod metadata (name, version, modid, fileid) and returns it.
+        """
+        return
+    
     def import_mod(self, folder: str):
         return
 
 
-# Create class for Vortex stagefiles #################################
+# Create class for Vortex stagefile ##################################
 class StageFile:
     def __init__(self, path: str):
         self.path = path
+        self.dir = os.path.dirname(path)
         self.data = {}
-        self.files = []
-        self.mods = []
+        self.loadorder = []
         self.modfiles = {} # mod: files
     
     def parse_file(self):
@@ -63,180 +69,77 @@ class StageFile:
             data = msgpack.load(file)
         
         self.data = data
-        self.files = [file['relPath'] for file in self.data['files']]
     
     def get_modlist(self):
-        mods = []
+        loadorder = []
         modfiles = {}
         for file in self.data['files']:
-            mod = os.path.join(os.path.dirname(self.path), file['source'])
-            if mod not in mods:
-                mods.append(mod)
-            if modfiles.get(mod, None) is None:
-                modfiles[mod] = [os.path.normpath(file['relPath'])]
+            mod = file['source']
+            if mod not in loadorder:
+                loadorder.append(mod)
+            if mod not in modfiles.keys():
+                modfiles[mod] = [file['relPath'].lower()]
             else:
-                modfiles[mod].append(os.path.normpath(file['relPath']))
-        self.mods = mods
+                modfiles[mod].append(file['relPath'].lower())
+        
+        self.loadorder = loadorder
         self.modfiles = modfiles
     
-    def if_from_mod(self, file: str, mod: str):
-        filepath = os.path.normpath(file.split(mod)[1]).strip("\\".strip())
-        return filepath in self.modfiles[mod]
-    
-    def get_mod_by_file(self, path: str):
-        path = path.split(os.path.dirname(self.path))[1].strip("\\")
-        modname, path = path.split("\\", 1)
+    def get_mod_by_filename(self, filename: str):
+        """
+        Returns modname as string or None if nothing is found.
+        Parameters:
+            filename: relative path to file
+        """
+
+        comparisons = f"Searching for file '{filename}'"
         for mod, files in self.modfiles.items():
-            if os.path.basename(mod) == modname:
-                continue
-            elif path in files:
-                return os.path.basename(mod)
+            for file in files:
+                if filename.lower() == file.lower():
+                    return mod
+                comparisons += f"\n'{file}': {filename == file}"
         else:
-            #print(f"{path = }")
-            #print(f"{mod = }")
-            #print(path in files)
-            #print(files)
-            return modname
-            raise ValueError(f"File '{path}' not found!")
-    
+            #with open('comparisons.txt', 'a', encoding='utf8') as compfile:
+            #    compfile.write(comparisons)
+            print(f"File {filename} not found!")
+        
+            return None
+
 
 # Create class for Vortex instance ###################################
 class VortexInstance(ModInstance):
     """
-    Class for Vortex ModInstance. Inherited from ModInstance class.
+    General class for mod manager instances.
     """
 
     def __init__(self, app: MainApp, instance: dict):
         super().__init__(app, instance)
-        
+
         self.stagefile = StageFile(self.paths['stagefile'])
         self.stagefile.parse_file()
         self.stagefile.get_modlist()
-        self.mods = self.instance['mods'] = self.stagefile.mods
-        self.files = self.instance['files'] = self.stagefile.files
-        self.unsorted_loadorder = True
-
+        self.mods = self.stagefile.modfiles
+    
     def __repr__(self):
         return "VortexInstance"
-            
-    def sort_loadorder(self):
-        """
-        Creates loadorder from Vortex stagefile.
-        """
-
-        self.app.log.info(f"Creating loadorder with {len(self.mods)} mod(s) from stagefile...")
-            
-        # Write unsorted loadorder for debbuging purpose to appdata folder
-        with open(os.path.join(os.getenv('APPDATA'), self.app.name, 'unsorted_loadorder.txt'), 'w') as file:
-            mods = ""
-            for mod in self.stagefile.mods:
-                mods += "\n" + os.path.basename(mod)
-            #mods = mods.strip()
-            file.write(f"# This file was automatically generated by Mod Manager Migrator.{mods}")
-        
-        # Scan mods
-        self.app.log.info("Scanning mods...")
-        load_order = [os.path.basename(mod) for mod in self.stagefile.mods]
-        for c, mod in enumerate(self.stagefile.mods):
-            modname = os.path.basename(mod)
-            self.app.log.debug(f"Scanning mod '{modname}'... ({c}/{len(self.stagefile.mods)})")
-            files = create_folder_list(mod)
-            #self.app.log.debug(f"Files: {len(files)}")
-            # Create list of mods that overwrite this
-            overwriting_mods = []
-            for file in files:
-                if not self.stagefile.if_from_mod(file, mod):
-                    overwriting_mod = self.stagefile.get_mod_by_file(file)
-                    if overwriting_mod != modname:
-                        overwriting_mods.append(overwriting_mod)
-            overwriting_mods = list(set(overwriting_mods)) # Remove duplicates
-            if overwriting_mods:
-                self.app.log.debug(f"Mod '{modname}' gets overwritten by {overwriting_mods}")
-
-            index = load_order.index(modname)
-            if overwriting_mods:
-                #self.app.log.debug(f"Sorting mod...")
-                self.app.log.debug(f"Old index: {index}")
-                for overwriting_mod in overwriting_mods:
-                    overwriting_index = load_order.index(overwriting_mod)
-                    # Compare indices
-                    if index > overwriting_index:
-                        index = overwriting_index
-                        continue
-                if index < 0:
-                    index = 0
-                self.app.log.debug(f"New index: {index}")
-
-            # Move mod to new index
-            load_order.remove(modname)
-            load_order.insert(index, modname)
-        
-        self.app.log.info("Created load order from Vortex deployment file.")
-        
-        # Write sorted loadorder for debbuging purposes to appdata folder
-        with open(os.path.join(os.getenv('APPDATA'), self.app.name, 'sorted_loadorder.txt'), 'w') as file:
-            for mod in load_order:
-                mods += "\n+" + os.path.basename(mod)
-            mods = mods.strip()
-            file.write(f"# This file was automatically generated by Mod Organizer.\n{mods}")
-        
-        load_order.reverse()
-        self.loadorder = load_order
-        self.unsorted_loadorder = False
-
-        self.app.log.info(f"Created loadorder.")
     
-    def get_loadorder(self):
-        """
-        Returns loadorder. Creates it from stagefile if not already done.
-        """
-
-        # Only sort loadorder if not already done
-        if self.unsorted_loadorder:
-            self.sort_loadorder()
-
-        return super().get_loadorder()
+    #def get_mod_metadata(self, modname: str):
     
-    def check_loadorder(self):
-        """
-        This method is for checking if files in stagefile and loadorder match.
-        For debugging purposes!
-        """
+    def get_loadorder(self, psignal=None):
+        loadorder = vortex2order(self.stagefile)
+    
+        loadorder.reverse()
 
-        print("Checking loadorder...")
-        print("Creating stagefile list...")
-        stagefile_files = {}
-        for file in self.stagefile.data['files']:
-            stagefile_files[file['relPath']] = file['source']
-        
-        print("Creating loadorder list...")
-        loadorder_files = {}
-        for c, mod in enumerate(self.loadorder):
-            print(f"Mod {c}/{len(self.loadorder)}")
-            mod = os.path.join(os.path.dirname(self.stagefile.path))
-            #files = stagefile.modfiles[mod]
-            files = create_folder_list(mod)
-            for file in files:
-                loadorder_files[file] = os.path.basename(mod)
-        
-        print("Comparing...")
-        different_files = {}
-        # Check each file and mod
-        for file, mod in stagefile_files.items():
-            # If file should come from different mod, add it to list
-            if loadorder_files.get(file, mod) != mod:
-                different_files[file] = mod
-        if different_files:
-            print("Found different files:")
-            print(different_files)
-        else:
-            print("Found no differences!")
+        check_loadorder(self.stagefile, loadorder)
+
+        loadorder.reverse()
+
+        return loadorder
 
     def get_size(self):
         self.app.log.debug(f"Calculating size of Vortex instance...")
         
         # Calculate size of staging folder
-        #size = get_folder_size(self.paths['staging_folder'])
         size = 0
         for file in self.stagefile.data['files']:
             size += os.path.getsize(os.path.join(self.paths['staging_folder'], file['source'], file['relPath']))
@@ -248,6 +151,7 @@ class VortexInstance(ModInstance):
         self.size = size
         self.app.log.debug(f"Calculation complete. Instance size: {get_size(self.size)}")
         return super().get_size()
+
 
 # Create class for MO2 instance ######################################
 class MO2Instance(ModInstance):
@@ -264,7 +168,7 @@ class MO2Instance(ModInstance):
         # Create directories
         self.app.log.debug(f"Creating directories...")
         appdata_path = os.path.join(os.getenv('LOCALAPPDATA'), 'ModOrganizer', self.name)
-        os.makedirs(appdata_path)
+        os.makedirs(appdata_path) # raise exception if instance does already exist
         os.makedirs(self.paths['instance_path'], exist_ok=True)
         os.makedirs(self.paths['download_path'], exist_ok=True)
         os.makedirs(self.paths['mods_path'], exist_ok=True)
@@ -309,18 +213,14 @@ size=0
 
         # Create modlist.txt
         with open(os.path.join(prof_path, 'modlist.txt'), 'w') as file:
-            #mods = '\n+'.join(self.loadorder).strip()
             mods = ""
-            loadorder = self.loadorder.copy()
-            #loadorder.reverse()
-            for mod in loadorder:
+            for mod in self.loadorder:
                 mods += "\n+" + os.path.basename(mod)
             mods = mods.strip()
             file.write(f"# This file was automatically generated by Mod Organizer.\n{mods}")
         self.app.log.debug("Created 'modlist.txt'.")
 
         # Copy ini files from User\Documents\My Games\Skyrim Special Edition
-        #ini_path = os.path.join(self.app.doc_path, 'My Games', 'Skyrim Special Edition')
         ini_path = self.app.doc_path
         shutil.copy(os.path.join(ini_path, 'Skyrim.ini'), os.path.join(prof_path, 'skyrim.ini'))
         shutil.copy(os.path.join(ini_path, 'SkyrimCustom.ini'), os.path.join(prof_path, 'skyrimcustom.ini'))
@@ -331,10 +231,6 @@ size=0
     
     def import_mod(self, folder: str):
         modname = os.path.basename(folder)
-        if fnmatch(modname, "*-*-*-*-*"):
-            meta = modname.rsplit("-", 4)
-            modid = meta[-1]
-            fileid = meta[0]
         shutil.copytree(folder, os.path.join(self.paths['mods_path'], modname))
     
     def get_size(self):
@@ -367,17 +263,135 @@ size=0
         # Return list with found instances
         return instances
 
-# Read folder and save files with relative paths to list #############
-def create_folder_list(folder: str):
-    """
-    Creates a list with all files with relative paths.
-    """
 
+# Define function to rebuild loadorder from Vortex stagefile #########
+def vortex2order(stagefile: StageFile):
+    print("Scanning mods...")
+
+    new_loadorder = stagefile.loadorder.copy()
+    overwrites = ""
+    for c, mod in enumerate(stagefile.loadorder):
+        print(f"Scanning mod '{mod}'... ({c}/{len(stagefile.loadorder)})")
+        overwriting_mods = []
+        
+        modfiles = create_folder_list(os.path.join(stagefile.dir, mod))
+
+        for file in modfiles:
+            overwriting_mod = stagefile.get_mod_by_filename(file)
+            if (overwriting_mod is not None) and (overwriting_mod != mod) and (overwriting_mod not in overwriting_mods):
+                overwriting_mods.append(overwriting_mod)
+        
+        if overwriting_mods:
+            _overwriting_mods = '\n    '.join(overwriting_mods)
+            overwrites += f"\nMod: {mod}\nOverwritten by:\n    {_overwriting_mods}\n{'-'*100}"
+
+            print(f"Sorting mod '{mod}'...")
+
+            old_index = index = new_loadorder.index(mod)
+
+            # get smallest index of all overwriting mods
+            index = min([new_loadorder.index(overwriting_mod) for overwriting_mod in overwriting_mods])
+            print(f"Current index: {old_index} | Minimal index of overwriting mods: {index}")
+
+            if old_index > index:
+                new_loadorder.insert(index, new_loadorder.pop(old_index))
+                print(f"Moved mod '{mod}' from index {old_index} to {index}.")
+    
+    with open("overwrites.txt", "w") as _file:
+        _file.write(overwrites)
+    
+    #raise Exception("STOP")
+
+    stagefile_files = {}
+    for file in stagefile.data['files']:
+        stagefile_files[file['relPath'].lower()] = file['source']
+    while different_files := check_loadorder(stagefile, new_loadorder):
+        loadorder_files = {}
+        for c, mod in enumerate(new_loadorder):
+            #print(f"Mod {c}/{len(new_loadorder)}")
+            #files = stagefile.modfiles[mod]
+            files = create_folder_list(os.path.join(stagefile.dir, mod))
+            for file in files:
+                loadorder_files[file.lower()] = mod
+        for file in different_files:
+            mod = loadorder_files[file]
+            old_index = new_loadorder.index(mod)
+            new_index = new_loadorder.index(stagefile_files[file])
+            if old_index > new_index:
+                new_loadorder.insert(new_index, new_loadorder.pop(old_index))
+                print(f"Moved mod '{mod}' from index {old_index} to {new_index}.")
+        #break
+    
+    new_loadorder.reverse()
+
+    print("Created loadorder from Vortex deployment file.")
+
+    with open('sorted_loadorder.txt', 'w') as file:
+        mods = ""
+        for mod in new_loadorder:
+            mods += "\n+" + os.path.basename(mod)
+        mods = mods.strip()
+        file.write(f"# This file was automatically generated by Mod Organizer.\n{mods}")
+
+    return new_loadorder
+
+# Define function to check if loadorder matches with stagefile #######
+def check_loadorder(stagefile: StageFile, loadorder: list):
+    print("Checking loadorder...")
+    stagefile_files = {}
+    _files = ""
+    for file in stagefile.data['files']:
+        stagefile_files[file['relPath'].lower()] = file['source']
+        _files += f"\n{file['relPath'].lower()} ---FROM--- {file['source']}"
+    
+    with open("stagefiles.txt", "w", encoding='utf8') as f:
+        f.write(_files)
+    
+    loadorder_files = {}
+    _files = ""
+    for c, mod in enumerate(loadorder):
+        files = create_folder_list(os.path.join(stagefile.dir, mod))
+        for file in files:
+            loadorder_files[file.lower()] = mod
+            _files += f"\n{file.lower()} ---FROM--- {mod}"
+    
+    with open("modfiles.txt", "w", encoding='utf8') as f:
+        f.write(_files)
+    
+    different_files = []
+    for file, mod in loadorder_files.items():
+        if file not in stagefile_files:
+            print(f"File: {file}")
+            print(f"Loadorder mod: {mod} ({loadorder.index(mod)})")
+            print(f"Stagefile mod: NOT FOUND!")
+            print("-"*50)
+            different_files.append(file)
+        elif mod != stagefile_files[file]:
+            print(f"File: {file}")
+            print(f"Loadorder mod: {mod} ({loadorder.index(mod)})")
+            print(f"Stagefile mod: {stagefile_files[file]} ({loadorder.index(stagefile_files[file])})")
+            print("-"*50)
+            different_files.append(file)
+
+    print(f"Found {len(different_files)} difference(s).")
+
+    return different_files
+
+# Read folder and save files with relative paths to list #############
+def create_folder_list(folder, lower=True):
+    """
+    Creates a list with all files with relative paths to <folder> and returns it.
+
+    Lowers filenames if <lower> is True.
+    """
     files = []
 
     for root, dirs, _files in os.walk(folder):
         for f in _files:
-            files.append(os.path.join(root, f))
+            if f not in ['.gitignore', 'meta.ini']: # check if in blacklist
+                path = os.path.join(root, f)
+                path = path.removeprefix(f"{folder}\\")
+                files.append(path.lower())
 
     return files
 

@@ -149,10 +149,12 @@ class MainApp(qtw.QApplication):
             parser = argparse.ArgumentParser(prog=f"{os.path.basename(sys.executable)} {__file__}", description=help_msg)
         parser.add_argument("-l", "--log-level", help="Specify logging level.", choices=list(LOG_LEVELS.values()))
         parser.add_argument("--no-log", help="Disable log file.", action="store_true")
-        parser.add_argument('inputfile', help="Optional file to open with.", nargs='?', type=argparse.FileType('rb'))
+        parser.add_argument("--keep-log", help="Keep log file. (Overwrites --no-log)", action="store_true")
         self.args = parser.parse_args()
         if self.args.no_log:
             self.config['save_logs'] = False
+        if self.args.keep_log:
+            self.config['save_logs'] = True
         if self.args.log_level:
             self.log_level = getattr(logging, self.args.log_level.upper(), 20)
             self.log.setLevel(self.log_level)
@@ -335,18 +337,31 @@ class MainApp(qtw.QApplication):
             return
 
         # Create destination mod instance with ini files and loadorder
-        self.dst_modinstance.loadorder = self.src_modinstance.get_loadorder()
+        def process(psignal: qtc.Signal):
+            #self.src_modinstance.get_loadorder()
+            self.dst_modinstance.loadorder = self.src_modinstance.get_loadorder()
+        loadingdialog = LoadingDialog(self.root, self, process, self.lang['sorting_loadorder'])
+        loadingdialog.exec()
         self.dst_modinstance.create_instance()
 
         # Copy mods to new instance
         def process(psignal: qtc.Signal):
-            for c, mod in enumerate(self.src_modinstance.mods):
+            for c, mod in enumerate(self.src_modinstance.mods.keys()):
                 psignal.emit({'value': c, 'max': len(self.src_modinstance.mods), 'text': self.lang['copying_mod'].replace("[MOD]", f"'{os.path.basename(mod)}'")})
-                self.dst_modinstance.import_mod(mod)
+                self.dst_modinstance.import_mod(os.path.join(self.src_modinstance.paths['instance_path'], mod))
         loadingdialog = LoadingDialog(self.root, self, process, self.lang['migrating_instance'])
         loadingdialog.exec()
 
         # Copy downloads if given to new instance
+        if self.src_modinstance.paths.get('download_path', None):
+            def process(psignal: qtc.Signal):
+                for c, archive in enumerate(os.listdir(self.src_modinstance.paths['download_path'])):
+                    psignal.emit({'value': c, 'max': len(self.src_modinstance.mods), 'text': self.lang['copying_download'].replace("[NAME]", f"'{os.path.basename(archive)}'")})
+                    src_path = os.path.join(self.src_modinstance.paths['download_path'])
+                    dst_path = os.path.join(self.dst_modinstance.paths['download_path'])
+                    shutil.copyfile(src_path, dst_path)
+            loadingdialog = LoadingDialog(self.root, self, process, self.lang['migrating_instance'])
+            loadingdialog.exec()
 
         self.log.info("Migration complete.")
         qtw.QMessageBox.information(self.root, self.lang['success'], self.lang['migration_complete'])
@@ -579,7 +594,7 @@ class MainApp(qtw.QApplication):
         else:
             self.instances = []
             def process(psignal: qtc.Signal):
-                if self.source == 'ModOrganizer 2 (MO2)':
+                if self.source == 'ModOrganizer':
                     self.instances = core.MO2Instance.get_instances(self)
             loading_dialog = LoadingDialog(self.source_dialog, self, lambda p: process(p), self.lang['loading_instances'])
             loading_dialog.exec()
@@ -632,9 +647,6 @@ class MainApp(qtw.QApplication):
             if os.path.isfile(stagefile):
                 instance_data['paths']['stagefile'] = stagefile
                 self.src_modinstance = core.VortexInstance(self, instance_data)
-                #self.stagefile = StageFile(stagefile)
-                #self.stagefile.parse_file()
-                #self.stagefile.get_modlist()
             else:
                 qtw.QMessageBox.critical(self.source_dialog, self.lang['error'], self.lang['invalid_staging_folder'])
                 return

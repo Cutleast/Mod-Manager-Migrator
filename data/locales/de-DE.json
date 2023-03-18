@@ -61,5 +61,7 @@
     "enough_space_text": "Stellen Sie vor dem Migrieren sicher, dass Sie über genügend freien Speicher ([FREE_SPACE]) verfügen.\nFür die Instanz benötigt: [REQUIRED_SPACE]",
     "migrating_instance": "Instanz wird migriert...",
     "migration_complete": "Instanz erfolgreich migriert.",
-    "copying_mod": "Kopiere Mod [MOD]..."
+    "copying_mod": "Kopiere Mod [MOD]...",
+    "copying_download": "Kopiere Download [NAME]...",
+    "sorting_loadorder": "Ladereihenfolge wird sortiert..."
 }
