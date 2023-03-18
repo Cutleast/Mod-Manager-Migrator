@@ -6,7 +6,9 @@
 <br>
 <strong>
 <p align="center">
-Mod Manager Migrator (MMM)
+<picture>
+  <img alt="" src="misc_assets/HeadLineGH.svg" width=256 height=256>
+</picture>
 </strong>
 <br>
 <a href="https://www.nexusmods.com/skyrimspecialedition/mods/87160"><img src="/misc_assets/GiO_NM.png" height="60px" />
