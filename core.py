@@ -93,12 +93,14 @@ class StageFile:
             filename: relative path to file
         """
 
-        comparisons = f"Searching for file '{filename}'"
+        #comparisons = f"Searching for file '{filename}'"
         for mod, files in self.modfiles.items():
-            for file in files:
-                if filename.lower() == file.lower():
-                    return mod
-                comparisons += f"\n'{file}': {filename == file}"
+            #for file in files:
+            #    if filename.lower() == file.lower():
+            #        return mod
+            #    comparisons += f"\n'{file}': {filename == file}"
+            if filename.lower() in files:
+                return mod
         else:
             #with open('comparisons.txt', 'a', encoding='utf8') as compfile:
             #    compfile.write(comparisons)
