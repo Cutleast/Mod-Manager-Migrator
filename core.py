@@ -63,6 +63,7 @@ class StageFile:
         self.data = {}
         self.loadorder = []
         self.modfiles = {} # mod: files
+        self.all_modfiles = {} # mod: all files (overwritten files, too)
     
     def parse_file(self):
         with open(self.path, 'rb') as file:
@@ -126,6 +127,9 @@ class VortexInstance(ModInstance):
     #def get_mod_metadata(self, modname: str):
     
     def get_loadorder(self, psignal=None):
+        for mod in self.stagefile.modfiles.keys():
+            self.stagefile.all_modfiles[mod] = create_folder_list(os.path.join(self.stagefile.dir, mod))
+
         loadorder = vortex2order(self.stagefile)
     
         loadorder.reverse()
@@ -274,7 +278,8 @@ def vortex2order(stagefile: StageFile):
         print(f"Scanning mod '{mod}'... ({c}/{len(stagefile.loadorder)})")
         overwriting_mods = []
         
-        modfiles = create_folder_list(os.path.join(stagefile.dir, mod))
+        #modfiles = create_folder_list(os.path.join(stagefile.dir, mod))
+        modfiles = stagefile.all_modfiles[mod]
 
         for file in modfiles:
             overwriting_mod = stagefile.get_mod_by_filename(file)
@@ -310,7 +315,8 @@ def vortex2order(stagefile: StageFile):
         for c, mod in enumerate(new_loadorder):
             #print(f"Mod {c}/{len(new_loadorder)}")
             #files = stagefile.modfiles[mod]
-            files = create_folder_list(os.path.join(stagefile.dir, mod))
+            #files = create_folder_list(os.path.join(stagefile.dir, mod))
+            files = stagefile.all_modfiles[mod]
             for file in files:
                 loadorder_files[file.lower()] = mod
         for file in different_files:
@@ -326,7 +332,7 @@ def vortex2order(stagefile: StageFile):
 
     print("Created loadorder from Vortex deployment file.")
 
-    with open('sorted_loadorder.txt', 'w') as file:
+    with open("sorted_loadorder.txt", 'w') as file:
         mods = ""
         for mod in new_loadorder:
             mods += "\n+" + os.path.basename(mod)
@@ -350,7 +356,8 @@ def check_loadorder(stagefile: StageFile, loadorder: list):
     loadorder_files = {}
     _files = ""
     for c, mod in enumerate(loadorder):
-        files = create_folder_list(os.path.join(stagefile.dir, mod))
+        #files = create_folder_list(os.path.join(stagefile.dir, mod))
+        files = stagefile.all_modfiles[mod]
         for file in files:
             loadorder_files[file.lower()] = mod
             _files += f"\n{file.lower()} ---FROM--- {mod}"

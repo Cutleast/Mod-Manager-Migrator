@@ -339,7 +339,7 @@ class MainApp(qtw.QApplication):
         # Create destination mod instance with ini files and loadorder
         def process(psignal: qtc.Signal):
             #self.src_modinstance.get_loadorder()
-            self.dst_modinstance.loadorder = self.src_modinstance.get_loadorder()
+            self.dst_modinstance.loadorder = self.src_modinstance.get_loadorder(psignal)
         loadingdialog = LoadingDialog(self.root, self, process, self.lang['sorting_loadorder'])
         loadingdialog.exec()
         self.dst_modinstance.create_instance()
