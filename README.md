@@ -1,3 +1,7 @@
+<picture>
+  <img alt="" src="data/icons/mmt.svg" width=400 height=400>
+</picture>
+
 # WARNING!!!
 **This is in a very early Alpha stage and issues/errors are very likely to occur! Use at your own risk!**
 
