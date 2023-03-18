@@ -63,7 +63,7 @@ If you encountered an issue/error or have a suggestion, create a issue with suff
 
 # Credits
 - Code by Cutleast ([GitHub](https://github.com/Cutleast) | [NexusMods](https://www.nexusmods.com/users/65733731))
-- Program icon and idea by [Wuerfelhusten](https://www.nexusmods.com/users/122160268)
+- Program icon and idea by Wuerfelhusten ([NexusMods](https://www.nexusmods.com/users/122160268))
 - Qt by The [Qt Company Ltd](https://qt.io)
 - Material icons by [Google LLC](https://github.com/Templarian/MaterialDesign)
 - Elusive Icons von [Team Redux](https://reduxframework.com/)
