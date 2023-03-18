@@ -2,11 +2,16 @@
 <picture>
   <img alt="" src="data/icons/mmm.svg" width=256 height=256>
 </picture>
+</p>
 <br>
+<strong>
+<p align="center">
 Mod Manager Migrator (MMM)
+</strong>
 <br>
 <a href="https://www.nexusmods.com/skyrimspecialedition/mods/87160"><img src="/misc_assets/GiO_NM.png" height="60px" />
 </p>
+
 
 # WARNING!!!
 **This is in a very early Alpha stage and issues/errors are very likely to occur! Use at your own risk!**
