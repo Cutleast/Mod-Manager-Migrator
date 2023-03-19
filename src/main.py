@@ -316,26 +316,27 @@ class MainApp(qtw.QApplication):
     def migrate(self):
         self.log.info(f"Migrating instance from {self.source} to {self.destination}...")
 
-        # Calculate free and required disk space
-        self.fspace = 0 # free space
-        self.rspace = 0 # required space
-        def process():
-            self.fspace = disk_usage(os.path.splitdrive(self.dst_modinstance.paths['instance_path'])[0])[2]
-            self.rspace = self.src_modinstance.get_size()
-            self.log.debug(f"Free space: {core.get_size(self.fspace)} | Required space: {core.get_size(self.rspace)}")
-        loadingdialog = LoadingDialog(self.root, self, lambda p: process(), self.lang['calc_size'])
-        loadingdialog.exec()
+        # Calculate free and required disk space if copy mode
+        if self.mode == 'copy':
+            self.fspace = 0 # free space
+            self.rspace = 0 # required space
+            def process():
+                self.fspace = disk_usage(os.path.splitdrive(self.dst_modinstance.paths['instance_path'])[0])[2]
+                self.rspace = self.src_modinstance.get_size()
+                self.log.debug(f"Free space: {core.get_size(self.fspace)} | Required space: {core.get_size(self.rspace)}")
+            loadingdialog = LoadingDialog(self.root, self, lambda p: process(), self.lang['calc_size'])
+            loadingdialog.exec()
 
-        # Check if there is enough free space
-        if self.fspace <= self.rspace:
-            self.log.error(f"Migration failed: not enough free space!")
-            qtw.QMessageBox.critical(
-                self.root,
-                self.lang['error'],
-                self.lang['enough_space_text'].replace(
-                    'FREE_SPACE', core.get_size(self.fspace)).replace(
-                    'REQUIRED_SPACE', core.get_size(self.rspace)))
-            return
+            # Check if there is enough free space
+            if self.fspace <= self.rspace:
+                self.log.error(f"Migration failed: not enough free space!")
+                qtw.QMessageBox.critical(
+                    self.root,
+                    self.lang['error'],
+                    self.lang['enough_space_text'].replace(
+                        'FREE_SPACE', core.get_size(self.fspace)).replace(
+                        'REQUIRED_SPACE', core.get_size(self.rspace)))
+                return
 
         # Create destination mod instance with ini files and loadorder
         def process(psignal: qtc.Signal):
@@ -398,7 +399,10 @@ class MainApp(qtw.QApplication):
         # Copy mods to new instance
         def process(psignal: qtc.Signal):
             for c, mod in enumerate(self.src_modinstance.mods.keys()):
-                psignal.emit({'value': c, 'max': len(self.src_modinstance.mods), 'text': self.lang['copying_mod'].replace("[MOD]", f"'{os.path.basename(mod)}'")})
+                if self.mode == 'copy':
+                    psignal.emit({'value': c, 'max': len(self.src_modinstance.mods), 'text': self.lang['copying_mod'].replace("[MOD]", f"'{os.path.basename(mod)}'")})
+                else:
+                    psignal.emit({'value': c, 'max': len(self.src_modinstance.mods), 'text': self.lang['linking_mod'].replace("[MOD]", f"'{os.path.basename(mod)}'")})
                 self.dst_modinstance.import_mod(os.path.join(self.src_modinstance.paths['instance_path'], mod))
         loadingdialog = LoadingDialog(self.root, self, process, self.lang['migrating_instance'])
         loadingdialog.exec()
@@ -407,7 +411,10 @@ class MainApp(qtw.QApplication):
         if self.src_modinstance.paths.get('download_path', None):
             def process(psignal: qtc.Signal):
                 for c, archive in enumerate(os.listdir(self.src_modinstance.paths['download_path'])):
-                    psignal.emit({'value': c, 'max': len(self.src_modinstance.mods), 'text': self.lang['copying_download'].replace("[NAME]", f"'{os.path.basename(archive)}'")})
+                    if self.mode == 'copy':
+                        psignal.emit({'value': c, 'max': len(self.src_modinstance.mods), 'text': self.lang['copying_download'].replace("[NAME]", f"'{os.path.basename(archive)}'")})
+                    else:
+                        psignal.emit({'value': c, 'max': len(self.src_modinstance.mods), 'text': self.lang['linking_download'].replace("[NAME]", f"'{os.path.basename(archive)}'")})
                     src_path = os.path.join(self.src_modinstance.paths['download_path'])
                     dst_path = os.path.join(self.dst_modinstance.paths['download_path'])
                     if self.mode == 'copy':
@@ -872,6 +879,7 @@ class MainApp(qtw.QApplication):
 
         # Add info label for copy mode
         copy_notice = qtw.QLabel(self.lang['copy_notice'])
+        copy_notice.hide()
         copy_mode_layout.addWidget(copy_notice, 1, 0, 1, 3)
 
         # Add inputbox for name
@@ -1049,7 +1057,7 @@ class MainApp(qtw.QApplication):
     
     def cancel_dst(self, event=None):
         self.destination_dialog.accept()
-
+    
     def dst_first_page(self):
         # Go to first page
         self.dst_instance_widget.hide()
