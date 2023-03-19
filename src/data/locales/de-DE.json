@@ -44,7 +44,7 @@
     "select_dst_instance_text": "Konfigurieren Sie die Instanz\nnach Ihren Wünschen.",
     "loading_instances": "Instanzen werden geladen...",
     "error_no_instances": "Keine Instanzen gefunden!",
-    "vortex_notice": "Von Vortex kann nur das aktive Profil migriert werden.\nStellen Sie zudem sicher, dass das Profil zurzeit deployed ist und die Plugins sortiert wurden.\nWählen Sie unten den Staging Folder von Vortex aus.\nNach dem Migrieren bitte in Vortex den Spielordner purgen.",
+    "vortex_notice": "Von Vortex kann nur das aktive Profil migriert werden.\nStellen Sie zudem sicher, dass das Profil zurzeit deployed ist und die Plugins mit Vortex sortiert wurden.\nWählen Sie unten den Staging Folder von Vortex aus.",
     "mod_manager": "Modmanager",
     "instance_name": "Name der Instanz",
     "instance_path": "Pfad der Instanz",
@@ -58,7 +58,7 @@
     "invalid_staging_folder": "Ungültiger Staging Folder. Stellen Sie sicher, dass Sie einen gültigen Staging Folder auswählen und das Profil deployed wurde.",
     "mode": "Modus",
     "copy_mode": "Kopiermodus",
-    "hardlink_mode": "Hardlink-Modus",
+    "hardlink_mode": "Hardlink-Modus (Empfohlen)",
     "calc_size": "Berechne benötigten Speicherplatz...",
     "enough_space_text": "Stellen Sie vor dem Migrieren sicher, dass Sie über genügend freien Speicher ([FREE_SPACE]) verfügen.\nFür die Instanz benötigt: [REQUIRED_SPACE]",
     "migrating_instance": "Instanz wird migriert...",
@@ -68,5 +68,5 @@
     "sorting_loadorder": "Ladereihenfolge wird sortiert...",
     "detected_root_files": "Es wurden Dateien erkannt, die von anderen Mod Managern als Vortex nicht verwaltet werden können.\nSie müssen daher direkt in das Spielverzeichnis kopiert werden, damit die Instanz im Ziel-Modmanager funktioniert.\nÖffnen Sie dazu Vortex und purgen Sie das Spielverzeichnis.\nKlicken Sie dann auf 'Fortsetzen', um den Migrationsprozess fertigzustellen.",
     "copying_files": "Kopiere Dateien...",
-    "hardlink_notice": "Bei dieser Methode werden harte Links verwendet, anstatt die Dateien zu kopieren.\nWindows wird denken, dass die Dateien doppelt vorhanden sind.\nDie Dateien im Mod Organizer-Ordner sind nur ein Spiegelbild der Vortex-Dateistruktur und verbrauchen daher nicht mehr Speicherplatz.\nAußerdem ist es viel schneller, Hardlinks zu erstellen, als jede Datei einzeln zu kopieren."
+    "hardlink_notice": "Bei dieser Methode werden Hardlinks verwendet, anstatt die Dateien zu kopieren.\nEs wird immitiert, dass die Dateien doppelt vorhanden sind.\nDie Dateien im Mod Organizer-Ordner sind lediglich ein Spiegelbild der Vortex-Dateistruktur und verbrauchen daher keinen weiteren Speicherplatz.\nAußerdem ist es viel schneller, Hardlinks zu erstellen, als jede Datei einzeln zu kopieren."
 }
