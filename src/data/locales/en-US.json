@@ -44,7 +44,7 @@
     "select_dst_instance_text": "Configure the instance according to your wishes.",
     "loading_instances": "Loading instances...",
     "error_no_instances": "Found no instances!",
-    "vortex_notice": "Only the active profile can be migrated from Vortex.\nAlso, make sure that the profile is currently deployed and the plugins are sorted.\nSelect the staging folder from Vortex below.\nAfter migrating, please purge the game folder in Vortex.",
+    "vortex_notice": "Only the active profile can be migrated from Vortex.\nAlso, make sure that the profile is currently deployed and the plugins are sorted via Vortex.\nSelect the mod staging folder from Vortex below.",
     "mod_manager": "Mod manager",
     "instance_name": "Instance name",
     "instance_path": "Instance path",
@@ -66,5 +66,6 @@
     "copying_download": "Copying download [NAME]...",
     "sorting_loadorder": "Sorting loadorder...",
     "detected_root_files": "Files have been detected that cannot be managed by mod managers other than Vortex.\nThey must therefore be copied directly to the game directory for the instance to work in the destination mod manager.\nTo do this, open Vortex and purge the game directory.\nThen click 'Continue' to complete the migration process.",
-    "copying_files": "Copying files..."
+    "copying_files": "Copying files...",
+    "hardlink_notice": "This method uses hard links instead of copying the files. Windows will think that the files exist twice.\nThe files in the Mod Organizer folder are just a mirror image of the Vortex file structure and thus do not consume any more disk space.\nAlso, creating hardlinks is much faster than copying each file.."
 }
