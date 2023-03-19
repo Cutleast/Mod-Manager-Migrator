@@ -66,5 +66,6 @@
     "copying_download": "Kopiere Download [NAME]...",
     "sorting_loadorder": "Ladereihenfolge wird sortiert...",
     "detected_root_files": "Es wurden Dateien erkannt, die von anderen Mod Managern als Vortex nicht verwaltet werden können.\nSie müssen daher direkt in das Spielverzeichnis kopiert werden, damit die Instanz im Ziel-Modmanager funktioniert.\nÖffnen Sie dazu Vortex und purgen Sie das Spielverzeichnis.\nKlicken Sie dann auf 'Fortsetzen', um den Migrationsprozess fertigzustellen.",
-    "copying_files": "Kopiere Dateien..."
+    "copying_files": "Kopiere Dateien...",
+    "hardlink_notice": "Bei dieser Methode werden harte Links verwendet, anstatt die Dateien zu kopieren.\nWindows wird denken, dass die Dateien doppelt vorhanden sind.\nDie Dateien im Mod Organizer-Ordner sind nur ein Spiegelbild der Vortex-Dateistruktur und verbrauchen daher nicht mehr Speicherplatz.\nAußerdem ist es viel schneller, Hardlinks zu erstellen, als jede Datei einzeln zu kopieren."
 }
