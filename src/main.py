@@ -64,6 +64,7 @@ class MainApp(qtw.QApplication):
         self.stagefile = None
         self.src_modinstance = None # VortexInstance or MO2Instance
         self.dst_modinstance = None # VortexInstance or MO2Instance
+        self.mode = 'copy' # 'copy' or 'hardlink'
         self.load_order = []
         self.start_date = time.strftime("%d.%m.%Y")
         self.start_time = time.strftime("%H:%M:%S")
@@ -982,9 +983,8 @@ class MainApp(qtw.QApplication):
         copy_mode_button = qtw.QPushButton(self.lang['copy_mode'])
         copy_mode_button.clicked.connect(lambda: (
             hardlink_mode_button.setChecked(False),
-            hardlink_mode_widget.hide(),
-            copy_mode_widget.show(),
-            copy_mode_button.setChecked(True)
+            copy_mode_button.setChecked(True),
+            self.set_mode('copy'),
         ))
         copy_mode_button.setCheckable(True)
         copy_mode_button.setChecked(True)
@@ -994,12 +994,9 @@ class MainApp(qtw.QApplication):
         hardlink_mode_button = qtw.QPushButton(self.lang['hardlink_mode'])
         hardlink_mode_button.clicked.connect(lambda: (
             copy_mode_button.setChecked(False),
-            copy_mode_widget.hide(),
-            hardlink_mode_widget.show(),
-            hardlink_mode_button.setChecked(True)
+            hardlink_mode_button.setChecked(True),
+            self.set_mode('hardlink'),
         ))
-        hardlink_mode_button.setDisabled(True)
-        hardlink_mode_button.setToolTip("Work in progress...")
         hardlink_mode_button.setCheckable(True)
         mode_layout.addWidget(hardlink_mode_button)
         ##############################################################
@@ -1357,6 +1354,9 @@ class MainApp(qtw.QApplication):
             self.settings_popup = None
     ##################################################################
     
+    def set_mode(self, mode: str='copy' | 'hardlink'):
+        self.mode = mode
+
     def update_title(self):
         # build title string
         title = f"{self.name}"

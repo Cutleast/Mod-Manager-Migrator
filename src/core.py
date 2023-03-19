@@ -417,8 +417,14 @@ size=0
         metadata = self.metadata[os.path.basename(folder)]
         modpath = os.path.join(self.paths['mods_path'], metadata['name'])
 
-        # Copy folder
-        shutil.copytree(folder, modpath)
+        # Copy folder if a migrate mode is 'copy'
+        if self.app.mode == 'copy':
+            shutil.copytree(folder, modpath)
+        # Create hardlinks otherwise
+        else:
+            for file in create_folder_list(folder):
+                os.makedirs(os.path.join(modpath, os.path.dirname(file)), exist_ok=True)
+                os.link(os.path.join(folder, file), os.path.join(modpath), file)
 
         # Write metadata to meta.ini
         with open(os.path.join(modpath, 'meta.ini'), 'w') as metafile:
