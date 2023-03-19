@@ -1,0 +1,324 @@
+/* QWidget */
+QWidget#root, QDialog {
+    background-color: <primary_bg>;
+    spacing: 15px;
+}
+QWidget#mainframe {
+    background-color: <secondary_bg>;
+    spacing: 15px;
+    border: 0px;
+    border-radius: 8px;
+}
+QWidget#commandframe {
+    background-color: <tertiary_bg>;
+    spacing: 15px;
+    border: 0px;
+    border-radius: 8px;
+}
+QWidget#panel {
+    background-color: <secondary_bg>;
+    border: 0px;
+    border-radius: 8px;
+    padding: 15px;
+    spacing: 15px;
+}
+
+/* QMenuBar, QMenu, QAction */
+QMenuBar {
+    background-color: <primary_bg>;
+    color: <text_color>;
+}
+QMenuBar::item {
+    padding: 4px;
+    background-color: transparent;
+    border-radius: 4px;
+}
+QMenuBar::item:selected {
+    background-color: <highlight_bg>;
+}
+QMenu {
+    background-color: <primary_bg>;
+    padding: 4px;
+    border-radius: 8px;
+}
+QMenu::item {
+    background-color: transparent;
+    color: <text_color>;
+    border-radius: 4px;
+    margin: 2px;
+    padding: 6px;
+}
+QMenu::item:selected {
+    background-color: <highlight_bg>;
+}
+QAction {
+    background-color: transparent;
+    color: <text_color>;
+    padding: 8px;
+    border-radius: 8px;
+}
+QAction:selected {
+    background-color: <highlight_bg>;
+}
+
+/* QGraphicsView */
+QGraphicsView, QGraphicsScene {
+    background: <primary_bg>;
+    border: 0px solid;
+    spacing: 0px;
+    padding: 0px;
+    margin: 0px;
+}
+
+/* QLabel */
+QLabel {
+    color: <text_color>;
+    font-family: <font>;
+    font-size: <font_size>;
+    border: 0px solid;
+    border-radius: 4px;
+    selection-background-color: <accent_color>;
+}
+QLabel#titlelabel {
+    font-family: <title_font>;
+    font-size: <title_size>;
+}
+QLabel#subtitlelabel {
+    font-family: <title_font>;
+    font-size: <subtitle_size>;
+}
+
+/* QPushButton */
+QPushButton {
+    background-color: <secondary_bg>;
+    color: <text_color>;
+    font-family: <font>;
+    font-size: <font_size>;
+    padding: 10px;
+    spacing: 15px;
+    border: 1px solid <secondary_bg>;
+    border-bottom: 1px solid <secondary_bg>;
+    border-radius: 4px;
+}
+QPushButton:hover {
+    background-color: <tertiary_bg>;
+}
+QPushButton:pressed {
+    background-color: <primary_bg>;
+}
+QPushButton:checked {
+    border: 1px solid <accent_color>;
+    color: <accent_color>;
+}
+QPushButton:disabled {
+    color: <highlight_bg>;
+}
+
+/* QSpinBox, QLineEdit */
+QSpinBox, QLineEdit {
+    background-color: <secondary_bg>;
+    color: <text_color>;
+    selection-background-color: <accent_color>;
+    font-family: <font>;
+    font-size: <font_size>;
+    padding: 10px;
+    spacing: 15px;
+    border: 0px solid;
+    border-radius: 4px;
+}
+QSpinBox:disabled, QLineEdit:disabled {
+    color: <highlight_bg>;
+}
+QSpinBox::down-button, QSpinBox::up-button {
+    border: 0px solid;
+}
+QLineEdit, QSpinBox {
+    border-bottom: 2px solid <secondary_bg>;
+}
+QLineEdit:hover, QLineEdit:focus,
+QSpinBox:hover, QSpinBox:focus {
+    border-bottom: 2px solid <accent_color>;
+}
+
+/* QToolTip */
+QToolTip {
+    background-color: <primary_bg>;
+    color: <text_color>;
+    font-family: <font>;
+    font-size: <font_size>;
+    spacing: 5px;
+    border: 0px solid <accent_color>;
+    border-radius: 4px;
+    opacity: 200;
+}
+
+/* QScrollArea & QScrollBar */
+QScrollArea#scrollarea, QWidget#scrollframe {
+    background-color: <tertiary_bg>;
+    border: 0px solid;
+    border-radius: 8px;
+    padding: 15px;
+    spacing: 15px;
+}
+QScrollBar {
+    background-color: <secondary_bg>;
+    border: 0px solid;
+    border-radius: 4px;
+    width: 10px;
+}
+QScrollBar::handle {
+    background-color: <highlight_bg>;
+    border: 0px solid;
+    border-radius: 4px;
+    width: 10px;
+}
+QScrollBar::handle:hover, QScrollBar::handle:pressed {
+    background-color: <accent_color>;
+}
+QScrollBar::up-button, QScrollBar::down-button {
+    width: 0px;
+    height: 0px;
+}
+QScrollBar::add-line, QScrollBar::sub-line {
+    width: 0px;
+    height: 0px;
+}
+QScrollBar::add-page, QScrollBar::sub-page {
+    background: none;
+}
+
+/* QMessageBox */
+QMessageBox {
+    background-color: <primary_bg>;
+    color: <text_color>;
+    text-align: center;
+}
+
+/* QProgressBar */
+QProgressBar {
+    background-color: <secondary_bg>;
+    color: <text_color>;
+    border: 0px solid;
+    border-radius: 8px;
+    padding: 0px;
+    height: 3px;
+}
+QProgressBar::chunk {
+    background-color: <accent_color>;
+    border: 0px solid;
+    border-radius: 8px;
+}
+
+/* QRadioButton & QCheckBox */
+QRadioButton, QCheckBox {
+    color: <text_color>;
+    font-family: <font>;
+    font-size: <font_size>;
+    border: 0px solid;
+    border-radius: 8px;
+    spacing: 15px;
+}
+QRadioButton:checked, QCheckBox:checked {
+    color: <accent_color>;
+}
+QCheckBox::indicator {
+    background-color: <primary_bg>;
+    width: 20px;
+    height: 20px;
+    border: 2px solid <primary_bg>;
+    border-radius: 4px;
+    padding: 2px;
+}
+QCheckBox::indicator:checked {
+    background-color: <accent_color>;
+    image: <checkbox_indicator>;
+    color: <text_color>;
+}
+QRadioButton::indicator {
+    background-color: <secondary_bg>;
+    width: 15px;
+    height: 15px;
+    border: 2px solid <secondary_bg>;
+    border-radius: 8px;
+}
+QRadioButton::indicator:checked {
+    background-color: <accent_color>;
+    border: 2px solid <secondary_bg>;
+    border-radius: 8px;
+}
+
+/* QComboBox */
+QComboBox {
+    background-color: <secondary_bg>;
+    color: <text_color>;
+    font-family: <font>;
+    font-size: <font_size>;
+    padding: 10px;
+    border: 0px solid;
+    border-radius: 4px;
+}
+QComboBox:editable {
+    border-bottom: 1px solid <accent_color>;
+}
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: right;
+
+    padding-right: 8px;
+
+    border-radius: 4px;
+    border: 0px solid;
+}
+QComboBox::down-arrow {
+    image: <dropdown_arrow>;
+    width: 24px;
+    height: 24px;
+    color: <text_color>;
+}
+QComboBox:hover {
+    background-color: <tertiary_bg>;
+}
+QComboBox QAbstractItemView {
+    border-radius: 4px;
+    border: 0px solid;
+    background-color: <secondary_bg>;
+    color: <text_color>;
+    font-family: <font>;
+    font-size: <font_size>;
+}
+QComboBox QAbstractItemView {
+    background-color: <secondary_bg>;
+    padding: 4px;
+    border-radius: 4px;
+}
+QComboBox QAbstractItemView::item {
+    background-color: transparent;
+    color: <text_color>;
+    border-radius: 4px;
+    margin: 2px;
+    padding: 4px;
+}
+QComboBox QAbstractItemView::item:selected {
+    background: <accent_color>;
+}
+
+/* QListWidget */
+QListWidget {
+    background-color: <secondary_bg>;
+    color: <text_color>;
+    font-family: <font>;
+    font-size: <font_size>;
+    selection-background-color: <highlight_bg>;
+    selection-color: <accent_color>;
+    border: 0px solid;
+    border-radius: 8px;
+}
+QListWidget::item {
+    border: 0px solid;
+    border-radius: 8px;
+    spacing: 5px;
+    padding: 5px;
+}
+QListWidget::item:selected {
+    background-color: <highlight_bg>;
+}
