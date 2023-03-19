@@ -1354,7 +1354,7 @@ class MainApp(qtw.QApplication):
             self.settings_popup = None
     ##################################################################
     
-    def set_mode(self, mode: str='copy' | 'hardlink'):
+    def set_mode(self, mode: str):
         self.mode = mode
 
     def update_title(self):
