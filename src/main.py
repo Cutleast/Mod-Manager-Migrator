@@ -870,19 +870,23 @@ class MainApp(qtw.QApplication):
         hardlink_notice = qtw.QLabel(self.lang['hardlink_notice'])
         copy_mode_layout.addWidget(hardlink_notice, 0, 0, 1, 3)
 
+        # Add info label for copy mode
+        copy_notice = qtw.QLabel(self.lang['copy_notice'])
+        copy_mode_layout.addWidget(copy_notice, 1, 0, 1, 3)
+
         # Add inputbox for name
         label = qtw.QLabel(self.lang['instance_name'])
-        copy_mode_layout.addWidget(label, 1, 0)
+        copy_mode_layout.addWidget(label, 2, 0)
         self.dst_name_box = qtw.QLineEdit()
         self.dst_name_box.setText(self.src_modinstance.name)
-        copy_mode_layout.addWidget(self.dst_name_box, 1, 1)
+        copy_mode_layout.addWidget(self.dst_name_box, 2, 1)
         
         # Add inputbox for instance path
         label = qtw.QLabel(self.lang['instance_path'])
-        copy_mode_layout.addWidget(label, 2, 0)
+        copy_mode_layout.addWidget(label, 3, 0)
         self.dst_path_box = qtw.QLineEdit()
         self.dst_path_box.setText(os.path.join(os.getenv('LOCALAPPDATA'), self.destination, self.dst_name_box.text()))
-        copy_mode_layout.addWidget(self.dst_path_box, 2, 1)
+        copy_mode_layout.addWidget(self.dst_path_box, 3, 1)
         def browse_path():
             file_dialog = qtw.QFileDialog(self.destination_dialog)
             file_dialog.setWindowTitle(self.lang['browse'])
@@ -899,14 +903,14 @@ class MainApp(qtw.QApplication):
                 self.dst_overwritepath_box.setText(os.path.join(folder, 'overwrite'))
         browse_button = qtw.QPushButton(self.lang['browse'])
         browse_button.clicked.connect(browse_path)
-        copy_mode_layout.addWidget(browse_button, 2, 2)
+        copy_mode_layout.addWidget(browse_button, 3, 2)
 
         # Add inputbox for downloads path
         label = qtw.QLabel(self.lang['download_path'])
-        copy_mode_layout.addWidget(label, 3, 0)
+        copy_mode_layout.addWidget(label, 4, 0)
         self.dst_dlpath_box = qtw.QLineEdit()
         self.dst_dlpath_box.setText(os.path.join(self.dst_path_box.text(), 'downloads'))
-        copy_mode_layout.addWidget(self.dst_dlpath_box, 3, 1)
+        copy_mode_layout.addWidget(self.dst_dlpath_box, 4, 1)
         def browse_dlpath():
             file_dialog = qtw.QFileDialog(self.destination_dialog)
             file_dialog.setWindowTitle(self.lang['browse'])
@@ -919,14 +923,14 @@ class MainApp(qtw.QApplication):
                 self.dst_dlpath_box.setText(folder)
         browse_button = qtw.QPushButton(self.lang['browse'])
         browse_button.clicked.connect(browse_dlpath)
-        copy_mode_layout.addWidget(browse_button, 3, 2)
+        copy_mode_layout.addWidget(browse_button, 4, 2)
 
         # Add inputbox for mods path
         label = qtw.QLabel(self.lang['mods_path'])
-        copy_mode_layout.addWidget(label, 4, 0)
+        copy_mode_layout.addWidget(label, 5, 0)
         self.dst_modspath_box = qtw.QLineEdit()
         self.dst_modspath_box.setText(os.path.join(self.dst_path_box.text(), 'mods'))
-        copy_mode_layout.addWidget(self.dst_modspath_box, 4, 1)
+        copy_mode_layout.addWidget(self.dst_modspath_box, 5, 1)
         def browse_modspath():
             file_dialog = qtw.QFileDialog(self.destination_dialog)
             file_dialog.setWindowTitle(self.lang['browse'])
@@ -939,14 +943,14 @@ class MainApp(qtw.QApplication):
                 self.dst_modspath_box.setText(folder)
         browse_button = qtw.QPushButton(self.lang['browse'])
         browse_button.clicked.connect(browse_modspath)
-        copy_mode_layout.addWidget(browse_button, 4, 2)
+        copy_mode_layout.addWidget(browse_button, 5, 2)
 
         # Add inputbox for profiles path
         label = qtw.QLabel(self.lang['profiles_path'])
-        copy_mode_layout.addWidget(label, 5, 0)
+        copy_mode_layout.addWidget(label, 6, 0)
         self.dst_profilespath_box = qtw.QLineEdit()
         self.dst_profilespath_box.setText(os.path.join(self.dst_path_box.text(), 'profiles'))
-        copy_mode_layout.addWidget(self.dst_profilespath_box, 5, 1)
+        copy_mode_layout.addWidget(self.dst_profilespath_box, 6, 1)
         def browse_profilespath():
             file_dialog = qtw.QFileDialog(self.destination_dialog)
             file_dialog.setWindowTitle(self.lang['browse'])
@@ -959,14 +963,14 @@ class MainApp(qtw.QApplication):
                 self.dst_profilespath_box.setText(folder)
         browse_button = qtw.QPushButton(self.lang['browse'])
         browse_button.clicked.connect(browse_profilespath)
-        copy_mode_layout.addWidget(browse_button, 5, 2)
+        copy_mode_layout.addWidget(browse_button, 6, 2)
 
         # Add inputbox for overwrite path
         label = qtw.QLabel(self.lang['overwrite_path'])
-        copy_mode_layout.addWidget(label, 6, 0)
+        copy_mode_layout.addWidget(label, 7, 0)
         self.dst_overwritepath_box = qtw.QLineEdit()
         self.dst_overwritepath_box.setText(os.path.join(self.dst_path_box.text(), 'overwrite'))
-        copy_mode_layout.addWidget(self.dst_overwritepath_box, 6, 1)
+        copy_mode_layout.addWidget(self.dst_overwritepath_box, 7, 1)
         def browse_overwritepath():
             file_dialog = qtw.QFileDialog(self.destination_dialog)
             file_dialog.setWindowTitle(self.lang['browse'])
@@ -979,7 +983,7 @@ class MainApp(qtw.QApplication):
                 self.dst_overwritepath_box.setText(folder)
         browse_button = qtw.QPushButton(self.lang['browse'])
         browse_button.clicked.connect(browse_overwritepath)
-        copy_mode_layout.addWidget(browse_button, 6, 2)
+        copy_mode_layout.addWidget(browse_button, 7, 2)
 
         # Add widget for hardlink mode
         hardlink_mode_widget = qtw.QWidget()
@@ -990,6 +994,7 @@ class MainApp(qtw.QApplication):
         hardlink_mode_button = qtw.QPushButton(self.lang['hardlink_mode'])
         hardlink_mode_button.clicked.connect(lambda: (
             copy_mode_button.setChecked(False),
+            copy_notice.hide(),
             hardlink_notice.show(),
             hardlink_mode_button.setChecked(True),
             self.set_mode('hardlink'),
@@ -1003,6 +1008,7 @@ class MainApp(qtw.QApplication):
         copy_mode_button.clicked.connect(lambda: (
             hardlink_mode_button.setChecked(False),
             hardlink_notice.hide(),
+            copy_notice.show(),
             copy_mode_button.setChecked(True),
             self.set_mode('copy'),
         ))
