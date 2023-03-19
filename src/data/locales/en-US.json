@@ -5,6 +5,7 @@
     "show_details": "Show details...",
     "hide_details": "Hide details...",
     "continue": "Continue",
+    "ignore": "Ignore",
     "next": "Next",
     "back": "Back",
     "warning": "Warning",
@@ -43,7 +44,7 @@
     "select_dst_instance_text": "Configure the instance according to your wishes.",
     "loading_instances": "Loading instances...",
     "error_no_instances": "Found no instances!",
-    "vortex_notice": "Only the active profile can be migrated from Vortex.\nAlso, make sure that the profile is currently deployed.\nSelect the staging folder from Vortex below.\nAfter migrating, please purge the game folder in Vortex.",
+    "vortex_notice": "Only the active profile can be migrated from Vortex.\nAlso, make sure that the profile is currently deployed and the plugins are sorted.\nSelect the staging folder from Vortex below.\nAfter migrating, please purge the game folder in Vortex.",
     "mod_manager": "Mod manager",
     "instance_name": "Instance name",
     "instance_path": "Instance path",
@@ -63,5 +64,7 @@
     "migration_complete": "Instance successfully migrated.",
     "copying_mod": "Copying mod [MOD]...",
     "copying_download": "Copying download [NAME]...",
-    "sorting_loadorder": "Sorting loadorder..."
+    "sorting_loadorder": "Sorting loadorder...",
+    "detected_root_files": "Files have been detected that cannot be managed by mod managers other than Vortex.\nThey must therefore be copied directly to the game directory for the instance to work in the destination mod manager.\nTo do this, open Vortex and purge the game directory.\nThen click 'Continue' to complete the migration process.",
+    "copying_files": "Copying files..."
 }

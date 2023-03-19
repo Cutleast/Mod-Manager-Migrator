@@ -5,6 +5,7 @@
     "show_details": "Details anzeigen...",
     "hide_details": "Details verstecken...",
     "continue": "Fortfahren",
+    "ignore": "Ignorieren",
     "next": "Weiter",
     "back": "Zurück",
     "warning": "Warnung",
@@ -43,7 +44,7 @@
     "select_dst_instance_text": "Konfigurieren Sie die Instanz\nnach Ihren Wünschen.",
     "loading_instances": "Instanzen werden geladen...",
     "error_no_instances": "Keine Instanzen gefunden!",
-    "vortex_notice": "Von Vortex kann nur das aktive Profil migriert werden.\nStellen Sie zudem sicher, dass das Profil zurzeit deployed ist.\nWählen Sie unten den Staging Folder von Vortex aus.\nNach dem Migrieren bitte in Vortex den Spielordner purgen.",
+    "vortex_notice": "Von Vortex kann nur das aktive Profil migriert werden.\nStellen Sie zudem sicher, dass das Profil zurzeit deployed ist und die Plugins sortiert wurden.\nWählen Sie unten den Staging Folder von Vortex aus.\nNach dem Migrieren bitte in Vortex den Spielordner purgen.",
     "mod_manager": "Modmanager",
     "instance_name": "Name der Instanz",
     "instance_path": "Pfad der Instanz",
@@ -63,5 +64,7 @@
     "migration_complete": "Instanz erfolgreich migriert.",
     "copying_mod": "Kopiere Mod [MOD]...",
     "copying_download": "Kopiere Download [NAME]...",
-    "sorting_loadorder": "Ladereihenfolge wird sortiert..."
+    "sorting_loadorder": "Ladereihenfolge wird sortiert...",
+    "detected_root_files": "Es wurden Dateien erkannt, die von anderen Mod Managern als Vortex nicht verwaltet werden können.\nSie müssen daher direkt in das Spielverzeichnis kopiert werden, damit die Instanz im Ziel-Modmanager funktioniert.\nÖffnen Sie dazu Vortex und purgen Sie das Spielverzeichnis.\nKlicken Sie dann auf 'Fortsetzen', um den Migrationsprozess fertigzustellen.",
+    "copying_files": "Kopiere Dateien..."
 }

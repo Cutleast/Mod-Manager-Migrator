@@ -3,6 +3,7 @@ import msgpack
 import os
 import winreg
 import shutil
+from glob import glob
 
 
 # Create class for modding instance ##################################
@@ -115,26 +116,44 @@ class VortexInstance(ModInstance):
         self.stagefile.parse_file()
         self.stagefile.get_modlist()
         self.mods = self.stagefile.modfiles
+
+        # Scan for other deployment files
+        self.stagefiles = [] # List of other stagefiles
+        for file in glob(os.path.join(self.stagefile.dir, 'vortex.deployment.*.msgpack')):
+            if os.path.isfile(file) and (file != self.stagefile):
+                stagefile = StageFile(file)
+                stagefile.parse_file()
+                stagefile.get_modlist()
+                self.stagefiles.append(stagefile)
+                self.app.log.debug(f"Found stagefile: {os.path.basename(stagefile.path)}")
     
     def __repr__(self):
         return "VortexInstance"
     
-    def get_mod_metadata(self, modname: str):
+    @staticmethod
+    def get_mod_metadata(modname: str):
         metadata = {}
         data = [int(split) for split in modname.split("-") if split.isnumeric()]
-        modid = data[0]
-        fileid = data[-1]
-        data.pop(0)
-        data.pop(-1)
-        data = [str(d) for d in data]
-        version = ".".join(data)
-        name = modname.split(str(modid))[0].strip("-")
-        metadata = {
-            'name': name,
-            'modid': modid,
-            'fileid': fileid,
-            'version': version,
-        }
+        try:
+            modid = data.pop(0)
+            fileid = data.pop(-1)
+            data = [str(d) for d in data]
+            version = ".".join(data)
+            name = modname.split(str(modid))[0].strip("-")
+            metadata = {
+                'name': name,
+                'modid': modid,
+                'fileid': fileid,
+                'version': version,
+            }
+        except IndexError:
+            print(f"Failed to get metadata from '{modname}': Insufficient data to parse!")
+            metadata = {
+                'name': modname,
+                'modid': 0,
+                'fileid': 0,
+                'version': ""
+            }
 
         return metadata
     
@@ -242,6 +261,13 @@ size=0
         shutil.copy(os.path.join(ini_path, 'SkyrimCustom.ini'), os.path.join(prof_path, 'skyrimcustom.ini'))
         shutil.copy(os.path.join(ini_path, 'SkyrimPrefs.ini'), os.path.join(prof_path, 'skyrimprefs.ini'))
         self.app.log.debug("Copied ini files from Skyrim folder.")
+
+        # Copy loadorder.txt and plugins.txt from User\AppData\Local\Skyrim Special Edition
+        if self.app.source == 'Vortex':
+            path = os.path.join(os.getenv('LOCALAPPDATA'), 'Skyrim Special Edition')
+            shutil.copy(os.path.join(path, 'loadorder.txt'), os.path.join(prof_path, 'loadorder.txt'))
+            shutil.copy(os.path.join(path, 'plugins.txt'), os.path.join(prof_path, 'plugins.txt'))
+            self.app.log.debug("Copied loadorder.txt and plugins.txt from Skyrim LocalAppData Folder.")
 
         self.app.log.info(f"Created MO2 instance.")
     

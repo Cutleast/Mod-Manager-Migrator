@@ -264,9 +264,9 @@ class MainApp(qtw.QApplication):
         self.mainlayout.addWidget(self.dst_button, 0, 2)
 
         # Add right arrow icon
-        label = qtw.QLabel()
-        label.setPixmap(qta.icon('fa5s.chevron-right', color=self.theme['text_color']).pixmap(120, 120))
-        self.mainlayout.addWidget(label, 1, 1)
+        self.mig_icon = qtw.QLabel()
+        self.mig_icon.setPixmap(qta.icon('fa5s.chevron-right', color=self.theme['text_color']).pixmap(120, 120))
+        self.mainlayout.addWidget(self.mig_icon, 1, 1)
 
         # Show window maximized
         #self.root.resize(1000, 600)
@@ -347,6 +347,52 @@ class MainApp(qtw.QApplication):
         loadingdialog = LoadingDialog(self.root, self, process, self.lang['sorting_loadorder'])
         loadingdialog.exec()
         self.dst_modinstance.create_instance()
+
+        # Check for files that have to be copied
+        # directly into the skyrim folder
+        # since MO2 cannot manage those
+        if self.source == 'Vortex':
+            if self.src_modinstance.stagefiles:
+                message_box = qtw.QMessageBox(self.root)
+                message_box.setWindowIcon(self.root.windowIcon())
+                message_box.setStyleSheet(self.stylesheet)
+                message_box.setWindowTitle(self.lang['migrating_instance'])
+                message_box.setText(self.lang['detected_root_files'])
+                message_box.setStandardButtons(qtw.QMessageBox.StandardButton.Ignore | qtw.QMessageBox.StandardButton.Yes)
+                message_box.setDefaultButton(qtw.QMessageBox.StandardButton.Yes)
+                ignore_button = message_box.button(qtw.QMessageBox.StandardButton.Ignore)
+                ignore_button.setText(self.lang['ignore'])
+                continue_button = message_box.button(qtw.QMessageBox.StandardButton.Yes)
+                continue_button.setText(self.lang['continue'])
+                continue_button.setDisabled(True)
+
+                timer = qtc.QTimer()
+                timer.setInterval(1000)
+                def check_purged():
+                    if message_box is not None:
+                        if os.path.isfile(self.src_modinstance.stagefile.path):
+                            timer.start()
+                        else:
+                            continue_button.setDisabled(False)
+                timer.timeout.connect(check_purged)
+                timer.start()
+
+                choice = message_box.exec()
+                message_box = None
+                
+                if choice == qtw.QMessageBox.StandardButton.Yes:
+                    # Copy root files directly into game directory
+                    def process(psignal: qtc.Signal):
+                        mods_to_copy = []
+                        skyrim_path = os.path.join(core.get_steam_path(), 'steamapps', 'common', 'Skyrim Special Edition')
+                        for stagefile in self.src_modinstance.stagefiles:
+                            for mod in stagefile.mods.keys():
+                                mods_to_copy.append(mod)
+                        for c, mod in enumerate(mods_to_copy):
+                            psignal.emit({'value': c, 'max': len(mods_to_copy), 'text': f"{self.src_modinstance.get_mod_metadata(mod)['name']} - {c}/{len(mods_to_copy)}"})
+                            shutil.copytree(os.path.join(self.src_modinstance.stagefile.dir, mod), skyrim_path, dirs_exist_ok=True)
+                    loadingdialog = LoadingDialog(self.root, self, process, text=self.lang['copying_files'])
+                    loadingdialog.exec()
 
         # Copy mods to new instance
         def process(psignal: qtc.Signal):
@@ -1114,6 +1160,9 @@ class MainApp(qtw.QApplication):
         # Disable add source button
         self.dst_button.setDisabled(True)
         self.mig_button.setDisabled(False)
+
+        # Colorize migration icon
+        self.mig_icon.setPixmap(qta.icon('fa5s.chevron-right', color=self.theme['accent_color']).pixmap(120, 120))
 
         # Close dialog
         self.destination_dialog.accept()
