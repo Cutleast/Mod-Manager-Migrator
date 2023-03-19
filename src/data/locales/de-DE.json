@@ -57,7 +57,7 @@
     "paths": "Pfade",
     "invalid_staging_folder": "Ungültiger Staging Folder. Stellen Sie sicher, dass Sie einen gültigen Staging Folder auswählen und das Profil deployed wurde.",
     "copy_mode": "Kopiermodus",
-    "hardlink_mode": "Hardlink-Modus",
+    "hardlink_mode": "Hardlink-Modus (Empfohlen)",
     "calc_size": "Berechne benötigten Speicherplatz...",
     "enough_space_text": "Stellen Sie vor dem Migrieren sicher, dass Sie über genügend freien Speicher ([FREE_SPACE]) verfügen.\nFür die Instanz benötigt: [REQUIRED_SPACE]",
     "migrating_instance": "Instanz wird migriert...",

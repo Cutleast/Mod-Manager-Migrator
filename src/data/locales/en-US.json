@@ -57,7 +57,7 @@
     "paths": "Paths",
     "invalid_staging_folder": "Invalid staging folder. Make sure that you select a valid staging folder and the profile has been deployed.",
     "copy_mode": "Copy mode",
-    "hardlink_mode": "Hardlink mode",
+    "hardlink_mode": "Hardlink mode (Recommended)",
     "calc_size": "Calculate required disk space...",
     "enough_space_text": "Before migrating, make sure you have enough free space ([FREE_SPACE]).\nRequired for the instance: [REQUIRED_SPACE]",
     "migrating_instance": "Migrating instance...",
