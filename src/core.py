@@ -1,12 +1,49 @@
-from main import MainApp, NUMBER_OF_THREADS
-import msgpack
+"""
+Part of MMM. Contains core classes and functions
+"""
+
 import os
 import queue
-import threading
-import winreg
-import time
 import shutil
+import sys
+import threading
+import time
+import winreg
 from glob import glob
+
+import msgpack
+
+from main import NUMBER_OF_THREADS, MainApp, qtw
+
+
+# Create class to copy stdout to log file ############################
+class StdoutPipe:
+    def __init__(self, app: MainApp, tag="stdout", encoding="utf8"):
+        self.app = app
+        self.tag = tag
+        self.encoding = encoding
+        self.file = open(self.app.log_path, "a")
+        self.stdout = sys.stdout
+        self.stderr = sys.stderr
+        sys.stdout = self
+        sys.stderr = self
+    def __del__(self):
+        sys.stdout = self.stdout
+        sys.stderr = self.stderr
+        self.file.close()
+    def write(self, string):
+        if string not in self.app.protocol:
+            self.app.protocol += string
+            try:
+                self.file.write(string)
+            except Exception as ex:
+                print(f"Logging error occured: {str(ex)}")
+        try:
+            self.stdout.write(string)
+        except AttributeError:
+            pass
+    def flush(self):
+        self.file.flush()
 
 
 # Create class for modding instance ##################################
@@ -101,7 +138,7 @@ class StageFile:
             if filename.lower() in files:
                 return mod
         else:
-            print(f"File {filename} not found!")
+            print(f"File '{filename}' not found!")
         
             return None
 
@@ -168,30 +205,67 @@ class VortexInstance(ModInstance):
         for c, mod in enumerate(stagefile.loadorder):
             self.app.log.debug(f"Scanning mod '{mod}'... ({c}/{len(stagefile.loadorder)})")
             if psignal is not None:
-                psignal.emit({'value': c, 'max': len(stagefile.loadorder), 'text': f"{mod} - {c}/{len(stagefile.loadorder)}"})
+                progress = {
+                    'value': c,
+                    'max': len(stagefile.loadorder),
+                    'text': f"{self.app.lang['sorting_loadorder']} ({c}/{len(stagefile.loadorder)})",
+                    'show2': True,
+                    'value2': 0,
+                    'max2': 0,
+                    'text2': mod
+                }
+                psignal.emit(progress)
             overwriting_mods = []
+            overwritten_files = []
             
             modfiles = stagefile.all_modfiles[mod]
 
             # skip mod if all files get deployed
-            if len(modfiles) == len(stagefile.modfiles[mod]):
+            overwritten_count = len(modfiles) - len(stagefile.modfiles[mod])
+            if not overwritten_count:
+                self.app.log.debug(f"Skipped mod: all files get deployed.")
                 continue
+            else:
+                self.app.log.debug(f"Overwritten files: {overwritten_count} (Total: {len(modfiles)})")
 
             q = queue.Queue()
             for file in modfiles:
                 q.put(file)
 
             def thread():
-                while True:
+                while len(overwritten_files) < overwritten_count:
                     file = q.get()
+                    q.task_done()
                     overwriting_mod = stagefile.get_mod_by_filename(file)
                     if (overwriting_mod is not None) and (overwriting_mod != mod) and (overwriting_mod not in overwriting_mods):
                         overwriting_mods.append(overwriting_mod)
-                    q.task_done()
+                        overwritten_files.append(file)
+                with q.mutex:
+                    q.queue.clear()
+                    q.all_tasks_done.notify_all()
+                    q.unfinished_tasks = 0
             
             for t in range(NUMBER_OF_THREADS):
                 worker = threading.Thread(target=thread, daemon=True, name=f"SortThread-{t+1}")
                 worker.start()
+            
+            def pthread():
+                while q.qsize():
+                    if psignal:
+                        progress = {
+                            'value': c,
+                            'max': len(stagefile.loadorder),
+                            'text': f"{self.app.lang['sorting_loadorder']} ({c}/{len(stagefile.loadorder)})",
+                            'show2': True,
+                            'value2': int(len(modfiles) - q.unfinished_tasks),
+                            'max2': len(modfiles),
+                            'text2': f"{mod} ({len(modfiles) - q.unfinished_tasks}/{len(modfiles)})"
+                        }
+                        psignal.emit(progress)
+                        time.sleep(.5)
+                    print(f"{q.unfinished_tasks = } ({((len(modfiles) - q.unfinished_tasks) / len(modfiles))*100:.3f}%) (Found: {len(overwritten_files)}/{overwritten_count})                           ", end='\r')
+            #threading.Thread(target=pthread, daemon=True, name='PThread').start()
+            pthread()
             
             q.join()
             
@@ -254,7 +328,7 @@ class VortexInstance(ModInstance):
 
         different_files = []
         for file in loadorder_files:
-            q.put(file)
+            q.put(file.lower())
         
         def thread():
             while True:
@@ -297,7 +371,7 @@ class VortexInstance(ModInstance):
         #self.check_loadorder(self.stagefile, loadorder)
         #loadorder.reverse()
 
-        self.app.log.debug(f"Sorting took {time.time() - starttime} second(s). ({(time.time() - starttime) / 60})")
+        self.app.log.debug(f"Sorting took {(time.time() - starttime):.2f} second(s). ({((time.time() - starttime) / 60):.2f} minute(s))")
 
         return loadorder
 
@@ -422,7 +496,7 @@ size=0
             shutil.copytree(folder, modpath)
         # Create hardlinks otherwise
         else:
-            for file in create_folder_list(folder):
+            for file in create_folder_list(folder, False):
                 os.makedirs(os.path.join(modpath, os.path.dirname(file)), exist_ok=True)
                 os.link(os.path.join(folder, file), os.path.join(modpath, file))
 
@@ -494,7 +568,9 @@ def create_folder_list(folder, lower=True):
             if f not in ['.gitignore', 'meta.ini']: # check if in blacklist
                 path = os.path.join(root, f)
                 path = path.removeprefix(f"{folder}\\")
-                files.append(path.lower())
+                if lower:
+                    path = path.lower()
+                files.append(path)
 
     return files
 
@@ -543,4 +619,21 @@ def get_steam_path():
         steam_path = os.path.normpath(winreg.QueryValueEx(hkey, "installPath")[0])
     
     return steam_path
+
+# Define function to move windows to center of parent ################
+def center(widget: qtw.QWidget):
+    """
+    Moves <widget> to center of its parent.
+    """
+
+    size = widget.size()
+    w = size.width()
+    h = size.height()
+    rsize = widget.parent().size()
+    rw = rsize.width()
+    rh = rsize.height()
+    x = int((rw / 2) - (w / 2))
+    y = int((rh / 2) - (h / 2))
+    widget.move(x, y)
+
 
