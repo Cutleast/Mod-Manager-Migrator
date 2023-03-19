@@ -1,7 +1,10 @@
-from main import MainApp
+from main import MainApp, NUMBER_OF_THREADS
 import msgpack
 import os
+import queue
+import threading
 import winreg
+import time
 import shutil
 from glob import glob
 
@@ -157,17 +160,144 @@ class VortexInstance(ModInstance):
 
         return metadata
     
+    def sort_loadorder(self, stagefile: StageFile, psignal=None):
+        self.app.log.debug("Scanning mods...")
+
+        new_loadorder = stagefile.loadorder.copy()
+        overwrites = ""
+        for c, mod in enumerate(stagefile.loadorder):
+            self.app.log.debug(f"Scanning mod '{mod}'... ({c}/{len(stagefile.loadorder)})")
+            if psignal is not None:
+                psignal.emit({'value': c, 'max': len(stagefile.loadorder), 'text': f"{mod} - {c}/{len(stagefile.loadorder)}"})
+            overwriting_mods = []
+            
+            modfiles = stagefile.all_modfiles[mod]
+
+            # skip mod if all files get deployed
+            if len(modfiles) == len(stagefile.modfiles[mod]):
+                continue
+
+            q = queue.Queue()
+            for file in modfiles:
+                q.put(file)
+
+            def thread():
+                while True:
+                    file = q.get()
+                    overwriting_mod = stagefile.get_mod_by_filename(file)
+                    if (overwriting_mod is not None) and (overwriting_mod != mod) and (overwriting_mod not in overwriting_mods):
+                        overwriting_mods.append(overwriting_mod)
+                    q.task_done()
+            
+            for t in range(NUMBER_OF_THREADS):
+                worker = threading.Thread(target=thread, daemon=True, name=f"SortThread-{t+1}")
+                worker.start()
+            
+            q.join()
+            
+            if overwriting_mods:
+                _overwriting_mods = '\n    '.join(overwriting_mods)
+                overwrites += f"\nMod: {mod}\nOverwritten by:\n    {_overwriting_mods}\n{'-'*100}"
+
+                self.app.log.debug(f"Sorting mod '{mod}'...")
+
+                old_index = index = new_loadorder.index(mod)
+
+                # get smallest index of all overwriting mods
+                index = min([new_loadorder.index(overwriting_mod) for overwriting_mod in overwriting_mods])
+                self.app.log.debug(f"Current index: {old_index} | Minimal index of overwriting mods: {index}")
+
+                if old_index > index:
+                    new_loadorder.insert(index, new_loadorder.pop(old_index))
+                    self.app.log.debug(f"Moved mod '{mod}' from index {old_index} to {index}.")
+        
+        if psignal is not None:
+            psignal.emit({})
+
+        stagefile_files = {}
+        for file in stagefile.data['files']:
+            stagefile_files[file['relPath'].lower()] = file['source']
+        while different_files := self.check_loadorder(stagefile, new_loadorder):
+            loadorder_files = {}
+            for c, mod in enumerate(new_loadorder):
+                files = stagefile.all_modfiles[mod]
+                for file in files:
+                    loadorder_files[file.lower()] = mod
+
+            for file in different_files:
+                mod = loadorder_files[file]
+                old_index = new_loadorder.index(mod)
+                new_index = new_loadorder.index(stagefile_files[file])
+                if old_index > new_index:
+                    new_loadorder.insert(new_index, new_loadorder.pop(old_index))
+                    self.app.log.debug(f"Moved mod '{mod}' from index {old_index} to {new_index}.")
+        
+        new_loadorder.reverse()
+
+        self.app.log.info("Created loadorder from Vortex deployment file.")
+
+        return new_loadorder
+
+    def check_loadorder(self, stagefile: StageFile, loadorder: list):
+        self.app.log.info("Checking loadorder...")
+        stagefile_files = {}
+        for file in stagefile.data['files']:
+            stagefile_files[file['relPath'].lower()] = file['source']
+        
+        loadorder_files = {}
+        for c, mod in enumerate(loadorder):
+            files = stagefile.all_modfiles[mod]
+            for file in files:
+                loadorder_files[file.lower()] = mod
+        
+        q = queue.Queue()
+
+        different_files = []
+        for file in loadorder_files:
+            q.put(file)
+        
+        def thread():
+            while True:
+                file = q.get()
+                mod = loadorder_files[file]
+                if file not in stagefile_files:
+                    self.app.log.debug(f"File: {file}")
+                    self.app.log.debug(f"Loadorder mod: {mod} ({loadorder.index(mod)})")
+                    self.app.log.debug(f"Stagefile mod: NOT FOUND!")
+                    self.app.log.debug("-"*50)
+                    different_files.append(file)
+                elif mod != stagefile_files[file]:
+                    self.app.log.debug(f"File: {file}")
+                    self.app.log.debug(f"Loadorder mod: {mod} ({loadorder.index(mod)})")
+                    self.app.log.debug(f"Stagefile mod: {stagefile_files[file]} ({loadorder.index(stagefile_files[file])})")
+                    self.app.log.debug("-"*50)
+                    different_files.append(file)
+                
+                q.task_done()
+        
+        for t in range(NUMBER_OF_THREADS):
+            worker = threading.Thread(target=thread, daemon=True, name=f"CheckThread-{t+1}")
+            worker.start()
+        
+        q.join()
+
+        self.app.log.info(f"Found {len(different_files)} difference(s).")
+
+        return different_files
+
     def get_loadorder(self, psignal=None):
+        self.app.log.debug("Reading mod files...")
+        starttime = time.time()
         for mod in self.stagefile.modfiles.keys():
             self.stagefile.all_modfiles[mod] = create_folder_list(os.path.join(self.stagefile.dir, mod))
 
-        loadorder = vortex2order(self.stagefile)
+        loadorder = self.sort_loadorder(self.stagefile, psignal)
     
-        loadorder.reverse()
+        #loadorder.reverse()
+        #self.check_loadorder(self.stagefile, loadorder)
+        #loadorder.reverse()
 
-        check_loadorder(self.stagefile, loadorder)
-
-        loadorder.reverse()
+        self.app.log.debug(f"Sorting took {time.time() - starttime} second(s). ({(time.time() - starttime) / 60})")
 
         return loadorder
 
@@ -229,6 +359,17 @@ first_start=true
 base_directory={instance_path}
 download_directory={download_path}
 style=Paper Dark.qss
+
+[customExecutables]
+size=1
+1\\arguments=
+1\\binary={skyrim_path}/skse64_loader.exe
+1\\hide=false
+1\\ownicon=true
+1\\steamAppID=
+1\\title=SKSE
+1\\toolbar=false
+1\\workingDirectory={skyrim_path}
 
 [PluginPersistance]
 Python%20Proxy\\tryInit=false
@@ -332,114 +473,6 @@ repository=Nexus
         # Return list with found instances
         return instances
 
-
-# Define function to rebuild loadorder from Vortex stagefile #########
-def vortex2order(stagefile: StageFile):
-    print("Scanning mods...")
-
-    new_loadorder = stagefile.loadorder.copy()
-    overwrites = ""
-    for c, mod in enumerate(stagefile.loadorder):
-        print(f"Scanning mod '{mod}'... ({c}/{len(stagefile.loadorder)})")
-        overwriting_mods = []
-        
-        modfiles = stagefile.all_modfiles[mod]
-
-        for file in modfiles:
-            overwriting_mod = stagefile.get_mod_by_filename(file)
-            if (overwriting_mod is not None) and (overwriting_mod != mod) and (overwriting_mod not in overwriting_mods):
-                overwriting_mods.append(overwriting_mod)
-        
-        if overwriting_mods:
-            _overwriting_mods = '\n    '.join(overwriting_mods)
-            overwrites += f"\nMod: {mod}\nOverwritten by:\n    {_overwriting_mods}\n{'-'*100}"
-
-            print(f"Sorting mod '{mod}'...")
-
-            old_index = index = new_loadorder.index(mod)
-
-            # get smallest index of all overwriting mods
-            index = min([new_loadorder.index(overwriting_mod) for overwriting_mod in overwriting_mods])
-            print(f"Current index: {old_index} | Minimal index of overwriting mods: {index}")
-
-            if old_index > index:
-                new_loadorder.insert(index, new_loadorder.pop(old_index))
-                print(f"Moved mod '{mod}' from index {old_index} to {index}.")
-    
-    with open("overwrites.txt", "w") as _file:
-        _file.write(overwrites)
-    
-    stagefile_files = {}
-    for file in stagefile.data['files']:
-        stagefile_files[file['relPath'].lower()] = file['source']
-    while different_files := check_loadorder(stagefile, new_loadorder):
-        loadorder_files = {}
-        for c, mod in enumerate(new_loadorder):
-            files = stagefile.all_modfiles[mod]
-            for file in files:
-                loadorder_files[file.lower()] = mod
-        for file in different_files:
-            mod = loadorder_files[file]
-            old_index = new_loadorder.index(mod)
-            new_index = new_loadorder.index(stagefile_files[file])
-            if old_index > new_index:
-                new_loadorder.insert(new_index, new_loadorder.pop(old_index))
-                print(f"Moved mod '{mod}' from index {old_index} to {new_index}.")
-    
-    new_loadorder.reverse()
-
-    print("Created loadorder from Vortex deployment file.")
-
-    with open("sorted_loadorder.txt", 'w') as file:
-        mods = ""
-        for mod in new_loadorder:
-            mods += "\n+" + os.path.basename(mod)
-        mods = mods.strip()
-        file.write(f"# This file was automatically generated by Mod Organizer.\n{mods}")
-
-    return new_loadorder
-
-# Define function to check if loadorder matches with stagefile #######
-def check_loadorder(stagefile: StageFile, loadorder: list):
-    print("Checking loadorder...")
-    stagefile_files = {}
-    _files = ""
-    for file in stagefile.data['files']:
-        stagefile_files[file['relPath'].lower()] = file['source']
-        _files += f"\n{file['relPath'].lower()} ---FROM--- {file['source']}"
-    
-    with open("stagefiles.txt", "w", encoding='utf8') as f:
-        f.write(_files)
-    
-    loadorder_files = {}
-    _files = ""
-    for c, mod in enumerate(loadorder):
-        files = stagefile.all_modfiles[mod]
-        for file in files:
-            loadorder_files[file.lower()] = mod
-            _files += f"\n{file.lower()} ---FROM--- {mod}"
-    
-    with open("modfiles.txt", "w", encoding='utf8') as f:
-        f.write(_files)
-    
-    different_files = []
-    for file, mod in loadorder_files.items():
-        if file not in stagefile_files:
-            print(f"File: {file}")
-            print(f"Loadorder mod: {mod} ({loadorder.index(mod)})")
-            print(f"Stagefile mod: NOT FOUND!")
-            print("-"*50)
-            different_files.append(file)
-        elif mod != stagefile_files[file]:
-            print(f"File: {file}")
-            print(f"Loadorder mod: {mod} ({loadorder.index(mod)})")
-            print(f"Stagefile mod: {stagefile_files[file]} ({loadorder.index(stagefile_files[file])})")
-            print("-"*50)
-            different_files.append(file)
-
-    print(f"Found {len(different_files)} difference(s).")
-
-    return different_files
 
 # Read folder and save files with relative paths to list #############
 def create_folder_list(folder, lower=True):

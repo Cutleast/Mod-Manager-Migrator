@@ -39,7 +39,7 @@ SUPPORTED_MODMANAGERS = [
     "Vortex",
     "ModOrganizer"
 ]
-
+NUMBER_OF_THREADS = 4
 
 # Create class for main application ##################################
 class MainApp(qtw.QApplication):
@@ -386,7 +386,7 @@ class MainApp(qtw.QApplication):
                         mods_to_copy = []
                         skyrim_path = os.path.join(core.get_steam_path(), 'steamapps', 'common', 'Skyrim Special Edition')
                         for stagefile in self.src_modinstance.stagefiles:
-                            for mod in stagefile.mods.keys():
+                            for mod in stagefile.modfiles.keys():
                                 mods_to_copy.append(mod)
                         for c, mod in enumerate(mods_to_copy):
                             psignal.emit({'value': c, 'max': len(mods_to_copy), 'text': f"{self.src_modinstance.get_mod_metadata(mod)['name']} - {c}/{len(mods_to_copy)}"})
@@ -1530,6 +1530,8 @@ class LoadingDialog(qtw.QProgressDialog):
         text = progress.get('text', "")
         if max is not None:
             self.setRange(0, int(max))
+        else:
+            self.setRange(0, 0)
         if value is not None:
             self.setValue(int(value))
         if text.strip():
