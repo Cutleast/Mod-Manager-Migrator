@@ -1122,36 +1122,46 @@ class MainApp(qtw.QApplication):
         self.destination_layout.addWidget(label, 1, 0)
         instance_label = qtw.QLabel(self.dst_modinstance.name)
         self.destination_layout.addWidget(instance_label, 1, 1)
+
+        # Add label with migration mode
+        label = qtw.QLabel(f"{self.lang['mode']}:")
+        self.destination_layout.addWidget(label, 2, 0)
+        path_label = qtw.QLabel()
+        if self.mode == 'hardlink':
+            self.dst_modinstance.paths['hardlink_mode']
+        else:
+            self.dst_modinstance.paths['copy_mode']
+        self.destination_layout.addWidget(path_label, 2, 1)
         
         # Add label with instance path
         label = qtw.QLabel(f"{self.lang['instance_path']}:")
-        self.destination_layout.addWidget(label, 2, 0)
+        self.destination_layout.addWidget(label, 3, 0)
         path_label = qtw.QLabel(self.dst_modinstance.paths['instance_path'])
-        self.destination_layout.addWidget(path_label, 2, 1)
+        self.destination_layout.addWidget(path_label, 3, 1)
 
         # Add label with downloads path
         label = qtw.QLabel(f"{self.lang['download_path']}:")
-        self.destination_layout.addWidget(label, 3, 0)
+        self.destination_layout.addWidget(label, 4, 0)
         dlpath_label = qtw.QLabel(self.dst_modinstance.paths['download_path'])
-        self.destination_layout.addWidget(dlpath_label, 3, 1)
+        self.destination_layout.addWidget(dlpath_label, 4, 1)
 
         # Add label with mods path
         label = qtw.QLabel(f"{self.lang['mods_path']}:")
-        self.destination_layout.addWidget(label, 4, 0)
+        self.destination_layout.addWidget(label, 5, 0)
         modpath_label = qtw.QLabel(self.dst_modinstance.paths['mods_path'])
-        self.destination_layout.addWidget(modpath_label, 4, 1)
+        self.destination_layout.addWidget(modpath_label, 5, 1)
 
         # Add label with profiles path
         label = qtw.QLabel(f"{self.lang['profiles_path']}:")
-        self.destination_layout.addWidget(label, 5, 0)
+        self.destination_layout.addWidget(label, 6, 0)
         profilespath_label = qtw.QLabel(self.dst_modinstance.paths['profiles_path'])
-        self.destination_layout.addWidget(profilespath_label, 5, 1)
+        self.destination_layout.addWidget(profilespath_label, 6, 1)
 
         # Add label with overwrite path
         label = qtw.QLabel(f"{self.lang['overwrite_path']}:")
-        self.destination_layout.addWidget(label, 6, 0)
+        self.destination_layout.addWidget(label, 7, 0)
         overwritepath_label = qtw.QLabel(self.dst_modinstance.paths['overwrite_path'])
-        self.destination_layout.addWidget(overwritepath_label, 6, 1)
+        self.destination_layout.addWidget(overwritepath_label, 7, 1)
         ##############################################################
 
         # Disable add source button

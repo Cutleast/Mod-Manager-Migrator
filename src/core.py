@@ -424,7 +424,7 @@ size=0
         else:
             for file in create_folder_list(folder):
                 os.makedirs(os.path.join(modpath, os.path.dirname(file)), exist_ok=True)
-                os.link(os.path.join(folder, file), os.path.join(modpath), file)
+                os.link(os.path.join(folder, file), os.path.join(modpath, file))
 
         # Write metadata to meta.ini
         with open(os.path.join(modpath, 'meta.ini'), 'w') as metafile:

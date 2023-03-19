@@ -56,6 +56,7 @@
     "staging_folder": "Vortex Staging Folder",
     "paths": "Pfade",
     "invalid_staging_folder": "Ungültiger Staging Folder. Stellen Sie sicher, dass Sie einen gültigen Staging Folder auswählen und das Profil deployed wurde.",
+    "mode": "Modus",
     "copy_mode": "Kopiermodus",
     "hardlink_mode": "Hardlink-Modus (Empfohlen)",
     "calc_size": "Berechne benötigten Speicherplatz...",
