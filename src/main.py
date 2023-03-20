@@ -39,7 +39,7 @@ SUPPORTED_MODMANAGERS = [
     "Vortex",
     "ModOrganizer"
 ]
-NUMBER_OF_THREADS = 4
+NUMBER_OF_THREADS = 4 # tests have shown that this is the ideal number
 
 # Create class for main application ##################################
 class MainApp(qtw.QApplication):
@@ -93,7 +93,7 @@ class MainApp(qtw.QApplication):
         # config
         self.default_conf = {
             'save_logs': False, 
-            'log_level': 'info',
+            'log_level': 'debug',
             'ui_mode': 'System',
             'language': 'System',
             'accent_color': '#d78f46',
@@ -342,15 +342,24 @@ class MainApp(qtw.QApplication):
             instance_path = self.dst_modinstance.paths['instance_path']
             if os.path.isdir(appdata_path):
                 self.log.debug("Wiping existing instance...")
-                shutil.rmtree(appdata_path)
+                def process(psignal: qtc.Signal):
+                    psignal.emit({'text': self.lang['wiping_instance']})
+                    shutil.rmtree(appdata_path)
+                loadingdialog = dialogs.LoadingDialog(self.root, self, process)
+                loadingdialog.exec()
                 self.log.debug("Instance wiped.")
             if os.path.isdir(instance_path):
                 self.log.debug("Wiping existing instance data...")
-                shutil.rmtree(instance_path)
+                def process(psignal: qtc.Signal):
+                    psignal.emit({'text': self.lang['wiping_instance_data']})
+                    shutil.rmtree(instance_path)
+                loadingdialog = dialogs.LoadingDialog(self.root, self, process)
+                loadingdialog.exec()
                 self.log.debug("Instance data wiped.")
 
         # Create destination mod instance with ini files and loadorder
         def process(psignal: qtc.Signal):
+            psignal.emit({'text': self.lang['sorting_loadorder']})
             self.dst_modinstance.loadorder = self.src_modinstance.get_loadorder(psignal)
             # Fetch and copy metadata
             for i, mod in enumerate(self.dst_modinstance.loadorder):
@@ -410,7 +419,7 @@ class MainApp(qtw.QApplication):
         # Copy mods to new instance
         def process(psignal: qtc.Signal):
             for c, mod in enumerate(self.src_modinstance.mods.keys()):
-                modname = self.src_modinstance.get_metadata(os.path.basename(mod))['name']
+                modname = self.src_modinstance.get_mod_metadata(os.path.basename(mod))['name']
                 if self.mode == 'copy':
                     progress = {
                         'value': c, 
@@ -428,7 +437,7 @@ class MainApp(qtw.QApplication):
                         'text2': self.lang['linking_mod'].replace("[MOD]", f"'{modname}'")
                     }
                 psignal.emit(progress)
-                self.dst_modinstance.import_mod(os.path.join(self.src_modinstance.paths['instance_path'], mod))
+                self.dst_modinstance.import_mod(os.path.join(self.src_modinstance.paths['instance_path'], mod), psignal)
         loadingdialog = dialogs.LoadingDialog(self.root, self, process)
         loadingdialog.exec()
 
@@ -465,7 +474,10 @@ class MainApp(qtw.QApplication):
         self.log.info("Migration complete.")
         dur = time.time() - starttime
         self.log.debug(f"Migration took: {dur} second(s) ({(dur / 60):.2f} minute(s))")
-        qtw.QMessageBox.information(self.root, self.lang['success'], self.lang['migration_complete'])
+        if self.source == 'Vortex':
+            qtw.QMessageBox.information(self.root, self.lang['success'], self.lang['migration_complete_purge_notice'])
+        else:
+            qtw.QMessageBox.information(self.root, self.lang['success'], self.lang['migration_complete'])
    ###################################################################
 
     def set_mode(self, mode: str):

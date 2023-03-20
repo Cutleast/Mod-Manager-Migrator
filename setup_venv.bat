@@ -4,3 +4,4 @@ pip install qtpy
 pip install qtawesome
 pip install msgpack
 pip install darkdetect
+pip install nuitka
