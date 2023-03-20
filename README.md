@@ -82,7 +82,7 @@ If you encountered an issue/error or have a suggestion, create a issue with suff
 4. Execute main file:
    `python main.py`
 
-# How it works
+# 💻How it works
 ### Mod order reconstruction from Vortex deployment file:
 1. It reads deployment files in staging folder
 2. Parses their data
