@@ -62,6 +62,7 @@ class ModInstance:
         self.paths = instance.get('paths', {})
         self.metadata = {} # full modname: {name, modid, fileid, version}
         self.loadorder = []
+        self.modnames = [] # list of parsed modnames to avoid duplicates
         self.size = 0
     
     def __repr__(self):
@@ -172,30 +173,35 @@ class VortexInstance(ModInstance):
     def __repr__(self):
         return "VortexInstance"
     
-    @staticmethod
-    def get_mod_metadata(modname: str):
-        metadata = {}
-        data = [int(split) for split in modname.split("-") if split.isnumeric()]
-        try:
-            modid = data.pop(0)
-            fileid = data.pop(-1)
-            data = [str(d) for d in data]
-            version = ".".join(data)
-            name = modname.split(str(modid))[0].strip("-")
-            metadata = {
-                'name': name,
-                'modid': modid,
-                'fileid': fileid,
-                'version': version,
-            }
-        except IndexError:
-            print(f"Failed to get metadata from '{modname}': Insufficient data to parse!")
-            metadata = {
-                'name': modname,
-                'modid': 0,
-                'fileid': 0,
-                'version': ""
-            }
+    def get_mod_metadata(self, modname: str):
+        if not self.metadata.get(modname, None):
+            metadata = {}
+            data = [int(split) for split in modname.split("-") if split.isnumeric()]
+            try:
+                modid = data.pop(0)
+                fileid = data.pop(-1)
+                data = [str(d) for d in data]
+                version = ".".join(data)
+                name = modname.split(str(modid))[0].strip("-")
+                metadata = {
+                    'name': name,
+                    'modid': modid,
+                    'fileid': fileid,
+                    'version': version,
+                }
+            except IndexError:
+                self.app.log.warning(f"Failed to get metadata from '{modname}': Insufficient data to parse!")
+                metadata = {
+                    'name': modname,
+                    'modid': 0,
+                    'fileid': 0,
+                    'version': ""
+                }
+            if name in self.modnames:
+                metadata['name'] = f"{name} ({metadata['fileid']})"
+            self.modnames.append(name)
+        else:
+            metadata = self.metadata[modname]
 
         return metadata
     
