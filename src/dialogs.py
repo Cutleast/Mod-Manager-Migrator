@@ -5,6 +5,7 @@ Part of MMM. Contains dialogs.
 import json
 import os
 import threading
+import time
 from typing import Callable
 
 import qtawesome as qta
@@ -863,6 +864,7 @@ class LoadingDialog(qtw.QDialog):
         self.success = True
         self.func = lambda: (self.start_signal.emit(), func(self.progress_signal), self.stop_signal.emit())
         self.Thread = LoadingDialogThread(self, target=self.func, daemon=True, name='BackgroundThread')
+        self.starttime = None
 
         # Set up dialog layout
         self.layout = qtw.QVBoxLayout()
@@ -906,7 +908,7 @@ class LoadingDialog(qtw.QDialog):
         self.progress_signal.connect(self.setProgress)
 
         # Configure dialog
-        self.setWindowTitle(self.parent().windowTitle())
+        self.setWindowTitle(self.app.name)
         self.setWindowIcon(self.parent().windowIcon())
         self.setStyleSheet(self.parent().styleSheet())
         self.setWindowFlag(qtc.Qt.WindowType.WindowCloseButtonHint, False)
@@ -976,9 +978,17 @@ class LoadingDialog(qtw.QDialog):
         # Move back to center
         core.center(self, self.app.root)
 
+    def timerEvent(self, event: qtc.QTimerEvent):
+        super().timerEvent(event)
+
+        self.setWindowTitle(f"{self.app.name} - {self.app.lang['elapsed']}: {core.get_diff(self.starttime, time.strftime('%H:%M:%S'))}")
+    
     def exec(self):
         #self.start_signal.emit()
         self.Thread.start()
+
+        self.starttime = time.strftime("%H:%M:%S")
+        self.startTimer(1000)
 
         super().exec()
 

@@ -247,7 +247,7 @@ class MainApp(qtw.QApplication):
         self.src_button.clicked.connect(lambda: dialogs.SourceDialog(self.root, self).show())
         self.mainlayout.addWidget(self.src_button, 0, 0)
         # Create migrate button
-        self.mig_button = qtw.QPushButton("Migrate")
+        self.mig_button = qtw.QPushButton(self.lang['migrate'])
         self.mig_button.setIcon(qta.icon('fa5s.chevron-right', color=self.theme['text_color']))
         self.mig_button.setLayoutDirection(qtc.Qt.LayoutDirection.RightToLeft)
         self.mig_button.clicked.connect(self.migrate)
@@ -507,6 +507,13 @@ class MainApp(qtw.QApplication):
         mb.setTextFormat(qtc.Qt.TextFormat.RichText)
         mb.setText(self.lang['about_text'])
         mb.setStandardButtons(qtw.QMessageBox.StandardButton.Ok)
+
+        # hacky way to set label width
+        for label in mb.findChildren(qtw.QLabel):
+            if label.text() == self.lang['about_text']:
+                label.setFixedWidth(400)
+                break
+        
         mb.exec()
     
     def show_about_qt_dialog(self):

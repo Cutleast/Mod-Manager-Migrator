@@ -2,5 +2,7 @@
 **.vscode
 **__pycache__
 **tests
+**main.build
+**main.dist
 *.txt
 Mod-Manager-Migrator.code-workspace

@@ -9,6 +9,7 @@ import sys
 import threading
 import time
 import winreg
+from datetime import datetime
 from glob import glob
 
 import msgpack
@@ -263,8 +264,7 @@ class VortexInstance(ModInstance):
                         }
                         psignal.emit(progress)
                         time.sleep(.5)
-                    print(f"{q.unfinished_tasks = } ({((len(modfiles) - q.unfinished_tasks) / len(modfiles))*100:.3f}%) (Found: {len(overwritten_files)}/{overwritten_count})                           ", end='\r')
-            #threading.Thread(target=pthread, daemon=True, name='PThread').start()
+                    #print(f"{q.unfinished_tasks = } ({((len(modfiles) - q.unfinished_tasks) / len(modfiles))*100:.3f}%) (Found: {len(overwritten_files)}/{overwritten_count})                           ", end='\r')
             pthread()
             
             q.join()
@@ -655,4 +655,9 @@ def center(widget: qtw.QWidget, referent: qtw.QWidget=None):
     y = int((rh / 2) - (h / 2))
     widget.move(x, y)
 
+# Define function to get difference between two times ######
+def get_diff(start_time, end_time, format="%H:%M:%S"):
+    """Returns difference between 'start_time' and 'end_time' in 'format'."""
+    tdelta = (datetime.strptime(end_time, format) - datetime.strptime(start_time, format))
+    return tdelta
 

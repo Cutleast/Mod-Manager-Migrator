@@ -14,7 +14,7 @@
     "file": "File",
     "help": "Help",
     "about": "About",
-    "about_text": "This is a program for migrating Skyrim modding instances between different mod managers.<br><br>Developed by Cutleast. | Idea and icon by Wuerfelhusten.<br><br>Material Icons by Google LLC.<br>Qt by The Qt Company Ltd.<br>Elusive Icons von <a href='https://reduxframework.com/'>Team Redux</a><br>FontAwesome Icons von <a href='https://github.com/FortAwesome/Font-Awesome'>FontAwesome</a>",
+    "about_text": "This is a program for migrating modding instances between different mod managers.<br><br>Developed by Cutleast. (<a href='https://www.nexusmods.com/users/65733731'>NexusMods</a> | <a href='https://github.com/cutleast'>GitHub</a> | <a href='https://ko-fi.com/cutleast'>Ko-Fi</a>)<br>Idea and logo Wuerfelhusten. (<a href='https://www.nexusmods.com/users/122160268'>NexusMods</a>)<br><br>Material Icons by <a href='https://github.com/google/material-design-icons'>Google LLC.</a><br>Qt by <a href='https://qt.io'>The Qt Company Ltd.</a><br>Elusive Icons by <a href='http://elusiveicons.com/'>Redux Framework</a><br>FontAwesome Icons by <a href='https://github.com/FortAwesome/Font-Awesome'>FontAwesome</a>",
     "name": "Name",
     "size": "Size",
     "browse": "Browse",
@@ -22,6 +22,7 @@
     "done": "Done",
     "yes": "Yes",
     "no": "No",
+    "migrate": "Migrate",
     "settings": "Settings",
     "open_log_file": "Open log file",
     "save_logs": "Keep log file",
@@ -80,5 +81,6 @@
     "wipe_notice": "One or more of the specified folders already exists. If you continue, their contents will be deleted.",
     "wiping_instance": "Wiping instance...",
     "wiping_instance_data": "Wiping instance data...",
-    "detected_same_path": "The source and destination paths must be different!"
+    "detected_same_path": "The source and destination paths must be different!",
+    "elapsed": "Elapsed time"
 }
