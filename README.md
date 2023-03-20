@@ -15,9 +15,9 @@ MMM - for a better modding environment.
 </p>
 
 
-# ❗WARNING!!!
+# ❗Please note!!!
 
-**This is in a very early Alpha stage and issues/errors are very likely to occur! Use at your own risk!**
+**This is the first initial release of this tool. I take no responsibility for any problems that may occur. In the current version everything works relatively stable. To get a clear picture, I depend on more extensive tests of the community.**
 
 
 # 📄Description
