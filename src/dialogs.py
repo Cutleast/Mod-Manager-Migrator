@@ -724,10 +724,24 @@ class DestinationDialog(qtw.QDialog):
     def finish(self):
         # Check if paths are same
         instance_path = self.path_box.text()
+        src_drive = self.app.src_modinstance.paths['instance_path'].split("\\", 1)[0]
+        dst_drive = instance_path.split("\\", 1)[0]
         if instance_path == self.app.src_modinstance.paths['instance_path']:
-            qtw.QMessageBox.critical(self, self.app.lang['error'], self.app.lang['detected_same_path'], buttons=qtw.QMessageBox.StandardButton.Ok)
             self.app.log.error("Failed to create destination instance: source and destination paths must not be same!")
+            qtw.QMessageBox.critical(self, self.app.lang['error'], self.app.lang['detected_same_path'], buttons=qtw.QMessageBox.StandardButton.Ok)
             return
+        elif (self.app.mode == 'hardlink') and (src_drive != dst_drive):
+            self.app.log.error(f"Failed to create destination instance: Hardlinks must be on the same drive. (Source: {src_drive} | Destination: {dst_drive})")
+            qtw.QMessageBox.critical(self, self.app.lang['error'], self.app.lang['hardlink_drive_error'].replace("[DESTDRIVE]", dst_drive).replace("[SOURCEDRIVE]", src_drive), buttons=qtw.QMessageBox.StandardButton.Ok)
+            return
+        
+        if (self.app.mode == 'hardlink') and self.app.src_modinstance.paths.get('download_path', None):
+            src_drive = self.app.src_modinstance.paths['download_path'].split("\\", 1)[0]
+            dst_drive = self.dlpath_box.text().split("\\")[0]
+            if src_drive != dst_drive:
+                self.app.log.error(f"Failed to create destination instance: Hardlinks must be on the same drive. (Source: {src_drive} | Destination: {dst_drive})")
+                qtw.QMessageBox.critical(self, self.app.lang['error'], self.app.lang['hardlink_drive_error'].replace("[DESTDRIVE]", dst_drive).replace("[SOURCEDRIVE]", src_drive), buttons=qtw.QMessageBox.StandardButton.Ok)
+                return
 
         # Create destination instance
         if self.app.destination == 'Vortex':
@@ -754,6 +768,7 @@ class DestinationDialog(qtw.QDialog):
             appdata_path = os.path.join(os.getenv('LOCALAPPDATA'), 'ModOrganizer', instance_data['name'])
             instance_path = self.app.dst_modinstance.paths['instance_path']
             if os.path.isdir(appdata_path) or os.path.isdir(instance_path):
+                self.app.log.warning("Instance data will be wiped!")
                 qtw.QMessageBox.warning(self.app.root, self.app.lang['warning'], self.app.lang['wipe_notice'], buttons=qtw.QMessageBox.StandardButton.Ok)
 
         # Create destination widget with instance details ############

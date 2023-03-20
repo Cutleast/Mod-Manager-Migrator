@@ -503,9 +503,10 @@ size=0
             files = create_folder_list(folder, lower=False)
             for c, file in enumerate(files):
                 if psignal is not None:
+                    _string = self.app.lang['linking_mod'].replace("[MOD]", f"'{metadata['name']}'")
                     progress = {
                         'show2': True,
-                        'text2': f"{metadata['name']} ({c}/{len(files)})",
+                        'text2': f"{_string} ({c}/{len(files)})",
                         'value2': c,
                         'max2': len(files),
                     }

@@ -333,6 +333,7 @@ class MainApp(qtw.QApplication):
     # Core function to migrate #######################################
     def migrate(self):
         self.log.info(f"Migrating instance from {self.source} to {self.destination}...")
+        self.log.debug(f"Mode: {self.mode}")
 
         starttime = time.time()
 
@@ -465,34 +466,41 @@ class MainApp(qtw.QApplication):
         loadingdialog.exec()
 
         # Copy downloads if given to new instance
-        if self.src_modinstance.paths.get('download_path', None):
-            def process(psignal: qtc.Signal):
-                for c, archive in enumerate(os.listdir(self.src_modinstance.paths['download_path'])):
-                    if self.mode == 'copy':
-                        progress = {
-                            'value': c, 
-                            'max': len(self.src_modinstance.mods),
-                            'text': self.lang['migrating_instance'],
-                            'show2': True,
-                            'text2': self.lang['copying_download'].replace("[NAME]", f"'{os.path.basename(archive)}'")
-                        }
-                    else:
-                        progress = {
-                            'value': c, 
-                            'max': len(self.src_modinstance.mods),
-                            'text': self.lang['migrating_instance'],
-                            'show2': True,
-                            'text2': self.lang['linking_download'].replace("[NAME]", f"'{os.path.basename(archive)}'")
-                        }
-                    psignal.emit()
-                    src_path = os.path.join(self.src_modinstance.paths['download_path'])
-                    dst_path = os.path.join(self.dst_modinstance.paths['download_path'])
-                    if self.mode == 'copy':
-                        shutil.copyfile(src_path, dst_path)
-                    else:
-                        os.link(src_path, dst_path)
-            loadingdialog = dialogs.LoadingDialog(self.root, self, process, self.lang['migrating_instance'])
-            loadingdialog.exec()
+        if src_dls := self.src_modinstance.paths.get('download_path', None):
+            # Only copy/link downloads if paths differ
+            if src_dls != self.dst_modinstance.paths['download_path']:
+                def process(psignal: qtc.Signal):
+                    self.log.debug(f"Mode: {self.mode}")
+                    for c, archive in enumerate(os.listdir(self.src_modinstance.paths['download_path'])):
+                        if self.mode == 'copy':
+                            progress = {
+                                'value': c, 
+                                'max': len(self.src_modinstance.mods),
+                                'text': self.lang['migrating_instance'],
+                                'show2': True,
+                                'text2': self.lang['copying_download'].replace("[NAME]", f"'{os.path.basename(archive)}'")
+                            }
+                        else:
+                            progress = {
+                                'value': c, 
+                                'max': len(self.src_modinstance.mods),
+                                'text': self.lang['migrating_instance'],
+                                'show2': True,
+                                'text2': self.lang['linking_download'].replace("[NAME]", f"'{os.path.basename(archive)}'")
+                            }
+                        psignal.emit(progress)
+                        src_path = os.path.join(self.src_modinstance.paths['download_path'])
+                        dst_path = os.path.join(self.dst_modinstance.paths['download_path'])
+                        if self.mode == 'copy':
+                            shutil.copyfile(src_path, dst_path)
+                        else:
+                            os.link(src_path, dst_path)
+                loadingdialog = dialogs.LoadingDialog(self.root, self, process)
+                try:
+                    loadingdialog.exec()
+                except PermissionError:
+                    self.log.error("Failed to migrate downloads: Access denied!")
+                    qtw.QMessageBox.critical(self.root, self.lang['error'], self.lang['permission_error'])
 
         self.log.info("Migration complete.")
         dur = time.time() - starttime
