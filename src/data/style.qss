@@ -201,11 +201,10 @@ QProgressBar {
     border: 0px solid;
     border-radius: 8px;
     padding: 0px;
-    height: 3px;
+    height: 2px;
 }
 QProgressBar::chunk {
     background-color: <accent_color>;
-    border: 0px solid;
     border-radius: 8px;
 }
 
