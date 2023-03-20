@@ -569,11 +569,18 @@ repository=Nexus
 
 # Define function to get latest version from version file in repo ####
 def get_latest_version():
-    url = "https://raw.githubusercontent.com/Cutleast/Mod-Manager-Migrator/main/version"
-    response = requests.get(url)
-    new_version = response.content.decode(encoding='utf8', errors='ignore')
-    new_version = float(new_version)
-    return new_version
+    try:
+        url = "https://raw.githubusercontent.com/Cutleast/Mod-Manager-Migrator/main/version"
+        #url = "https://raw.githubusercontent.com/Cutleast/Test/main/version" # test url
+        response = requests.get(url)
+        if response.status_code == 200:
+            new_version = response.content.decode(encoding='utf8', errors='ignore').strip()
+            new_version = float(new_version)
+            return new_version
+        else:
+            raise Exception(f"Status code: {response.status_code}")
+    except Exception:
+        return 0.0
 
 # Read folder and save files with relative paths to list #############
 def create_folder_list(folder, lower=True):

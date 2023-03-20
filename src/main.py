@@ -270,6 +270,8 @@ class MainApp(qtw.QApplication):
 
         # Check for updates
         if (new_version := core.get_latest_version()) > float(self.version):
+            self.log.info(f"A new version is available to download: Current version: {self.version} | Latest version: {new_version}")
+
             message_box = qtw.QMessageBox(self.root)
             message_box.setWindowIcon(self.root.windowIcon())
             message_box.setStyleSheet(self.stylesheet)
@@ -279,12 +281,15 @@ class MainApp(qtw.QApplication):
             message_box.setDefaultButton(qtw.QMessageBox.StandardButton.Yes)
             message_box.button(qtw.QMessageBox.StandardButton.Yes).setText(self.lang['yes'])
             message_box.button(qtw.QMessageBox.StandardButton.No).setText(self.lang['no'])
+            core.center(message_box, self.root)
             choice = message_box.exec()
             
             # Handle the user's choice
             if choice == qtw.QMessageBox.StandardButton.Yes:
                 # Open nexus mods file page
                 os.startfile("https://www.nexusmods.com/skyrimspecialedition/mods/87160?tab=files")
+        elif new_version == 0.0:
+            self.log.error("Failed to check for update.")
 
     def __repr__(self):
         return "MainApp"
