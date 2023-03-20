@@ -4,6 +4,7 @@ Part of MMM. Contains core classes and functions
 
 import os
 import queue
+import requests
 import shutil
 import sys
 import threading
@@ -565,6 +566,14 @@ repository=Nexus
         # Return list with found instances
         return instances
 
+
+# Define function to get latest version from version file in repo ####
+def get_latest_version():
+    url = "https://raw.githubusercontent.com/Cutleast/Mod-Manager-Migrator/main/version"
+    response = requests.get(url)
+    new_version = response.content.decode(encoding='utf8', errors='ignore')
+    new_version = float(new_version)
+    return new_version
 
 # Read folder and save files with relative paths to list #############
 def create_folder_list(folder, lower=True):

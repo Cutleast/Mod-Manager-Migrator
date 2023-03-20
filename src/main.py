@@ -268,6 +268,24 @@ class MainApp(qtw.QApplication):
         #self.root.resize(1000, 600)
         self.root.showMaximized()
 
+        # Check for updates
+        if (new_version := core.get_latest_version()) > float(self.version):
+            message_box = qtw.QMessageBox(self.root)
+            message_box.setWindowIcon(self.root.windowIcon())
+            message_box.setStyleSheet(self.stylesheet)
+            message_box.setWindowTitle(self.name)
+            message_box.setText(self.lang['update_available'].replace("[OLD_VERSION]", self.version).replace("[NEW_VERSION]", str(new_version)))
+            message_box.setStandardButtons(qtw.QMessageBox.StandardButton.No | qtw.QMessageBox.StandardButton.Yes)
+            message_box.setDefaultButton(qtw.QMessageBox.StandardButton.Yes)
+            message_box.button(qtw.QMessageBox.StandardButton.Yes).setText(self.lang['yes'])
+            message_box.button(qtw.QMessageBox.StandardButton.No).setText(self.lang['no'])
+            choice = message_box.exec()
+            
+            # Handle the user's choice
+            if choice == qtw.QMessageBox.StandardButton.Yes:
+                # Open nexus mods file page
+                os.startfile("https://www.nexusmods.com/skyrimspecialedition/mods/87160?tab=files")
+
     def __repr__(self):
         return "MainApp"
     
