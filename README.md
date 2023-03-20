@@ -9,6 +9,7 @@
 </picture>
 <br>
 <a href="https://www.nexusmods.com/skyrimspecialedition/mods/87160"><img src="misc_assets/GiO_NM.png" height="60px"/> </a>
+<a href="https://ko-fi.com/cutleast"><img src="misc_assets/KoFi.png" height="60px"/> </a>
 <br>
 MMM - for a better modding environment.
 </p>
@@ -29,14 +30,11 @@ This is a tool for migrating modding instances between various mod managers (cur
 - create mod order from Vortex conflict rules
 - fully automated migration
 - new instance is customizable
+- hardlink and copy method
 
 ### Planned Features
-
-- Vortex as migration destination
-- hardlink method to use same files between mod managers
 - support for more games (suggestions are welcome)
 - support for more mod managers (suggestions are also welcome)
-
 
 # 🔧Usage
 
