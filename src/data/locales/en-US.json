@@ -83,5 +83,5 @@
     "wiping_instance_data": "Wiping instance data...",
     "detected_same_path": "The source and destination paths must be different!",
     "elapsed": "Elapsed time",
-    "Update_Available": "It seems like your version of MMM is outdated. You are using the version [OLD_VERSION].\nVersion [NEW_VERSION] is already available. Do you want to download it now?"
+    "update_available": "It seems like your version of MMM is outdated. You are using the version [OLD_VERSION].\nVersion [NEW_VERSION] is already available. Do you want to download it now?"
 }
