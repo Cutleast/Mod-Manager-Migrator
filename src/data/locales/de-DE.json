@@ -82,5 +82,6 @@
     "wiping_instance": "Bestehende Instanz wird gelöscht...",
     "wiping_instance_data": "Bestehende Instanzdaten werden gelöscht...",
     "detected_same_path": "Die Quell- und Zielpfade müssen unterschiedlich sein!",
-    "elapsed": "Verstrichene Zeit"
+    "elapsed": "Verstrichene Zeit",
+    "Update_Available": "Es scheint, dass Ihre Version von MMM veraltet ist. Sie verwenden die Version [OLD_VERSION].\nDie Version [NEW_VERSION] ist bereits verfügbar. Möchten Sie sie jetzt herunterladen?"
 }
