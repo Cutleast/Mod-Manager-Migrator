@@ -9,11 +9,12 @@ import sys
 import threading
 import time
 import winreg
+from datetime import datetime
 from glob import glob
 
 import msgpack
 
-from main import NUMBER_OF_THREADS, MainApp, qtw
+from main import NUMBER_OF_THREADS, MainApp, qtw, qtc
 
 
 # Create class to copy stdout to log file ############################
@@ -65,7 +66,7 @@ class ModInstance:
     def __repr__(self):
         return "ModInstance"
     
-    def get_loadorder(self, psignal=None):
+    def get_loadorder(self, psignal: qtc.Signal=None):
         """
         Returns loadorder.
         """
@@ -92,7 +93,7 @@ class ModInstance:
         """
         return {}
     
-    def import_mod(self, folder: str):
+    def import_mod(self, folder: str, psignal: qtc.Signal=None):
         return
 
 
@@ -197,7 +198,7 @@ class VortexInstance(ModInstance):
 
         return metadata
     
-    def sort_loadorder(self, stagefile: StageFile, psignal=None):
+    def sort_loadorder(self, stagefile: StageFile, psignal: qtc.Signal=None):
         self.app.log.debug("Scanning mods...")
 
         new_loadorder = stagefile.loadorder.copy()
@@ -263,8 +264,7 @@ class VortexInstance(ModInstance):
                         }
                         psignal.emit(progress)
                         time.sleep(.5)
-                    print(f"{q.unfinished_tasks = } ({((len(modfiles) - q.unfinished_tasks) / len(modfiles))*100:.3f}%) (Found: {len(overwritten_files)}/{overwritten_count})                           ", end='\r')
-            #threading.Thread(target=pthread, daemon=True, name='PThread').start()
+                    #print(f"{q.unfinished_tasks = } ({((len(modfiles) - q.unfinished_tasks) / len(modfiles))*100:.3f}%) (Found: {len(overwritten_files)}/{overwritten_count})                           ", end='\r')
             pthread()
             
             q.join()
@@ -286,7 +286,10 @@ class VortexInstance(ModInstance):
                     self.app.log.debug(f"Moved mod '{mod}' from index {old_index} to {index}.")
         
         if psignal is not None:
-            psignal.emit({})
+            psignal.emit({
+                'text': self.app.lang['sorting_loadorder'],
+                'value': 0,
+                'max': 0})
 
         stagefile_files = {}
         for file in stagefile.data['files']:
@@ -338,13 +341,13 @@ class VortexInstance(ModInstance):
                     self.app.log.debug(f"File: {file}")
                     self.app.log.debug(f"Loadorder mod: {mod} ({loadorder.index(mod)})")
                     self.app.log.debug(f"Stagefile mod: NOT FOUND!")
-                    self.app.log.debug("-"*50)
+                    #self.app.log.debug("-"*50)
                     different_files.append(file)
                 elif mod != stagefile_files[file]:
                     self.app.log.debug(f"File: {file}")
                     self.app.log.debug(f"Loadorder mod: {mod} ({loadorder.index(mod)})")
                     self.app.log.debug(f"Stagefile mod: {stagefile_files[file]} ({loadorder.index(stagefile_files[file])})")
-                    self.app.log.debug("-"*50)
+                    #self.app.log.debug("-"*50)
                     different_files.append(file)
                 
                 q.task_done()
@@ -359,7 +362,7 @@ class VortexInstance(ModInstance):
 
         return different_files
 
-    def get_loadorder(self, psignal=None):
+    def get_loadorder(self, psignal: qtc.Signal=None):
         self.app.log.debug("Reading mod files...")
         starttime = time.time()
         for mod in self.stagefile.modfiles.keys():
@@ -486,7 +489,7 @@ size=0
 
         self.app.log.info(f"Created MO2 instance.")
     
-    def import_mod(self, folder: str):
+    def import_mod(self, folder: str, psignal: qtc.Signal=None):
         # Get metadata
         metadata = self.metadata[os.path.basename(folder)]
         modpath = os.path.join(self.paths['mods_path'], metadata['name'])
@@ -496,7 +499,16 @@ size=0
             shutil.copytree(folder, modpath)
         # Create hardlinks otherwise
         else:
-            for file in create_folder_list(folder, False):
+            files = create_folder_list(folder, lower=False)
+            for c, file in enumerate(files):
+                if psignal is not None:
+                    progress = {
+                        'show2': True,
+                        'text2': f"{metadata['name']} ({c}/{len(files)})",
+                        'value2': c,
+                        'max2': len(files),
+                    }
+                    psignal.emit(progress)
                 os.makedirs(os.path.join(modpath, os.path.dirname(file)), exist_ok=True)
                 os.link(os.path.join(folder, file), os.path.join(modpath, file))
 
@@ -621,19 +633,31 @@ def get_steam_path():
     return steam_path
 
 # Define function to move windows to center of parent ################
-def center(widget: qtw.QWidget):
+def center(widget: qtw.QWidget, referent: qtw.QWidget=None):
     """
     Moves <widget> to center of its parent.
+    
+    Parameters:
+        widget: QWidget (widget to move)
+        referent: QWidget (widget reference for center coords; use widget.parent() if None)
     """
 
     size = widget.size()
     w = size.width()
     h = size.height()
-    rsize = widget.parent().size()
+    if referent is None:
+        rsize = widget.parent().size()
+    else:
+        rsize = referent.size()
     rw = rsize.width()
     rh = rsize.height()
     x = int((rw / 2) - (w / 2))
     y = int((rh / 2) - (h / 2))
     widget.move(x, y)
 
+# Define function to get difference between two times ######
+def get_diff(start_time, end_time, format="%H:%M:%S"):
+    """Returns difference between 'start_time' and 'end_time' in 'format'."""
+    tdelta = (datetime.strptime(end_time, format) - datetime.strptime(start_time, format))
+    return tdelta
 

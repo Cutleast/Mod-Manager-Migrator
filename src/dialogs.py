@@ -5,6 +5,7 @@ Part of MMM. Contains dialogs.
 import json
 import os
 import threading
+import time
 from typing import Callable
 
 import qtawesome as qta
@@ -308,7 +309,14 @@ class SourceDialog(qtw.QDialog):
             stagefile = os.path.join(instance_data['paths']['staging_folder'], 'vortex.deployment.msgpack')
             if os.path.isfile(stagefile):
                 instance_data['paths']['stagefile'] = stagefile
-                self.app.src_modinstance = core.VortexInstance(self.app, instance_data)
+                def process(psignal: qtc.Signal):
+                    progress = {
+                        'text': self.app.lang['loading_stagingfolder']
+                    }
+                    psignal.emit(progress)
+                    self.app.src_modinstance = core.VortexInstance(self.app, instance_data)
+                loadingdialog = LoadingDialog(self, self.app, process)
+                loadingdialog.exec()
             else:
                 qtw.QMessageBox.critical(self, self.app.lang['error'], self.app.lang['invalid_staging_folder'])
                 return
@@ -513,6 +521,7 @@ class DestinationDialog(qtw.QDialog):
                 folder = file_dialog.selectedFiles()[0]
                 folder = os.path.normpath(folder)
                 self.path_box.setText(folder)
+                self.name_box.setText(os.path.basename(folder))
                 self.dlpath_box.setText(os.path.join(folder, 'downloads'))
                 self.modspath_box.setText(os.path.join(folder, 'mods'))
                 self.profilespath_box.setText(os.path.join(folder, 'profiles'))
@@ -713,6 +722,13 @@ class DestinationDialog(qtw.QDialog):
         core.center(self)
     
     def finish(self):
+        # Check if paths are same
+        instance_path = self.path_box.text()
+        if instance_path == self.app.src_modinstance.paths['instance_path']:
+            qtw.QMessageBox.critical(self, self.app.lang['error'], self.app.lang['detected_same_path'], buttons=qtw.QMessageBox.StandardButton.Ok)
+            self.app.log.error("Failed to create destination instance: source and destination paths must not be same!")
+            return
+
         # Create destination instance
         if self.app.destination == 'Vortex':
             instance_data = {
@@ -848,6 +864,7 @@ class LoadingDialog(qtw.QDialog):
         self.success = True
         self.func = lambda: (self.start_signal.emit(), func(self.progress_signal), self.stop_signal.emit())
         self.Thread = LoadingDialogThread(self, target=self.func, daemon=True, name='BackgroundThread')
+        self.starttime = None
 
         # Set up dialog layout
         self.layout = qtw.QVBoxLayout()
@@ -891,13 +908,10 @@ class LoadingDialog(qtw.QDialog):
         self.progress_signal.connect(self.setProgress)
 
         # Configure dialog
-        self.setWindowTitle(self.parent().windowTitle())
+        self.setWindowTitle(self.app.name)
         self.setWindowIcon(self.parent().windowIcon())
         self.setStyleSheet(self.parent().styleSheet())
         self.setWindowFlag(qtc.Qt.WindowType.WindowCloseButtonHint, False)
-
-        # Set fixed with
-        #self.setFixedWidth(self.parent().width())
     
     def setProgress(self, progress: dict):
         value = progress.get('value', None)
@@ -917,8 +931,8 @@ class LoadingDialog(qtw.QDialog):
         # first row (always shown)
         if max is not None:
             self.pbar1.setRange(0, int(max))
-        else:
-            self.pbar1.setRange(0, 0)
+        #else:
+        #    self.pbar1.setRange(0, 0)
         if value is not None:
             self.pbar1.setValue(int(value))
         if text.strip():
@@ -931,8 +945,8 @@ class LoadingDialog(qtw.QDialog):
             self.label2.show()
             if max2 is not None:
                 self.pbar2.setRange(0, int(max2))
-            else:
-                self.pbar2.setRange(0, 0)
+            #else:
+            #    self.pbar2.setRange(0, 0)
             if value2 is not None:
                 self.pbar2.setValue(int(value2))
             if text2.strip():
@@ -948,8 +962,8 @@ class LoadingDialog(qtw.QDialog):
             self.label3.show()
             if max3 is not None:
                 self.pbar3.setRange(0, int(max3))
-            else:
-                self.pbar3.setRange(0, 0)
+            #else:
+            #    self.pbar3.setRange(0, 0)
             if value3 is not None:
                 self.pbar3.setValue(int(value3))
             if text3.strip():
@@ -962,11 +976,19 @@ class LoadingDialog(qtw.QDialog):
         self.setFixedHeight(self.sizeHint().height())
 
         # Move back to center
-        core.center(self)
+        core.center(self, self.app.root)
 
+    def timerEvent(self, event: qtc.QTimerEvent):
+        super().timerEvent(event)
+
+        self.setWindowTitle(f"{self.app.name} - {self.app.lang['elapsed']}: {core.get_diff(self.starttime, time.strftime('%H:%M:%S'))}")
+    
     def exec(self):
         #self.start_signal.emit()
         self.Thread.start()
+
+        self.starttime = time.strftime("%H:%M:%S")
+        self.startTimer(1000)
 
         super().exec()
 
