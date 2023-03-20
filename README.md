@@ -27,14 +27,14 @@ This is a tool for migrating modding instances between various mod managers (cur
 
 # 🕹Features
 
-- create mod order from Vortex conflict rules
-- fully automated migration
-- new instance is customizable
-- hardlink and copy method
+- Create mod order from Vortex conflict rules
+- Fully automated migration
+- New instance is customizable
+- Hardlink and copy method
 
 ### Planned Features
-- support for more games (suggestions are welcome)
-- support for more mod managers (suggestions are also welcome)
+- Support for more games (suggestions are welcome)
+- Support for more mod managers (suggestions are also welcome)
 
 # 🔧Usage
 
@@ -82,12 +82,21 @@ If you encountered an issue/error or have a suggestion, create a issue with suff
 4. Execute main file:
    `python main.py`
 
+# How it works
+### Mod order reconstruction from Vortex deployment file:
+1. It reads deployment files in staging folder
+2. Parses their data
+3. The data contains a list with all deployed files
+4. This list is used to reconstruct a mod order by checking which files come from which mod
+5. After initial sorting the loadorder is simulated and checked against the deployment file
+6. Sorts different mods until there are no differences left (mostly 1 or 2 times)
+
 
 # 🔗Credits
 
 - Code by Cutleast ([GitHub](https://github.com/Cutleast) | [NexusMods](https://www.nexusmods.com/users/65733731))
 - Program icon and idea by Wuerfelhusten ([NexusMods](https://www.nexusmods.com/users/122160268))
 - Qt by The [Qt Company Ltd](https://qt.io)
-- Material icons by [Google LLC](https://github.com/Templarian/MaterialDesign)
-- Elusive Icons von [Team Redux](https://reduxframework.com/)
-- FontAwesome Icons von [FontAwesome](https://github.com/FortAwesome/Font-Awesome)
+- Material icons by [Google LLC](https://github.com/google/material-design-icons)
+- Elusive Icons by [Redux Framework](http://elusiveicons.com/)
+- FontAwesome Icons by [FontAwesome](https://github.com/FortAwesome/Font-Awesome)
