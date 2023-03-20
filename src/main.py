@@ -429,15 +429,26 @@ class MainApp(qtw.QApplication):
                 if choice == qtw.QMessageBox.StandardButton.Yes:
                     # Copy root files directly into game directory
                     def process(psignal: qtc.Signal):
+                        progress = {
+                            'text': self.lang['copying_files'],
+                        }
+                        psignal.emit(progress)
                         mods_to_copy = []
                         skyrim_path = os.path.join(core.get_steam_path(), 'steamapps', 'common', 'Skyrim Special Edition')
                         for stagefile in self.src_modinstance.stagefiles:
                             for mod in stagefile.modfiles.keys():
                                 mods_to_copy.append(mod)
                         for c, mod in enumerate(mods_to_copy):
-                            psignal.emit({'value': c, 'max': len(mods_to_copy), 'text': f"{self.src_modinstance.get_mod_metadata(mod)['name']} - {c}/{len(mods_to_copy)}"})
+                            progress = {
+                                'text': f"{self.lang['copying_files']} - {c}/{len(mods_to_copy)}",
+                                'value': c,
+                                'max': len(mods_to_copy),
+                                'show2': True,
+                                'text2': self.src_modinstance.get_mod_metadata(mod)['name']
+                            }
+                            psignal.emit(progress)
                             shutil.copytree(os.path.join(self.src_modinstance.stagefile.dir, mod), skyrim_path, dirs_exist_ok=True)
-                    loadingdialog = dialogs.LoadingDialog(self.root, self, process, text=self.lang['copying_files'])
+                    loadingdialog = dialogs.LoadingDialog(self.root, self, process)
                     loadingdialog.exec()
 
         # Copy mods to new instance
