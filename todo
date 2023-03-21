@@ -1,0 +1,32 @@
+Credits
+- TranslatorStrings
+    - Name
+    - URL
+- Removal of unnecessary links
+
+Designs
+- redesign mainpage
+    - Mod Manager's svgs
+    - Mod Manager specific backgrounds
+
+
+Technical Features
+- Loot file integration
+- Vortex as Destination
+- MO2 Import via ldb files
+- Nexus Mod Manager implementation
+
+v1.1
+- Loot Files
+- Updated Credits Section
+- Vortex Import
+- MO2 Import Improvement
+- Design Update
+
+v1.2
+- Support for more games
+    - Oldrim
+    - Enderal
+    - Enderal Special Edition
+    - Fallout 4
+- Nexus Mod Manager CE Support
