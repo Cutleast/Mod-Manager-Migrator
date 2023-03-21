@@ -1,4 +1,6 @@
-{   
+{  
+    "translater_name": "For Translaters: If you are translating this file, put in your name here. This will be present in the credits section.",
+    "translater_url": "For Translaters: If you do have any social link, you can also put it here, the credits section will link to your profile." ,
     "error": "Fehler",
     "success": "Erfolgreich",
     "error_text": "Ein Fehler ist aufgetreten:",
