@@ -6,6 +6,7 @@ import json
 import os
 import threading
 import time
+from glob import glob
 from typing import Callable
 
 import qtawesome as qta
@@ -767,7 +768,14 @@ class DestinationDialog(qtw.QDialog):
             self.app.dst_modinstance = core.MO2Instance(self.app, instance_data)
             appdata_path = os.path.join(os.getenv('LOCALAPPDATA'), 'ModOrganizer', instance_data['name'])
             instance_path = self.app.dst_modinstance.paths['instance_path']
-            if os.path.isdir(appdata_path) or os.path.isdir(instance_path):
+            exist = False
+            if os.path.isdir(appdata_path):
+                if os.listdir(appdata_path):
+                    exist = True
+            elif os.path.isdir(instance_path):
+                if os.listdir(instance_path):
+                    exist = True
+            if exist:
                 self.app.log.warning("Instance data will be wiped!")
                 qtw.QMessageBox.warning(self.app.root, self.app.lang['warning'], self.app.lang['wipe_notice'], buttons=qtw.QMessageBox.StandardButton.Ok)
 
@@ -1101,8 +1109,11 @@ class SettingsDialog(qtw.QDialog):
             elif config == 'language':
                 dropdown = qtw.QComboBox()
                 dropdown.setObjectName(config)
-                dropdown.addItems([self.app.lang['de-DE'], self.app.lang['en-US'], "System"])
-                dropdown.setCurrentText(self.app.lang.get(value, value))
+                dropdown.addItem("System")
+                for lang in glob(os.path.join(self.app.res_path, 'locales', '??-??.json')):
+                    lang = os.path.basename(lang).rsplit(".", 1)[0]
+                    dropdown.addItem(lang)
+                dropdown.setCurrentText(self.app.config['language'])
                 dropdown.setEditable(False)
                 dropdown.currentTextChanged.connect(lambda e: self.on_setting_change())
                 self.settings_widgets.append(dropdown)
@@ -1170,7 +1181,7 @@ class SettingsDialog(qtw.QDialog):
                 elif widget.objectName() == 'ui_mode':
                     config[widget.objectName()] = 'System' if widget.currentText() == 'System' else ('Dark' if widget.currentText() == self.app.lang['dark'] else 'Light')
                 elif widget.objectName() == 'language':
-                    config[widget.objectName()] = 'System' if widget.currentText() == 'System' else ('de-DE' if widget.currentText() == self.app.lang['de-DE'] else 'en-US')
+                    config[widget.objectName()] = widget.currentText()
                 elif widget.objectName() == 'log_level':
                     config[widget.objectName()] = widget.currentText().lower()
             elif isinstance(widget, qtw.QSpinBox):

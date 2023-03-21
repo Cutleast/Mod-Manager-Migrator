@@ -33,7 +33,7 @@ LOG_LEVELS = {
     20: "info",                         # INFO
     30: "warning",                      # WARNING
     40: "error",                        # ERROR
-    50: "fatal/critical/exception"      # FATAL/CRITICAL/EXCEPTION
+    50: "critical"                      # CRITICAL
 }
 SUPPORTED_MODMANAGERS = [
     "Vortex",
@@ -452,6 +452,7 @@ class MainApp(qtw.QApplication):
                     loadingdialog.exec()
 
         # Copy mods to new instance
+        self.log.debug("Migrating mods...")
         def process(psignal: qtc.Signal):
             for c, mod in enumerate(self.src_modinstance.mods.keys()):
                 modname = self.src_modinstance.get_mod_metadata(os.path.basename(mod))['name']
@@ -515,7 +516,7 @@ class MainApp(qtw.QApplication):
 
         self.log.info("Migration complete.")
         dur = time.time() - starttime
-        self.log.debug(f"Migration took: {dur} second(s) ({(dur / 60):.2f} minute(s))")
+        self.log.debug(f"Migration took: {dur:.2f} second(s) ({(dur / 60):.2f} minute(s))")
         if self.source == 'Vortex':
             qtw.QMessageBox.information(self.root, self.lang['success'], self.lang['migration_complete_purge_notice'])
         else:

@@ -1,4 +1,4 @@
-{
+{   
     "error": "Fehler",
     "success": "Erfolgreich",
     "error_text": "Ein Fehler ist aufgetreten:",
@@ -29,8 +29,6 @@
     "log_level": "Logging Level",
     "ui_mode": "Farbmodus",
     "language": "Sprache",
-    "de-DE": "Deutsch",
-    "en-US": "Englisch",
     "true": "Aktiviert",
     "false": "Deaktiviert",
     "dark": "Dunkel",
@@ -73,7 +71,7 @@
     "copying_download": "Kopiere Download [NAME]...",
     "linking_download": "Verknüpfe Download [NAME]...",
     "sorting_loadorder": "Overwrite-Reihenfolge wird sortiert...",
-    "detected_root_files": "Es wurden Dateien erkannt, die von anderen Mod Managern außer Vortex nicht verwaltet werden können. (z.B. SKSE)\nSie müssen daher direkt in das Spielverzeichnis kopiert werden, damit die Instanz im Ziel-Modmanager funktioniert.\nÖffnen Sie dazu Vortex und purgen Sie das Spielverzeichnis.\nKlicken Sie dann auf 'Fortsetzen', um den Migrationsprozess fertigzustellen.",
+    "detected_root_files": "Es wurden Dateien erkannt, die von anderen Mod Managern außer Vortex nicht verwaltet werden können. (z.B. SKSE)\nSie müssen daher direkt in das Spielverzeichnis kopiert werden, damit die Instanz im Ziel-Modmanager funktioniert.\nÖffnen Sie dazu Vortex und purgen Sie das Spielverzeichnis.\nKlicken Sie dann auf 'Fortfahren', um den Migrationsprozess fertigzustellen.",
     "copying_files": "Kopiere Dateien...",
     "hardlink_notice": "Bei dieser Methode werden Hardlinks verwendet, anstatt die Dateien zu kopieren.\nEs wird imitiert, dass die Dateien doppelt vorhanden sind.\nDie Dateien im Mod Organizer-Ordner sind lediglich ein Spiegelbild der Quell-Dateistruktur und verbrauchen daher keinen weiteren Speicherplatz.\nSie müssen Ihre neue Instanz auf der gleichen Festplatte erstellen, auf welcher sich auch der Quell-Instanzordner befindet.\nAußerdem ist es viel schneller, Hardlinks zu erstellen, als jede Datei einzeln zu kopieren.",
     "hardlink_drive_error": "Bei der Hardlink-Methode müssen Sie die das Ziel ([DESTDRIVE]) auf der selben Festplatte festlegen,\nauf der sich auch der Quell-Instanzordner befindet. ([SOURCEDRIVE])",

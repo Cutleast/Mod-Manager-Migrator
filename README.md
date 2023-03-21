@@ -11,13 +11,13 @@
 <a href="https://www.nexusmods.com/skyrimspecialedition/mods/87160"><img src="misc_assets/GiO_NM.png" height="60px"/> </a>
 <a href="https://ko-fi.com/cutleast"><img src="misc_assets/KoFi.png" height="60px"/> </a>
 <br>
-MMM - Move Mods Masterfully.
+<strong>MMM - Move Mods Masterfully.</strong>
 </p>
 
 
 # ❗Please note!!!
 
-**This is the first initial release of this tool. I take no responsibility for any problems that may occur. In the current version everything works relatively stable. To get a clear picture, I depend on more extensive tests of the community.**
+**This is the first initial release of this tool. I take no responsibility for any problems that may occur. In the current version everything works relatively stable. But to get a clear picture, I depend on more extensive testing from the community.**
 
 
 # 📄Description
@@ -34,11 +34,12 @@ This is a tool for migrating modding instances between various mod managers (cur
 
 ### Planned Features
 - Support for more games (suggestions are welcome)
-- Support for more mod managers (suggestions are also welcome)
+- Support for more mod managers (NMM (CE) is the next, but suggestions are welcome)
+
 
 # 🔧Usage
 
-To migrate an instance from Vortex to MO2, for example, follow these steps:
+### To migrate an instance from Vortex to MO2, for example, follow these steps:
 
 1. Start Vortex and make sure that the profile you want to migrate is deployed.
 2. Close Vortex and start MMM (Mod Manager Migrator).
@@ -55,11 +56,11 @@ To migrate an instance from Vortex to MO2, for example, follow these steps:
 
 ### 1. Translations
 
-Create your translation for your desired language from en-US.json under `<Path to MMM>`/data/locales and give it a proper name: for example: "en-US.json" or "de-DE.json". Send it to me (cutleast@gmail.com) and I will add it as soon as I can.
+Create your translation for your desired language from en-US.json under `<Path to MMM>`/data/locales and give it a proper name: for example: "en-US.json" or "de-DE.json". Put it in the locales folder and make a pull request.
 
 ### 2. Feedback (Suggestions/Issues)
 
-If you encountered an issue/error or have a suggestion, create a issue with sufficient information.
+If you encountered an issue/error or have a suggestion, open an issue with sufficient information.
 
 ### 3. Code contributions
 
@@ -82,13 +83,22 @@ If you encountered an issue/error or have a suggestion, create a issue with suff
 4. Execute main file:
    `python main.py`
 
+### 5. Compile and build executable
+
+1. Follow the steps on this page [Nuitka.net](https://nuitka.net/doc/user-manual.html#usage) to install a C Compiler
+2. Run `build_nuitka.bat` with activated virtual environment from the root folder of this repo.
+3. The executable and its dependencies are created in the main.dist-Folder.
+
+
 # 💻How it works
+
 ### Mod order reconstruction from Vortex deployment file:
+
 1. It reads deployment files in staging folder
 2. Parses their data
 3. The data contains a list with all deployed files
 4. This list is used to reconstruct a mod order by checking which files come from which mod
-5. After initial sorting the loadorder is simulated and checked against the deployment file
+5. After initial sorting the loadorder is compared with and checked against the deployment file
 6. Sorts different mods until there are no differences left (mostly 1 or 2 times)
 
 

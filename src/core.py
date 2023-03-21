@@ -182,7 +182,9 @@ class VortexInstance(ModInstance):
                 fileid = data.pop(-1)
                 data = [str(d) for d in data]
                 version = ".".join(data)
-                name = modname.split(str(modid))[0].strip("-")
+                if not version:
+                    version = "1.0"
+                name = modname.split(str(modid))[0].strip("-").strip(".").strip()
                 metadata = {
                     'name': name,
                     'modid': modid,
@@ -191,6 +193,7 @@ class VortexInstance(ModInstance):
                 }
             except IndexError:
                 self.app.log.warning(f"Failed to get metadata from '{modname}': Insufficient data to parse!")
+                name = modname
                 metadata = {
                     'name': modname,
                     'modid': 0,
@@ -198,8 +201,10 @@ class VortexInstance(ModInstance):
                     'version': ""
                 }
             if name in self.modnames:
-                metadata['name'] = f"{name} ({metadata['fileid']})"
+                name += f"({metadata['fileid']})"
+                metadata['name'] = name
             self.modnames.append(name)
+            self.metadata[modname] = metadata
         else:
             metadata = self.metadata[modname]
 
@@ -220,7 +225,7 @@ class VortexInstance(ModInstance):
                     'show2': True,
                     'value2': 0,
                     'max2': 0,
-                    'text2': mod
+                    'text2': self.get_mod_metadata(mod)['name']
                 }
                 psignal.emit(progress)
             overwriting_mods = []
