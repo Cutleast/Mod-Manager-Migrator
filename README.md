@@ -50,7 +50,6 @@ This is a tool for migrating modding instances between various mod managers (cur
 6. Set paths name as you like it and click on "Done".
 7. Click on "Migrate" and wait for it to finish.
 8. After migration is done, open Vortex and purge game folder.
-9. Close Vortex, open it never again and you're done!
 
 
 # 🫶Contributing
