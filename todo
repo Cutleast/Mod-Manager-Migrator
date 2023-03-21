@@ -13,15 +13,14 @@ Designs
 Technical Features
 - Loot file integration
 - Vortex as Destination
+- MO2 Import via ldb files
 - Nexus Mod Manager implementation
-
-
-
-
-
-
-
-
 
 v1.1
 - Loot Files
+- Updated Credits Section
+
+v1.2
+- Vortex Import
+- MO2 Import Improvement
+- Design Update
