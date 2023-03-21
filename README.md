@@ -33,6 +33,7 @@ This is a tool for migrating modding instances between various mod managers (cur
 - Hardlink and copy method
 
 ### Planned Features
+- Ability to import Loadorder Rules into native Loot instance
 - Support for more games (suggestions are welcome)
 - Support for more mod managers (NMM (CE) is the next, but suggestions are welcome)
 
