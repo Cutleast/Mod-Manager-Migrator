@@ -632,7 +632,7 @@ def get_size(bytes: int | float, suffix="B"):
     else:
         return str(bytes)
 
-# Define function to calculate folder size
+# Define function to calculate folder size ###########################
 def get_folder_size(start_path: str):
     total_size = 0
     i = 0
@@ -683,7 +683,7 @@ def center(widget: qtw.QWidget, referent: qtw.QWidget=None):
     y = int((rh / 2) - (h / 2))
     widget.move(x, y)
 
-# Define function to get difference between two times ######
+# Define function to get difference between two times ################
 def get_diff(start_time, end_time, format="%H:%M:%S"):
     """Returns difference between 'start_time' and 'end_time' in 'format'."""
     tdelta = (datetime.strptime(end_time, format) - datetime.strptime(start_time, format))

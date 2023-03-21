@@ -44,7 +44,6 @@ NUMBER_OF_THREADS = 4 # tests have shown that this is the ideal number
 # Create class for main application ##################################
 class MainApp(qtw.QApplication):
     theme_change_sign = qtc.Signal()
-    change_sign = qtc.Signal()
 
     def __init__(self):
         super().__init__([])
@@ -54,18 +53,11 @@ class MainApp(qtw.QApplication):
         self.name = f"Mod Manager Migrator"
         # check if compiled with nuitka (or in general)
         self.compiled = ("__compiled__" in globals()) or (sys.argv[0].endswith('.exe'))
-        self._imgdata = None
-        self.encrypt_key = None
-        self.unsaved_changes = False
-        self.change_sign.connect(self.on_change)
-        self.unsaved_settings = False
-        self.source = None
-        self.destination = None
-        self.stagefile = None
+        self.source = None # has to be in SUPPORTED_MODMANAGERS
+        self.destination = None # has to be in SUPPORTED_MODMANAGERS
         self.src_modinstance = None # VortexInstance or MO2Instance
         self.dst_modinstance = None # VortexInstance or MO2Instance
         self.mode = 'hardlink' # 'copy' or 'hardlink'
-        self.load_order = []
         self.start_date = time.strftime("%d.%m.%Y")
         self.start_time = time.strftime("%H:%M:%S")
         self.os_type = "linux" if "Linux" in platform.system() else "windows"
@@ -525,19 +517,6 @@ class MainApp(qtw.QApplication):
 
     def set_mode(self, mode: str):
         self.mode = mode
-
-    def update_title(self):
-        # build title string
-        title = f"{self.name}"
-        if self.unsaved_changes:
-            title += "*"
-        
-        # apply title to window
-        self.root.setWindowTitle(title)
-    
-    def on_change(self):
-        self.unsaved_changes = True
-        self.update_title()
 
     def show_about_dialog(self):
         #qtw.QMessageBox.about(self.root, self.lang['about'], self.lang['about_text'])
