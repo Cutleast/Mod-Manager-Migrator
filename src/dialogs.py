@@ -138,7 +138,11 @@ class SourceDialog(qtw.QDialog):
         def browse_stagefolder():
             file_dialog = qtw.QFileDialog(self)
             file_dialog.setWindowTitle(self.app.lang['browse'])
-            file_dialog.setDirectory(os.path.join(os.getenv('APPDATA'), 'Vortex', 'skyrimse'))
+            _path = self.stagefolder_box.text()
+            if os.path.isdir(_path):
+                file_dialog.setDirectory(_path)
+            else:
+                file_dialog.setDirectory(os.path.join(os.getenv('APPDATA'), 'Vortex', 'skyrimse'))
             file_dialog.setFileMode(qtw.QFileDialog.FileMode.Directory)
             if file_dialog.exec():
                 folder = file_dialog.selectedFiles()[0]
@@ -168,7 +172,11 @@ class SourceDialog(qtw.QDialog):
         def browse_dlpath():
             file_dialog = qtw.QFileDialog(self)
             file_dialog.setWindowTitle(self.app.lang['browse'])
-            file_dialog.setDirectory(os.path.join(os.getenv('APPDATA'), 'Vortex', 'skyrimse'))
+            _path = self.dlpath_box.text()
+            if os.path.isdir(_path):
+                file_dialog.setDirectory(_path)
+            else:
+                file_dialog.setDirectory(os.path.join(os.getenv('APPDATA'), 'Vortex', 'skyrimse'))
             file_dialog.setFileMode(qtw.QFileDialog.FileMode.Directory)
             if file_dialog.exec():
                 folder = file_dialog.selectedFiles()[0]
