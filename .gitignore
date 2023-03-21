@@ -4,6 +4,5 @@
 **tests
 **main.build
 **main.dist
-**leveldb
 *.txt
 Mod-Manager-Migrator.code-workspace
