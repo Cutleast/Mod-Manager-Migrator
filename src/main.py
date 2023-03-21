@@ -279,7 +279,7 @@ class MainApp(qtw.QApplication):
             # Handle the user's choice
             if choice == qtw.QMessageBox.StandardButton.Yes:
                 # Open nexus mods file page
-                os.startfile("https://www.nexusmods.com/skyrimspecialedition/mods/87160?tab=files")
+                os.startfile("https://www.nexusmods.com/site/mods/545?tab=files")
         elif new_version == 0.0:
             self.log.error("Failed to check for update.")
 
