@@ -378,9 +378,14 @@ class SourceDialog(qtw.QDialog):
             self.source_layout.addWidget(label, 1, 0)
             instance_label = qtw.QLabel(self.app.src_modinstance.name)
             self.source_layout.addWidget(instance_label, 1, 1)
+        # Add label with game
+        label = qtw.QLabel(f"{self.app.lang['game']}:")
+        self.source_layout.addWidget(label, 2, 0)
+        game_label = qtw.QLabel(self.app.game_instance.name)
+        self.source_layout.addWidget(game_label, 2, 1)
         # Add label with instance paths
         label = qtw.QLabel(f"{self.app.lang['paths']}:")
-        self.source_layout.addWidget(label, 2, 0)
+        self.source_layout.addWidget(label, 3, 0)
         paths_label = qtw.QLabel()
         paths_label.setTextInteractionFlags(qtc.Qt.TextInteractionFlag.TextSelectableByMouse)
         paths_label.setCursor(qtg.QCursor(qtc.Qt.CursorShape.IBeamCursor))
@@ -389,12 +394,12 @@ class SourceDialog(qtw.QDialog):
             if path.strip():
                 paths += f"\n{pathname}: {path}"
         paths_label.setText(paths.strip())
-        self.source_layout.addWidget(paths_label, 2, 1)
+        self.source_layout.addWidget(paths_label, 3, 1)
         # Add label with number of mods
         label = qtw.QLabel("Mods:")
-        self.source_layout.addWidget(label, 3, 0)
+        self.source_layout.addWidget(label, 4, 0)
         mod_label = qtw.QLabel(str(len(self.app.src_modinstance.mods)))
-        self.source_layout.addWidget(mod_label, 3, 1)
+        self.source_layout.addWidget(mod_label, 4, 1)
         ##############################################################
 
         # Disable add source button

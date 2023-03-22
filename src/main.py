@@ -16,6 +16,7 @@ import sys
 import threading
 import time
 import traceback
+from glob import glob
 from locale import getlocale
 from shutil import disk_usage
 from typing import Callable
@@ -39,6 +40,9 @@ SUPPORTED_MODMANAGERS = [
     "Vortex",
     "ModOrganizer"
 ]
+SUPPORTED_GAMES = [
+    "SkyrimSE",
+]
 NUMBER_OF_THREADS = 4 # tests have shown that this is the ideal number
 
 # Create class for main application ##################################
@@ -49,14 +53,17 @@ class MainApp(qtw.QApplication):
         super().__init__([])
 
         # Initialize variables #######################################
-        self.version = "1.0"
+        with open(".\\data\\version", 'r') as file:
+            self.version = file.read().strip()
         self.name = f"Mod Manager Migrator"
         # check if compiled with nuitka (or in general)
         self.compiled = ("__compiled__" in globals()) or (sys.argv[0].endswith('.exe'))
         self.source = None # has to be in SUPPORTED_MODMANAGERS
         self.destination = None # has to be in SUPPORTED_MODMANAGERS
-        self.src_modinstance = None # VortexInstance or MO2Instance
-        self.dst_modinstance = None # VortexInstance or MO2Instance
+        self.src_modinstance = None # class that is inherited from ModInstance
+        self.dst_modinstance = None # class that is inherited from ModInstance
+        self.game = None # has to be in SUPPORTED_GAMES
+        self.game_instance = None # class that is inherited from GameInstance
         self.mode = 'hardlink' # 'copy' or 'hardlink'
         self.start_date = time.strftime("%d.%m.%Y")
         self.start_time = time.strftime("%H:%M:%S")
@@ -72,7 +79,7 @@ class MainApp(qtw.QApplication):
         self.qss_path = os.path.join(self.res_path, 'style.qss')
         _buf = ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)
         ctypes.windll.shell32.SHGetFolderPathW(None, 5, None, 0, _buf)
-        self.doc_path = os.path.normpath(os.path.join(_buf.value, 'My Games', 'Skyrim Special Edition'))
+        self.doc_path = os.path.normpath(_buf.value)
         # logging
         self.log_name = f"{self.name}_{self.start_date}_-_{self.start_time.replace(':', '.')}.log"
         #self.log_path = os.path.join(self.res_path, 'logs', self.log_name)
@@ -156,6 +163,7 @@ class MainApp(qtw.QApplication):
         log_title = "-" * 40 + f" {self.name} " + "-" * 40
         self.log.info(f"\n{'-' * len(log_title)}\n{log_title}\n{'-' * len(log_title)}")
         self.log.info(f"Starting program...")
+        self.log.info(f"{'Program version':22}: {self.version}")
         self.log.info(f"{'Executable name':22}: {sys.executable}")
         self.log.info(f"{'Executable path':22}: {self.cur_path}")
         self.log.debug(f"{'Compiled':21}: {self.compiled}")
@@ -279,9 +287,13 @@ class MainApp(qtw.QApplication):
             # Handle the user's choice
             if choice == qtw.QMessageBox.StandardButton.Yes:
                 # Open nexus mods file page
-                os.startfile("https://www.nexusmods.com/skyrimspecialedition/mods/87160?tab=files")
+                os.startfile("https://www.nexusmods.com/site/mods/545?tab=files")
         elif new_version == 0.0:
             self.log.error("Failed to check for update.")
+
+        # The following will be removed when multi game support releases
+        self.game = "SkyrimSE"
+        self.game_instance = games.SkyrimSEInstance(self)
 
     def __repr__(self):
         return "MainApp"
@@ -386,10 +398,24 @@ class MainApp(qtw.QApplication):
         loadingdialog.exec()
         self.dst_modinstance.create_instance()
 
-        # Check for files that have to be copied
-        # directly into the skyrim folder
-        # since MO2 cannot manage those
         if self.source == 'Vortex':
+            # Copy userlist from Vortex' integrated LOOT to installed LOOT
+            # Renames the original userlist.yaml to userlist.yaml.mmm
+            # to avoid deleting files
+            vortex_path = os.path.join(os.getenv('APPDATA'), 'Vortex', self.game.lower())
+            loot_path = os.path.join(os.getenv('LOCALAPPDATA'), 'LOOT', 'games', self.game_instance.name)
+            # Only if LOOT is even installed outside of Vortex
+            if os.path.isdir(loot_path):
+                userlists = glob(os.path.join(loot_path, 'userlist.yaml.mmm_*'))
+                c = len(userlists) + 1
+                os.rename(os.path.join(loot_path, 'userlist.yaml'), os.path.join(loot_path, f'userlist.yaml.mmm_{c}'))
+                self.log.debug(f"Renamed installed LOOT's 'userlist.yaml' to 'userlist.yaml.mmm_{c}'.")
+                shutil.copyfile(os.path.join(vortex_path, 'userlist.yaml'), os.path.join(loot_path, 'userlist.yaml'))
+                self.log.debug("Copied userlist.yaml from Vortex' LOOT to installed LOOT.")
+
+            # Check for files that have to be copied
+            # directly into the game folder
+            # since MO2 cannot manage those
             if self.src_modinstance.stagefiles:
                 message_box = qtw.QMessageBox(self.root)
                 message_box.setWindowIcon(self.root.windowIcon())
@@ -426,7 +452,7 @@ class MainApp(qtw.QApplication):
                         }
                         psignal.emit(progress)
                         mods_to_copy = []
-                        skyrim_path = os.path.join(core.get_steam_path(), 'steamapps', 'common', 'Skyrim Special Edition')
+                        installdir = self.game_instance.get_install_dir()
                         for stagefile in self.src_modinstance.stagefiles:
                             for mod in stagefile.modfiles.keys():
                                 mods_to_copy.append(mod)
@@ -439,7 +465,7 @@ class MainApp(qtw.QApplication):
                                 'text2': self.src_modinstance.get_mod_metadata(mod)['name']
                             }
                             psignal.emit(progress)
-                            shutil.copytree(os.path.join(self.src_modinstance.stagefile.dir, mod), skyrim_path, dirs_exist_ok=True)
+                            shutil.copytree(os.path.join(self.src_modinstance.stagefile.dir, mod), installdir, dirs_exist_ok=True)
                     loadingdialog = dialogs.LoadingDialog(self.root, self, process)
                     loadingdialog.exec()
 
@@ -682,6 +708,7 @@ class Theme:
 # Start main application #############################################
 if __name__ == '__main__':
     import core
+    import games
     import dialogs
     app = MainApp()
     app.exec()

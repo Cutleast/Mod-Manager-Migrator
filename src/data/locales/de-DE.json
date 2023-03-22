@@ -84,5 +84,6 @@
     "detected_same_path": "Die Quell- und Zielpfade müssen unterschiedlich sein!",
     "elapsed": "Verstrichene Zeit",
     "update_available": "Es scheint, dass Ihre Version von MMM veraltet ist. Sie verwenden die Version [OLD_VERSION].\nDie Version [NEW_VERSION] ist bereits verfügbar. Möchten Sie sie jetzt herunterladen?",
-    "permission_error": "Zugriff verweigert. Starten Sie MMM als Administrator und versuchen Sie es erneut.\nWenn das Programm bereits mit Administratorrechten läuft, stellen Sie sicher, dass dieser die erforderlichen Lese- und Schreibrechte hat."
+    "permission_error": "Zugriff verweigert. Starten Sie MMM als Administrator und versuchen Sie es erneut.\nWenn das Programm bereits mit Administratorrechten läuft, stellen Sie sicher, dass dieser die erforderlichen Lese- und Schreibrechte hat.",
+    "game": "Spiel"
 }
