@@ -11,14 +11,12 @@ Designs
 
 
 Technical Features
-- Loot file integration
 - Vortex as Destination
 - MO2 Import via ldb files
 - Nexus Mod Manager implementation
 - Keep log file automatically if at least one exception occurs (catched exceptions are still ignored)
 
 v1.1
-- Loot Files
 - Updated Credits Section
 - Vortex Import
 - MO2 Import Improvement
