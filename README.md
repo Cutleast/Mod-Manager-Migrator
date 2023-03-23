@@ -31,10 +31,10 @@ This is a tool for migrating modding instances between various mod managers (cur
 - Fully automated migration
 - New instance is customizable
 - Hardlink and copy method
+- Custom LOOT rules (userlist.yaml) are migrated
 
 ### Planned Features
 - Vortex as migration destination
-- Ability to import Loadorder Rules into native Loot instance
 - Support for more games (suggestions are welcome)
 - Support for more mod managers (NMM (CE) is the next, but suggestions are welcome)
 
