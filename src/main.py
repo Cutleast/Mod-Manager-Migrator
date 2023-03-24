@@ -58,6 +58,7 @@ class MainApp(qtw.QApplication):
         self.name = f"Mod Manager Migrator"
         # check if compiled with nuitka (or in general)
         self.compiled = ("__compiled__" in globals()) or (sys.argv[0].endswith('.exe'))
+        self.exception = False # will be set to True if an uncatched exception occurs
         self.source = None # has to be in SUPPORTED_MODMANAGERS
         self.destination = None # has to be in SUPPORTED_MODMANAGERS
         self.src_modinstance = None # class that is inherited from ModInstance
@@ -290,6 +291,8 @@ class MainApp(qtw.QApplication):
                 os.startfile("https://www.nexusmods.com/site/mods/545?tab=files")
         elif new_version == 0.0:
             self.log.error("Failed to check for update.")
+        else:
+            self.log.info("No update available.")
 
         # The following will be removed when multi game support releases
         self.game = "SkyrimSE"
@@ -302,6 +305,7 @@ class MainApp(qtw.QApplication):
         if issubclass(exc_type, KeyboardInterrupt):
             sys.__excepthook__(exc_type, exc_value, exc_traceback)
             return
+        self.exception = True
         self.log.critical(f"An uncaught exception occured:", exc_info=(exc_type, exc_value, exc_traceback))
         mb = qtw.QMessageBox(self.root)
         mb.setWindowTitle(f"{self.name} - {self.lang['error']}")
@@ -338,6 +342,9 @@ class MainApp(qtw.QApplication):
     def migrate(self):
         self.log.info(f"Migrating instance from {self.source} to {self.destination}...")
         self.log.debug(f"Mode: {self.mode}")
+
+        # Only continue if there is a valid game path
+        self.game_instance.get_install_dir()
 
         starttime = time.time()
 
@@ -408,8 +415,9 @@ class MainApp(qtw.QApplication):
             if os.path.isdir(loot_path):
                 userlists = glob(os.path.join(loot_path, 'userlist.yaml.mmm_*'))
                 c = len(userlists) + 1
-                os.rename(os.path.join(loot_path, 'userlist.yaml'), os.path.join(loot_path, f'userlist.yaml.mmm_{c}'))
-                self.log.debug(f"Renamed installed LOOT's 'userlist.yaml' to 'userlist.yaml.mmm_{c}'.")
+                if os.path.isfile(os.path.join(loot_path, 'userlist.yaml')):
+                    os.rename(os.path.join(loot_path, 'userlist.yaml'), os.path.join(loot_path, f'userlist.yaml.mmm_{c}'))
+                    self.log.debug(f"Renamed installed LOOT's 'userlist.yaml' to 'userlist.yaml.mmm_{c}'.")
                 shutil.copyfile(os.path.join(vortex_path, 'userlist.yaml'), os.path.join(loot_path, 'userlist.yaml'))
                 self.log.debug("Copied userlist.yaml from Vortex' LOOT to installed LOOT.")
 
@@ -572,7 +580,7 @@ class MainApp(qtw.QApplication):
 
         # Exit and clean up
         self.log.info("Exiting program...")
-        if (not self.config['save_logs']) or (self.config['save_logs'] == 'False'):
+        if (not self.config['save_logs'] or (self.config['save_logs'] == 'False')) and (not self.exception):
             self.log.info("Cleaning log file...")
             self.stdout.__del__()
             os.remove(self.log_path)
@@ -594,7 +602,24 @@ class MainApp(qtw.QApplication):
         
         # Load language
         with open(langpath, "r", encoding='utf-8') as langfile:
-            self.lang = json.load(langfile)
+            lang = json.load(langfile)
+        
+        # Load english language as fallback
+        with open(os.path.join(self.res_path, 'locales', 'en-US.json'), 'r', encoding='utf-8') as engfile:
+            eng_lang = json.load(engfile)
+        
+        if len(eng_lang) > len(lang):
+            self.log.warning(f"Detected outdated localisation: '{language}'!")
+            self.log.debug(f"Missing strings: {len(eng_lang) - len(lang)}")
+
+            for key, value in eng_lang.items():
+                if key not in lang.keys():
+                    lang[key] = value
+            
+            self.log.debug(f"Filled missing strings from en-US strings.")
+        
+        self.lang = lang
+
         self.log.info(f"{'Program language':21}: {language}")
 
 

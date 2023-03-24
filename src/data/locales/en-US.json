@@ -85,5 +85,6 @@
     "elapsed": "Elapsed time",
     "update_available": "It seems like your version of MMM is outdated. You are using the version [OLD_VERSION].\nVersion [NEW_VERSION] is already available. Do you want to download it now?",
     "permission_error": "Access denied. Start MMM as administrator and try again.\nIf the program is already running with administrator rights, make sure that the administrator has the necessary read and write permissions.",
-    "game": "Game"
+    "game": "Game",
+    "game_not_found": "The game's install path could not be found. Make sure that the game is installed and select its path manually below to continue."
 }

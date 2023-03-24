@@ -5,7 +5,7 @@ Part of MMM. Contains game classes.
 import os
 import winreg
 
-from main import MainApp
+from main import MainApp, qtw, qtc
 
 
 # Create class for Game instance #####################################
@@ -52,7 +52,7 @@ class GameInstance:
                     self.app.log.error(f"Failed to get install path from Steam: {ex}")
 
             # Try to get Skyrim path from GOG if installed
-            elif self.gogid:
+            if self.gogid:
                 try:
                     reg_path = f"SOFTWARE\\WOW6432Node\\GOG.com\\Games\\{self.gogid}"
                     with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, reg_path) as hkey:
@@ -62,6 +62,59 @@ class GameInstance:
                             return self.installdir
                 except Exception as ex:
                     self.app.log.error(f"Failed to get install path from Steam: {ex}")
+
+        if not installdir:
+            dialog = qtw.QDialog()
+            dialog.setModal(True)
+            dialog.setWindowTitle(self.app.name)
+            dialog.setWindowIcon(self.app.root.windowIcon())
+            dialog.setStyleSheet(self.app.stylesheet)
+            dialog.setWindowFlag(qtc.Qt.WindowType.WindowCloseButtonHint, False)
+            
+            layout = qtw.QGridLayout()
+            dialog.setLayout(layout)
+
+            label = qtw.QLabel(self.app.lang['game_not_found'])
+            label.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
+            layout.addWidget(label, 0, 0, 1, 2)
+
+            lineedit = qtw.QLineEdit()
+            layout.addWidget(lineedit, 1, 0)
+
+            def on_edit(text: str):
+                # Enable button if path is valid or empty
+                if os.path.isdir(text) or (not text.strip()):
+                    continue_button.setDisabled(False)
+                # Disable it otherwise
+                else:
+                    continue_button.setDisabled(True)
+            lineedit.textChanged.connect(on_edit)
+
+            def browse_path():
+                file_dialog = qtw.QFileDialog(dialog)
+                file_dialog.setWindowTitle(self.app.lang['browse'])
+                file_dialog.setDirectory(lineedit.text())
+                file_dialog.setFileMode(qtw.QFileDialog.FileMode.Directory)
+                if file_dialog.exec():
+                    folder = file_dialog.selectedFiles()[0]
+                    folder = os.path.normpath(folder)
+                    lineedit.setText(folder)
+
+            browse_button = qtw.QPushButton(self.app.lang['browse'])
+            browse_button.clicked.connect(browse_path)
+            layout.addWidget(browse_button, 1, 1)
+
+            continue_button = qtw.QPushButton(self.app.lang['continue'])
+            continue_button.setDisabled(True)
+            continue_button.clicked.connect(dialog.accept)
+            layout.addWidget(continue_button, 2, 1)
+
+            dialog.exec()
+
+            if os.path.isdir(lineedit.text()):
+                self.installdir = os.path.normpath(lineedit.text())
+            else:
+                raise Exception("No path specified!")
 
         return self.installdir
     
