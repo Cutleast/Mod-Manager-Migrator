@@ -82,5 +82,6 @@
     "detected_same_path": "源路径和目标路径必须不同！",
     "elapsed": "已用时间",
     "update_available": "看起来您的 MMM 版本已过时。您正在使用的是版本 [OLD_VERSION] 。\n新版本 [NEW_VERSION] 已经发布。想要现在下载吗？",
-    "permission_error": "拒绝访问，请以管理员身份启动MMM并重试。\n如果程序已经以管理员权限运行，请确保管理员具有必要的读写权限。"
+    "permission_error": "拒绝访问，请以管理员身份启动MMM并重试。\n如果程序已经以管理员权限运行，请确保管理员具有必要的读写权限。",
+    "game": "Game"
 }
