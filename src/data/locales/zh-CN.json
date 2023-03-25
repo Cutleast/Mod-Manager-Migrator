@@ -1,4 +1,6 @@
-{   
+{  
+    "translater_name": "Abab-bk",
+    "translater_url": "https://github.com/Abab-bk", 
     "error": "错误",
     "success": "成功",
     "error_text": "发生了一个错误：",
@@ -46,7 +48,7 @@
     "loading_instances": "正在加载实例...",
     "loading_stagingfolder": "正在加载 Vortex 实例...",
     "error_no_instances": "没有找到实例！",
-    "vortex_notice": "只有已经启用的配置文件可以从Vortex迁移。\n并且，确保当前部署了配置文件，并且通过 Vortex 对插件进行了排序。\n从下面的Vortex中选择 MOD 暂存文件夹。",
+    "vortex_notice": "只有已经启用的配置文件可以从Vortex迁移。\n并且，确保当前部署了配置文件，并且通过 Vortex 对插件进行了排序。\n从下面的输入框中选择 MOD 暂存文件夹。",
     "mod_manager": "MOD管理器",
     "instance_name": "实例名称",
     "instance_path": "实例路径",
@@ -71,11 +73,11 @@
     "copying_download": "正在复制下载 [NAME]...",
     "linking_download": "正在链接MOD [NAME]...",
     "sorting_loadorder": "排序覆盖顺序...",
-    "detected_root_files": "检测到文件不能由Vortex以外的mod管理器管理。（例如：SKSE）\n必须把这些文件直接复制到游戏目录，以便实例在目标MOD管理器中工作。\n要这样做，首先打开Vortex，清除游戏目录。\n然后点击 ‘继续’，完成迁移。",
+    "detected_root_files": "检测到文件不能由Vortex以外的mod管理器管理（例如：SKSE）。\n必须把这些文件直接复制到游戏目录，以便实例在目标MOD管理器中工作。\n要这样做，首先打开Vortex，清除游戏目录。\n然后点击 ‘继续’，完成迁移。",
     "copying_files": "正在复制文件...",
     "hardlink_notice": "这种方法使用硬链接来替代复制文件。Windows会认为这些文件存在两次。\nMO文件夹中的文件只是 Vortex 文件结构的镜像，因此不会占用更多的磁盘空间。\n 你的新实例必须存在于与源实例文件夹相同的分区上。\n另外，创建硬链接比逐个复制文件要快得多。",
     "hardlink_drive_error": "当使用硬链接方法时，必须将目标 ([DESTDRIVE]) 设置在与源实例文件夹位于同一分区上（[SOURCEDRIVE]）。",
-    "copy_notice": "此方法直接将文件复制到您的新实例中。\n你真应该使用硬链接（除非您知道自己在做什么）。\n 如果直接复制这些文件，这个过程将需要更长的时间。\n并且新的实例将需要你硬盘上的额外空间。",
+    "copy_notice": "此方法直接将文件复制到您的新实例中。\n你应该使用硬链接（除非您知道自己在做什么）。\n 如果直接复制这些文件，这个过程将需要更长的时间。\n并且新的实例将需要你硬盘上的额外空间。",
     "wipe_notice": "指定的一个或多个文件夹已经存在。如果您继续，它们的内容将被删除。",
     "wiping_instance": "清空实例...",
     "wiping_instance_data": "清空实例数据...",
@@ -83,5 +85,6 @@
     "elapsed": "已用时间",
     "update_available": "看起来您的 MMM 版本已过时。您正在使用的是版本 [OLD_VERSION] 。\n新版本 [NEW_VERSION] 已经发布。想要现在下载吗？",
     "permission_error": "拒绝访问，请以管理员身份启动MMM并重试。\n如果程序已经以管理员权限运行，请确保管理员具有必要的读写权限。",
-    "game": "Game"
+    "game": "游戏",
+    "game_not_found": "游戏安装路径未找到，请确保游戏已安装，并在下面手动选择游戏路径以继续。"
 }
