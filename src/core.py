@@ -5,13 +5,16 @@ Part of MMM. Contains core classes and functions.
 import os
 import queue
 import requests
+import plyvel as leveldb
 import shutil
+import subprocess
 import sys
 import threading
 import time
 import winreg
 from datetime import datetime
 from glob import glob
+from typing import Union
 
 import msgpack
 
@@ -97,6 +100,121 @@ class ModInstance:
     
     def import_mod(self, folder: str, psignal: qtc.Signal=None):
         return
+
+
+# Create class for Vortex commandline interface ######################
+class VortexDatabase:
+    def __init__(self, app: MainApp):
+        self.app = app
+        self.data = {}
+        self.appdir = os.path.join(os.getenv('APPDATA'), 'Vortex')
+        self.db_path = os.path.join(self.appdir, 'state.v2')
+        
+        # Do backup
+        shutil.copytree(self.db_path, f"{self.db_path}.mmm_backup")
+
+        # Initialize database
+        self.db = leveldb.DB(self.db_path)
+    
+    def load_db(self):
+        self.app.log.debug(f"Loading Vortex database...")
+
+        lines = []
+        for keys, value in self.db:
+            keys, value = keys.decode(), value.decode()
+            lines.append(f"{keys} = {value}")
+        
+        data = self.parse_string_to_dict(lines)
+        self.data = data
+
+        self.app.log.debug(f"Loaded Vortex database.")
+        return data
+    
+    def save_db(self):
+        self.app.log.debug(f"Saving Vortex database...")
+
+        lines = self.convert_nested_dict_to_text(self.data)
+
+        for line in lines:
+            path, line = line.split(" = ", 1)
+            path, line = path.encode(), line.encode()
+            self.db.put(path, line)
+        
+        self.db.close()
+
+        self.app.log.debug(f"Saved to database.")
+
+    @staticmethod
+    def convert_nested_dict_to_text(nested_dict: dict) -> str:
+        """
+        This function takes a nested dictionary and converts it back to a string of text in the format of
+        'key1.subkey1.subsubkey1.subsubsubkey1 = subsubsubvalue1'. Each key-value pair is represented on a separate line,
+        and the keys are separated by dots to indicate nesting.
+
+        Parameters:
+            nested_dict: dict (nested dictionary)
+        Returns:
+            str (string of text in the specified format.)
+        """
+
+        def flatten_dict(d: dict, prefix=""):
+            lines = []
+            for key, value in d.items():
+                full_key = f"{prefix}###{key}" if prefix else key
+                if isinstance(value, dict):
+                    lines.extend(flatten_dict(value, prefix=full_key))
+                else:
+                    lines.append(f"{full_key} = {value}")
+            return lines
+
+        flat_dict = flatten_dict(nested_dict)
+        return flat_dict
+    
+    @staticmethod
+    def parse_string_to_dict(text: Union[str, list]):
+        """
+        This method takes a string of text in the
+        format of 'key1.subkey1.subsubkey1.subsubsubkey1 = subsubsubvalue1'
+        and converts it into a nested dictionary.
+        The text must have a key-value pair on each line and
+        each key must be separated by dots to indicate nesting.
+        Empty lines are ignored.
+
+        Parameters:
+            text: str or list (text which lines are in specified format above)
+        
+        Returns:
+            result: dict (nested dictionary)
+        """
+
+        result = {}
+
+        if isinstance(text, str):
+            lines = text.split("\n")
+        else:
+            lines = text
+        
+        for line in lines:
+            try:
+                line = line.strip()
+                if not line:
+                    continue
+                keys, value = line.split("=", 1)
+                keys = keys.strip().split("###")
+                current = result
+                for key in keys[:-1]:
+                    if key not in current:
+                        current[key] = {}
+                    current = current[key]
+                try:
+                    value = eval(value.strip())
+                except:
+                    value = value.strip()
+                current[keys[-1]] = value
+            except ValueError:
+                print(f"Failed to process line: {line:20}...")
+                continue
+        return result
 
 
 # Create class for Vortex stagefile ##################################
@@ -606,7 +724,12 @@ def create_folder_list(folder, lower=True):
 
     for root, dirs, _files in os.walk(folder):
         for f in _files:
-            if f not in ['.gitignore', 'meta.ini']: # check if in blacklist
+            blacklist = []
+            with open('\\data\\blacklist', 'r') as file:
+                for line in file.readlines():
+                    if line.strip():
+                        blacklist.append(line)
+            if f not in blacklist: # check if in blacklist
                 path = os.path.join(root, f)
                 path = path.removeprefix(f"{folder}\\")
                 if lower:
@@ -616,7 +739,7 @@ def create_folder_list(folder, lower=True):
     return files
 
 # Define function to round bytes #####################################
-def get_size(bytes: int | float, suffix="B"):
+def get_size(bytes: Union[int, float], suffix="B"):
     """
     Scale bytes to their proper format; for e.g:
     1253656 => '1.20MB'

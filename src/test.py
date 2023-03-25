@@ -12,11 +12,13 @@ import platform
 import shutil
 import sys
 import time
+from glob import glob
 from locale import getlocale
 from shutil import disk_usage
 
 import main
 import core
+import games
 
 
 # Create stripped MainApp class for testing ##########################
@@ -34,8 +36,10 @@ class MainApp:
         self.source = None
         self.destination = None
         self.stagefile = None
-        self.src_modinstance = None # VortexInstance or MO2Instance
-        self.dst_modinstance = None # VortexInstance or MO2Instance
+        self.src_modinstance = None # Inherited by ModInstance
+        self.dst_modinstance = None # Inherited by ModInstance
+        self.game = None # has to be in SUPPORTED_GAMES
+        self.game_instance = None # Inherited by GameInstance
         self.mode = 'hardlink' # 'copy' or 'hardlink'
         self.load_order = []
         self.start_date = time.strftime("%d.%m.%Y")
@@ -106,7 +110,7 @@ class MainApp:
         self.log = logging.getLogger(self.__repr__())
         log_fmt = "[%(asctime)s.%(msecs)03d][%(levelname)s][%(threadName)s.%(name)s.%(funcName)s]: %(message)s"
         self.log_fmt = logging.Formatter(log_fmt, datefmt="%d.%m.%Y %H:%M:%S")
-        self.stdout = main.StdoutPipe(self)
+        self.stdout = core.StdoutPipe(self)
         self.log_str = logging.StreamHandler(self.stdout)
         self.log_str.setFormatter(self.log_fmt)
         self.log.addHandler(self.log_str)
@@ -147,25 +151,35 @@ class MainApp:
         self.log.info(f"{'System language':22}: {getlocale()[0]}")
         self.log.debug(f"{'Detected platform':21}: {platform.system()} {platform.version()} {platform.architecture()[0]}")
 
+        # Set SkyrimSE as default game ###############################
+        self.game = "SkyrimSE"
+        self.game_instance = games.SkyrimSEInstance(self)
+
     def __repr__(self):
         return "MainApp"
        
     # Core function to migrate #######################################
     def migrate(self):
         self.log.info(f"Migrating instance from {self.source} to {self.destination}...")
+        self.log.debug(f"Mode: {self.mode}")
 
-        # Calculate free and required disk space if copy mode
-        if self.mode == 'copy':
-            self.fspace = 0 # free space
-            self.rspace = 0 # required space
-            self.fspace = disk_usage(os.path.splitdrive(self.dst_modinstance.paths['instance_path'])[0])[2]
-            self.rspace = self.src_modinstance.get_size()
-            self.log.debug(f"Free space: {core.get_size(self.fspace)} | Required space: {core.get_size(self.rspace)}")
+        # Only continue if there is a valid game path
+        self.game_instance.get_install_dir()
 
-            # Check if there is enough free space
-            if self.fspace <= self.rspace:
-                self.log.error(f"Migration failed: not enough free space!")
-                return
+        starttime = time.time()
+
+        # Wipe folders if they already exist
+        if self.destination == 'ModOrganizer':
+            appdata_path = os.path.join(os.getenv('LOCALAPPDATA'), 'ModOrganizer', self.dst_modinstance.name)
+            instance_path = self.dst_modinstance.paths['instance_path']
+            if os.path.isdir(appdata_path):
+                self.log.debug("Wiping existing instance...")
+                shutil.rmtree(appdata_path)
+                self.log.debug("Instance wiped.")
+            if os.path.isdir(instance_path):
+                self.log.debug("Wiping existing instance data...")
+                shutil.rmtree(instance_path)
+                self.log.debug("Instance data wiped.")
 
         # Create destination mod instance with ini files and loadorder
         self.dst_modinstance.loadorder = self.src_modinstance.get_loadorder()
@@ -176,28 +190,60 @@ class MainApp:
             self.dst_modinstance.metadata[mod] = data
         self.dst_modinstance.create_instance()
 
-        # Check for files that have to be copied
-        # directly into the skyrim folder
-        # since MO2 cannot manage those
         if self.source == 'Vortex':
+            # Copy userlist from Vortex' integrated LOOT to installed LOOT
+            # Renames the original userlist.yaml to userlist.yaml.mmm
+            # to avoid deleting files
+            vortex_path = os.path.join(os.getenv('APPDATA'), 'Vortex', self.game.lower())
+            loot_path = os.path.join(os.getenv('LOCALAPPDATA'), 'LOOT', 'games', self.game_instance.name)
+            # Only if LOOT is even installed outside of Vortex
+            if os.path.isdir(loot_path):
+                userlists = glob(os.path.join(loot_path, 'userlist.yaml.mmm_*'))
+                c = len(userlists) + 1
+                if os.path.isfile(os.path.join(loot_path, 'userlist.yaml')):
+                    os.rename(os.path.join(loot_path, 'userlist.yaml'), os.path.join(loot_path, f'userlist.yaml.mmm_{c}'))
+                    self.log.debug(f"Renamed installed LOOT's 'userlist.yaml' to 'userlist.yaml.mmm_{c}'.")
+                shutil.copyfile(os.path.join(vortex_path, 'userlist.yaml'), os.path.join(loot_path, 'userlist.yaml'))
+                self.log.debug("Copied userlist.yaml from Vortex' LOOT to installed LOOT.")
+
+            # Check for files that have to be copied
+            # directly into the game folder
+            # since MO2 cannot manage those
             if self.src_modinstance.stagefiles:
-                self.log.info("Found root files!")
+                if 'y' in input("Detected root files. Copy to gamefolder? (y or n)\n>"):
+                    # Copy root files directly into game directory
+                    mods_to_copy = []
+                    installdir = self.game_instance.get_install_dir()
+                    for stagefile in self.src_modinstance.stagefiles:
+                        for mod in stagefile.modfiles.keys():
+                            mods_to_copy.append(mod)
+                    for c, mod in enumerate(mods_to_copy):
+                        shutil.copytree(os.path.join(self.src_modinstance.stagefile.dir, mod), installdir, dirs_exist_ok=True)
 
         # Copy mods to new instance
+        self.log.debug("Migrating mods...")
         for c, mod in enumerate(self.src_modinstance.mods.keys()):
             self.dst_modinstance.import_mod(os.path.join(self.src_modinstance.paths['instance_path'], mod))
 
         # Copy downloads if given to new instance
-        if self.src_modinstance.paths.get('download_path', None):
-            for c, archive in enumerate(os.listdir(self.src_modinstance.paths['download_path'])):
-                src_path = os.path.join(self.src_modinstance.paths['download_path'], archive)
-                dst_path = os.path.join(self.dst_modinstance.paths['download_path'], archive)
-                if self.mode == 'copy':
-                    shutil.copyfile(src_path, dst_path)
-                else:
-                    os.link(src_path, dst_path)
+        if src_dls := self.src_modinstance.paths.get('download_path', None):
+            # Only copy/link downloads if paths differ
+            if src_dls != self.dst_modinstance.paths['download_path']:
+                try:
+                    self.log.debug(f"Mode: {self.mode}")
+                    for c, archive in enumerate(os.listdir(self.src_modinstance.paths['download_path'])):
+                        src_path = os.path.join(self.src_modinstance.paths['download_path'])
+                        dst_path = os.path.join(self.dst_modinstance.paths['download_path'])
+                        if self.mode == 'copy':
+                            shutil.copyfile(src_path, dst_path)
+                        else:
+                            os.link(src_path, dst_path)
+                except PermissionError:
+                    self.log.error("Failed to migrate downloads: Access denied!")
 
         self.log.info("Migration complete.")
+        dur = time.time() - starttime
+        self.log.debug(f"Migration took: {dur:.2f} second(s) ({(dur / 60):.2f} minute(s))")
 
 
 # Define function to test loading dialog #############################
@@ -239,8 +285,11 @@ QProgressBar::chunk {
 """)
     ld.exec()
 
-
-if __name__ == '__main__':
+global app
+app = None
+# Define main function for testing ###################################
+def main_test():
+    global app
     starttime = time.time()
     app = MainApp()
 
@@ -345,15 +394,24 @@ if __name__ == '__main__':
 
     # console
     print("Type 'continue' to continue with automated testing.\nOr type another command to test a specific part of code.")
+    _exit = False
     while True:
-        inpt = input("\n>>> ")
+        inpt = input("\n> ")
         if inpt == "continue":
+            break
+        elif inpt == "exit":
+            _exit = True
             break
         else:
             eval(inpt)
+    
+    if not _exit:
+        # Migrate
+        app.migrate()
 
-    # Migrate
-    app.migrate()
+        # Print execution time to log
+        app.log.debug(f"Testing took {time.time() - starttime} second(s). ({(time.time() - starttime) / 60} minute(s))")
 
-    # Print execution time to log
-    app.log.debug(f"Testing took {time.time() - starttime} second(s). ({(time.time() - starttime) / 60} minute(s))")
+
+if __name__ == '__main__':
+    main_test()

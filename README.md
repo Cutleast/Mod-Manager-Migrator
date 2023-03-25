@@ -65,7 +65,7 @@ If you encountered an issue/error or have a suggestion, open an issue with suffi
 
 ### 3. Code contributions
 
-1. Install Python 3.10 (Make sure that you add it to PATH!)
+1. Install Python 3.9 (Make sure that you add it to PATH!)
 2. Clone repository
 3. Open terminal in repository folder
 4. Type in following command to set up virtual environment:
