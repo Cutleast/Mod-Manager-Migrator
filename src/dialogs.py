@@ -8,6 +8,7 @@ import threading
 import time
 from glob import glob
 from typing import Callable
+import shutil
 
 import qtawesome as qta
 import qtpy.QtCore as qtc
@@ -24,6 +25,7 @@ class SourceDialog(qtw.QDialog):
         super().__init__(parent)
 
         self.app = app
+        self.modinstance = None
 
         # Create dialog to choose mod manager and instance/profile
         self.setWindowTitle(f"{self.app.name} - {self.app.lang['select_source']}")
@@ -99,95 +101,6 @@ class SourceDialog(qtw.QDialog):
         self.instances_box.setMinimumHeight(200)
         self.instances_layout.addWidget(self.instances_box, 1)
         ##############################################################
-
-        # Create widget for vortex staging path ######################
-        self.vortex_widget = qtw.QWidget()
-        self.vortex_widget.hide()
-        layout.addWidget(self.vortex_widget)
-
-        # Create layout
-        self.src_vortex_layout = qtw.QGridLayout()
-        self.vortex_widget.setLayout(self.src_vortex_layout)
-
-        # Add label with instruction
-        label = qtw.QLabel(self.app.lang['select_src_instance_text'])
-        label.setObjectName("titlelabel")
-        label.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
-        self.src_vortex_layout.addWidget(label, 0, 0, 1, 3)
-
-        # Add label with notice for Vortex users
-        label = qtw.QLabel(self.app.lang['vortex_notice'])
-        label.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
-        self.src_vortex_layout.addWidget(label, 1, 0, 1, 3)
-
-        # Add lineedit for staging path
-        label = qtw.QLabel(self.app.lang['staging_folder'])
-        self.src_vortex_layout.addWidget(label, 2, 0)
-        self.stagefolder_box = qtw.QLineEdit()
-        self.src_vortex_layout.addWidget(self.stagefolder_box, 2, 1)
-        # Bind staging path to next/done button
-        def on_stagefolder_edit(text: str):
-            # Enable button if path is valid
-            if os.path.isdir(text):
-                self.next_button.setDisabled(False)
-            # Disable it otherwise
-            else:
-                self.next_button.setDisabled(True)
-        self.stagefolder_box.textChanged.connect(on_stagefolder_edit)
-        # Add browse function
-        def browse_stagefolder():
-            file_dialog = qtw.QFileDialog(self)
-            file_dialog.setWindowTitle(self.app.lang['browse'])
-            _path = self.stagefolder_box.text()
-            if os.path.isdir(_path):
-                file_dialog.setDirectory(_path)
-            else:
-                file_dialog.setDirectory(os.path.join(os.getenv('APPDATA'), 'Vortex', 'skyrimse'))
-            file_dialog.setFileMode(qtw.QFileDialog.FileMode.Directory)
-            if file_dialog.exec():
-                folder = file_dialog.selectedFiles()[0]
-                folder = os.path.normpath(folder)
-                self.stagefolder_box.setText(folder)
-        # Add browse button
-        button = qtw.QPushButton()
-        button.setText(self.app.lang['browse'])
-        button.clicked.connect(browse_stagefolder)
-        self.src_vortex_layout.addWidget(button, 2, 2)
-
-        # Add lineedit for optional download path
-        label = qtw.QLabel(self.app.lang['optional_download_path'])
-        self.src_vortex_layout.addWidget(label, 3, 0)
-        self.dlpath_box = qtw.QLineEdit()
-        self.src_vortex_layout.addWidget(self.dlpath_box, 3, 1)
-        # Bind staging path to next/done button
-        def on_dlpath_edit(text: str):
-            # Enable button if path is valid or empty
-            if os.path.isdir(text) or (not text.strip()):
-                self.next_button.setDisabled(False)
-            # Disable it otherwise
-            else:
-                self.next_button.setDisabled(True)
-        self.dlpath_box.textChanged.connect(on_dlpath_edit)
-        # Add browse function
-        def browse_dlpath():
-            file_dialog = qtw.QFileDialog(self)
-            file_dialog.setWindowTitle(self.app.lang['browse'])
-            _path = self.dlpath_box.text()
-            if os.path.isdir(_path):
-                file_dialog.setDirectory(_path)
-            else:
-                file_dialog.setDirectory(os.path.join(os.getenv('APPDATA'), 'Vortex', 'skyrimse'))
-            file_dialog.setFileMode(qtw.QFileDialog.FileMode.Directory)
-            if file_dialog.exec():
-                folder = file_dialog.selectedFiles()[0]
-                folder = os.path.normpath(folder)
-                self.dlpath_box.setText(folder)
-        # Add browse button
-        button = qtw.QPushButton()
-        button.setText(self.app.lang['browse'])
-        button.clicked.connect(browse_dlpath)
-        self.src_vortex_layout.addWidget(button, 3, 2)
-        ##############################################################
         
         # Add spacing
         layout.addSpacing(25)
@@ -224,7 +137,6 @@ class SourceDialog(qtw.QDialog):
     def first_page(self):
         # Go to first page
         self.instances_widget.hide()
-        self.vortex_widget.hide()
         self.modmanagers_widget.show()
 
         # Update back button
@@ -247,48 +159,48 @@ class SourceDialog(qtw.QDialog):
         core.center(self)
     
     def last_page(self):
-        # Check if source is Vortex
-        if self.app.source == 'Vortex':
-            # Hide first page
-            self.modmanagers_widget.hide()
-            # Show Vortex page
-            self.vortex_widget.show()
-            # Disable next button
-            self.next_button.setDisabled(True)
+        # Create source instance
+        if (self.app.source == 'Vortex') and (not isinstance(self.modinstance, core.VortexInstance)):
+            def process():
+                self.modinstance = core.VortexInstance(self.app, instance={})
+            loadingdialog = LoadingDialog(self, self.app, lambda p: process())
+            loadingdialog.progress_signal.emit({'text': self.app.lang['loading_instances']})
+            try:
+                loadingdialog.exec()
+            except shutil.Error:
+                self.modinstance = None
+                self.app.log.error(f"Failed to access Vortex database: Vortex is running!")
+                qtw.QMessageBox.critical(self, self.app.lang['error'], self.app.lang['vortex_running'])
+                return
+        elif (self.app.source == 'ModOrganizer') and (not isinstance(self.modinstance, core.MO2Instance)):
+            def process():
+                self.modinstance = core.MO2Instance(self.app, instance={})
+            loadingdialog = LoadingDialog(self, self.app, lambda p: process())
+            loadingdialog.progress_signal.emit({'text': self.app.lang['loading_instances']})
+            loadingdialog.exec()
 
-        # Load instances from source otherwise
+        # Load instances from modinstance
+        instances = self.modinstance.get_instances()
+
+        # Check if instances were found
+        if instances:
+            self.instances_box.clear()
+            self.instances_box.addItems(instances)
+            self.instances_box.setCurrentRow(0)
+        # Go to first page otherwise
         else:
-            self.instances = []
-            def process(psignal: qtc.Signal):
-                if self.app.source == 'ModOrganizer':
-                    self.instances = core.MO2Instance.get_instances(self)
-            loading_dialog = LoadingDialog(self, self.app, lambda p: process(p), self.app.lang['loading_instances'])
-            loading_dialog.exec()
-            # Check if instances were found
-            if self.instances:
-                self.instances_box.clear()
-                self.instances_box.addItems(self.instances)
-                self.instances_box.setCurrentRow(0)
-            # Go to first page otherwise
-            else:
-                qtw.QMessageBox.critical(self, self.app.lang['error'], self.app.lang['error_no_instances'])
-                self.first_page()
+            qtw.QMessageBox.critical(self, self.app.lang['error'], self.app.lang['error_no_instances'])
+            self.first_page()
 
-            # Go to instances page
-            self.modmanagers_widget.hide()
-            self.instances_widget.show()
+        # Go to instances page
+        self.modmanagers_widget.hide()
+        self.instances_widget.show()
 
         # Bind next button to done
         self.next_button.clicked.disconnect()
         self.next_button.setText(self.app.lang['done'])
         self.next_button.clicked.connect(self.finish)
         self.next_button.setIcon(qtg.QIcon())
-        # Enable next button if path is valid
-        if os.path.isdir(self.stagefolder_box.text()):
-            self.next_button.setDisabled(False)
-        # Disable it otherwise
-        else:
-            self.next_button.setDisabled(True)
 
         # Bind back button to previous page
         self.back_button.clicked.connect(self.first_page)
@@ -306,31 +218,15 @@ class SourceDialog(qtw.QDialog):
         instance_data = {} # keys: name, paths, mods, loadorder, custom executables
         
         if self.app.source == 'Vortex':
-            instance_data['name'] = "Migrated Vortex Instance"
-            self.app.log.debug("Loading active Vortex profile...")
+            instance_data['name'] = self.instances_box.currentItem().text()
+            self.app.log.debug(f"Loading Vortex profile '{instance_data['name']}'...")
             instance_data['paths'] = {
-                'staging_folder': self.stagefolder_box.text(),
-                'instance_path': self.stagefolder_box.text(),
-                'download_path': self.dlpath_box.text(),
-                'skyrim_ini': os.path.join(self.app.doc_path, 'Skyrim.ini'),
-                'skyrim_prefs_ini': os.path.join(self.app.doc_path, 'SkyrimPrefs.ini')
+                'inifiles': [
+                    os.path.join(self.app.game_instance.inidir, inifile) for inifile in self.app.game_instance.inifiles
+                ]
             }
-            stagefile = os.path.join(instance_data['paths']['staging_folder'], 'vortex.deployment.msgpack')
-            if os.path.isfile(stagefile):
-                instance_data['paths']['stagefile'] = stagefile
-                def process(psignal: qtc.Signal):
-                    progress = {
-                        'text': self.app.lang['loading_stagingfolder']
-                    }
-                    psignal.emit(progress)
-                    self.app.src_modinstance = core.VortexInstance(self.app, instance_data)
-                loadingdialog = LoadingDialog(self, self.app, process)
-                loadingdialog.exec()
-            else:
-                qtw.QMessageBox.critical(self, self.app.lang['error'], self.app.lang['invalid_staging_folder'])
-                return
-            #instance_data['mods'] = self.stagefile.mods
-            self.app.log.debug(f"Staging folder: {instance_data['paths']['staging_folder']}")
+            self.modinstance.set_instance_data(instance_data)
+            self.app.src_modinstance = self.modinstance
         elif self.app.source == 'ModOrganizer':
             instance_data['name'] = self.instances_box.currentItem().text()
             self.app.log.debug(f"Loading mod instance '{instance_data['name']}'...")
@@ -391,8 +287,12 @@ class SourceDialog(qtw.QDialog):
         paths_label.setCursor(qtg.QCursor(qtc.Qt.CursorShape.IBeamCursor))
         paths = ""
         for pathname, path in self.app.src_modinstance.paths.items():
-            if path.strip():
-                paths += f"\n{pathname}: {path}"
+            if isinstance(path, str):
+                path = path.strip()
+            elif isinstance(path, list):
+                path = ",\n".join(path)
+                path = f"[{path}]"
+            paths += f"\n{pathname}: {path}"
         paths_label.setText(paths.strip())
         self.source_layout.addWidget(paths_label, 3, 1)
         # Add label with number of mods
