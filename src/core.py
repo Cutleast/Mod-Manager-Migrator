@@ -450,7 +450,7 @@ class VortexInstance(ModInstance):
                 name = attrs['name'].strip("-").strip(".").strip()
             else:
                 name = modname.strip("-").strip(".").strip()
-            if len(name) > 100:
+            if len(name) > 75:
                 if str(modid) in modname:
                     name = modname.split(str(modid))[0].removesuffix("-").strip()
                 else:

@@ -478,7 +478,9 @@ class MainApp(qtw.QApplication):
                         'max': len(self.src_modinstance.mods), 
                         'text': f"{self.lang['migrating_instance']} ({c}/{len(self.src_modinstance.mods)})",
                         'show2': True,
-                        'text2': self.lang['copying_mod'].replace("[MOD]", f"'{modname}'")
+                        'text2': self.lang['copying_mod'].replace("[MOD]", f"'{modname}'"),
+                        'value2': 0,
+                        'max2': 0,
                     }
                 else:
                     progress = {
@@ -486,7 +488,9 @@ class MainApp(qtw.QApplication):
                         'max': len(self.src_modinstance.mods), 
                         'text': f"{self.lang['migrating_instance']} ({c}/{len(self.src_modinstance.mods)})",
                         'show2': True,
-                        'text2': self.lang['linking_mod'].replace("[MOD]", f"'{modname}'")
+                        'text2': self.lang['linking_mod'].replace("[MOD]", f"'{modname}'"),
+                        'value2': 0,
+                        'max2': 0,
                     }
                 psignal.emit(progress)
                 if self.source == 'Vortex':
