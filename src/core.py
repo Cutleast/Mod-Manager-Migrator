@@ -590,7 +590,7 @@ size=0
 
         # Copy folder if a migrate mode is 'copy'
         if self.app.mode == 'copy':
-            shutil.copytree(folder, modpath)
+            shutil.copytree(f"\\\\?\\{folder}", f"\\\\?\\{modpath}")
         # Create hardlinks otherwise
         else:
             files = create_folder_list(folder, lower=False)
@@ -604,8 +604,8 @@ size=0
                         'max2': len(files),
                     }
                     psignal.emit(progress)
-                os.makedirs(os.path.join(modpath, os.path.dirname(file)), exist_ok=True)
-                os.link(os.path.join(folder, file), os.path.join(modpath, file))
+                os.makedirs(f"\\\\?\\{os.path.join(modpath, os.path.dirname(file))}", exist_ok=True)
+                os.link(f"\\\\?\\{os.path.join(folder, file)}", f"\\\\?\\{os.path.join(modpath, file)}")
 
         # Write metadata to meta.ini
         with open(os.path.join(modpath, 'meta.ini'), 'w') as metafile:
