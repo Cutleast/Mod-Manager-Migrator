@@ -318,23 +318,15 @@ def main_test():
     app.log.debug(f"Creating source instance...")
     instance_data = {} # keys: name, paths, mods, loadorder, custom executables
     if app.source == 'Vortex':
-        instance_data['name'] = "Migrated Vortex Instance"
-        app.log.debug("Loading active Vortex profile...")
+        app.src_modinstance = core.VortexInstance(app, instance_data)
+        app.src_modinstance.get_instances()
+        instance_data['name'] = "Default"
+        app.log.debug(f"Loading Vortex profile '{instance_data['name']}'...")
         instance_data['paths'] = {
-            'staging_folder': staging_folder,
-            'instance_path': instance_path,
-            'download_path': download_path,
             'skyrim_ini': os.path.join(app.doc_path, 'Skyrim.ini'),
             'skyrim_prefs_ini': os.path.join(app.doc_path, 'SkyrimPrefs.ini')
         }
-        stagefile = os.path.join(instance_data['paths']['staging_folder'], 'vortex.deployment.msgpack')
-        if os.path.isfile(stagefile):
-            instance_data['paths']['stagefile'] = stagefile
-            app.src_modinstance = core.VortexInstance(app, instance_data)
-        else:
-            raise Exception(f"Invalid stagingfolder: {staging_folder}")
-        #instance_data['mods'] = stagefile.mods
-        app.log.debug(f"Staging folder: {instance_data['paths']['staging_folder']}")
+        app.src_modinstance.set_instance_data(instance_data)
     elif app.source == 'ModOrganizer':
         instance_data['name'] = instance_name
         app.log.debug(f"Loading mod instance '{instance_data['name']}'...")

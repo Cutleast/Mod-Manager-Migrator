@@ -13,16 +13,13 @@ import os
 import platform
 import shutil
 import sys
-import threading
 import time
 import traceback
 from glob import glob
 from locale import getlocale
 from shutil import disk_usage
-from typing import Callable
 
 import darkdetect
-import msgpack
 import qtawesome as qta
 import qtpy.QtCore as qtc
 import qtpy.QtGui as qtg
@@ -396,11 +393,7 @@ class MainApp(qtw.QApplication):
         def process(psignal: qtc.Signal):
             psignal.emit({'text': self.lang['sorting_loadorder']})
             self.dst_modinstance.loadorder = self.src_modinstance.get_loadorder(psignal)
-            # Fetch and copy metadata
-            for i, mod in enumerate(self.dst_modinstance.loadorder):
-                data = self.src_modinstance.get_mod_metadata(mod)
-                self.dst_modinstance.loadorder[i] = data['name']
-                self.dst_modinstance.metadata[mod] = data
+            self.dst_modinstance.metadata = self.src_modinstance.metadata
         loadingdialog = dialogs.LoadingDialog(self.root, self, process)
         loadingdialog.exec()
         self.dst_modinstance.create_instance()
@@ -424,7 +417,8 @@ class MainApp(qtw.QApplication):
             # Check for files that have to be copied
             # directly into the game folder
             # since MO2 cannot manage those
-            if self.src_modinstance.stagefiles:
+            if self.src_modinstance.root_mods:
+                print(self.src_modinstance.root_mods)
                 message_box = qtw.QMessageBox(self.root)
                 message_box.setWindowIcon(self.root.windowIcon())
                 message_box.setStyleSheet(self.stylesheet)
@@ -442,7 +436,7 @@ class MainApp(qtw.QApplication):
                 timer.setInterval(1000)
                 def check_purged():
                     if message_box is not None:
-                        if os.path.isfile(self.src_modinstance.stagefile.path):
+                        if os.path.isfile(os.path.join(self.src_modinstance.paths['mods_path'], 'vortex.deployment.msgpack')):
                             timer.start()
                         else:
                             continue_button.setDisabled(False)
@@ -459,36 +453,34 @@ class MainApp(qtw.QApplication):
                             'text': self.lang['copying_files'],
                         }
                         psignal.emit(progress)
-                        mods_to_copy = []
                         installdir = self.game_instance.get_install_dir()
-                        for stagefile in self.src_modinstance.stagefiles:
-                            for mod in stagefile.modfiles.keys():
-                                mods_to_copy.append(mod)
-                        for c, mod in enumerate(mods_to_copy):
+                        for c, mod in enumerate(self.src_modinstance.root_mods):
                             progress = {
-                                'text': f"{self.lang['copying_files']} - {c}/{len(mods_to_copy)}",
+                                'text': f"{self.lang['copying_files']} - {c}/{len(self.src_modinstance.root_mods)}",
                                 'value': c,
-                                'max': len(mods_to_copy),
+                                'max': len(self.src_modinstance.root_mods),
                                 'show2': True,
                                 'text2': self.src_modinstance.get_mod_metadata(mod)['name']
                             }
                             psignal.emit(progress)
-                            shutil.copytree(os.path.join(self.src_modinstance.stagefile.dir, mod), installdir, dirs_exist_ok=True)
+                            shutil.copytree(os.path.join(self.src_modinstance.paths['mods_path'], mod), installdir, dirs_exist_ok=True)
                     loadingdialog = dialogs.LoadingDialog(self.root, self, process)
                     loadingdialog.exec()
 
         # Copy mods to new instance
         self.log.debug("Migrating mods...")
         def process(psignal: qtc.Signal):
-            for c, mod in enumerate(self.src_modinstance.mods.keys()):
-                modname = self.src_modinstance.get_mod_metadata(os.path.basename(mod))['name']
+            for c, mod in enumerate(self.src_modinstance.mods):
+                modname = self.src_modinstance.metadata[mod]['name']
                 if self.mode == 'copy':
                     progress = {
                         'value': c, 
                         'max': len(self.src_modinstance.mods), 
                         'text': f"{self.lang['migrating_instance']} ({c}/{len(self.src_modinstance.mods)})",
                         'show2': True,
-                        'text2': self.lang['copying_mod'].replace("[MOD]", f"'{modname}'")
+                        'text2': self.lang['copying_mod'].replace("[MOD]", f"'{modname}'"),
+                        'value2': 0,
+                        'max2': 0,
                     }
                 else:
                     progress = {
@@ -496,15 +488,22 @@ class MainApp(qtw.QApplication):
                         'max': len(self.src_modinstance.mods), 
                         'text': f"{self.lang['migrating_instance']} ({c}/{len(self.src_modinstance.mods)})",
                         'show2': True,
-                        'text2': self.lang['linking_mod'].replace("[MOD]", f"'{modname}'")
+                        'text2': self.lang['linking_mod'].replace("[MOD]", f"'{modname}'"),
+                        'value2': 0,
+                        'max2': 0,
                     }
                 psignal.emit(progress)
-                self.dst_modinstance.import_mod(os.path.join(self.src_modinstance.paths['instance_path'], mod), psignal)
+                if self.source == 'Vortex':
+                    modtype = self.src_modinstance.database['persistent']['mods'][self.game.lower()][mod]['type'].strip()
+                    if modtype == 'collection':
+                        print(f"Skipped mod '{mod}'")
+                        continue
+                self.dst_modinstance.import_mod(os.path.join(self.src_modinstance.paths['mods_path'], mod), psignal)
         loadingdialog = dialogs.LoadingDialog(self.root, self, process)
         loadingdialog.exec()
 
         # Copy downloads if given to new instance
-        if src_dls := self.src_modinstance.paths.get('download_path', None):
+        if (src_dls := self.src_modinstance.paths.get('download_path', None)) is not None:
             # Only copy/link downloads if paths differ
             if src_dls != self.dst_modinstance.paths['download_path']:
                 def process(psignal: qtc.Signal):
@@ -733,8 +732,8 @@ class Theme:
 # Start main application #############################################
 if __name__ == '__main__':
     import core
-    import games
     import dialogs
+    import games
     app = MainApp()
     app.exec()
 
