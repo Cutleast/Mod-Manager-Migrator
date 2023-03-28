@@ -43,14 +43,12 @@ This is a tool for migrating modding instances between various mod managers (cur
 
 ### To migrate an instance from Vortex to MO2, for example, follow these steps:
 
-1. Start Vortex and make sure that the profile you want to migrate is deployed.
-2. Close Vortex and start MMM (Mod Manager Migrator).
+1. Make sure that Vortex is not running and start MMM (Mod Manager Migrator).
 3. Click on "Add source", select Vortex and click on "Next".
-4. Select the staging folder of Vortex and click on "Done".
+4. Select the profile you want to migrate and click on "Done".
 5. Click on "Add destination", select MO2 and click on "Next".
 6. Set paths name as you like it and click on "Done".
 7. Click on "Migrate" and wait for it to finish.
-8. After migration is done, open Vortex and purge game folder.
 
 
 # 🫶Contributing
@@ -65,7 +63,7 @@ If you encountered an issue/error or have a suggestion, open an issue with suffi
 
 ### 3. Code contributions
 
-1. Install Python 3.10 (Make sure that you add it to PATH!)
+1. Install Python 3.9 (Make sure that you add it to PATH!)
 2. Clone repository
 3. Open terminal in repository folder
 4. Type in following command to set up virtual environment:
@@ -93,14 +91,11 @@ If you encountered an issue/error or have a suggestion, open an issue with suffi
 
 # 💻How it works
 
-### Mod order reconstruction from Vortex deployment file:
+### Mod order reconstruction from Vortex conflict rules:
 
-1. It reads deployment files in staging folder
-2. Parses their data
-3. The data contains a list with all deployed files
-4. This list is used to reconstruct a mod order by checking which files come from which mod
-5. After initial sorting the loadorder is compared with and checked against the deployment file
-6. Sorts different mods until there are no differences left (mostly 1 or 2 times)
+1. It reads Vortex's level database
+2. Creates dict of mods and overwriting mods
+3. A load order is constructed according to the overwrites
 
 
 # 🔗Credits

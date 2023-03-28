@@ -1,6 +1,6 @@
 {  
-    "translater_name": "For Translaters: If you are translating this file, put in your name here. This will be present in the credits section.",
-    "translater_url": "For Translaters: If you do have any social link, you can also put it here, the credits section will link to your profile.",
+    "translator_name": "For translators: If you are translating this file, put in your name here. This will be present in the credits section.",
+    "translator_url": "For translators: If you do have any social link, you can also put it here, the credits section will link to your profile.",
     "error": "Fehler",
     "success": "Erfolgreich",
     "error_text": "Ein Fehler ist aufgetreten:",
@@ -76,7 +76,7 @@
     "detected_root_files": "Es wurden Dateien erkannt, die von anderen Mod Managern außer Vortex nicht verwaltet werden können. (z.B. SKSE)\nSie müssen daher direkt in das Spielverzeichnis kopiert werden, damit die Instanz im Ziel-Modmanager funktioniert.\nÖffnen Sie dazu Vortex und purgen Sie das Spielverzeichnis.\nKlicken Sie dann auf 'Fortfahren', um den Migrationsprozess fertigzustellen.",
     "copying_files": "Kopiere Dateien...",
     "hardlink_notice": "Bei dieser Methode werden Hardlinks verwendet, anstatt die Dateien zu kopieren.\nEs wird imitiert, dass die Dateien doppelt vorhanden sind.\nDie Dateien im Mod Organizer-Ordner sind lediglich ein Spiegelbild der Quell-Dateistruktur und verbrauchen daher keinen weiteren Speicherplatz.\nSie müssen Ihre neue Instanz auf der gleichen Festplatte erstellen, auf welcher sich auch der Quell-Instanzordner befindet.\nAußerdem ist es viel schneller, Hardlinks zu erstellen, als jede Datei einzeln zu kopieren.",
-    "hardlink_drive_error": "Bei der Hardlink-Methode müssen Sie die das Ziel ([DESTDRIVE]) auf der selben Festplatte festlegen,\nauf der sich auch der Quell-Instanzordner befindet. ([SOURCEDRIVE])",
+    "hardlink_drive_error": "Bei der Hardlink-Methode müssen Sie das Ziel ([DESTDRIVE]) auf der selben Festplatte festlegen,\nauf der sich auch der Quell-Instanzordner befindet. ([SOURCEDRIVE])",
     "copy_notice": "Bei dieser Methode werden die Dateien direkt in die neue Instanz kopiert.\nSie sollten wirklich Hardlinks verwenden (es sei denn, Sie wissen, was Sie tun).\nWenn Sie diese Dateien direkt kopieren, dauert der Vorgang viel länger\nund die neue Instanz benötigt zusätzlichen Speicherplatz auf Ihrer Festplatte.",
     "wipe_notice": "Einer oder mehrere der angebenen Ordner existieren bereits. Wenn Sie fortfahren, wird deren Inhalt gelöscht.",
     "wiping_instance": "Bestehende Instanz wird gelöscht...",
@@ -86,5 +86,6 @@
     "update_available": "Es scheint, dass Ihre Version von MMM veraltet ist. Sie verwenden die Version [OLD_VERSION].\nDie Version [NEW_VERSION] ist bereits verfügbar. Möchten Sie sie jetzt herunterladen?",
     "permission_error": "Zugriff verweigert. Starten Sie MMM als Administrator und versuchen Sie es erneut.\nWenn das Programm bereits mit Administratorrechten läuft, stellen Sie sicher, dass dieser die erforderlichen Lese- und Schreibrechte hat.",
     "game": "Spiel",
-    "game_not_found": "Der Installationspfad des Spiels konnte nicht gefunden werden. Vergewissern Sie sich, dass das Spiel installiert ist und wählen Sie den Pfad unten manuell aus, um fortzufahren."
+    "game_not_found": "Der Installationspfad des Spiels konnte nicht gefunden werden. Vergewissern Sie sich, dass das Spiel installiert ist und wählen Sie den Pfad unten manuell aus, um fortzufahren.",
+    "vortex_running": "Zugriff auf Vortex-Datenbank nicht möglich, während Vortex läuft! Stellen Sie sicher, dass Vortex nicht läuft und versuchen Sie es erneut."
 }

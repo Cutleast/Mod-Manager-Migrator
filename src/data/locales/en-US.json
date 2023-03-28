@@ -1,6 +1,6 @@
 {   
-    "translater_name": "For Translaters: If you are translating this file, put in your name here. This will be present in the credits section.",
-    "translater_url": "For Translaters: If you do have any social link, you can also put it here, the credits section will link to your profile.",
+    "translator_name": "For translators: If you are translating this file, put in your name here. This will be present in the credits section.",
+    "translator_url": "For translators: If you do have any social link, you can also put it here, the credits section will link to your profile.",
     "error": "Error",
     "success": "Success",
     "error_text": "An error occured:",
@@ -86,5 +86,6 @@
     "update_available": "It seems like your version of MMM is outdated. You are using the version [OLD_VERSION].\nVersion [NEW_VERSION] is already available. Do you want to download it now?",
     "permission_error": "Access denied. Start MMM as administrator and try again.\nIf the program is already running with administrator rights, make sure that the administrator has the necessary read and write permissions.",
     "game": "Game",
-    "game_not_found": "The game's install path could not be found. Make sure that the game is installed and select its path manually below to continue."
+    "game_not_found": "The game's install path could not be found. Make sure that the game is installed and select its path manually below to continue.",
+    "vortex_running": "Cannot access Vortex database while Vortex is running! Make sure that Vortex is not running and try again."
 }

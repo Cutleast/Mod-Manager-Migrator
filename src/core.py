@@ -5,13 +5,16 @@ Part of MMM. Contains core classes and functions.
 import os
 import queue
 import requests
+import plyvel as leveldb
 import shutil
+import subprocess
 import sys
 import threading
 import time
 import winreg
 from datetime import datetime
 from glob import glob
+from typing import Union
 
 import msgpack
 
@@ -57,6 +60,14 @@ class ModInstance:
     def __init__(self, app: MainApp, instance: dict):
         self.app = app
         self.instance = instance
+        
+        self.set_instance_data(self.instance)
+    
+    def __repr__(self):
+        return "ModInstance"
+    
+    def set_instance_data(self, instance: dict):
+        self.instance = instance
         self.name = instance.get('name', "")
         self.mods = instance.get('mods', [])
         self.paths = instance.get('paths', {})
@@ -64,10 +75,7 @@ class ModInstance:
         self.loadorder = []
         self.modnames = [] # list of parsed modnames to avoid duplicates
         self.size = 0
-    
-    def __repr__(self):
-        return "ModInstance"
-    
+
     def get_loadorder(self, psignal: qtc.Signal=None):
         """
         Returns loadorder.
@@ -97,6 +105,147 @@ class ModInstance:
     
     def import_mod(self, folder: str, psignal: qtc.Signal=None):
         return
+
+    def get_instances(self):
+        """
+        Gets list of instances and returns it.
+        """
+
+        return []
+
+
+# Create class for Vortex commandline interface ######################
+class VortexDatabase:
+    """
+    Class for Vortex level database. Use only one instance at a time!
+    """
+    
+    def __init__(self, app: MainApp):
+        self.app = app
+        self.data = {}
+        self.appdir = os.path.join(os.getenv('APPDATA'), 'Vortex')
+        self.db_path = os.path.join(self.appdir, 'state.v2')
+        
+        # Delete old backup
+        backup_path = f"{self.db_path}.mmm_backup"
+        if os.path.isdir(backup_path):
+            shutil.rmtree(backup_path)
+        # Create new backup
+        shutil.copytree(self.db_path, f"{self.db_path}.mmm_backup")
+
+        # Initialize database
+        self.db = leveldb.DB(self.db_path)
+    
+    def open_db(self):
+        if self.db.closed:
+            self.db = leveldb.DB(self.db_path)
+    
+    def close_db(self):
+        if not self.db.closed:
+            self.db.close()
+    
+    def load_db(self):
+        self.app.log.debug(f"Loading Vortex database...")
+
+        self.open_db()
+        lines = []
+        for keys, value in self.db:
+            keys, value = keys.decode(), value.decode()
+            lines.append(f"{keys} = {value}")
+        self.close_db()
+
+        data = self.parse_string_to_dict(lines)
+        self.data = data
+
+        self.app.log.debug(f"Loaded Vortex database.")
+        return data
+    
+    def save_db(self):
+        self.app.log.debug(f"Saving Vortex database...")
+
+        lines = self.convert_nested_dict_to_text(self.data)
+
+        self.open_db()
+        with self.db.write_patch() as batch:
+            for line in lines:
+                path, line = line.split(" = ", 1)
+                path, line = path.encode(), line.encode()
+                batch.put(path, line)
+        self.close_db()
+
+        self.app.log.debug(f"Saved to database.")
+    
+    @staticmethod
+    def convert_nested_dict_to_text(nested_dict: dict) -> str:
+        """
+        This function takes a nested dictionary and converts it back to a string of text in the format of
+        'key1.subkey1.subsubkey1.subsubsubkey1 = subsubsubvalue1'. Each key-value pair is represented on a separate line,
+        and the keys are separated by dots to indicate nesting.
+
+        Parameters:
+            nested_dict: dict (nested dictionary)
+        Returns:
+            str (string of text in the specified format.)
+        """
+
+        def flatten_dict(d: dict, prefix=""):
+            lines = []
+            for key, value in d.items():
+                full_key = f"{prefix}###{key}" if prefix else key
+                if isinstance(value, dict):
+                    lines.extend(flatten_dict(value, prefix=full_key))
+                else:
+                    lines.append(f"{full_key} = {value}")
+            return lines
+
+        flat_dict = flatten_dict(nested_dict)
+        return flat_dict
+    
+    @staticmethod
+    def parse_string_to_dict(text: Union[str, list]):
+        """
+        This method takes a string of text in the
+        format of 'key1.subkey1.subsubkey1.subsubsubkey1 = subsubsubvalue1'
+        and converts it into a nested dictionary.
+        The text must have a key-value pair on each line and
+        each key must be separated by dots to indicate nesting.
+        Empty lines are ignored.
+
+        Parameters:
+            text: str or list (text which lines are in specified format above)
+        
+        Returns:
+            result: dict (nested dictionary)
+        """
+
+        result = {}
+
+        if isinstance(text, str):
+            lines = text.split("\n")
+        else:
+            lines = text
+        
+        for line in lines:
+            try:
+                line = line.strip()
+                if not line:
+                    continue
+                keys, value = line.split("=", 1)
+                keys = keys.strip().split("###")
+                current = result
+                for key in keys[:-1]:
+                    if key not in current:
+                        current[key] = {}
+                    current = current[key]
+                try:
+                    value = eval(value.strip())
+                except:
+                    value = value.strip()
+                current[keys[-1]] = value
+            except ValueError:
+                print(f"Failed to process line: {line:20}...")
+                continue
+        return result
 
 
 # Create class for Vortex stagefile ##################################
@@ -146,144 +295,123 @@ class StageFile:
             return None
 
 
-# Create class for Vortex instance ###################################
+# Create new class for Vortex instance ###############################
 class VortexInstance(ModInstance):
     """
     Class for Vortex ModInstance. Inherited from ModInstance class.
+    
+    Uses level database instead of Vortex's deployment files.
     """
 
     def __init__(self, app: MainApp, instance: dict):
         super().__init__(app, instance)
 
-        self.stagefile = StageFile(self.paths['stagefile'])
-        self.stagefile.parse_file()
-        self.stagefile.get_modlist()
-        self.mods = self.stagefile.modfiles
+        self.db = VortexDatabase(app)
+        self.database = self.db.load_db()
 
-        # Scan for other deployment files
-        self.stagefiles = [] # List of other stagefiles
-        for file in glob(os.path.join(self.stagefile.dir, 'vortex.deployment.*.msgpack')):
-            if os.path.isfile(file) and (file != self.stagefile):
-                stagefile = StageFile(file)
-                stagefile.parse_file()
-                stagefile.get_modlist()
-                self.stagefiles.append(stagefile)
-                self.app.log.debug(f"Found stagefile: {os.path.basename(stagefile.path)}")
+        self.profiles = {} # profile name: id
+        self.overwrites = {} # mod: [overwriting mod, overwriting mod, etc...]
+        self.root_mods = [] # list of mods that must be copied directly to the game folder
     
     def __repr__(self):
         return "VortexInstance"
-    
-    def get_mod_metadata(self, modname: str):
-        if not self.metadata.get(modname, None):
-            metadata = {}
-            data = [int(split) for split in modname.split("-") if split.isnumeric()]
-            try:
-                modid = data.pop(0)
-                fileid = data.pop(-1)
-                data = [str(d) for d in data]
-                version = ".".join(data)
-                if not version:
-                    version = "1.0"
-                name = modname.split(str(modid))[0].strip("-").strip(".").strip()
-                metadata = {
-                    'name': name,
-                    'modid': modid,
-                    'fileid': fileid,
-                    'version': version,
-                }
-            except IndexError:
-                self.app.log.warning(f"Failed to get metadata from '{modname}': Insufficient data to parse!")
-                name = modname
-                metadata = {
-                    'name': modname,
-                    'modid': 0,
-                    'fileid': 0,
-                    'version': ""
-                }
-            if name in self.modnames:
-                name += f"({metadata['fileid']})"
-                metadata['name'] = name
-            self.modnames.append(name)
-            self.metadata[modname] = metadata
-        else:
-            metadata = self.metadata[modname]
 
-        return metadata
+    def get_size(self):
+        self.app.log.debug(f"Calculating size of Vortex profile...")
+        
+        # Calculate size of mods in staging folder
+        size = 0
+        for mod in self.mods:
+            size += get_folder_size(os.path.join(self.paths['mods_path'], mod))
+
+        # Add size of download folder if one is given
+        if (dlpath := self.paths.get('download_path', None)) is not None:
+            size += get_folder_size(dlpath)
+
+        self.size = size
+        self.app.log.debug(f"Calculation complete. Profile size: {get_size(self.size)}")
+        return super().get_size()
+
+    def set_instance_data(self, instance: dict):
+        profname = instance.get('name', None)
+        if profname is not None:
+            profid = self.profiles[profname]
+
+            mods = []
+            for modname, modstate in self.database['persistent']['profiles'][profid]['modState'].items():
+                if modstate['enabled'] == 'true':
+                    mods.append(modname)
+            instance['mods'] = mods
+            instance['paths']['mods_path'] = self.database['settings']['mods']['installPath'][self.app.game.lower()]
+            instance['paths']['instance_path'] = instance['paths']['mods_path']
+            profpath = os.path.join(os.getenv('APPDATA'), 'Vortex', self.app.game.lower(), 'profiles', str(profid))
+            instance['paths']['plugin_files'] = [
+                os.path.join(profpath, 'loadorder.txt'),
+                os.path.join(profpath, 'plugins.txt')
+            ]
+            
+        super().set_instance_data(instance)
     
-    def sort_loadorder(self, stagefile: StageFile, psignal: qtc.Signal=None):
+    def sort_loadorder(self, psignal: qtc.Signal=None):
         self.app.log.debug("Scanning mods...")
 
-        new_loadorder = stagefile.loadorder.copy()
-        overwrites = ""
-        for c, mod in enumerate(stagefile.loadorder):
-            self.app.log.debug(f"Scanning mod '{mod}'... ({c}/{len(stagefile.loadorder)})")
-            if psignal is not None:
-                progress = {
-                    'value': c,
-                    'max': len(stagefile.loadorder),
-                    'text': f"{self.app.lang['sorting_loadorder']} ({c}/{len(stagefile.loadorder)})",
-                    'show2': True,
-                    'value2': 0,
-                    'max2': 0,
-                    'text2': self.get_mod_metadata(mod)['name']
-                }
-                psignal.emit(progress)
-            overwriting_mods = []
-            overwritten_files = []
-            
-            modfiles = stagefile.all_modfiles[mod]
-
-            # skip mod if all files get deployed
-            overwritten_count = len(modfiles) - len(stagefile.modfiles[mod])
-            if not overwritten_count:
-                self.app.log.debug(f"Skipped mod: all files get deployed.")
+        new_loadorder = self.mods.copy()
+        new_loadorder.sort()
+        
+        for mod in self.mods.copy():
+            modtype = self.database['persistent']['mods'][self.app.game.lower()][mod]['type'].strip()
+            # Skip mod if it is a root mod
+            if modtype and modtype != 'collection':
+                print(f"{mod}: {modtype}")
+                self.root_mods.append(mod)
+                self.mods.remove(mod)
+                new_loadorder.remove(mod)
                 continue
-            else:
-                self.app.log.debug(f"Overwritten files: {overwritten_count} (Total: {len(modfiles)})")
+            # Ignore collection bundle
+            elif modtype == 'collection':
+                self.mods.remove(mod)
+                new_loadorder.remove(mod)
+                continue
+            # Get rules of mod
+            rules = self.database['persistent']['mods'][self.app.game.lower()][mod].get('rules', [])
 
-            q = queue.Queue()
-            for file in modfiles:
-                q.put(file)
-
-            def thread():
-                while len(overwritten_files) < overwritten_count:
-                    file = q.get()
-                    q.task_done()
-                    overwriting_mod = stagefile.get_mod_by_filename(file)
-                    if (overwriting_mod is not None) and (overwriting_mod != mod) and (overwriting_mod not in overwriting_mods):
-                        overwriting_mods.append(overwriting_mod)
-                        overwritten_files.append(file)
-                with q.mutex:
-                    q.queue.clear()
-                    q.all_tasks_done.notify_all()
-                    q.unfinished_tasks = 0
+            for rule in rules:
+                if 'id' in rule['reference']:
+                    ref_mod = rule['reference']['id'].strip()
+                elif 'fileExpression' in rule['reference']:
+                    ref_mod = rule['reference']['fileExpression'].strip()
+                # Skip mod if reference mod does not exist
+                else:
+                    continue
+                if ref_mod in self.mods:
+                    if rule['type'] == 'before':
+                        overwrites = self.overwrites.get(mod, [])
+                        overwriting_mod = ref_mod
+                        if overwriting_mod in self.mods:
+                            overwrites.append(overwriting_mod)
+                            self.overwrites[mod] = overwrites
+                    elif rule['type'] == 'after':
+                        overwriting_mod = ref_mod
+                        if overwriting_mod in self.mods:
+                            overwrites = self.overwrites.get(overwriting_mod, [])
+                            overwrites.append(mod)
+                            self.overwrites[overwriting_mod] = overwrites
+                    elif rule['type'] == 'requires':
+                        continue
+                    else:
+                        print(f"Mod: {mod}")
+                        print(f"Rule type: {rule['type']}")
+                        print(f"Rule reference attrs: {rule['reference'].keys()}")
+                        print(f"Rule reference: {rule['reference']}")
+                        raise ValueError(f"Invalid rule type '{rule['type']}'!")
             
-            for t in range(NUMBER_OF_THREADS):
-                worker = threading.Thread(target=thread, daemon=True, name=f"SortThread-{t+1}")
-                worker.start()
-            
-            def pthread():
-                while q.qsize():
-                    if psignal:
-                        progress = {
-                            'value': c,
-                            'max': len(stagefile.loadorder),
-                            'text': f"{self.app.lang['sorting_loadorder']} ({c}/{len(stagefile.loadorder)})",
-                            'show2': True,
-                            'value2': int(len(modfiles) - q.unfinished_tasks),
-                            'max2': len(modfiles),
-                            'text2': f"{mod} ({len(modfiles) - q.unfinished_tasks}/{len(modfiles)})"
-                        }
-                        psignal.emit(progress)
-                        time.sleep(.5)
-                    #print(f"{q.unfinished_tasks = } ({((len(modfiles) - q.unfinished_tasks) / len(modfiles))*100:.3f}%) (Found: {len(overwritten_files)}/{overwritten_count})                           ", end='\r')
-            pthread()
-            
-            q.join()
+            overwriting_mods = self.overwrites.get(mod, [])
             
             if overwriting_mods:
-                _overwriting_mods = '\n    '.join(overwriting_mods)
-                overwrites += f"\nMod: {mod}\nOverwritten by:\n    {_overwriting_mods}\n{'-'*100}"
+                #_overwriting_mods = '\n    '.join(overwriting_mods)
+                #overwrites = ""
+                #overwrites += f"\nMod: {mod}\nOverwritten by:\n    {_overwriting_mods}\n{'-'*100}"
+                #print(overwrites)
 
                 self.app.log.debug(f"Sorting mod '{mod}'...")
 
@@ -297,90 +425,51 @@ class VortexInstance(ModInstance):
                     new_loadorder.insert(index, new_loadorder.pop(old_index))
                     self.app.log.debug(f"Moved mod '{mod}' from index {old_index} to {index}.")
         
-        if psignal is not None:
-            psignal.emit({
-                'text': self.app.lang['sorting_loadorder'],
-                'value': 0,
-                'max': 0})
-
-        stagefile_files = {}
-        for file in stagefile.data['files']:
-            stagefile_files[file['relPath'].lower()] = file['source']
-        while different_files := self.check_loadorder(stagefile, new_loadorder):
-            loadorder_files = {}
-            for c, mod in enumerate(new_loadorder):
-                files = stagefile.all_modfiles[mod]
-                for file in files:
-                    loadorder_files[file.lower()] = mod
-
-            for file in different_files:
-                mod = loadorder_files[file]
-                old_index = new_loadorder.index(mod)
-                new_index = new_loadorder.index(stagefile_files[file])
-                if old_index > new_index:
-                    new_loadorder.insert(new_index, new_loadorder.pop(old_index))
-                    self.app.log.debug(f"Moved mod '{mod}' from index {old_index} to {new_index}.")
-        
         new_loadorder.reverse()
 
-        self.app.log.info("Created loadorder from Vortex deployment file.")
+        # Replace Vortex's full mod names by <modname> - <filename>
+        final_loadorder = []
+        for mod in new_loadorder:
+            modname = self.get_mod_metadata(mod)['name']
+            final_loadorder.append(modname)
 
-        return new_loadorder
+        self.app.log.info("Created loadorder from Vortex rules.")
 
-    def check_loadorder(self, stagefile: StageFile, loadorder: list):
-        self.app.log.info("Checking loadorder...")
-        stagefile_files = {}
-        for file in stagefile.data['files']:
-            stagefile_files[file['relPath'].lower()] = file['source']
-        
-        loadorder_files = {}
-        for c, mod in enumerate(loadorder):
-            files = stagefile.all_modfiles[mod]
-            for file in files:
-                loadorder_files[file.lower()] = mod
-        
-        q = queue.Queue()
+        return final_loadorder
+    
+    def get_mod_metadata(self, modname: str):
+        if (metadata := self.metadata.get(modname, None)) is None:
+            attrs = self.database['persistent']['mods'][self.app.game.lower()][modname]['attributes']
+            #print(modname)
+            modid = attrs.get('modId', 0)
+            fileid = attrs.get('fileId', 0)
+            version = attrs['version']
+            if 'customFileName' in attrs:
+                name = attrs['customFileName'].strip("-").strip(".").strip()
+            elif 'name' in attrs:
+                name = attrs['name'].strip("-").strip(".").strip()
+            else:
+                name = modname.strip("-").strip(".").strip()
+            if len(name) > 75:
+                if str(modid) in modname:
+                    name = modname.split(str(modid))[0].removesuffix("-").strip()
+                else:
+                    name = modname.strip("-").strip(".").strip()
+            metadata = {
+                'name': name,
+                'modid': modid,
+                'fileid': fileid,
+                'version': version,
+            }
+            self.modnames.append(metadata['name'])
+            self.metadata[modname] = metadata
 
-        different_files = []
-        for file in loadorder_files:
-            q.put(file.lower())
-        
-        def thread():
-            while True:
-                file = q.get()
-                mod = loadorder_files[file]
-                if file not in stagefile_files:
-                    self.app.log.debug(f"File: {file}")
-                    self.app.log.debug(f"Loadorder mod: {mod} ({loadorder.index(mod)})")
-                    self.app.log.debug(f"Stagefile mod: NOT FOUND!")
-                    #self.app.log.debug("-"*50)
-                    different_files.append(file)
-                elif mod != stagefile_files[file]:
-                    self.app.log.debug(f"File: {file}")
-                    self.app.log.debug(f"Loadorder mod: {mod} ({loadorder.index(mod)})")
-                    self.app.log.debug(f"Stagefile mod: {stagefile_files[file]} ({loadorder.index(stagefile_files[file])})")
-                    #self.app.log.debug("-"*50)
-                    different_files.append(file)
-                
-                q.task_done()
-        
-        for t in range(NUMBER_OF_THREADS):
-            worker = threading.Thread(target=thread, daemon=True, name=f"CheckThread-{t+1}")
-            worker.start()
-        
-        q.join()
-
-        self.app.log.info(f"Found {len(different_files)} difference(s).")
-
-        return different_files
-
+        return metadata
+    
     def get_loadorder(self, psignal: qtc.Signal=None):
-        self.app.log.debug("Reading mod files...")
         starttime = time.time()
-        for mod in self.stagefile.modfiles.keys():
-            self.stagefile.all_modfiles[mod] = create_folder_list(os.path.join(self.stagefile.dir, mod))
 
-        loadorder = self.sort_loadorder(self.stagefile, psignal)
+        self.loadorder = self.sort_loadorder(psignal)
     
         #loadorder.reverse()
         #self.check_loadorder(self.stagefile, loadorder)
@@ -388,23 +477,18 @@ class VortexInstance(ModInstance):
 
         self.app.log.debug(f"Sorting took {(time.time() - starttime):.2f} second(s). ({((time.time() - starttime) / 60):.2f} minute(s))")
 
-        return loadorder
+        return self.loadorder
 
-    def get_size(self):
-        self.app.log.debug(f"Calculating size of Vortex instance...")
+    def get_instances(self):
+        self.app.log.debug(f"Loading profiles from database...")
+
+        for profid, profdata in self.database['persistent']['profiles'].items():
+            if (profdata['gameId'] == self.app.game.lower()) and ('modState' in profdata.keys()):
+                profname = profdata['name']
+                self.profiles[profname] = profid
         
-        # Calculate size of staging folder
-        size = 0
-        for file in self.stagefile.data['files']:
-            size += os.path.getsize(os.path.join(self.paths['staging_folder'], file['source'], file['relPath']))
-
-        # Add size of download folder if one is given
-        if self.paths['download_path']:
-            size += get_folder_size(self.paths['download_path'])
-
-        self.size = size
-        self.app.log.debug(f"Calculation complete. Instance size: {get_size(self.size)}")
-        return super().get_size()
+        self.app.log.debug(f"Loaded {len(self.profiles)} profile(s) from database.")
+        return list(self.profiles.keys())
 
 
 # Create class for MO2 instance ######################################
@@ -492,12 +576,10 @@ size=0
             shutil.copy(os.path.join(ini_path, ini_file), os.path.join(prof_path, ini_file.lower()))
         self.app.log.debug("Copied ini files from game's ini folder.")
 
-        # Copy loadorder.txt and plugins.txt from User\AppData\Local\<game name>
-        if self.app.source == 'Vortex':
-            path = os.path.join(os.getenv('LOCALAPPDATA'), self.app.game_instance.name)
-            shutil.copy(os.path.join(path, 'loadorder.txt'), os.path.join(prof_path, 'loadorder.txt'))
-            shutil.copy(os.path.join(path, 'plugins.txt'), os.path.join(prof_path, 'plugins.txt'))
-            self.app.log.debug("Copied loadorder.txt and plugins.txt from game's LocalAppData Folder.")
+        # Copy loadorder.txt and plugins.txt from source instance
+        for plugin_file in self.app.src_modinstance.paths.get('plugin_files', []):
+            shutil.copy(plugin_file, os.path.join(prof_path, os.path.basename(plugin_file)))
+        self.app.log.debug("Copied 'loadorder.txt' and 'plugins.txt' from source instance.")
 
         self.app.log.info(f"Created MO2 instance.")
     
@@ -508,7 +590,7 @@ size=0
 
         # Copy folder if a migrate mode is 'copy'
         if self.app.mode == 'copy':
-            shutil.copytree(folder, modpath)
+            shutil.copytree(f"\\\\?\\{folder}", f"\\\\?\\{modpath}")
         # Create hardlinks otherwise
         else:
             files = create_folder_list(folder, lower=False)
@@ -522,8 +604,8 @@ size=0
                         'max2': len(files),
                     }
                     psignal.emit(progress)
-                os.makedirs(os.path.join(modpath, os.path.dirname(file)), exist_ok=True)
-                os.link(os.path.join(folder, file), os.path.join(modpath, file))
+                os.makedirs(f"\\\\?\\{os.path.join(modpath, os.path.dirname(file))}", exist_ok=True)
+                os.link(f"\\\\?\\{os.path.join(folder, file)}", f"\\\\?\\{os.path.join(modpath, file)}")
 
         # Write metadata to meta.ini
         with open(os.path.join(modpath, 'meta.ini'), 'w') as metafile:
@@ -559,22 +641,17 @@ repository=Nexus
 
         return super().get_size()
 
-    @staticmethod
-    def get_instances(app: MainApp):
-        """
-        Create a list with all ModOrganizer instances at %LOCALAPPDATA%\\ModOrganizer
-        """
-
+    def get_instances(self):
         instances_path = os.path.join(os.getenv('LOCALAPPDATA'), 'ModOrganizer')
         instances = []
         # Check if path exists
         if os.path.isdir(instances_path):
             # Filter for folders and ignore files
             instances = [obj for obj in os.listdir(instances_path) if os.path.isdir(os.path.join(instances_path, obj))]
-            app.log.info(f"Found {len(instances)} instance(s).")
+            self.app.log.info(f"Found {len(instances)} instance(s).")
         # Show error message otherwise
         else:
-            app.log.error("Failed to load instances from ModOrganizer: Found no instances.")
+            self.app.log.error("Failed to load instances from ModOrganizer: Found no instances.")
         
         # Return list with found instances
         return instances
@@ -606,7 +683,12 @@ def create_folder_list(folder, lower=True):
 
     for root, dirs, _files in os.walk(folder):
         for f in _files:
-            if f not in ['.gitignore', 'meta.ini']: # check if in blacklist
+            blacklist = []
+            with open('.\\data\\blacklist', 'r') as file:
+                for line in file.readlines():
+                    if line.strip():
+                        blacklist.append(line)
+            if f not in blacklist: # check if in blacklist
                 path = os.path.join(root, f)
                 path = path.removeprefix(f"{folder}\\")
                 if lower:
@@ -616,7 +698,7 @@ def create_folder_list(folder, lower=True):
     return files
 
 # Define function to round bytes #####################################
-def get_size(bytes: int | float, suffix="B"):
+def get_size(bytes: Union[int, float], suffix="B"):
     """
     Scale bytes to their proper format; for e.g:
     1253656 => '1.20MB'
