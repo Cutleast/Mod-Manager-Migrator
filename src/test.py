@@ -17,7 +17,7 @@ from locale import getlocale
 from shutil import disk_usage
 
 import main
-import core
+import core_old
 import games
 
 
@@ -110,7 +110,7 @@ class MainApp:
         self.log = logging.getLogger(self.__repr__())
         log_fmt = "[%(asctime)s.%(msecs)03d][%(levelname)s][%(threadName)s.%(name)s.%(funcName)s]: %(message)s"
         self.log_fmt = logging.Formatter(log_fmt, datefmt="%d.%m.%Y %H:%M:%S")
-        self.stdout = core.StdoutPipe(self)
+        self.stdout = core_old.StdoutPipe(self)
         self.log_str = logging.StreamHandler(self.stdout)
         self.log_str.setFormatter(self.log_fmt)
         self.log.addHandler(self.log_str)
@@ -318,7 +318,7 @@ def main_test():
     app.log.debug(f"Creating source instance...")
     instance_data = {} # keys: name, paths, mods, loadorder, custom executables
     if app.source == 'Vortex':
-        app.src_modinstance = core.VortexInstance(app, instance_data)
+        app.src_modinstance = core_old.VortexInstance(app, instance_data)
         app.src_modinstance.get_instances()
         instance_data['name'] = "Default"
         app.log.debug(f"Loading Vortex profile '{instance_data['name']}'...")
@@ -345,7 +345,7 @@ def main_test():
         # Get mods from mods folder
         mods = [os.path.join(instance_path, 'mods', mod) for mod in os.listdir(os.path.join(instance_path, 'mods')) if os.path.isdir(os.path.join(instance_path, 'mods', mod))]
         instance_data['mods'] = mods
-        app.src_modinstance = core.MO2Instance(app, instance_data)
+        app.src_modinstance = core_old.MO2Instance(app, instance_data)
         app.log.debug(f"Instance path: {instance_data['paths']['instance_path']}")
     else:
         raise Exception(f"Mod manager '{app.source}' is unsupported!")
@@ -358,7 +358,7 @@ def main_test():
                 'staging_folder': ""
             }
         }
-        app.dst_modinstance = core.VortexInstance(app, instance_data)
+        app.dst_modinstance = core_old.VortexInstance(app, instance_data)
     elif app.destination == 'ModOrganizer':
         dst_instance_data = {
             'name': instance_name,
@@ -371,7 +371,7 @@ def main_test():
             },
             'mods': app.src_modinstance.mods
         }
-        app.dst_modinstance = core.MO2Instance(app, instance_data)
+        app.dst_modinstance = core_old.MO2Instance(app, instance_data)
         appdata_path = os.path.join(os.getenv('LOCALAPPDATA'), 'ModOrganizer', instance_name)
         if os.path.isdir(appdata_path):
             app.log.debug("Wiping existing instance...")

@@ -161,7 +161,7 @@ QScrollArea#scrollarea, QWidget#scrollframe {
     spacing: 15px;
 }
 QScrollBar {
-    background-color: <secondary_bg>;
+    background-color: transparent;
     border: 0px solid;
     border-radius: 4px;
     width: 10px;
@@ -303,7 +303,7 @@ QComboBox QAbstractItemView::item:selected {
 
 /* QListWidget */
 QListWidget {
-    background-color: <secondary_bg>;
+    background-color: <tertiary_bg>;
     color: <text_color>;
     font-family: <font>;
     font-size: <font_size>;

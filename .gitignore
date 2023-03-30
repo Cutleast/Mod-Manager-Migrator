@@ -6,4 +6,5 @@
 **main.dist
 *.txt
 **.old
+**_old.py
 Mod-Manager-Migrator.code-workspace

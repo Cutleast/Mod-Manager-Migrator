@@ -1,9 +1,14 @@
 """
 Part of MMM. Contains game classes.
+
+Falls under license
+Attribution-NonCommercial-NoDerivatives 4.0 International.
 """
 
 import os
 import winreg
+from pathlib import Path
+from typing import List
 
 from main import MainApp, qtw, qtc
 
@@ -16,16 +21,16 @@ class GameInstance:
 
     def __init__(self, app: MainApp):
         self.app = app
-        self.name = ""
-        self.installdir = ""
-        self.inidir = ""
-        self.inifiles = []
-        self.steamid = 0
-        self.gogid = 0
-    
+        self.name: str = ""
+        self.installdir: Path = ""
+        self.inidir: Path = ""
+        self.inifiles: List[Path] = []
+        self.steamid: int = 0
+        self.gogid: int = 0
+
     def __repr__(self):
         return "GameInstance"
-    
+
     def get_install_dir(self):
         """
         Gets game's install directory and returns it.
@@ -42,22 +47,30 @@ class GameInstance:
             # Try to get Skyrim path from Steam if installed
             if self.steamid:
                 try:
-                    reg_path = f"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App {self.steamid}"
+                    reg_path = f"\
+SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App {self.steamid}"
                     with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, reg_path) as hkey:
-                        installdir = os.path.normpath(winreg.QueryValueEx(hkey, "installLocation")[0])
-                        if os.path.isdir(installdir):
+                        installdir = Path(
+                            winreg.QueryValueEx(hkey, "installLocation")[0]
+                        )
+                        if installdir.is_dir():
                             self.installdir = installdir
                             return self.installdir
                 except Exception as ex:
-                    self.app.log.error(f"Failed to get install path from Steam: {ex}")
+                    self.app.log.error(
+                        f"Failed to get install path from Steam: {ex}"
+                    )
 
             # Try to get Skyrim path from GOG if installed
             if self.gogid:
                 try:
-                    reg_path = f"SOFTWARE\\WOW6432Node\\GOG.com\\Games\\{self.gogid}"
+                    reg_path = f"\
+SOFTWARE\\WOW6432Node\\GOG.com\\Games\\{self.gogid}"
                     with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, reg_path) as hkey:
-                        installdir = os.path.normpath(winreg.QueryValueEx(hkey, "path")[0])
-                        if os.path.isdir(installdir):
+                        installdir = Path(
+                            winreg.QueryValueEx(hkey, "path")[0]
+                        )
+                        if installdir.is_dir():
                             self.installdir = installdir
                             return self.installdir
                 except Exception as ex:
@@ -70,7 +83,7 @@ class GameInstance:
             dialog.setWindowIcon(self.app.root.windowIcon())
             dialog.setStyleSheet(self.app.stylesheet)
             dialog.setWindowFlag(qtc.Qt.WindowType.WindowCloseButtonHint, False)
-            
+
             layout = qtw.QGridLayout()
             dialog.setLayout(layout)
 
@@ -83,7 +96,7 @@ class GameInstance:
 
             def on_edit(text: str):
                 # Enable button if path is valid or empty
-                if os.path.isdir(text) or (not text.strip()):
+                if Path(text).is_dir() or (not text.strip()):
                     continue_button.setDisabled(False)
                 # Disable it otherwise
                 else:
@@ -97,7 +110,7 @@ class GameInstance:
                 file_dialog.setFileMode(qtw.QFileDialog.FileMode.Directory)
                 if file_dialog.exec():
                     folder = file_dialog.selectedFiles()[0]
-                    folder = os.path.normpath(folder)
+                    folder = Path(folder)
                     lineedit.setText(folder)
 
             browse_button = qtw.QPushButton(self.app.lang['browse'])
@@ -111,13 +124,14 @@ class GameInstance:
 
             dialog.exec()
 
-            if os.path.isdir(lineedit.text()):
-                self.installdir = os.path.normpath(lineedit.text())
+            installdir = Path(lineedit.text())
+            if installdir.is_dir():
+                self.installdir = installdir
             else:
-                raise Exception("No path specified!")
+                raise ValueError("No path specified!")
 
         return self.installdir
-    
+
 
 # Create class for SkyrimSE instance #################################
 class SkyrimSEInstance(GameInstance):
@@ -129,7 +143,12 @@ class SkyrimSEInstance(GameInstance):
         super().__init__(app)
 
         self.name = "Skyrim Special Edition"
-        self.inidir = os.path.join(self.app.doc_path, 'My Games', 'Skyrim Special Edition')
+        self.inidir = Path(os.path.join(
+                self.app.doc_path,
+                'My Games',
+                'Skyrim Special Edition'
+            )
+        )
         self.inifiles = ['Skyrim.ini', 'SkyrimPrefs.ini', 'SkyrimCustom.ini']
         self.steamid = 489830
         self.gogid = 1711230643
