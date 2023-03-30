@@ -86,5 +86,6 @@
     "update_available": "看起来您的 MMM 版本已过时。您正在使用的是版本 [OLD_VERSION] 。\n新版本 [NEW_VERSION] 已经发布。想要现在下载吗？",
     "permission_error": "拒绝访问，请以管理员身份启动MMM并重试。\n如果程序已经以管理员权限运行，请确保管理员具有必要的读写权限。",
     "game": "游戏",
-    "game_not_found": "游戏安装路径未找到，请确保游戏已安装，并在下面手动选择游戏路径以继续。"
+    "game_not_found": "游戏安装路径未找到，请确保游戏已安装，并在下面手动选择游戏路径以继续。",
+    "vortex_running": "当 Vortex 运行时不能使用 Vortex 数据！确保Vortex没有运行，然后再试一次。"
 }
