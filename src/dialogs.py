@@ -5,11 +5,11 @@ Falls under license
 Attribution-NonCommercial-NoDerivatives 4.0 International.
 """
 
+# Import libraries ###################################################
 import json
 import os
-import threading
-import time
-from typing import Callable, List
+import logging
+from typing import List
 from pathlib import Path
 
 import qtawesome as qta
@@ -20,9 +20,11 @@ import qtpy.QtWidgets as qtw
 import utils
 import main
 import managers
+import games
+from loadingdialog import LoadingDialog
 
 
-# Source dialog ######################################################
+# Source class for source dialog #####################################
 class SourceDialog(qtw.QDialog):
     """
     Dialog for source selection.
@@ -35,6 +37,11 @@ class SourceDialog(qtw.QDialog):
         self.modinstance: managers.ModInstance = None
         self.source_widget: qtw.QWidget = None
         self.mods_box: qtw.QListWidget = None
+
+        # Initialize class specific logger
+        self.log = logging.getLogger(self.__repr__())
+        self.log.addHandler(self.app.log_str)
+        self.log.setLevel(self.app.log.level)
 
         # Configure dialog
         self.setWindowTitle(
@@ -112,6 +119,7 @@ class SourceDialog(qtw.QDialog):
         self.instances_box.setSelectionMode(
             qtw.QListWidget.SelectionMode.SingleSelection
         )
+        self.instances_box.doubleClicked.connect(self.finish)
         self.instances_box.setMinimumHeight(200)
         instances_layout.addWidget(self.instances_box, 1)
         ##############################################################
@@ -159,6 +167,9 @@ class SourceDialog(qtw.QDialog):
             lambda: self.next_button.setDisabled(False)
         )
 
+    def __repr__(self):
+        return "SourceDialog"
+
     def goto_first_page(self):
         """
         Hides second page and shows first page.
@@ -200,22 +211,12 @@ class SourceDialog(qtw.QDialog):
         # Create source mod manager instance
         # if not already done
         if self.app.source == 'Vortex':
-            exist = isinstance(
-                self.modinstance,
-                managers.VortexInstance
-            )
-            if not exist:
-                self.modinstance = managers.VortexInstance(self.app)
+            self.modinstance = managers.VortexInstance(self.app)
         elif self.app.source == 'ModOrganizer':
-            exist = isinstance(
-                self.modinstance,
-                managers.MO2Instance
-            )
-            if not exist:
-                self.modinstance = managers.MO2Instance(self.app)
+            self.modinstance = managers.MO2Instance(self.app)
         else:
-            raise ValueError(
-                f"Mod manager '{self.app.source}' is unsupported!"
+            raise utils.UiException(
+                f"[unsupported_mod_manager] Mod manager '{self.app.source}' is unsupported!"
             )
 
         # Load instances from source mod manager
@@ -226,15 +227,13 @@ class SourceDialog(qtw.QDialog):
             self.instances_box.clear()
             self.instances_box.addItems(instances)
             self.instances_box.setCurrentRow(0)
+        
         # Show error message and
         # go to first page otherwise
         else:
-            qtw.QMessageBox.critical(
-                parent=self,
-                title=self.app.lang['error'],
-                text=self.app.lang['error_no_instances']
+            raise utils.UiException(
+                "[error_no_instances] Found no instances!"
             )
-            return
 
         # Hide first page and show second page
         self.modmanagers_widget.hide()
@@ -266,93 +265,48 @@ class SourceDialog(qtw.QDialog):
 
         # Load instance from source mod manager
         name = self.instances_box.currentItem().text()
-        self.modinstance.load_instance(name)
+        loadingdialog = LoadingDialog(
+            parent=self,
+            app=self.app,
+            func=lambda ldialog: (
+                self.modinstance.load_instance(name, ldialog)
+            )
+        )
+        loadingdialog.exec()
         self.app.src_modinstance = self.modinstance
 
-        # Create source widget with instance details #################
-        # Destroy widget if one already exists
-        if self.source_widget is not None:
-            self.source_widget.destroy()
-        self.source_widget = qtw.QWidget()
-        self.source_widget.setObjectName("panel")
-        self.app.mainlayout.addWidget(self.source_widget, 1, 0)
-
-        # Create layout
-        layout = qtw.QGridLayout()
-        layout.setAlignment(qtc.Qt.AlignmentFlag.AlignTop)
-        layout.setColumnStretch(2, 1)
-        self.source_widget.setLayout(layout)
-
-        # Add label with mod manager icon
-        label = qtw.QLabel(f"{self.app.lang['mod_manager']}:")
-        layout.addWidget(label, 0, 0)
-        icon = qtg.QPixmap(os.path.join(
-                self.app.ico_path,
-                self.modinstance.icon_name
-            )
-        )
-        label = qtw.QLabel()
-        label.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)
-        label.setPixmap(icon)
-        label.setScaledContents(True)
-        label.resize(128, 128)
-        label.setFixedSize(128, 128)
-        layout.addWidget(label, 0, 1)
-
-        # Add label with instance name
-        label = qtw.QLabel(f"{self.app.lang['instance_name']}:")
-        layout.addWidget(label, 1, 0)
-        label = qtw.QLabel(self.modinstance.name)
-        layout.addWidget(label, 1, 1)
-
-        # Add label with game name
-        label = qtw.QLabel(f"{self.app.lang['game']}:")
-        layout.addWidget(label, 2, 0)
-        label = qtw.QLabel(self.app.game_instance.name)
-        layout.addWidget(label, 2, 1)
-
-        # Add listbox for source mods
-        label = qtw.QLabel("Mods:")
-        layout.addWidget(label, 3, 0)
-        label = qtw.QLabel(str(len(self.modinstance.mods)))
-        layout.addWidget(label, 3, 1)
-        self.mods_box = qtw.QListWidget()
-        self.mods_box.setSelectionMode(
-            qtw.QListWidget.SelectionMode.NoSelection
-        )
-        self.mods_box.setHorizontalScrollBarPolicy(
-            qtc.Qt.ScrollBarPolicy.ScrollBarAsNeeded
-        )
-        self.mods_box.itemClicked.connect(
-            lambda item: (
-                item.setCheckState(qtc.Qt.CheckState.Unchecked)
-                if item.checkState() == qtc.Qt.CheckState.Checked
-                else
-                item.setCheckState(qtc.Qt.CheckState.Checked)
-            )
-        )
-        layout.addWidget(self.mods_box, 4, 0, 1, 3)
-
-        # Add mods to listbox
-        for mod in self.modinstance.loadorder:
-            item = qtw.QListWidgetItem(
-                mod.name,
-                self.mods_box
-            )
-            item.setFlags(item.flags() | qtc.Qt.ItemFlag.ItemIsUserCheckable)
-            if mod.enabled:
-                item.setCheckState(qtc.Qt.CheckState.Checked)
-            else:
-                item.setCheckState(qtc.Qt.CheckState.Unchecked)
-            self.mods_box.addItem(item)
+        # Create source widget with instance details
+        self.modinstance.show_src_widget()
 
         # Update source button
         self.app.src_button.setText(self.app.lang['edit_source'])
         self.app.src_button.clicked.disconnect()
+        #self.back_button.setDisabled(True)
         self.app.src_button.clicked.connect(self.show)
 
         # Enable destination button
         self.app.dst_button.setDisabled(False)
+
+        # Ensure that migrate button is disabled after changes
+        self.app.mig_button.setDisabled(True)
+
+        # Delete destination widget after changes
+        if self.app.dst_widget:
+            self.app.dst_widget.hide()
+            self.app.dst_widget.destroy()
+        self.app.dst_widget = None
+        self.app.destination = None
+        self.app.dst_modinstance = None
+        self.app.dst_button.setText(self.app.lang['select_source'])
+        self.app.dst_button.clicked.disconnect()
+        self.app.dst_button.clicked.connect(
+            lambda: DestinationDialog(self.app.root, self.app).show()
+        )
+        self.app.mig_icon.setPixmap(qta.icon(
+            'fa5s.chevron-right',
+            color=self.app.theme['text_color']
+            ).pixmap(120, 120)
+        )
 
         # Close dialog
         self.accept()
@@ -371,6 +325,11 @@ class DestinationDialog(qtw.QDialog):
         self.modinstance: managers.ModInstance = None
         self.destination_widget: qtw.QWidget = None
         self.mods_box: qtw.QListWidget = None
+
+        # Initialize class specific logger
+        self.log = logging.getLogger(self.__repr__())
+        self.log.addHandler(self.app.log_str)
+        self.log.setLevel(self.app.log.level)
 
         # Configure dialog
         self.setWindowTitle(
@@ -482,7 +441,7 @@ class DestinationDialog(qtw.QDialog):
         def browse_path():
             file_dialog = qtw.QFileDialog(self)
             file_dialog.setWindowTitle(self.app.lang['browse'])
-            file_dialog.setDirectory(self.path_box.text())
+            file_dialog.setDirectory(str(Path(self.path_box.text()).parent))
             file_dialog.setFileMode(qtw.QFileDialog.FileMode.Directory)
             if file_dialog.exec():
                 folder = file_dialog.selectedFiles()[0]
@@ -679,6 +638,9 @@ class DestinationDialog(qtw.QDialog):
         self.next_button.clicked.connect(self.goto_secnd_page)
         self.button_layout.addWidget(self.next_button)
 
+    def __repr__(self):
+        return "DestinationDialog"
+
     def goto_first_page(self):
         """
         Hides second page and shows first page.        
@@ -723,12 +685,7 @@ class DestinationDialog(qtw.QDialog):
         vortex = self.app.destination == 'Vortex'
         mo2 = self.app.destination == 'ModOrganizer'
         if vortex:
-            exist = isinstance(
-                self.modinstance,
-                managers.VortexInstance
-            )
-            if not exist:
-                self.modinstance = managers.VortexInstance(self.app)
+            self.modinstance = managers.VortexInstance(self.app)
 
             app_path = Path(os.getenv('APPDATA'))
             app_path = app_path / 'Vortex' / self.app.game.lower()
@@ -742,12 +699,7 @@ class DestinationDialog(qtw.QDialog):
             )
             self.overwritepath_box.setText("")
         elif mo2:
-            exist = isinstance(
-                self.modinstance,
-                managers.MO2Instance
-            )
-            if not exist:
-                self.modinstance = managers.MO2Instance(self.app)
+            self.modinstance = managers.MO2Instance(self.app)
         else:
             raise ValueError(f"Unsupported destination: {self.app.destination}")
 
@@ -799,17 +751,10 @@ class DestinationDialog(qtw.QDialog):
         dst_drive = instance_path.drive
         # Check if source and destination match
         if instance_path == self.app.src_modinstance.mods_path:
-            self.app.log.error(
-                "Failed to create destination instance: \
+            raise utils.UiException(
+                "[detected_same_path] Failed to create destination instance: \
 source and destination paths must not be same!"
             )
-            qtw.QMessageBox.critical(
-                self,
-                self.app.lang['error'],
-                self.app.lang['detected_same_path'],
-                buttons=qtw.QMessageBox.StandardButton.Ok
-            )
-            return
         # Check if drives match when mode is 'hardlink'
         if (self.app.mode == 'hardlink') and (src_drive != dst_drive):
             self.app.log.error(
@@ -818,14 +763,16 @@ Failed to create destination instance: \
 Hardlinks must be on the same drive. \
 (Source: {src_drive} | Destination: {dst_drive})"
             )
-            qtw.QMessageBox.critical(
-                self,
-                self.app.lang['error'],
-                self.app.lang['hardlink_drive_error']\
+            print("\a", end='\r')
+            ErrorDialog(
+                parent=self,
+                app=self.app,
+                title=self.app.lang['error'],
+                text=self.app.lang['hardlink_drive_error']\
                 .replace("[DESTDRIVE]", dst_drive)\
                 .replace("[SOURCEDRIVE]", src_drive),
-                buttons=qtw.QMessageBox.StandardButton.Ok
-            )
+                yesno=False
+            ).exec()
             return
 
         # Get user input
@@ -880,91 +827,16 @@ Hardlinks must be on the same drive. \
         self.modinstance.instance_data = instance_data
         self.modinstance.mods_path = mods_path
         self.app.dst_modinstance = self.modinstance
+        self.app.dst_modinstance.mods = self.app.src_modinstance.mods
+        self.app.dst_modinstance.loadorder = self.app.src_modinstance.loadorder
 
-        # Create destination widget with instance details ############
-        # Destroy already existing widget
-        if self.destination_widget is not None:
-            self.destination_widget.destroy()
-
-        self.destination_widget = qtw.QWidget()
-        self.destination_widget.setObjectName("panel")
-        self.app.mainlayout.addWidget(self.destination_widget, 1, 2)
-
-        # Create layout
-        layout = qtw.QGridLayout()
-        layout.setAlignment(qtc.Qt.AlignmentFlag.AlignTop)
-        layout.setColumnStretch(2, 1)
-        self.destination_widget.setLayout(layout)
-
-        # Add label with mod manager icon
-        label = qtw.QLabel(f"{self.app.lang['mod_manager']}:")
-        layout.addWidget(label, 0, 0)
-        icon = qtg.QPixmap(os.path.join(
-                self.app.ico_path,
-                self.modinstance.icon_name
-            )
-        )
-        label = qtw.QLabel()
-        label.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)
-        label.setPixmap(icon)
-        label.setScaledContents(True)
-        label.resize(128, 128)
-        label.setFixedSize(128, 128)
-        layout.addWidget(label, 0, 1)
-
-        # Add label with instance name
-        label = qtw.QLabel(f"{self.app.lang['instance_name']}:")
-        layout.addWidget(label, 1, 0)
-        label = qtw.QLabel(self.modinstance.name)
-        layout.addWidget(label, 1, 1)
-
-        # Add label with game name
-        label = qtw.QLabel(f"{self.app.lang['game']}:")
-        layout.addWidget(label, 2, 0)
-        label = qtw.QLabel(self.app.game_instance.name)
-        layout.addWidget(label, 2, 1)
-
-        # Add listbox for source mods
-        label = qtw.QLabel("Mods:")
-        layout.addWidget(label, 3, 0)
-        label = qtw.QLabel(str(len(self.app.src_modinstance.mods)))
-        layout.addWidget(label, 3, 1)
-        self.mods_box = qtw.QListWidget()
-        self.mods_box.setSelectionMode(
-            qtw.QListWidget.SelectionMode.NoSelection
-        )
-        self.mods_box.setHorizontalScrollBarPolicy(
-            qtc.Qt.ScrollBarPolicy.ScrollBarAsNeeded
-        )
-        self.mods_box.itemClicked.connect(
-            lambda item: (
-                item.setCheckState(qtc.Qt.CheckState.Unchecked)
-                if item.checkState() == qtc.Qt.CheckState.Checked
-                else
-                item.setCheckState(qtc.Qt.CheckState.Checked)
-            )
-        )
-        layout.addWidget(self.mods_box, 4, 0, 1, 3)
-
-        # Add mods to listbox
-        for mod in self.app.src_modinstance.loadorder:
-            item = qtw.QListWidgetItem(
-                mod.name,
-                self.mods_box
-            )
-            item.setFlags(
-                item.flags()
-                | qtc.Qt.ItemFlag.ItemIsUserCheckable
-            )
-            if mod.enabled:
-                item.setCheckState(qtc.Qt.CheckState.Checked)
-            else:
-                item.setCheckState(qtc.Qt.CheckState.Unchecked)
-            self.mods_box.addItem(item)
+        # Create destination widget with instance details
+        self.modinstance.show_dst_widget()
 
         # Update destination button
         self.app.dst_button.setText(self.app.lang['edit_destination'])
         self.app.dst_button.clicked.disconnect()
+        self.back_button.setDisabled(True)
         self.app.dst_button.clicked.connect(self.show)
 
         # Update migrate button and icon
@@ -979,243 +851,133 @@ Hardlinks must be on the same drive. \
         self.accept()
 
 
-# Create class for loading dialog ####################################
-class LoadingDialog(qtw.QDialog):
+# Create class for game dialog #######################################
+class GameDialog(qtw.QDialog):
     """
-    QDialog designed for progress bars.
-    
-    Parameters:
-        parent: QWidget
-        app: main.MainApp
-        func: function or method that is run in a background thread
+    Dialog for game selection.
     """
 
-    start_signal = qtc.Signal()
-    stop_signal = qtc.Signal()
-    progress_signal = qtc.Signal(dict)
-
-    def __init__(
-            self,
-            parent: qtw.QWidget,
-            app: main.MainApp,
-            func: Callable
-        ):
+    def __init__(self, parent: qtw.QWidget, app: main.MainApp):
         super().__init__(parent)
 
-        # Force focus
-        self.setModal(True)
-
-        # Set up variables
         self.app = app
-        self.success = True
-        self.func = lambda: (
-            self.start_signal.emit(),
-            func(self.progress_signal),
-            self.stop_signal.emit()
-        )
-        self.dialog_thread = LoadingDialogThread(
-            dialog=self,
-            target=self.func,
-            daemon=True,
-            name='BackgroundThread'
-        )
-        self.starttime = None
+        self.game: str = None
+        self.game_instance: games.GameInstance = None
 
-        # Set up dialog layout
-        self.layout = qtw.QVBoxLayout()
-        self.layout.setAlignment(qtc.Qt.AlignmentFlag.AlignTop)
-        self.setLayout(self.layout)
-
-        # Set up first label and progressbar
-        self.label1 = qtw.QLabel()
-        self.label1.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
-        self.layout.addWidget(self.label1)
-        self.pbar1 = qtw.QProgressBar()
-        self.pbar1.setTextVisible(False)
-        self.pbar1.setFixedHeight(3)
-        self.layout.addWidget(self.pbar1)
-
-        # Set up second label and progressbar
-        self.label2 = qtw.QLabel()
-        self.label2.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
-        self.label2.hide()
-        self.layout.addWidget(self.label2)
-        self.pbar2 = qtw.QProgressBar()
-        self.pbar2.setTextVisible(False)
-        self.pbar2.setFixedHeight(3)
-        self.pbar2.hide()
-        self.layout.addWidget(self.pbar2)
-
-        # Set up third label and progressbar
-        self.label3 = qtw.QLabel()
-        self.label3.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
-        self.label3.hide()
-        self.layout.addWidget(self.label3)
-        self.pbar3 = qtw.QProgressBar()
-        self.pbar3.setTextVisible(False)
-        self.pbar3.setFixedHeight(3)
-        self.pbar3.hide()
-        self.layout.addWidget(self.pbar3)
-
-        # Connect signals
-        self.start_signal.connect(self.on_start)
-        self.stop_signal.connect(self.on_finish)
-        self.progress_signal.connect(self.setProgress)
+        # Initialize class specific logger
+        self.log = logging.getLogger(self.__repr__())
+        self.log.addHandler(self.app.log_str)
+        self.log.setLevel(self.app.log.level)
 
         # Configure dialog
-        self.setWindowTitle(self.app.name)
-        self.setWindowIcon(self.parent().windowIcon())
-        self.setStyleSheet(self.parent().styleSheet())
-        self.setWindowFlag(qtc.Qt.WindowType.WindowCloseButtonHint, False)
-
-    def setProgress(self, progress: dict):
-        """
-        Sets progress from <progress>.
-
-        Parameters:
-            progress: dict ('value': int, 'max': int, 'text': str)
-        """
-
-        value1 = progress.get('value', None)
-        max1 = progress.get('max', None)
-        text1 = progress.get('text', "")
-        show2 = progress.get('show2', False)
-        value2 = progress.get('value2', None)
-        max2 = progress.get('max2', None)
-        text2 = progress.get('text2', "")
-        show3 = progress.get('show3', False)
-        value3 = progress.get('value3', None)
-        max3 = progress.get('max3', None)
-        text3 = progress.get('text3', "")
-
-        # first row (always shown)
-        if max1 is not None:
-            self.pbar1.setRange(0, int(max1))
-        #else:
-        #    self.pbar1.setRange(0, 0)
-        if value1 is not None:
-            self.pbar1.setValue(int(value1))
-        if text1.strip():
-            self.label1.setText(text1)
-
-        # second row
-        if show2:
-            self.pbar2.show()
-            self.label2.show()
-            if max2 is not None:
-                self.pbar2.setRange(0, int(max2))
-            if value2 is not None:
-                self.pbar2.setValue(int(value2))
-            if text2.strip():
-                self.label2.setText(text2)
-        else:
-            self.pbar2.hide()
-            self.label2.hide()
-
-        # third row
-        if show3:
-            self.pbar3.show()
-            self.label3.show()
-            if max3 is not None:
-                self.pbar3.setRange(0, int(max3))
-            if value3 is not None:
-                self.pbar3.setValue(int(value3))
-            if text3.strip():
-                self.label3.setText(text3)
-        else:
-            self.pbar3.hide()
-            self.label3.hide()
-
-        self.setFixedHeight(self.sizeHint().height())
-
-        # Move back to center
-        utils.center(self, self.app.root)
-
-    def timerEvent(self, event: qtc.QTimerEvent):
-        """
-        Callback for timer timeout.
-        Updates window title time.        
-        """
-
-        super().timerEvent(event)
-
         self.setWindowTitle(
-            f"\
-{self.app.name} - {self.app.lang['elapsed']}: \
-{utils.get_diff(self.starttime, time.strftime('%H:%M:%S'))}"
+            f"{self.app.name} - {self.app.lang['select_game']}"
         )
+        self.setWindowIcon(self.app.root.windowIcon())
+        self.setModal(True)
+        self.setObjectName("root")
+        self.setFixedSize(720, 350)
 
-    def exec(self):
-        """
-        Shows dialog and executes thread.
-        Blocks code until thread is done
-        and dialog is closed.        
-        """
+        # Create main layout
+        layout = qtw.QVBoxLayout()
+        self.setLayout(layout)
 
-        #self.start_signal.emit()
-        self.dialog_thread.start()
+        # Add label with instruction
+        label = qtw.QLabel()
+        label.setText(self.app.lang['select_game_text'])
+        label.setObjectName("titlelabel")
+        label.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
+        layout.addWidget(label)
 
-        self.starttime = time.strftime("%H:%M:%S")
-        self.startTimer(1000)
+        # Add listbox for games
+        self.games_box = qtw.QListWidget()
+        self.games_box.setSelectionMode(
+            qtw.QListWidget.SelectionMode.SingleSelection
+        )
+        self.games_box.doubleClicked.connect(self.finish)
+        self.games_box.setMinimumHeight(200)
+        layout.addWidget(self.games_box, 1)
 
-        super().exec()
+        # Add games to listbox
+        for game in games.GAMES:
+            game = game(self.app)
+            text = game.name
+            if game.name != "Skyrim Special Edition":
+                text += " (EXPERIMENTAL)"
+            if game.icon_name:
+                icon = qtg.QIcon(str(self.app.ico_path / game.icon_name))
+                item = qtw.QListWidgetItem(
+                    icon,
+                    text
+                )
+            else:
+                item = qtw.QListWidgetItem(
+                    text=text
+                )
 
-        if self.dialog_thread.exception is not None:
-            raise self.dialog_thread.exception
+            self.games_box.addItem(item)
+        self.games_box.setCurrentRow(0)
 
-    def on_start(self):
-        """
-        Callback for thread start.        
-        """
+        # Add remember checkbox
+        self.rem_checkbox = qtw.QCheckBox(self.app.lang['do_not_ask_again'])
+        layout.addWidget(self.rem_checkbox, alignment=qtc.Qt.AlignmentFlag.AlignHCenter)
 
-        self.pbar1.setRange(0, 0)
-        self.pbar2.setRange(0, 0)
-        self.pbar3.setRange(0, 0)
-        self.show()
+        # Add cancel and done button
+        button_layout = qtw.QHBoxLayout()
+        layout.addLayout(button_layout)
 
-    def on_finish(self):
-        """
-        Callback for thread done.
-        """
+        # Cancel button
+        cancel_button = qtw.QPushButton(self.app.lang['exit'])
+        cancel_button.clicked.connect(self.app.exit)
+        button_layout.addWidget(cancel_button)
 
-        self.pbar1.setRange(0, 1)
-        self.pbar1.setValue(1)
-        self.pbar2.setRange(0, 1)
-        self.pbar2.setValue(1)
-        self.pbar3.setRange(0, 1)
-        self.pbar3.setValue(1)
-        self.accept()
+        # Seperate cancel button with spacing
+        button_layout.addSpacing(200)
 
+        # Done button
+        done_button = qtw.QPushButton(self.app.lang['done'])
+        done_button.clicked.connect(self.finish)
+        button_layout.addWidget(done_button)
 
-class LoadingDialogThread(threading.Thread):
-    """
-    Thread for LoadingDialog.
-    """
+        utils.center(self)
+    
+    def __repr__(self):
+        return "GameDialog"
 
-    exception = None
+    def closeEvent(self, event):
+        super().closeEvent(event)
 
-    def __init__(
-            self,
-            dialog: LoadingDialog,
-            target: Callable,
-            *args,
-            **kwargs
-        ):
+        if not self.game_instance:
+            self.app.exit()
 
-        super().__init__(target=target, *args, **kwargs)
+    def finish(self):
+        sel_game = self.games_box.currentItem().text()
+        if '(EXPERIMENTAL)' in sel_game:
+            sel_game = sel_game.replace('(EXPERIMENTAL)', '').strip()
+        for game in games.GAMES:
+            if game(self.app).name == sel_game:
+                self.game_instance = game(self.app)
+                break
+        else:
+            raise utils.UiException(
+                f"[game_not_supported] Game '{sel_game}' not supported."
+            )
 
-        self.dialog = dialog
+        dir = self.game_instance.get_install_dir()
+        if str(dir).strip() and dir.is_dir():
+            self.game = self.game_instance.id
+            self.app.game_instance = self.game_instance
+            self.app.game = self.game
 
-    def run(self):
-        """
-        Runs thread and raises errors that could occur.        
-        """
+            self.log.info(f"Current game: {self.game_instance.name}")
 
-        try:
-            super().run()
-        except Exception as ex:
-            self.exception = ex
-            self.dialog.stop_signal.emit()
+            self.accept()
+
+            # Save game to config if rem checkbox is selected
+            if self.rem_checkbox.isChecked():
+                self.app.config['default_game'] = self.app.game_instance.name
+                with open(self.app.con_path, 'w', encoding='utf8') as file:
+                    json.dump(self.app.config, file, indent=4)
 
 
 # Create class for settings dialog ###################################
@@ -1229,6 +991,11 @@ class SettingsDialog(qtw.QDialog):
         self.app = app
 
         self.stylesheet = self.app._theme.load_stylesheet()
+
+        # initialize class specific logger
+        self.log = logging.getLogger(self.__repr__())
+        self.log.addHandler(self.app.log_str)
+        self.log.setLevel(self.app.log.level)
 
         # create popup window
         self.setModal(True)
@@ -1358,6 +1125,25 @@ class SettingsDialog(qtw.QDialog):
                 button.clicked.connect(choose_color)
                 self.settings_widgets.append(button)
                 detail_layout.addWidget(button, r, 1)
+            elif config == 'default_game':
+                dropdown = qtw.QComboBox()
+                dropdown.setObjectName(config)
+                dropdown.addItems([
+                        game(self.app).name
+                        for game in games.GAMES
+                    ]
+                )
+                dropdown.addItem(self.app.lang['ask_always'])
+                if value is not None:
+                    dropdown.setCurrentText(value)
+                else:
+                    dropdown.setCurrentText(self.app.lang['ask_always'])
+                dropdown.setEditable(False)
+                dropdown.currentTextChanged.connect(
+                    lambda e: self.on_setting_change()
+                )
+                self.settings_widgets.append(dropdown)
+                detail_layout.addWidget(dropdown, r, 1)
 
         # create frame with cancel and done button
         command_frame = qtw.QWidget()
@@ -1382,11 +1168,15 @@ class SettingsDialog(qtw.QDialog):
         # show popup
         self.exec()
 
+    def __repr__(self):
+        return "Settings"
+    
     def finish_settings(self):
         """
         Gets user input and saves config to file.        
         """
 
+        # Get config
         config = self.app.config.copy()
         for widget in self.settings_widgets:
             name = widget.objectName()
@@ -1409,12 +1199,17 @@ class SettingsDialog(qtw.QDialog):
                     config[name] = widget.currentText()
                 elif name == 'log_level':
                     config[name] = widget.currentText().lower()
+                elif name == 'default_game':
+                    value = widget.currentText()
+                    if value == self.app.lang['ask_always']:
+                        value = None
+                    config[name] = value
             elif isinstance(widget, qtw.QSpinBox):
                 config[name] = widget.value()
             elif isinstance(widget, qtw.QPushButton):
                 config[name] = widget.color
 
-        # save config
+        # Save config
         if config['ui_mode'] != self.app.config['ui_mode']:
             self.app._theme.set_mode(config['ui_mode'].lower())
             self.app.theme = self.app._theme.load_theme()
@@ -1427,12 +1222,13 @@ class SettingsDialog(qtw.QDialog):
         with open(self.app.con_path, 'w', encoding='utf8') as file:
             json.dump(self.app.config, file, indent=4)
         self.app.unsaved_settings = False
-        self.app.log.info("Saved config to file.")
+        self.log.info("Saved config to file.")
 
-        # update accent color
+        # Update accent color
         self.app.theme['accent_color'] = self.app.config['accent_color']
         self.stylesheet = self.app._theme.load_stylesheet()
         self.app.root.setStyleSheet(self.app.stylesheet)
+
         # Update icons
         self.app.mig_button.setIcon(
             qta.icon('fa5s.chevron-right', color=self.app.theme['text_color'])
@@ -1449,6 +1245,7 @@ class SettingsDialog(qtw.QDialog):
                     color=self.app.theme['text_color']
                 ).pixmap(120, 120)
             )
+
         # Fix link color
         palette = self.app.palette()
         palette.setColor(
@@ -1457,7 +1254,7 @@ class SettingsDialog(qtw.QDialog):
         )
         self.app.setPalette(palette)
 
-        # close settings popup
+        # Close settings popup
         self.accept()
 
     def on_setting_change(self):
@@ -1503,3 +1300,83 @@ class SettingsDialog(qtw.QDialog):
         else:
             self.accept()
             del self
+
+
+# Create class for error messagebox ##################################
+class ErrorDialog(qtw.QMessageBox):
+    """
+    Custom error messagebox with short text
+    and detailed text functionality.
+
+    Parameters:
+        parent: QWidget (parent window)
+        app: MainApp (for localisation of buttons)
+        title: str (window title)
+        text: str (short message)
+        details: str (will be displayed when details are shown)
+        yesno: bool (determines if 'continue' and 'cancel' buttons are shown
+        or only an 'ok' button)
+    """
+
+    def __init__(
+            self,
+            parent: qtw.QWidget,
+            app: main.MainApp,
+            title: str,
+            text: str,
+            details: str="",
+            yesno: bool=True,
+        ):
+        super().__init__(parent)
+        self.app = app
+
+        # Basic configuration
+        self.setWindowTitle(title)
+        self.setIcon(qtw.QMessageBox.Icon.Critical)
+        self.setText(text)
+        
+        # Show 'continue' and 'cancel' button
+        if yesno:
+            self.setStandardButtons(
+                qtw.QMessageBox.StandardButton.Yes
+                | qtw.QMessageBox.StandardButton.No
+            )
+            self.button(
+                qtw.QMessageBox.StandardButton.Yes
+            ).setText(self.app.lang['continue'])
+            self.button(
+                qtw.QMessageBox.StandardButton.No
+            ).setText(self.app.lang['exit'])
+        
+        # Only show 'ok' button
+        else:
+            self.setStandardButtons(
+                qtw.QMessageBox.StandardButton.Ok
+            )
+
+        # Add details button if details are given
+        if details:
+            self.details_button: qtw.QPushButton = self.addButton(
+                self.app.lang['show_details'],
+                qtw.QMessageBox.ButtonRole.YesRole
+            )
+
+            self._details = False
+            def toggle_details():
+                # toggle details
+                if not self._details:
+                    self._details = True
+                    self.details_button.setText(self.app.lang['hide_details'])
+                    self.setInformativeText(details)
+                else:
+                    self._details = False
+                    self.details_button.setText(self.app.lang['show_details'])
+                    self.setInformativeText("")
+
+                # update messagebox size
+                # and move messagebox to center of screen
+                self.adjustSize()
+                utils.center(self)
+
+            self.details_button.clicked.disconnect()
+            self.details_button.clicked.connect(toggle_details)

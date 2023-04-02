@@ -5,11 +5,13 @@ Falls under license
 Attribution-NonCommercial-NoDerivatives 4.0 International.
 """
 
-import os
+# Import libraries ###################################################
+import logging
 import winreg
 from pathlib import Path
-from typing import List
+from typing import List, Type
 
+from utils import UiException
 from main import MainApp, qtw, qtc
 
 
@@ -19,14 +21,22 @@ class GameInstance:
     General class for game instances.
     """
 
+    icon_name = ""
+
     def __init__(self, app: MainApp):
         self.app = app
         self.name: str = ""
+        self.id: str = ""
         self.installdir: Path = ""
         self.inidir: Path = ""
         self.inifiles: List[Path] = []
         self.steamid: int = 0
         self.gogid: int = 0
+
+        # Initialize class specific logger
+        self.log = logging.getLogger(self.__repr__())
+        self.log.addHandler(self.app.log_str)
+        self.log.setLevel(self.app.log.level)
 
     def __repr__(self):
         return "GameInstance"
@@ -55,14 +65,14 @@ SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App {self.steamid
                         )
                         if installdir.is_dir():
                             self.installdir = installdir
-                            return self.installdir
+                            #return self.installdir
                 except Exception as ex:
-                    self.app.log.error(
+                    self.log.error(
                         f"Failed to get install path from Steam: {ex}"
                     )
 
             # Try to get Skyrim path from GOG if installed
-            if self.gogid:
+            if self.gogid and (not self.installdir):
                 try:
                     reg_path = f"\
 SOFTWARE\\WOW6432Node\\GOG.com\\Games\\{self.gogid}"
@@ -72,9 +82,9 @@ SOFTWARE\\WOW6432Node\\GOG.com\\Games\\{self.gogid}"
                         )
                         if installdir.is_dir():
                             self.installdir = installdir
-                            return self.installdir
+                            #return self.installdir
                 except Exception as ex:
-                    self.app.log.error(f"Failed to get install path from Steam: {ex}")
+                    self.log.error(f"Failed to get install path from GOG: {ex}")
 
         if not installdir:
             dialog = qtw.QDialog()
@@ -82,7 +92,7 @@ SOFTWARE\\WOW6432Node\\GOG.com\\Games\\{self.gogid}"
             dialog.setWindowTitle(self.app.name)
             dialog.setWindowIcon(self.app.root.windowIcon())
             dialog.setStyleSheet(self.app.stylesheet)
-            dialog.setWindowFlag(qtc.Qt.WindowType.WindowCloseButtonHint, False)
+            #dialog.setWindowFlag(qtc.Qt.WindowType.WindowCloseButtonHint, False)
 
             layout = qtw.QGridLayout()
             dialog.setLayout(layout)
@@ -122,34 +132,39 @@ SOFTWARE\\WOW6432Node\\GOG.com\\Games\\{self.gogid}"
             continue_button.clicked.connect(dialog.accept)
             layout.addWidget(continue_button, 2, 1)
 
-            dialog.exec()
-
-            installdir = Path(lineedit.text())
-            if installdir.is_dir():
-                self.installdir = installdir
+            if dialog.exec():
+                installdir = Path(lineedit.text())
+                if installdir.is_dir() and str(installdir).strip():
+                    self.installdir = installdir
+                else:
+                    raise UiException("[invalid_path] Path is invalid!")
             else:
-                raise ValueError("No path specified!")
+                return Path(" ")
 
+        self.log.debug(f"Game install path: {self.installdir}")
         return self.installdir
 
 
 # Create class for SkyrimSE instance #################################
 class SkyrimSEInstance(GameInstance):
     """
-    Class for SkyrimSE GameInstance. Inherited from GameInstance class.
+    Class for SkyrimSE GameInstance.
+    Inherited from GameInstance class.
     """
+
+    icon_name = "Skyrimse.ico"
 
     def __init__(self, app: MainApp):
         super().__init__(app)
 
         self.name = "Skyrim Special Edition"
-        self.inidir = Path(os.path.join(
-                self.app.doc_path,
-                'My Games',
-                'Skyrim Special Edition'
-            )
-        )
-        self.inifiles = ['Skyrim.ini', 'SkyrimPrefs.ini', 'SkyrimCustom.ini']
+        self.id = "SkyrimSE"
+        self.inidir = self.app.doc_path / 'My Games' / self.name
+        self.inifiles = [
+            self.inidir / 'Skyrim.ini',
+            self.inidir / 'SkyrimPrefs.ini',
+            self.inidir / 'SkyrimCustom.ini'
+        ]
         self.steamid = 489830
         self.gogid = 1711230643
 
@@ -160,15 +175,23 @@ class SkyrimSEInstance(GameInstance):
 # Create class for Skyrim ("Oldrim") instance ########################
 class SkyrimInstance(GameInstance):
     """
-    Class for Skyrim ("Oldrim") GameInstance. Inherited from GameInstance class.
+    Class for Skyrim ("Oldrim") GameInstance.
+    Inherited from GameInstance class.
     """
+
+    icon_name = "Skyrim.ico"
 
     def __init__(self, app: MainApp):
         super().__init__(app)
 
         self.name = "Skyrim"
-        self.inidir = os.path.join(self.app.doc_path, 'My Games', 'Skyrim')
-        self.inifiles = ['Skyrim.ini', 'SkyrimPrefs.ini', 'SkyrimCustom.ini']
+        self.id = "Skyrim"
+        self.inidir = self.app.doc_path / 'My Games' / self.name
+        self.inifiles = [
+            self.inidir / 'Skyrim.ini',
+            self.inidir / 'SkyrimPrefs.ini',
+            self.inidir / 'SkyrimCustom.ini'
+        ]
         self.steamid = 72850
 
     def __repr__(self):
@@ -178,14 +201,23 @@ class SkyrimInstance(GameInstance):
 # Create class for Fallout4 instance #################################
 class Fallout4Instance(GameInstance):
     """
-    Class for Fallout 4 GameInstance. Inherited from GameInstance class.
+    Class for Fallout 4 GameInstance.
+    Inherited from GameInstance class.
     """
+
+    icon_name = "Fallout4.ico"
 
     def __init__(self, app: MainApp):
         super().__init__(app)
 
         self.name = "Fallout 4"
-        self.inidir = os.path.join(self.app.doc_path, 'My Games', 'Fallout 4')
+        self.id = "Fallout4"
+        self.inidir = self.app.doc_path / 'My Games' / 'Fallout4'
+        self.inifiles = [
+            self.inidir / 'Fallout4.ini',
+            self.inidir / 'Fallout4Prefs.ini',
+            self.inidir / 'Fallout4Custom.ini'
+        ]
         self.steamid = 377160
 
     def __repr__(self):
@@ -195,14 +227,23 @@ class Fallout4Instance(GameInstance):
 # Create class for Enderal instance ##################################
 class EnderalInstance(GameInstance):
     """
-    Class for Enderal GameInstance. Inherited from GameInstance class.
+    Class for Enderal GameInstance.
+    Inherited from GameInstance class.
     """
+
+    icon_name = "Enderal.ico"
 
     def __init__(self, app: MainApp):
         super().__init__(app)
 
         self.name = "Enderal"
-        self.inidir = os.path.join(self.app.doc_path, 'My Games', 'Enderal')
+        self.id = "Enderal"
+        self.inidir = self.app.doc_path / 'My Games' / self.name
+        self.inifiles = [
+            self.inidir / 'Enderal.ini',
+            self.inidir / 'EnderalPrefs.ini',
+            self.inidir / 'EnderalCustom.ini'
+        ]
         self.steamid = 933480
 
     def __repr__(self):
@@ -212,15 +253,33 @@ class EnderalInstance(GameInstance):
 # Create class for EnderalSE instance ##################################
 class EnderalSEInstance(GameInstance):
     """
-    Class for EnderalSE GameInstance. Inherited from GameInstance class.
+    Class for EnderalSE GameInstance.
+    Inherited from GameInstance class.
     """
+
+    icon_name = "Enderalse.ico"
 
     def __init__(self, app: MainApp):
         super().__init__(app)
 
         self.name = "Enderal Special Edition"
-        self.inidir = os.path.join(self.app.doc_path, 'My Games', 'Enderal Special Edition')
+        self.id = "EnderalSE"
+        self.inidir = self.app.doc_path / 'My Games' / self.name
+        self.inifiles = [
+            self.inidir / 'Enderal.ini',
+            self.inidir / 'EnderalPrefs.ini',
+            self.inidir / 'EnderalCustom.ini'
+        ]
         self.steamid = 976620
 
     def __repr__(self):
         return "EnderalSEInstance"
+
+
+GAMES: List[Type[GameInstance]] = [
+    SkyrimSEInstance,
+    SkyrimInstance,
+    Fallout4Instance,
+    EnderalSEInstance,
+    EnderalInstance
+]

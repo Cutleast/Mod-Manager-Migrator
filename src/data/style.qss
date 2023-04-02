@@ -61,15 +61,6 @@ QAction:selected {
     background-color: <highlight_bg>;
 }
 
-/* QGraphicsView */
-QGraphicsView, QGraphicsScene {
-    background: <primary_bg>;
-    border: 0px solid;
-    spacing: 0px;
-    padding: 0px;
-    margin: 0px;
-}
-
 /* QLabel */
 QLabel {
     color: <text_color>;
@@ -217,18 +208,15 @@ QRadioButton, QCheckBox {
     border-radius: 8px;
     spacing: 15px;
 }
-QRadioButton:checked, QCheckBox:checked {
-    color: <accent_color>;
-}
-QCheckBox::indicator {
+QCheckBox::indicator, QListWidget::indicator {
     background-color: <primary_bg>;
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
     border: 2px solid <primary_bg>;
     border-radius: 4px;
     padding: 2px;
 }
-QCheckBox::indicator:checked {
+QCheckBox::indicator:checked, QListWidget::indicator:checked {
     background-color: <accent_color>;
     image: <checkbox_indicator>;
     color: <text_color>;
@@ -315,8 +303,9 @@ QListWidget {
 QListWidget::item {
     border: 0px solid;
     border-radius: 8px;
-    spacing: 5px;
-    padding: 5px;
+    spacing: 3px;
+    padding: 3px;
+    margin: 3px;
 }
 QListWidget::item:selected {
     background-color: <highlight_bg>;
