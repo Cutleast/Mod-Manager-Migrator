@@ -153,9 +153,8 @@ class ModInstance:
         # Add label with mod manager icon
         label = qtw.QLabel(f"{self.app.lang['mod_manager']}:")
         layout.addWidget(label, 0, 0)
-        icon = qtg.QPixmap(os.path.join(
-                self.app.ico_path,
-                self.icon_name
+        icon = qtg.QPixmap(str(
+                self.app.ico_path / self.icon_name
             )
         )
         label = qtw.QLabel()
@@ -163,7 +162,8 @@ class ModInstance:
         size = qtc.QSize(375, 125)
         label.resize(size)
         label.setFixedSize(size)
-        icon = icon.scaled(size, qtc.Qt.AspectRatioMode.KeepAspectRatio)
+        label.setScaledContents(True)
+        #icon = icon.scaled(size, qtc.Qt.AspectRatioMode.KeepAspectRatio)
         label.setPixmap(icon)
         layout.addWidget(label, 0, 1)
 
@@ -384,7 +384,7 @@ class VortexInstance(ModInstance):
     Class for Vortex ModInstance. Inherited from ModInstance class.
     """
 
-    icon_name = "Vortex-Label.png"
+    icon_name = "Vortex_Label.svg"
 
     def __init__(self, app: MainApp):
         super().__init__(app)
@@ -971,7 +971,7 @@ class MO2Instance(ModInstance):
     Class for ModOrganizer ModInstance. Inherited from ModInstance class.
     """
 
-    icon_name = "MO2-Label.png"
+    icon_name = "MO2_Label.svg"
 
     def __repr__(self):
         return "MO2Instance"
@@ -1118,7 +1118,7 @@ class MO2Instance(ModInstance):
         settings: Dict[str, str] = data['Settings']
 
         # Get instance paths from ini
-        base_dir = Path(settings['base_directory'])
+        base_dir = Path(settings.get('base_directory', instance_path))
         dl_dir = settings.get('download_directory', None)
         dl_dir = Path((base_dir / 'downloads')
                         if dl_dir is None

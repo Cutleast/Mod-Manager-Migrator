@@ -17,38 +17,57 @@
 
 # ❗Please note!!!
 
-**This is the first initial release of this tool. I take no responsibility for any problems that may occur. In the current version everything works relatively stable. But to get a clear picture, I depend on more extensive testing from the community.**
+**I take no responsibility for any problems that may occur.**
 
 
 # 📄Description
 
-This is a tool for migrating modding instances between various mod managers (currently only Vortex to MO2). This program is in a very early Alpha stage and feedback is crucial for me to continue developing. Currently only Skyrim SE from Vortex to ModOrganizer 2 (MO2) is supported with support for more games and mod managers planned. **Only Windows is supported!**
+This is a tool for migrating modding instances between various mod managers.
+
+**Only Windows is supported!**
 
 
 # 🕹Features
 
-- Create mod order from Vortex conflict rules
 - Fully automated migration
 - New instance is customizable
 - Hardlink and copy method
-- Custom LOOT rules (userlist.yaml) are migrated
 
-### Planned Features
-- Vortex as migration destination
-- Support for more games (suggestions are welcome)
-- Support for more mod managers (NMM (CE) is the next, but suggestions are welcome)
+### Supported Games
+
+- Skyrim (Special Edition)
+- Enderal (Special Edition)
+- Fallout 4
+
+#### Planned games
+
+- Oblivion
+- Nehrim
+- Morrowind
+- Fallout 3
+- Fallout: New Vegas
+- You (the community) decides, feel free to suggest
+
+### Supported Mod Managers
+
+- Vortex
+- Mod Organizer 2
+
+#### Planned Mod Managers
+
+- Nexus Mod Manager Community Edition
+- Feel free to suggest
 
 
 # 🔧Usage
 
-### To migrate an instance from Vortex to MO2, for example, follow these steps:
+### To migrate an instance, follow these steps:
 
-1. Make sure that Vortex is not running and start MMM (Mod Manager Migrator).
-3. Click on "Add source", select Vortex and click on "Next".
-4. Select the profile you want to migrate and click on "Done".
-5. Click on "Add destination", select MO2 and click on "Next".
-6. Set paths name as you like it and click on "Done".
-7. Click on "Migrate" and wait for it to finish.
+1. Click on "Add source", select your source and click on "Next".
+2. Select the instance you want to migrate and click on "Done".
+3. Click on "Add destination", select your destination and click on "Next".
+4. Set paths as you like it and click on "Done".
+5. Click on "Migrate" and wait for it to finish.
 
 
 # 🫶Contributing
@@ -91,17 +110,23 @@ If you encountered an issue/error or have a suggestion, open an issue with suffi
 
 # 💻How it works
 
-### Mod order reconstruction from Vortex conflict rules:
+### Mod order from Vortex conflict rules:
 
 1. It reads Vortex's level database
 2. Creates dict of mods and overwriting mods
 3. A load order is constructed according to the overwrites
 
+### Vortex conflict rules from mod order
+
+1. Scans all files in all mods
+2. Checks for overwritten mods
+3. Creates a rule for every overwritten mod
+
 
 # 🔗Credits
 
 - Code by Cutleast ([GitHub](https://github.com/Cutleast) | [NexusMods](https://www.nexusmods.com/users/65733731))
-- Program icon and idea by Wuerfelhusten ([NexusMods](https://www.nexusmods.com/users/122160268))
+- Design and idea by Wuerfelhusten ([NexusMods](https://www.nexusmods.com/users/122160268))
 - Qt by The [Qt Company Ltd](https://qt.io)
 - Material icons by [Google LLC](https://github.com/google/material-design-icons)
 - Elusive Icons by [Redux Framework](http://elusiveicons.com/)

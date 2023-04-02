@@ -9,6 +9,8 @@ Attribution-NonCommercial-NoDerivatives 4.0 International.
 import json
 import os
 import logging
+import pyperclip as clipboard
+from winsound import MessageBeep as alert
 from typing import List
 from pathlib import Path
 
@@ -763,7 +765,7 @@ Failed to create destination instance: \
 Hardlinks must be on the same drive. \
 (Source: {src_drive} | Destination: {dst_drive})"
             )
-            print("\a", end='\r')
+            alert()
             ErrorDialog(
                 parent=self,
                 app=self.app,
@@ -902,8 +904,8 @@ class GameDialog(qtw.QDialog):
         for game in games.GAMES:
             game = game(self.app)
             text = game.name
-            if game.name != "Skyrim Special Edition":
-                text += " (EXPERIMENTAL)"
+            #if game.name != "Skyrim Special Edition":
+            #    text += " (EXPERIMENTAL)"
             if game.icon_name:
                 icon = qtg.QIcon(str(self.app.ico_path / game.icon_name))
                 item = qtw.QListWidgetItem(
@@ -1358,7 +1360,7 @@ class ErrorDialog(qtw.QMessageBox):
         if details:
             self.details_button: qtw.QPushButton = self.addButton(
                 self.app.lang['show_details'],
-                qtw.QMessageBox.ButtonRole.YesRole
+                qtw.QMessageBox.ButtonRole.AcceptRole
             )
 
             self._details = False
@@ -1380,3 +1382,17 @@ class ErrorDialog(qtw.QMessageBox):
 
             self.details_button.clicked.disconnect()
             self.details_button.clicked.connect(toggle_details)
+            self.copy_button: qtw.QPushButton = self.addButton(
+                "",
+                qtw.QMessageBox.ButtonRole.AcceptRole
+            )
+            self.copy_button.setIcon(qta.icon(
+                    'mdi6.content-copy',
+                    color=self.app.theme['text_color']
+                )
+            )
+            self.copy_button.clicked.disconnect()
+            self.copy_button.clicked.connect(
+                lambda: clipboard.copy(details)
+            )
+

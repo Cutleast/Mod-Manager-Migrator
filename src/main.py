@@ -18,6 +18,7 @@ import shutil
 import sys
 import time
 import traceback
+from winsound import MessageBeep as alert
 from locale import getlocale
 from pathlib import Path
 from shutil import disk_usage
@@ -329,7 +330,7 @@ Updating with default config..."
             lambda: os.startfile(self.log_path)
         )
         def test_exception():
-            raise utils.UiException("[no_mods] Instance has no mods installed!")
+            raise Exception("Test exception")
         self.exception_test_action.triggered.connect(test_exception)
         self.about_action.triggered.connect(self.show_about_dialog)
         self.about_qt_action.triggered.connect(self.show_about_qt_dialog)
@@ -483,7 +484,7 @@ Current version: {self.version} | Latest version: {new_version}"
             )
 
             # Get exception info
-            error_msg = str(exc_value)
+            error_msg = f"{self.lang['error_text']} {exc_value}"
             detailed_msg = ''.join(traceback.format_exception(
                     exc_type,
                     exc_value,
@@ -491,6 +492,11 @@ Current version: {self.version} | Latest version: {new_version}"
                 )
             )
             yesno = True
+
+            # Set exception to True
+            # to save log file when exit
+            # this ignores user configuration
+            self.exception = True
 
         # Create error messagebox
         messagebox = dialogs.ErrorDialog(
@@ -503,13 +509,8 @@ Current version: {self.version} | Latest version: {new_version}"
         )
 
         # Play system alarm sound
-        print("\a", end='\r')
+        alert()
 
-        # Set exception to True
-        # to save log file when exit
-        # this ignores user configuration
-        self.exception = True
-        
         choice = messagebox.exec()
 
         if choice == qtw.QMessageBox.StandardButton.No:
