@@ -63,7 +63,8 @@ SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App {self.steamid
                         installdir = Path(
                             winreg.QueryValueEx(hkey, "installLocation")[0]
                         )
-                        if installdir.is_dir():
+
+                        if installdir.is_dir() and str(installdir) != ".":
                             self.installdir = installdir
                             #return self.installdir
                 except Exception as ex:
@@ -80,13 +81,14 @@ SOFTWARE\\WOW6432Node\\GOG.com\\Games\\{self.gogid}"
                         installdir = Path(
                             winreg.QueryValueEx(hkey, "path")[0]
                         )
-                        if installdir.is_dir():
-                            self.installdir = installdir
-                            #return self.installdir
+
+                    if installdir.is_dir() and str(installdir) != ".":
+                        self.installdir = installdir
+                        #return self.installdir
                 except Exception as ex:
                     self.log.error(f"Failed to get install path from GOG: {ex}")
 
-        if not installdir:
+        if not self.installdir:
             dialog = qtw.QDialog()
             dialog.setModal(True)
             dialog.setWindowTitle(self.app.name)
@@ -121,7 +123,7 @@ SOFTWARE\\WOW6432Node\\GOG.com\\Games\\{self.gogid}"
                 if file_dialog.exec():
                     folder = file_dialog.selectedFiles()[0]
                     folder = Path(folder)
-                    lineedit.setText(folder)
+                    lineedit.setText(str(folder))
 
             browse_button = qtw.QPushButton(self.app.lang['browse'])
             browse_button.clicked.connect(browse_path)

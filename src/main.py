@@ -353,6 +353,15 @@ Updating with default config..."
             lambda: dialogs.SourceDialog(self.root, self).show()
         )
         self.mainlayout.addWidget(self.src_button, 0, 0)
+        
+        # Add game icon
+        self.game_icon = qtw.QLabel()
+        #self.game_icon.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)
+        #size = qtc.QSize(120, 120)
+        #self.game_icon.resize(size)
+        #self.game_icon.setFixedSize(size)
+        #self.game_icon.setScaledContents(True)
+        #self.mainlayout.addWidget(self.game_icon, 0, 1)
 
         # Create migrate button
         self.mig_button = qtw.QPushButton(self.lang['migrate'])
@@ -441,8 +450,11 @@ Current version: {self.version} | Latest version: {new_version}"
         for game in games.GAMES:
             if game(self).name == self.config['default_game']:
                 game = game(self)
+                game.get_install_dir()
                 self.game_instance = game
                 self.game = self.game_instance.id
+                icon = qtg.QPixmap(self.ico_path / self.game_instance.icon_name)
+                self.game_icon.setPixmap(icon)
                 self.log.info(f"Current game: {game.name}")
                 break
         else:
@@ -735,7 +747,7 @@ Current version: {self.version} | Latest version: {new_version}"
                 self.lang['success'],
                 self.lang['migration_complete']
             )
-   ###################################################################
+    ##################################################################
 
     def set_mode(self, mode: str):
         """

@@ -22,7 +22,8 @@ import qtpy.QtWidgets as qtw
 from loadingdialog import LoadingDialog
 from main import MainApp, qtc, qtg, qtw
 from utils import (IniParser, Mod, ModItem, UiException, VortexDatabase,
-                   create_folder_list, get_folder_size, scale_value)
+                   create_folder_list, get_folder_size, scale_value,
+                   wrap_string)
 
 
 # Create class for modding instance ##################################
@@ -182,9 +183,16 @@ class ModInstance:
         # Add label with mods path
         label = qtw.QLabel(f"{self.app.lang['mods_path']}:")
         layout.addWidget(label, 3, 0)
-        self.mods_count_label = qtw.QLabel(str(self.mods_path))
-        layout.addWidget(self.mods_count_label, 3, 1)
-        
+        path = str(self.mods_path)
+        path = wrap_string(path, 50)
+        label = qtw.QLabel(path)
+        label.setTextInteractionFlags(
+            qtc.Qt.TextInteractionFlag.TextSelectableByMouse
+        )
+        label.setCursor(qtc.Qt.CursorShape.IBeamCursor)
+        label.setWordWrap(True)
+        layout.addWidget(label, 3, 1)
+
         # Add label with instance size
         if pos == 'src':
             label = qtw.QLabel(f"{self.app.lang['size']}:")
@@ -203,12 +211,17 @@ class ModInstance:
         self.mods_count_label = qtw.QLabel(str(len(self.mods)))
         layout.addWidget(self.mods_count_label, 5, 1)
 
+        # Add spacer
+        spacer = qtw.QWidget()
+        spacer.setFixedHeight(20)
+        layout.addWidget(spacer, 6, 0)
+
         # Add listbox for source mods
         if pos == 'src':
             label = qtw.QLabel(self.app.lang['mods_to_migrate'])
         else:
             label = qtw.QLabel(self.app.lang['mods_to_enable'])
-        layout.addWidget(label, 6, 0)
+        layout.addWidget(label, 7, 0)
         self.mods_box = qtw.QListWidget()
         self.mods_box.setSelectionMode(
             qtw.QListWidget.SelectionMode.MultiSelection
@@ -225,7 +238,7 @@ class ModInstance:
         self.mods_box.customContextMenuRequested.connect(
             lambda pos: self._contextmenu(self.mods_box.mapToGlobal(pos))
         )
-        layout.addWidget(self.mods_box, 7, 0, 1, 3)
+        layout.addWidget(self.mods_box, 8, 0, 1, 3)
 
         # Add mods to listbox
         self._update_listbox(pos)
@@ -814,14 +827,12 @@ f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
                         )
 
                     # Copy userlist.yaml from source to destination
-                    if not app_dir.is_dir():
-                        os.makedirs(app_dir)
+                    os.makedirs(app_dir, exist_ok=True)
                     shutil.copyfile(file, dst_path)
                 else:
                     # Copy additional files like ini files to profile folder
                     dst_path = dst_dir / filename.lower()
-                    if not dst_dir.is_dir():
-                        os.makedirs(dst_dir)
+                    os.makedirs(dst_dir, exist_ok=True)
                     shutil.copyfile(file, dst_path)
 
                 self.log.debug(f"Copied '{filename}' to destination.")
@@ -1083,8 +1094,18 @@ class MO2Instance(ModInstance):
                 # Get all instance folders
                 instances = [
                     obj for obj in os.listdir(instances_path)
-                    if Path(os.path.join(instances_path, obj)).is_dir()
+                    if (instances_path / obj / 'ModOrganizer.ini').is_file()
                 ]
+
+                # Remove instances from other games
+                for instance in instances.copy():
+                    instance_ini = IniParser(
+                        instances_path / instance / 'ModOrganizer.ini'
+                    )
+                    instance_data = instance_ini.load_file()
+                    if instance_data['General']['gameName'] != self.app.game_instance.name:
+                        instances.remove(instance)
+
                 self.instances = instances
                 self.log.debug(f"Found {len(instances)} instance(s).")
             # Show error message otherwise
@@ -1405,10 +1426,12 @@ f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
                         )
 
                     # Copy userlist.yaml from source to destination
+                    os.makedirs(app_dir, exist_ok=True)
                     shutil.copyfile(file, dst_path)
                 else:
                     # Copy additional files like ini files to profile folder
                     dst_path = dst_dir / filename.lower()
+                    os.makedirs(dst_dir, exist_ok=True)
                     shutil.copyfile(file, dst_path)
 
                 self.log.debug(f"Copied '{filename}' to destination.")

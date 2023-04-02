@@ -516,3 +516,21 @@ def get_diff(start_time: str, end_time: str, str_format: str = "%H:%M:%S"):
         - datetime.strptime(start_time, str_format)
     )
     return tdelta
+
+# Define function to wrap string #####################################
+def wrap_string(string: str, wrap_length: int):
+    """
+    Inserts spaces in <string> in <wrap_length> interval.
+    """
+
+    if len(string) > wrap_length and " " not in string:
+        characters = list(string)
+        w = 0
+        for i, c in enumerate(string):
+            if w == wrap_length:
+                characters.insert(i, " ")
+                w = 0
+            w += 1
+        return ''.join(characters)
+    else:
+        return string

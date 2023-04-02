@@ -747,10 +747,17 @@ class DestinationDialog(qtw.QDialog):
         Displays data in main window and closes dialog.        
         """
 
-        # Check if paths are valid
+        # Get user input
+        name = self.name_box.text()
         instance_path = Path(self.path_box.text())
-        src_drive = self.app.src_modinstance.mods_path.drive
-        dst_drive = instance_path.drive
+        mods_path = Path(self.modspath_box.text())
+        dl_path = Path(self.dlpath_box.text())
+        profs_path = Path(self.profilespath_box.text())
+        overw_path = Path(self.overwritepath_box.text())
+
+        # Check if paths are valid
+        src_drive = self.app.src_modinstance.mods_path.drive.upper()
+        dst_drive = mods_path.drive.upper()
         # Check if source and destination match
         if instance_path == self.app.src_modinstance.mods_path:
             raise utils.UiException(
@@ -776,14 +783,6 @@ Hardlinks must be on the same drive. \
                 yesno=False
             ).exec()
             return
-
-        # Get user input
-        name = self.name_box.text()
-        instance_path = Path(self.path_box.text())
-        mods_path = Path(self.modspath_box.text())
-        dl_path = Path(self.dlpath_box.text())
-        profs_path = Path(self.profilespath_box.text())
-        overw_path = Path(self.overwritepath_box.text())
 
         # Create destination instance
         if self.app.destination == 'Vortex':
@@ -970,6 +969,10 @@ class GameDialog(qtw.QDialog):
             self.game = self.game_instance.id
             self.app.game_instance = self.game_instance
             self.app.game = self.game
+
+            # Update game icon
+            icon = qtg.QPixmap(self.app.ico_path / self.game_instance.icon_name)
+            self.app.game_icon.setPixmap(icon)
 
             self.log.info(f"Current game: {self.game_instance.name}")
 
