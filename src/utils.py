@@ -345,7 +345,10 @@ class IniParser:
                     value = ""
                 lines.append(f"{key}={value}\n")
 
-        with open(self.filename, 'w', encoding='utf8') as file:
+        dir = f"\\\\?\\{self.filename.parent}"
+        filename = f"\\\\?\\{self.filename}"
+        os.makedirs(dir, exist_ok=True)
+        with open(filename, 'w', encoding='utf8') as file:
             file.writelines(lines)
 
     def load_file(self):
