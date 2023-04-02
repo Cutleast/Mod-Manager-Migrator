@@ -542,6 +542,9 @@ Vortex is running!"
         persistent: dict = self.database['persistent']
         modsdata: dict = persistent['mods'][game]
         for modindex, (modname, modstate) in enumerate(profmods.items()):
+            if modname not in modsdata:
+                continue
+
             # Update progress bar
             if ldialog:
                 ldialog.updateProgress(
