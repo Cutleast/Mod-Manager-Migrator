@@ -5,18 +5,23 @@ Falls under license
 Attribution-NonCommercial-NoDerivatives 4.0 International.
 """
 
+# Import libraries ###################################################
 import json
+import logging
 import os
-from pathlib import Path
 import shutil
 import sys
 from datetime import datetime
-from typing import Union, List, Dict, Any
+from pathlib import Path
+from typing import Any, Dict, List, Union
 
 import plyvel as leveldb
 import requests
 
-from main import MainApp, qtw
+import qtpy.QtWidgets as qtw
+import qtpy.QtCore as qtc
+
+from main import MainApp
 
 
 # Create class to copy stdout to log file ############################
@@ -67,6 +72,16 @@ class StdoutPipe:
         self.file.flush()
 
 
+# Create class for custom exceptions #################################
+class UiException(Exception):
+    """
+    Subclass of Exception used for translated error messages.
+    
+    Usage:
+        raise UiException("[<error id>] <raw error message>")
+    """
+
+
 # Create class for mod ###############################################
 class Mod:
     """
@@ -91,11 +106,46 @@ class Mod:
         self.files = files # list of all files
         self.size = size # size of all files
         self.enabled = enabled # state in mod manager (True or False)
+        self.selected = True # True: mod is migrated; False: mod is ignored
         self.installed = installed # state in instance (True or False)
         self.overwriting_mods: List[Mod] = [] # list of overwriting mods
 
     def __repr__(self):
         return self.name
+
+    def set_enabled(self, enabled: bool):
+        self.enabled = enabled
+    
+    def set_selected(self, selected: bool):
+        self.selected = selected
+
+
+# Create class for listbox mod item ##################################
+class ModItem(qtw.QListWidgetItem):
+    def __init__(self, mod: Mod, mode: str, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.mod = mod
+        self.mode = mode
+        self.checked = False
+
+    def setCheckState(self, state: qtc.Qt.CheckState):
+        super().setCheckState(state)
+
+        self.checked = state == qtc.Qt.CheckState.Checked
+
+    def onClick(self):
+        if self.checked:
+            self.setCheckState(qtc.Qt.CheckState.Unchecked)
+        else:
+            self.setCheckState(qtc.Qt.CheckState.Checked)
+        
+        if self.mode == 'src':
+            self.mod.set_selected(self.checked)
+        else:
+            self.mod.set_enabled(self.checked)
+
+        return self.checked
 
 
 # Create class for Vortex Level Database bindings ####################
@@ -110,11 +160,16 @@ class VortexDatabase:
         appdir = Path(os.getenv('APPDATA')) / 'Vortex'
         self.db_path = appdir / 'state.v2'
 
+        # Initialize class specific logger
+        self.log = logging.getLogger(self.__repr__())
+        self.log.addHandler(self.app.log_str)
+        self.log.setLevel(self.app.log.level)
+
         # Initialize database
         self.db = leveldb.DB(str(self.db_path))
 
     def __repr__(self):
-        return "VortexDatabase"
+        return "LevelDB"
 
     def open_db(self):
         """
@@ -142,7 +197,7 @@ class VortexDatabase:
         Loads database, converts it to dict and returns it
         """
 
-        self.app.log.debug("Loading Vortex database...")
+        self.log.debug("Loading Vortex database...")
 
         self.open_db()
         lines = []
@@ -154,7 +209,7 @@ class VortexDatabase:
         data = self.parse_string_to_dict(lines)
         self.data = data
 
-        self.app.log.debug("Loaded Vortex database.")
+        self.log.debug("Loaded Vortex database.")
         return data
 
     def save_db(self):
@@ -162,7 +217,7 @@ class VortexDatabase:
         Converts dict to strings and saves them to database.
         """
 
-        self.app.log.debug("Saving Vortex database...")
+        self.log.debug("Saving Vortex database...")
 
         # Delete old backup
         backup_path = f"{self.db_path}.mmm_backup"
@@ -170,7 +225,7 @@ class VortexDatabase:
             shutil.rmtree(backup_path)
         # Create new backup
         shutil.copytree(self.db_path, f"{self.db_path}.mmm_backup")
-        self.app.log.debug("Created database backup.")
+        self.log.debug("Created database backup.")
 
         lines = self.convert_nested_dict_to_text(self.data)
 
@@ -182,7 +237,7 @@ class VortexDatabase:
                 batch.put(path, line)
         self.close_db()
 
-        self.app.log.debug("Saved to database.")
+        self.log.debug("Saved to database.")
 
     @staticmethod
     def convert_nested_dict_to_text(nested_dict: dict) -> str:
@@ -354,8 +409,8 @@ print(f"{blacklist = }")
 # Read folder and save files with relative paths to list #############
 def create_folder_list(folder: Path, lower=True):
     """
-    Creates a list with all files with
-    relative paths to <folder> and returns it.
+    Creates a list with all files
+    with relative paths to <folder> and returns it.
 
     Lowers filenames if <lower> is True.
     """
@@ -439,7 +494,7 @@ def center(widget: qtw.QWidget, referent: qtw.QWidget = None):
     h = size.height()
 
     if referent is None:
-        rsize = widget.parent().size()
+        rsize = qtw.QApplication.primaryScreen().size()
     else:
         rsize = referent.size()
     rw = rsize.width()
@@ -450,7 +505,7 @@ def center(widget: qtw.QWidget, referent: qtw.QWidget = None):
 
     widget.move(x, y)
 
-# Define function to get difference between two times ################
+# Define function to get difference between two time strings #########
 def get_diff(start_time: str, end_time: str, str_format: str = "%H:%M:%S"):
     """
     Returns difference between <start_time> and <end_time> in <str_format>.
