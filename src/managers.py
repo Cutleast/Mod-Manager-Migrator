@@ -428,7 +428,7 @@ Vortex is running!"
 
         # Get paths from settings
         apppath = Path(os.getenv('APPDATA')) / 'Vortex'
-        modspath: str = settings['mods']['installPath'].get(game, str(apppath / game))
+        modspath: str = settings['mods']['installPath'].get(game, str(apppath / game / 'mods'))
         modspath = Path(modspath.replace('{game}', self.app.game.lower()))
         dlpath: str = settings['downloads']['path']
         dlpath = Path(dlpath.replace('{USERDATA}', str(apppath)))
