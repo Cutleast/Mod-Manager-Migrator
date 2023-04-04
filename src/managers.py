@@ -52,6 +52,9 @@ class ModInstance:
         # directly to the game folder
         self.root_mods: List[Mod] = []
 
+        # file: [origin mod, origin mod, etc...]
+        self.modfiles: Dict[Path, List[Mod]] = {}
+
         # size in bytes as integer
         self._size: int = 0
 
@@ -118,6 +121,20 @@ class ModInstance:
 
         return
 
+    def get_file_conflicts(self):
+        """
+        Gets seperate files conflicts and converts them.
+        """
+
+        return
+    
+    def set_file_conflicts(self):
+        """
+        Converts source's file conflicts to this mod manager's format.
+        """
+
+        return
+    
     def show_src_widget(self):
         """
         Shows widget with instance details and mods
@@ -415,7 +432,6 @@ Vortex is running!"
 
         # Files and overwrites
         self.overwrites: Dict[Mod, List[Mod]] = {} # mod: [overwriting mod, overwriting mod, etc...]
-        self.modfiles: Dict[Path, List[Mod]] = {} # file: [origin mod, origin mod, etc...]
 
         # Current profile
         self.profname: str = None
@@ -674,6 +690,17 @@ f"{self.app.lang['migrating_instance']} ({modindex}/{maximum})",
 
                 installed_mods[mod.metadata['filename']]['rules'] = rules
 
+                # Add file conflicts
+                if mod.overwriting_files:
+                    overrides: list = installed_mods[mod.metadata['filename']].get('fileOverrides', [])
+                    overrides.extend([
+                        str(file)
+                        for file in mod.overwriting_files
+                        if str(file) not in overrides
+                    ])
+                    
+                    installed_mods[mod.metadata['filename']]['fileOverrides'] = overrides
+
             # Add mod to database otherwise
             else:
                 source = 'nexus' if mod.metadata['modid'] else 'other'
@@ -711,6 +738,16 @@ f"{self.app.lang['migrating_instance']} ({modindex}/{maximum})",
                     rules.append(rule)
 
                 moddata['rules'] = rules
+
+                # Add file conflicts
+                if mod.overwriting_files:
+                    overrides = [
+                        str(file)
+                        for file in mod.overwriting_files
+                    ]
+                    
+                    moddata['fileOverrides'] = overrides
+
                 installed_mods[mod.metadata['filename']] = moddata
 
             # Add mod to profile
@@ -751,9 +788,9 @@ f"{file.name} ({scale_value(os.path.getsize(mod.path / file))})"
                 dst_dirs = dst_path.parent
 
                 # Fix too long paths (> 260 characters)
-                dst_dirs = f"\\\\?\\{dst_dirs}"
+                dst_dirs = f"\\\\?\\{dst_dirs}".replace(".mohidden", "")
                 src_path = f"\\\\?\\{src_path}"
-                dst_path = f"\\\\?\\{dst_path}"
+                dst_path = f"\\\\?\\{dst_path}".replace(".mohidden", "")
 
                 # Create directory structure and hardlink file
                 os.makedirs(dst_dirs, exist_ok=True)
@@ -840,6 +877,40 @@ f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
 
                 self.log.debug(f"Copied '{filename}' to destination.")
 
+    def get_file_conflicts(self):
+        game = self.app.game.lower()
+        installed_mods: Dict[str, dict] = self.database['persistent']['mods'][game]
+
+        for mod in self.mods:
+            if 'fileOverrides' in installed_mods[mod.metadata['filename']]:
+                mod.overwriting_files = [
+                    Path(file)
+                    for file in installed_mods[mod.metadata['filename']]['fileOverrides']
+                ]
+    
+    def set_file_conflicts(self):
+        """
+        Converts Mod.overwritten_files to Mod.overwriting_files.        
+        """
+
+        for file, mods in self.modfiles.items():
+            # Skip file if it has no conflicts
+            if len(mods) == 1:
+                continue
+
+            # Scan for file conflicts
+            for mod in mods:
+                if file in mod.overwritten_files:
+                    # Add file conflict to every mod that is load after
+                    overwriting_mods = [
+                        _mod
+                        for _mod in mods
+                        if self.loadorder.index(_mod) < self.loadorder.index(mod)
+                    ]
+
+                    for overwriting_mod in overwriting_mods:
+                        overwriting_mod.overwriting_files.append(file)
+    
     @property
     def loadorder(self, ldialog: LoadingDialog = None):
         if not self._loadorder:
@@ -970,6 +1041,10 @@ f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
 
                 # Add rest of the mods to its overwriting list
                 mod.overwriting_mods.extend(overwriting_mods)
+
+                # Remove mod from its own list
+                if mod in mod.overwriting_mods:
+                    mod.overwriting_mods.remove(mod)
 
             # Remove duplicates
             mod.overwriting_mods = list(set(mod.overwriting_mods))
@@ -1317,6 +1392,11 @@ f"{self.app.lang['migrating_instance']} ({modindex}/{maximum})",
             # Copy mod to mod path
             modpath: Path = self.mods_path / mod.metadata['name']
             for fileindex, file in enumerate(mod.files):
+                # Skip if destination file already exists
+                if (modpath / file).is_file():
+                    continue
+
+                filepath = f"\\\\?\\{mod.path / file}"
                 # Update progress bars
                 if ldialog:
                     ldialog.updateProgress(
@@ -1327,7 +1407,7 @@ f"{mod.metadata['name']} ({fileindex}/{len(mod.files)})",
 
                         show3=True,
                         text3=\
-f"{file.name} ({scale_value(os.path.getsize(mod.path / file))})"
+f"{file.name} ({scale_value(os.path.getsize(filepath))})"
                     )
 
                 src_path = mod.path / file
@@ -1339,6 +1419,10 @@ f"{file.name} ({scale_value(os.path.getsize(mod.path / file))})"
                 src_path = f"\\\\?\\{src_path}"
                 dst_path = f"\\\\?\\{dst_path}"
 
+                # Add .mohidden to path if file is overwritten
+                if file in mod.overwritten_files:
+                    dst_path += ".mohidden"
+
                 # Create directory structure
                 os.makedirs(dst_dirs, exist_ok=True)
 
@@ -1347,7 +1431,7 @@ f"{file.name} ({scale_value(os.path.getsize(mod.path / file))})"
                     shutil.copyfile(src_path, dst_path)
                 # Link file
                 else:
-                    os.link(src_path, dst_path)
+                        os.link(src_path, dst_path)
 
             # Write metadata to 'meta.ini' in destination mod
             metaini = IniParser(modpath / 'meta.ini')
@@ -1438,3 +1522,72 @@ f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
                     shutil.copyfile(file, dst_path)
 
                 self.log.debug(f"Copied '{filename}' to destination.")
+
+    def get_file_conflicts(self):
+        self.log.debug("Scanning mods for file conflicts...")
+
+        for mod in self.mods:
+            # Get list of overwritten files
+            overwritten_files = [
+                Path(str(file).replace(".mohidden", ""))
+                for file in mod.files
+                if ".mohidden" in str(file)
+            ]
+
+            # Get list of conflicting mods
+            for file in overwritten_files:
+                # Skip file if it has no conflicts
+                if file not in self.modfiles:
+                    continue
+
+                # Add file to overwritten files list of mod
+                mod.overwritten_files.append(file)
+
+                overwriting_mods = self.modfiles[file]
+                overwriting_indices = [
+                    self.loadorder.index(overwriting_mod)
+                    for overwriting_mod in overwriting_mods
+                ]
+
+                # Get last overwriting mod
+                overwriting_index = max(overwriting_indices)
+                overwriting_mod = self.loadorder[overwriting_index]
+
+                # Add file to overwriting files list of overwriting mod
+                overwriting_mod.overwriting_files.append(file)
+
+    def set_file_conflicts(self):
+        """
+        Converts Mod.overwriting_files to Mod.overwritten_files.        
+        """
+
+        for mod in self.mods:
+            for file in mod.files:
+                # Make all files lowercase
+                file = Path(str(file).lower())
+                if file in self.modfiles:
+                    self.modfiles[file].append(mod)
+                else:
+                    self.modfiles[file] = [mod]
+
+        # Scan for file conflicts
+        for mod in self.mods:
+            if not mod.overwriting_files:
+                continue
+
+            for file in mod.overwriting_files:
+                # Skip file if there is no conflict
+                if len(self.modfiles[file]) == 1:
+                    continue
+
+                # Add file conflict to every mod that is load after
+                overwritten_mods = [
+                    overwritten_mod
+                    for overwritten_mod in self.modfiles[file]
+                    if self.loadorder.index(overwritten_mod) > self.loadorder.index(mod)
+                ]
+
+                for overwritten_mod in overwritten_mods:
+                    overwritten_mod.overwritten_files.append(file)
+                
+                break

@@ -14,18 +14,15 @@
 <strong>MMM - Move Mods Masterfully.</strong>
 </p>
 
-
 # ❗Please note!!!
 
 **I take no responsibility for any problems that may occur.**
-
 
 # 📄Description
 
 This is a tool for migrating modding instances between various mod managers.
 
 **Only Windows is supported!**
-
 
 # 🕹Features
 
@@ -46,7 +43,7 @@ This is a tool for migrating modding instances between various mod managers.
 - Morrowind
 - Fallout 3
 - Fallout: New Vegas
-- You (the community) decides, feel free to suggest
+- You (the community) decide, feel free to suggest
 
 ### Supported Mod Managers
 
@@ -58,7 +55,6 @@ This is a tool for migrating modding instances between various mod managers.
 - Nexus Mod Manager Community Edition
 - Feel free to suggest
 
-
 # 🔧Usage
 
 ### To migrate an instance, follow these steps:
@@ -68,7 +64,6 @@ This is a tool for migrating modding instances between various mod managers.
 3. Click on "Add destination", select your destination and click on "Next".
 4. Set paths as you like it and click on "Done".
 5. Click on "Migrate" and wait for it to finish.
-
 
 # 🫶Contributing
 
@@ -107,7 +102,6 @@ If you encountered an issue/error or have a suggestion, open an issue with suffi
 2. Run `build_nuitka.bat` with activated virtual environment from the root folder of this repo.
 3. The executable and its dependencies are created in the main.dist-Folder.
 
-
 # 💻How it works
 
 ### Mod order from Vortex conflict rules:
@@ -121,7 +115,6 @@ If you encountered an issue/error or have a suggestion, open an issue with suffi
 1. Scans all files in all mods
 2. Checks for overwritten mods
 3. Creates a rule for every overwritten mod
-
 
 # 🔗Credits
 

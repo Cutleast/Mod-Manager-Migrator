@@ -15,7 +15,7 @@
     "file": "File",
     "help": "Help",
     "about": "About",
-    "about_text": "This is a program for migrating modding instances between different mod managers.<br><br>Developed by Cutleast. (<a href='https://www.nexusmods.com/users/65733731'>NexusMods</a> | <a href='https://github.com/cutleast'>GitHub</a> | <a href='https://ko-fi.com/cutleast'>Ko-Fi</a>)<br>Idea and design by Wuerfelhusten. (<a href='https://www.nexusmods.com/users/122160268'>NexusMods</a>)<br><br>Material Icons by <a href='https://github.com/google/material-design-icons'>Google LLC.</a><br>Qt by <a href='https://qt.io'>The Qt Company Ltd.</a><br>Elusive Icons by <a href='http://elusiveicons.com/'>Redux Framework</a><br>FontAwesome Icons by <a href='https://github.com/FortAwesome/Font-Awesome'>FontAwesome</a>",
+    "about_text": "This is a program for migrating modding instances between different mod managers.<br><br>Developed by Cutleast. (<a href='https://www.nexusmods.com/users/65733731'>NexusMods</a> | <a href='https://github.com/cutleast'>GitHub</a> | <a href='https://ko-fi.com/cutleast'>Ko-Fi</a>)<br>Idea and design by Wuerfelhusten. (<a href='https://www.nexusmods.com/users/122160268'>NexusMods</a>)<br><br>Material Icons by <a href='https://github.com/google/material-design-icons'>Google LLC.</a><br>Qt by <a href='https://qt.io'>The Qt Company Ltd.</a><br>Elusive Icons by <a href='http://elusiveicons.com/'>Redux Framework</a><br>FontAwesome Icons by <a href='https://github.com/FortAwesome/Font-Awesome'>FontAwesome</a><br>Tested by the community",
     "name": "Name",
     "size": "Size",
     "browse": "Browse",

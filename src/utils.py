@@ -109,6 +109,8 @@ class Mod:
         self.selected = True # True: mod is migrated; False: mod is ignored
         self.installed = installed # state in instance (True or False)
         self.overwriting_mods: List[Mod] = [] # list of overwriting mods
+        self.overwriting_files: List[Path] = [] # list of overwriting files (Vortex)
+        self.overwritten_files: List[Path] = [] # list of overwritten files (MO2)
 
     def __repr__(self):
         return self.name

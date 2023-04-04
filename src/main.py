@@ -631,10 +631,14 @@ Current version: {self.version} | Latest version: {new_version}"
                     self.log.debug("Instance data wiped.")
 
         # Transfer mods
+        self.src_modinstance.get_file_conflicts()
         self.dst_modinstance.mods = self.src_modinstance.mods
 
         # Transfer loadorder
         self.dst_modinstance.loadorder = self.src_modinstance.loadorder
+
+        # Transfer file conflicts
+        self.dst_modinstance.set_file_conflicts()
 
         # Set up destination instance
         self.dst_modinstance.setup_instance()
