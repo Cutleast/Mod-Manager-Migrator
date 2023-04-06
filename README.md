@@ -55,6 +55,12 @@ This is a tool for migrating modding instances between various mod managers.
 - Nexus Mod Manager Community Edition
 - Feel free to suggest
 
+
+### Known Issues
+- some users cannot access their Vortex database although it is not running (already working on a fix)
+- separate file conflicts may not be migrated correctly (investigating)
+- cannot migrate from Vortex if it is used in "Shared" mode ([Vortex > Settings > Vortex](https://imgur.com/fyKAgK7))
+
 # 🔧Usage
 
 ### To migrate an instance, follow these steps:
