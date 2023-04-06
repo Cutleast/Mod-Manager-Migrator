@@ -12,6 +12,8 @@ import random
 import shutil
 import string
 import time
+import traceback
+import plyvel
 from pathlib import Path
 from typing import Dict, List
 
@@ -423,7 +425,9 @@ class VortexInstance(ModInstance):
         try:
             self.db = VortexDatabase(app)
             self.database = self.db.load_db()
-        except:
+        except Exception:
+            traceback.print_exc()
+            self.app.exception = True
             raise UiException(\
 "[vortex_running] Failed to access Vortex database: \
 Vortex is running!"

@@ -162,6 +162,14 @@ class VortexDatabase:
         appdir = Path(os.getenv('APPDATA')) / 'Vortex'
         self.db_path = appdir / 'state.v2'
 
+        # Set whitelist to just load relevant db keys
+        self.whitelist = [
+            'persistent###profiles',
+            'persistent###mods',
+            'settings###mods###installPath',
+            'settings###downloads###path'
+        ]
+
         # Initialize class specific logger
         self.log = logging.getLogger(self.__repr__())
         self.log.addHandler(self.app.log_str)
@@ -208,7 +216,7 @@ class VortexDatabase:
             lines.append(f"{keys} = {value}")
         self.close_db()
 
-        data = self.parse_string_to_dict(lines)
+        data = self.parse_string_to_dict(lines, self.whitelist)
         self.data = data
 
         self.log.debug("Loaded Vortex database.")
@@ -271,7 +279,7 @@ class VortexDatabase:
         return flat_dict
 
     @staticmethod
-    def parse_string_to_dict(text: Union[str, list]):
+    def parse_string_to_dict(text: Union[str, list], whitelist: List[str]):
         """
         This method takes a string of text in the
         format of
@@ -300,7 +308,7 @@ class VortexDatabase:
             try:
                 line = line.strip()
                 # Skip empty lines
-                if not line:
+                if (not line) or (not any(map(line.startswith, whitelist))):
                     continue
 
                 # Split line in keys and value
