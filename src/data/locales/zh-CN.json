@@ -15,6 +15,7 @@
     "file": "文件",
     "help": "帮助",
     "about": "关于",
+    "about_text": "这是一个用于在不同的模组管理器之间迁移模组实例的程序。<br><br>由Cutleast开发。（<a href='https://www.nexusmods.com/users/65733731'>NexusMods</a> | <a href='https://github.com/cutleast'>GitHub</a> | <a href='https://ko-fi.com/cutleast'>Ko-Fi</a>）<br>想法和设计来自Wuerfelhusten。（<a href='https://www.nexusmods.com/users/122160268'>NexusMods</a>）<br><br>Material Icons由<a href='https://github.com/google/material-design-icons'>Google LLC.</a>提供。<br>Qt由<a href='https://qt.io'>The Qt Company Ltd.</a>提供。<br>Elusive Icons由<a href='http://elusiveicons.com/'>Redux Framework</a>提供。<br>FontAwesome Icons由<a href='https://github.com/FortAwesome/Font-Awesome'>FontAwesome</a>提供。<br>由社区测试。",
     "name": "名称",
     "size": "大小",
     "browse": "浏览",
@@ -74,5 +75,19 @@
     "permission_error": "拒绝访问，请以管理员身份启动MMM并重试。\n如果程序已经以管理员权限运行，请确保管理员具有必要的读写权限。",
     "game": "游戏",
     "game_not_found": "游戏安装路径未找到，请确保游戏已安装，并在下面手动选择游戏路径以继续。",
-    "vortex_running": "当 Vortex 运行时不能使用 Vortex 数据！确保Vortex没有运行，然后再试一次。"
+    "vortex_running": "当 Vortex 运行时不能使用 Vortex 数据！确保Vortex没有运行，然后再试一次。",
+    "no_mods": "选择的实例没有MOD！确认至少安装了一个MOD然后再次尝试。",
+    "loading_instance": "加载实例...",
+    "mods_to_migrate": "选择你想迁移的MOD：",
+    "mods_to_enable": "选择你想在迁移后启用的MOD：",
+    "select_game": "选择游戏...",
+    "select_game_text": "选择这个游戏\n你想迁移的实例。",
+    "invalid_path": "路径无效！确认这个路径存在然后再次尝试。",
+    "default_game": "默认游戏",
+    "ask_always": "总是询问",
+    "do_not_ask_again": "不在询问",
+    "enable_selected": "启用选择的MOD",
+    "disable_selected": "禁用选择的MOD",
+    "unselect_all": "反选全部MOD",
+    "number_of_mods": "MOD数量"
 }
