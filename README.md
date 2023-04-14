@@ -57,9 +57,8 @@ This is a tool for migrating modding instances between various mod managers.
 
 
 ### Known Issues
-- some users cannot access their Vortex database although it is not running (already working on a fix)
-- separate file conflicts may not be migrated correctly (investigating)
-- cannot migrate from Vortex if it is used in "Shared" mode ([Vortex > Settings > Vortex](https://imgur.com/fyKAgK7))
+- Separate file conflicts may not be migrated correctly (investigating)
+- Cannot migrate from Vortex if it is used in "Shared" mode ([Vortex > Settings > Vortex](https://imgur.com/fyKAgK7))
 
 # 🔧Usage
 
