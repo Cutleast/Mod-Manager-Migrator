@@ -762,7 +762,7 @@ class DestinationDialog(qtw.QDialog):
         if instance_path == self.app.src_modinstance.mods_path:
             raise utils.UiException(
                 "[detected_same_path] Failed to create destination instance: \
-source and destination paths must not be same!"
+source and destination paths must not be the same!"
             )
         # Check if drives match when mode is 'hardlink'
         if (self.app.mode == 'hardlink') and (src_drive != dst_drive):
