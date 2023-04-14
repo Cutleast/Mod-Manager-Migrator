@@ -57,8 +57,8 @@ This is a tool for migrating modding instances between various mod managers.
 
 
 ### Known Issues
-- Separate file conflicts may not be migrated correctly (investigating)
 - Cannot migrate from Vortex if it is used in "Shared" mode ([Vortex > Settings > Vortex](https://imgur.com/fyKAgK7))
+- Some Windows Defender versions detect MMM as malware and delete the executable
 
 # 🔧Usage
 
