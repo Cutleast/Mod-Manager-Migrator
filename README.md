@@ -126,6 +126,4 @@ If you encountered an issue/error or have a suggestion, open an issue with suffi
 - Code by Cutleast ([GitHub](https://github.com/Cutleast) | [NexusMods](https://www.nexusmods.com/users/65733731))
 - Design and idea by Wuerfelhusten ([NexusMods](https://www.nexusmods.com/users/122160268))
 - Qt by The [Qt Company Ltd](https://qt.io)
-- Material icons by [Google LLC](https://github.com/google/material-design-icons)
-- Elusive Icons by [Redux Framework](http://elusiveicons.com/)
 - FontAwesome Icons by [FontAwesome](https://github.com/FortAwesome/Font-Awesome)
