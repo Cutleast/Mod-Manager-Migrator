@@ -7,4 +7,5 @@
 *.txt
 **.old
 **_old.py
+!requirements.txt
 Mod-Manager-Migrator.code-workspace

@@ -961,14 +961,13 @@ f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
                     # Skip mod if reference mod does not exist
                     else:
                         continue
-
-                    # Check if mod is in migrated mods
-                    for _mod in self.mods:
-                        if _mod.metadata['filename'] == ref_mod:
-                            ref_mod = _mod
-                            break
+                    
+                    # Get referenced mod from mod list if available
+                    if (ref_mods := list(filter(lambda _mod: _mod.metadata['filename'] == ref_mod), self.mods)):
+                        ref_mod: Mod = ref_mods[0]
                     else:
                         ref_mod = None
+                    # Check if mod is in migrated mods
                     if ref_mod in self.mods:
                         ruletype = rule['type']
                         # Before
@@ -977,16 +976,24 @@ f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
                         # After
                         elif ruletype == 'after':
                             ref_mod.overwriting_mods.append(mod)
-                        # Ignore if it is dependency
+                        # Ignore if it is a dependency
                         elif ruletype == 'requires':
+                            continue
+                        # Ignore but warn if a mod conflict is detected
+                        # for eg. when two mods are incompatible
+                        elif ruletype == 'conflicts':
+                            self.log.warning(f"Detected incompatible mod conflict!")
+                            self.log.debug(f"Mod: {mod}")
+                            self.log.debug(f"Conflicting mod: {ref_mod}")
+                            if (version_match := reference.get('versionMatch', None)):
+                                self.log.debug(f"Version match: {version_match}")
                             continue
                         # Raise error if rule type is unknown
                         else:
-                            print(f"Mod: {mod}")
-                            print(f"Ref mod: {ref_mod}")
-                            print(f"Rule type: {rule['type']}")
-                            print(f"Rule reference attrs: {rule['reference'].keys()}")
-                            print(f"Rule reference: {rule['reference']}")
+                            self.log.debug(f"Mod: {mod}")
+                            self.log.debug(f"Ref mod: {ref_mod}")
+                            self.log.debug(f"Rule type: {rule['type']}")
+                            self.log.debug(f"Rule reference: {reference}")
                             raise ValueError(f"Invalid rule type '{rule['type']}'!")
 
                 # Sort mod

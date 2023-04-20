@@ -55,10 +55,10 @@ This is a tool for migrating modding instances between various mod managers.
 - Nexus Mod Manager Community Edition
 - Feel free to suggest
 
-
 ### Known Issues
+
 - Separate file conflicts may not be migrated correctly (investigating)
-- Cannot migrate from Vortex if it is used in "Shared" mode ([Vortex > Settings > Vortex](https://imgur.com/fyKAgK7))
+- Cannot migrate from Vortex if it is used in "Shared" mode ([Vortex &gt; Settings &gt; Vortex](https://imgur.com/fyKAgK7))
 
 # 🔧Usage
 
@@ -85,12 +85,10 @@ If you encountered an issue/error or have a suggestion, open an issue with suffi
 1. Install Python 3.9 (Make sure that you add it to PATH!)
 2. Clone repository
 3. Open terminal in repository folder
-4. Type in following command to set up virtual environment:
-   `python -m venv src\venv`
+4. Type in following command to set up virtual environment and install all requirements:
+   `setup_venv.bat`
 5. Activate virtual environment by typing:
    `src\venv\Scripts\activate`
-6. Run setup_venv.bat by typing:
-   `setup_venv.bat`
 
 ### 4. Execute from source
 
