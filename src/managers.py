@@ -963,7 +963,7 @@ f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
                         continue
                     
                     # Get referenced mod from mod list if available
-                    if (ref_mods := list(filter(lambda _mod: _mod.metadata['filename'] == ref_mod), self.mods)):
+                    if (ref_mods := list(filter(lambda _mod: _mod.metadata['filename'] == ref_mod, self.mods))):
                         ref_mod: Mod = ref_mods[0]
                     else:
                         ref_mod = None
