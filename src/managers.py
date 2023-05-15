@@ -1593,6 +1593,12 @@ f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
                 continue
 
             for file in mod.overwriting_files:
+                if file not in self.modfiles:
+                    self.log.warning(
+                        f"Failed to migrate conflicting file '{file}': File was not found!"
+                    )
+                    continue
+
                 # Check for mods that are loaded before
                 overwritten_mods = [
                     overwritten_mod
