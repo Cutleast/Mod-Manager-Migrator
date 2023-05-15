@@ -85,7 +85,7 @@ If you encountered an issue/error or have a suggestion, open an issue with suffi
 1. Install Python 3.9 (Make sure that you add it to PATH!)
 2. Clone repository
 3. Open terminal in repository folder
-4. Type in following command to set up virtual environment and install all requirements:
+4. Type in following command to set up a virtual environment and install all requirements:
    `setup_venv.bat`
 5. Activate virtual environment by typing:
    `src\venv\Scripts\activate`
@@ -102,8 +102,8 @@ If you encountered an issue/error or have a suggestion, open an issue with suffi
 ### 5. Compile and build executable
 
 1. Follow the steps on this page [Nuitka.net](https://nuitka.net/doc/user-manual.html#usage) to install a C Compiler
-2. Run `build_nuitka.bat` with activated virtual environment from the root folder of this repo.
-3. The executable and its dependencies are created in the main.dist-Folder.
+2. Run `build.bat` with activated virtual environment from the root folder of this repo.
+3. The executable and all dependencies are built in the main.dist-Folder.
 
 # 💻How it works
 

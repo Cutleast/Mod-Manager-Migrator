@@ -1,7 +1,6 @@
 PySide6
 qtpy
 qtawesome
-msgpack
 darkdetect
 requests
 nuitka
