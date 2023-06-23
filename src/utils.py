@@ -547,3 +547,49 @@ def wrap_string(string: str, wrap_length: int):
         return ''.join(characters)
     else:
         return string
+
+# Define function to clean string from illegal path chars ############
+def clean_string(source: str):
+    """
+    Cleans <source> from illegal characters like '%', ':' or '/'.
+
+    Args:
+        | source (str): the string to be cleaned.
+
+    Returns:
+        | (str): A cleaned-up string.
+    """
+
+    illegal_chars = "%:/,.\\[]<>*?"
+
+    output = ''.join([
+        c for c in source
+        if c not in illegal_chars
+    ])
+    
+    return output
+
+# Define function to clean file paths from illegal chars #############
+def clean_filepath(filepath: Path):
+    """
+    Cleans <filepath> from illegal characters like '%', ':' or '/'.
+
+    Args:
+        | filepath (Path): the file path to be cleaned.
+
+    Returns:
+        | (Path): A cleaned-up file path.
+    """
+
+    path_parts = list(filepath.parts)
+
+    for i, part in enumerate(path_parts):
+        if i == 0 and Path(part).is_dir():
+            continue
+        cleaned_part = clean_string(part)
+
+        path_parts[i] = cleaned_part
+    
+    cleaned_path = Path(*path_parts)
+
+    return cleaned_path
