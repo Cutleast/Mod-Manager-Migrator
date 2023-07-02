@@ -1,3 +1,3 @@
 @echo off
-py -3.9 -m venv src\venv
+py -3.11 -m venv src\venv
 src\venv\scripts\activate && pip install -r requirements.txt

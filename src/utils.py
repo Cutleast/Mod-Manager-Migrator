@@ -15,7 +15,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Union
 
-import plyvel as leveldb
+import subprocess
 import requests
 
 import qtpy.QtWidgets as qtw
@@ -79,6 +79,19 @@ class UiException(Exception):
     
     Usage:
         raise UiException("[<error id>] <raw error message>")
+    """
+
+
+class LevelDBError(Exception):
+    """
+    General exceptions for level db.
+    """
+
+
+class DBAlreadyInUse(LevelDBError):
+    """
+    Exception when database is already used
+    (when Vortex is running).
     """
 
 
@@ -158,9 +171,10 @@ class VortexDatabase:
 
     def __init__(self, app: MainApp):
         self.app = app
-        self.data = {}
+        self.data = self.origin_data = {}
         appdir = Path(os.getenv('APPDATA')) / 'Vortex'
         self.db_path = appdir / 'state.v2'
+        self.bin_path = app.res_path / 'bin' / 'leveldb.exe'
 
         # Set whitelist to just load relevant db keys
         self.whitelist = [
@@ -169,38 +183,50 @@ class VortexDatabase:
             'settings###mods###installPath',
             'settings###downloads###path'
         ]
+        self.blacklist = [
+            'description'
+        ]
 
         # Initialize class specific logger
         self.log = logging.getLogger(self.__repr__())
         self.log.addHandler(self.app.log_str)
         self.log.setLevel(self.app.log.level)
 
-        # Initialize database
-        self.db = leveldb.DB(str(self.db_path))
-
     def __repr__(self):
         return "LevelDB"
 
-    def open_db(self):
+    def _exec_cmd(self, cmd: List[str]):
         """
-        Opens database if it is closed.
-
-        Internal use only! Use load_db instead!
-        """
-
-        if self.db.closed:
-            del self.db
-            self.db = leveldb.DB(str(self.db_path))
-
-    def close_db(self):
-        """
-        Closes database if it is opened.
-
-        Internal use only! Use save_db instead!
+        Executes leveldb binary with <cmd> arguments
+        and returns output as list of lines.
         """
 
-        if not self.db.closed:
-            self.db.close()
+        cmd.insert(0, str(self.bin_path))
+
+        lines: List[str] = []
+        with subprocess.Popen(
+            cmd,
+            shell=True,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            encoding="utf8",
+            errors="ignore"
+        ) as process:
+            for line in process.stdout:
+                lines.append(line)
+
+        if process.returncode:
+            if (
+                "leveldb: error: The process cannot access the file because it is being used by another process.\n"
+                in lines
+            ):
+                raise DBAlreadyInUse
+            self.log.error("".join(lines[-10:])) # Just print last 10 lines
+            raise Exception("Command failed! Check log for more details.")
+
+        return lines
 
     def load_db(self):
         """
@@ -209,18 +235,33 @@ class VortexDatabase:
 
         self.log.debug("Loading Vortex database...")
 
-        self.open_db()
-        lines = []
-        for keys, value in self.db:
-            keys, value = keys.decode(), value.decode()
-            lines.append(f"{keys} = {value}")
-        self.close_db()
+        cmd = [
+            "-d", str(self.db_path),
+            "show",
+            "--raw",
+            "--no-json",
+            "--no-truncate",
+        ]
+        lines = self._exec_cmd(cmd)
 
-        data = self.parse_string_to_dict(lines, self.whitelist)
-        self.data = data
+        data: Dict[str, str] = {}
+
+        for line in lines:
+            line = line.strip().removesuffix("\n")
+            key, value = line.split(': ', 1)
+            key = key.removeprefix('"')
+
+            data[key] = value
+
+        self.data = self.parse_flat_dict(data)
+
+        self.origin_data = data.copy()
+
+        # with open("debug.json", "w") as file:
+        #     json.dump(self.data, file, indent=4)
 
         self.log.debug("Loaded Vortex database.")
-        return data
+        return self.data
 
     def save_db(self):
         """
@@ -237,83 +278,68 @@ class VortexDatabase:
         shutil.copytree(self.db_path, f"{self.db_path}.mmm_backup")
         self.log.debug("Created database backup.")
 
-        lines = self.convert_nested_dict_to_text(self.data)
+        flat_dict = self.flatten_nested_dict(self.data)
 
-        self.open_db()
-        with self.db.write_batch() as batch:
-            for line in lines:
-                path, line = line.split(" = ", 1)
-                path, line = path.encode(), line.encode()
-                batch.put(path, line)
-        self.close_db()
+        diff = comp_dicts(flat_dict, self.origin_data, use_json=True)
+
+        for keys, value in diff.items():
+            cmd = [
+                "-d", str(self.db_path),
+                "put", keys,
+                value
+            ]
+            self._exec_cmd(cmd)
+
+        self.origin_data = flat_dict
 
         self.log.debug("Saved to database.")
 
     @staticmethod
-    def convert_nested_dict_to_text(nested_dict: dict) -> str:
+    def flatten_nested_dict(nested_dict: dict) -> Dict[str, str]:
         """
         This function takes a nested dictionary
-        and converts it back to a string of text in the format of
-        'key1.subkey1.subsubkey1.subsubsubkey1 = subsubsubvalue1'.
-        Each key-value pair is represented on a separate line,
-        and the keys are separated by dots to indicate nesting.
+        and converts it back to a flat dictionary in the format of
+        {'key1###subkey1###subsubkey1###subsubsubkey1': 'subsubsubvalue1'}.
 
         Parameters:
-            nested_dict: dict (nested dictionary)
+                nested_dict: dict (nested dictionary)
         Returns:
-            str (string of text in the specified format.)
+                dict (dictionary in the format above.)
         """
 
-        def flatten_dict(d: dict, prefix=""):
-            lines = []
-            for key, value in d.items():
-                full_key = f"{prefix}###{key}" if prefix else key
-                if isinstance(value, dict):
-                    lines.extend(flatten_dict(value, prefix=full_key))
-                else:
-                    value = json.dumps(value, separators=(',', ':'))
-                    lines.append(f"{full_key} = {value}")
-            return lines
+        flat_dict: Dict[str, str] = {}
 
-        flat_dict = flatten_dict(nested_dict)
+        def flatten_dict_helper(dictionary, prefix=''):
+            for key, value in dictionary.items():
+                if isinstance(value, dict):
+                    flatten_dict_helper(value, prefix + key + '###')
+                else:
+                    flat_dict[prefix + key] = json.dumps(value, separators=(',', ':'))
+
+        flatten_dict_helper(nested_dict)
+
         return flat_dict
 
     @staticmethod
-    def parse_string_to_dict(text: Union[str, list], whitelist: List[str]):
+    def parse_flat_dict(data: Dict[str, str]):
         """
-        This method takes a string of text in the
+        This function takes a dict in the
         format of
-        'key1.subkey1.subsubkey1.subsubsubkey1 = subsubsubvalue1'
+        {'key1###subkey1###subsubkey1###subsubsubkey1': 'subsubsubvalue1'}
         and converts it into a nested dictionary.
-        The text must have a key-value pair on each line and
-        each key must be separated by dots to indicate nesting.
-        Empty lines are ignored.
 
         Parameters:
-            text: str or list (text which lines are in specified
-            format above)
-        
+            data: dict of format above
+
         Returns:
             result: dict (nested dictionary)
         """
 
         result: dict = {}
 
-        if isinstance(text, str):
-            lines = text.split("\n")
-        else:
-            lines = text
-
-        for line in lines:
+        for keys, value in data.items():
             try:
-                line = line.strip()
-                # Skip empty lines
-                if (not line) or (not any(map(line.startswith, whitelist))):
-                    continue
-
-                # Split line in keys and value
-                keys, value = line.split("=", 1)
-                keys: List[str] = keys.strip().split("###")
+                keys = keys.strip().split("###")
 
                 # Add keys and value to result
                 current = result
@@ -324,8 +350,9 @@ class VortexDatabase:
                 value = json.loads(value)
                 current[keys[-1]] = value
             except ValueError:
-                print(f"Failed to process line: {line:20}...")
+                print(f"Failed to process key: {keys:20}...")
                 continue
+
         return result
 
 
@@ -554,13 +581,13 @@ def clean_string(source: str):
     Cleans <source> from illegal characters like '%', ':' or '/'.
 
     Args:
-        | source (str): the string to be cleaned.
+        source (str): the string to be cleaned.
 
     Returns:
-        | (str): A cleaned-up string.
+        (str): A cleaned-up string.
     """
 
-    illegal_chars = "%:/,.\\[]<>*?"
+    illegal_chars = """;<>\\/{}[]+=|*?&,:'"`"""
 
     output = ''.join([
         c for c in source
@@ -593,3 +620,35 @@ def clean_filepath(filepath: Path):
     cleaned_path = Path(*path_parts)
 
     return cleaned_path
+
+def comp_dicts(dict1: dict, dict2: dict, use_json: bool = False):
+    """
+    Compares two dicts and returns the different key-value pairs.
+
+    For example:
+        dict1 = original dict
+
+        dict2 = modified version of dict1
+
+        -> returns different key-value pairs from dict2
+    """
+
+    if not use_json:
+        diff = {
+            key: value
+            for key, value in dict2.items()
+            if dict1.get(key) != value
+        }
+    else:
+        diff = {}
+
+        for key, value1 in dict1.items():
+            value2 = dict2.get(key)
+
+            if value2:
+                if json.loads(value1) != json.loads(value2):
+                    diff[key] = value2
+            else:
+                diff[key] = value1
+
+    return diff

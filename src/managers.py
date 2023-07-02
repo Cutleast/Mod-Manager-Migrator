@@ -12,7 +12,6 @@ import random
 import shutil
 import string
 import time
-import traceback
 import datetime
 from pathlib import Path
 from typing import Dict, List
@@ -23,9 +22,7 @@ import qtpy.QtWidgets as qtw
 
 from loadingdialog import LoadingDialog
 from main import MainApp, qtc, qtg, qtw
-from utils import (IniParser, Mod, ModItem, UiException, VortexDatabase,
-                   create_folder_list, get_folder_size, scale_value,
-                   wrap_string, clean_filepath, clean_string)
+from utils import *
 
 
 # Create class for modding instance ##################################
@@ -425,9 +422,7 @@ class VortexInstance(ModInstance):
         try:
             self.db = VortexDatabase(app)
             self.database = self.db.load_db()
-        except Exception:
-            traceback.print_exc()
-            self.app.exception = True
+        except DBAlreadyInUse:
             raise UiException(\
 "[vortex_running] Failed to access Vortex database: \
 Vortex is running!"
@@ -578,8 +573,8 @@ f"{self.app.lang['loading_instance']} ({modindex}/{len(profmods)})",
             moddata = modsdata[modname]
             attributes: Dict[str, str] = moddata['attributes']
             filename = modname
-            modname = attributes.get('customFileName', modname)
-            modname = modname.strip("-").strip(".").strip()
+            if not (modname := attributes.get('customFileName')):
+                modname = attributes.get('logicalFileName', modname)
 
             # Update progress bar
             if ldialog:
@@ -784,6 +779,15 @@ f"{self.app.lang['migrating_instance']} ({modindex}/{maximum})",
 
             # Link or copy mod to destination
             for fileindex, file in enumerate(mod.files):
+                src_path = mod.path / file
+                dst_path = modpath / file
+                dst_dirs = dst_path.parent
+
+                # Fix too long paths (> 260 characters)
+                dst_dirs = f"\\\\?\\{dst_dirs}".replace(".mohidden", "")
+                src_path = f"\\\\?\\{src_path}"
+                dst_path = f"\\\\?\\{dst_path}".replace(".mohidden", "")
+
                 # Update progress bars
                 if ldialog:
                     ldialog.updateProgress(
@@ -794,17 +798,8 @@ f"{mod.metadata['name']} ({fileindex}/{len(mod.files)})",
 
                         show3=True,
                         text3=\
-f"{file.name} ({scale_value(os.path.getsize(mod.path / file))})"
+f"{file.name} ({scale_value(os.path.getsize(src_path))})"
                     )
-
-                src_path = mod.path / file
-                dst_path = modpath / file
-                dst_dirs = dst_path.parent
-
-                # Fix too long paths (> 260 characters)
-                dst_dirs = f"\\\\?\\{dst_dirs}".replace(".mohidden", "")
-                src_path = f"\\\\?\\{src_path}"
-                dst_path = f"\\\\?\\{dst_path}".replace(".mohidden", "")
 
                 # Create directory structure and hardlink file
                 os.makedirs(dst_dirs, exist_ok=True)
@@ -1427,7 +1422,10 @@ f"{self.app.lang['migrating_instance']} ({modindex}/{maximum})",
                 if (modpath / file).is_file():
                     continue
 
-                filepath = f"\\\\?\\{mod.path / file}"
+                src_path = mod.path / file
+                dst_path = modpath / file
+                dst_dirs = dst_path.parent
+
                 # Update progress bars
                 if ldialog:
                     ldialog.updateProgress(
@@ -1438,12 +1436,8 @@ f"{mod.metadata['name']} ({fileindex}/{len(mod.files)})",
 
                         show3=True,
                         text3=\
-f"{file.name} ({scale_value(os.path.getsize(filepath))})"
+f"{file.name} ({scale_value(os.path.getsize(src_path))})"
                     )
-
-                src_path = mod.path / file
-                dst_path = modpath / file
-                dst_dirs = dst_path.parent
 
                 # Fix too long paths (> 260 characters)
                 dst_dirs = f"\\\\?\\{dst_dirs}"
@@ -1472,7 +1466,8 @@ f"{file.name} ({scale_value(os.path.getsize(filepath))})"
                     'modid': mod.metadata['modid'],
                     'version': mod.metadata['version'],
                     'installationFile': f"{mod.metadata['filename']}.7z",
-                    'repository': 'Nexus'
+                    'repository': 'Nexus',
+                    'validated': 'true'
                 },
 
                 'installedFiles': {
