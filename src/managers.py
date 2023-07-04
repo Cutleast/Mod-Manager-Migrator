@@ -1314,16 +1314,19 @@ f"{self.app.lang['loading_instance']} ({modindex}/{len(lines)})",
                     data = iniparser.load_file()
 
                     general = data['General']
-                    installedfiles = data['installedFiles']
                     modid = general.get('modid', 0)
-                    fileid = installedfiles.get('1\\fileid', 0)
                     version = general.get('version', '1.0')
                     _ver = '-'.join(version.split('.'))
-                    filename = general.get(
-                        'installationFile',
-                        f"{modname}-{modid}-{_ver}-{fileid}.7z"
-                    )
-                    filename = filename.rsplit(".", 1)[0] # remove file type
+                    installedfiles = data.get('installedFiles')
+                    if not installedfiles:
+                        filename = f"{modname}-{_ver}"
+                    else:
+                        fileid = installedfiles.get('1\\fileid', 0)
+                        filename = general.get(
+                            'installationFile',
+                            f"{modname}-{modid}-{_ver}-{fileid}.7z"
+                        )
+                        filename = filename.rsplit(".", 1)[0] # remove file type
 
                 # Create metadata if 'meta.ini' does not exist
                 else:
