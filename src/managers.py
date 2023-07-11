@@ -573,8 +573,9 @@ f"{self.app.lang['loading_instance']} ({modindex}/{len(profmods)})",
             moddata = modsdata[modname]
             attributes: Dict[str, str] = moddata['attributes']
             filename = modname
-            if not (modname := attributes.get('customFileName')):
-                modname = attributes.get('logicalFileName', modname)
+            if not (name := attributes.get('customFileName')):
+                name = attributes.get('logicalFileName', modname)
+            modname = name
 
             # Update progress bar
             if ldialog:
