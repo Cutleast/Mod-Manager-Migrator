@@ -22,7 +22,7 @@ import qtpy.QtWidgets as qtw
 
 from loadingdialog import LoadingDialog
 from main import MainApp, qtc, qtg, qtw
-from utils import *
+import utils
 
 
 # Create class for modding instance ##################################
@@ -45,20 +45,20 @@ class ModInstance:
         self.name: str = None
 
         # list of installed mods
-        self.mods: List[Mod] = []
+        self.mods: List[utils.Mod] = []
 
         # list of mods that must be copied
         # directly to the game folder
-        self.root_mods: List[Mod] = []
+        self.root_mods: List[utils.Mod] = []
 
         # file: [origin mod, origin mod, etc...]
-        self.modfiles: Dict[Path, List[Mod]] = {}
+        self.modfiles: Dict[Path, List[utils.Mod]] = {}
 
         # size in bytes as integer
         self._size: int = 0
 
         # list of mods sorted in loadorder
-        self._loadorder: List[Mod] = []
+        self._loadorder: List[utils.Mod] = []
 
         # loadorder.txt, plugins.txt, game inis, etc.
         self.additional_files: List[Path] = []
@@ -200,7 +200,7 @@ class ModInstance:
         label = qtw.QLabel(f"{self.app.lang['mods_path']}:")
         layout.addWidget(label, 3, 0)
         path = str(self.mods_path)
-        path = wrap_string(path, 50)
+        path = utils.wrap_string(path, 50)
         label = qtw.QLabel(path)
         label.setTextInteractionFlags(
             qtc.Qt.TextInteractionFlag.TextSelectableByMouse
@@ -213,7 +213,7 @@ class ModInstance:
         if pos == 'src':
             label = qtw.QLabel(f"{self.app.lang['size']}:")
             layout.addWidget(label, 4, 0)
-            label = qtw.QLabel(scale_value(self.size))
+            label = qtw.QLabel(utils.scale_value(self.size))
             layout.addWidget(label, 4, 1)
         else:
             label = qtw.QLabel(f"{self.app.lang['mode']}:")
@@ -352,7 +352,7 @@ class ModInstance:
             for mod in self.loadorder:
                 if not mod.selected and pos == 'dst':
                     continue
-                item = ModItem(
+                item = utils.ModItem(
                     mod,
                     pos,
                     mod.name,
@@ -420,17 +420,17 @@ class VortexInstance(ModInstance):
 
         # Initialize Vortex specific attributes
         try:
-            self.db = VortexDatabase(app)
+            self.db = utils.VortexDatabase(app)
             self.database = self.db.load_db()
-        except DBAlreadyInUse:
-            raise UiException(\
+        except utils.DBAlreadyInUse:
+            raise utils.UiException(\
 "[vortex_running] Failed to access Vortex database: \
 Vortex is running!"
             )
         self.profiles: Dict[str, str] = {}
 
         # Files and overwrites
-        self.overwrites: Dict[Mod, List[Mod]] = {} # mod: [overwriting mod, overwriting mod, etc...]
+        self.overwrites: Dict[utils.Mod, List[utils.Mod]] = {} # mod: [overwriting mod, overwriting mod, etc...]
 
         # Current profile
         self.profname: str = None
@@ -592,10 +592,10 @@ f"{self.app.lang['loading_instance']} ({modindex}/{len(profmods)})",
             if 'modSize' in attributes:
                 modsize = attributes['modSize']
             else:
-                modsize = get_folder_size(modpath)
-            modfiles = create_folder_list(modpath, lower=False)
+                modsize = utils.get_folder_size(modpath)
+            modfiles = utils.create_folder_list(modpath, lower=False)
 
-            mod = Mod(
+            mod = utils.Mod(
                 name=modname,
                 path=modpath,
                 metadata={
@@ -617,7 +617,7 @@ f"{self.app.lang['loading_instance']} ({modindex}/{len(profmods)})",
                 if file in self.modfiles:
                     self.modfiles[file].append(mod)
                 else:
-                    self.modfiles[file] = [mod]
+                    self.modfiles[file] = [utils.mod]
 
         # Get additional files
         profpath = apppath / game / 'profiles' / profid
@@ -770,7 +770,7 @@ f"{self.app.lang['migrating_instance']} ({modindex}/{maximum})",
 
             # Skip mod if it is already installed
             modpath: Path = self.mods_path / mod.metadata['filename']
-            modpath = clean_filepath(modpath)
+            modpath = utils.clean_filepath(modpath)
             if modpath.is_dir():
                 if list(modpath.iterdir()):
                     mod.installed = True
@@ -799,7 +799,7 @@ f"{mod.metadata['name']} ({fileindex}/{len(mod.files)})",
 
                         show3=True,
                         text3=\
-f"{file.name} ({scale_value(os.path.getsize(src_path))})"
+f"{file.name} ({utils.scale_value(os.path.getsize(src_path))})"
                     )
 
                 # Create directory structure and hardlink file
@@ -961,7 +961,7 @@ f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
                     
                     # Get referenced mod from mod list if available
                     if (ref_mods := list(filter(lambda _mod: _mod.metadata['filename'] == ref_mod, self.mods))):
-                        ref_mod: Mod = ref_mods[0]
+                        ref_mod: utils.Mod = ref_mods[0]
                     else:
                         ref_mod = None
                     # Check if mod is in migrated mods
@@ -1025,7 +1025,7 @@ f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
         return self._loadorder
 
     @loadorder.setter
-    def loadorder(self, loadorder: List[Mod], ldialog: LoadingDialog = None):
+    def loadorder(self, loadorder: List[utils.Mod], ldialog: LoadingDialog = None):
         self.log.info("Creating conflict rules from loadorder...")
 
         self.log.debug("Scanning mods for file conflicts...")
@@ -1036,7 +1036,7 @@ f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
                 if file in self.modfiles:
                     self.modfiles[file].append(mod)
                 else:
-                    self.modfiles[file] = [mod]
+                    self.modfiles[file] = [utils.mod]
 
         self.log.debug("Creating conflict rules...")
         for file, mods in self.modfiles.items():
@@ -1120,7 +1120,7 @@ class MO2Instance(ModInstance):
 
         # Create ini file with instance configuration
         inipath = Path(os.path.join(appdata_path, 'ModOrganizer.ini'))
-        iniparser = IniParser(inipath)
+        iniparser = utils.IniParser(inipath)
         iniparser.data = {
             'General': {
                 'gameName': self.app.game_instance.name,
@@ -1144,7 +1144,7 @@ class MO2Instance(ModInstance):
         # Create profile files
         # Create initweaks.ini
         inipath = Path(os.path.join(prof_dir, 'initweaks.ini'))
-        iniparser = IniParser(inipath)
+        iniparser = utils.IniParser(inipath)
         iniparser.data = {
             'Archive': {
                 'InvalidateOlderFiles': 1
@@ -1164,7 +1164,7 @@ class MO2Instance(ModInstance):
                 if not mod.selected:
                     continue
 
-                modname = clean_string(mod.metadata['name'])
+                modname = utils.clean_string(mod.metadata['name'])
 
                 # Enable mod in destination
                 if mod.enabled:
@@ -1196,7 +1196,7 @@ class MO2Instance(ModInstance):
 
                 # Remove instances from other games
                 for instance in instances.copy():
-                    instance_ini = IniParser(
+                    instance_ini = utils.IniParser(
                         instances_path / instance / 'ModOrganizer.ini'
                     )
                     instance_data = instance_ini.load_file()
@@ -1231,7 +1231,7 @@ class MO2Instance(ModInstance):
         
         # Load settings from ini
         inifile = instance_path / 'ModOrganizer.ini'
-        iniparser = IniParser(inifile)
+        iniparser = utils.IniParser(inifile)
         data = iniparser.load_file()
         settings: Dict[str, str] = data['Settings']
 
@@ -1285,7 +1285,7 @@ class MO2Instance(ModInstance):
         mods = []
         modlist = prof_dir / 'modlist.txt'
         if not modlist.is_file():
-            raise UiException(f"[no_mods] Instance '{name}' has no mods!")
+            raise utils.UiException(f"[no_mods] Instance '{name}' has no mods!")
         with open(modlist, 'r', encoding='utf8') as modlist:
             lines = modlist.readlines()
 
@@ -1311,7 +1311,7 @@ f"{self.app.lang['loading_instance']} ({modindex}/{len(lines)})",
                 # Load mod metadata from meta.ini
                 metaini = modpath / 'meta.ini'
                 if metaini.is_file():
-                    iniparser = IniParser(metaini)
+                    iniparser = utils.IniParser(metaini)
                     data = iniparser.load_file()
 
                     general = data['General']
@@ -1339,11 +1339,11 @@ f"{self.app.lang['loading_instance']} ({modindex}/{len(lines)})",
                     version = '1.0'
                     filename = f"{modname}-1-0"
                 
-                modfiles = create_folder_list(modpath, lower=False)
-                modsize = get_folder_size(modpath)
+                modfiles = utils.create_folder_list(modpath, lower=False)
+                modsize = utils.get_folder_size(modpath)
                 enabled = line.startswith('+')
 
-                mod = Mod(
+                mod = utils.Mod(
                     name=modname,
                     path=modpath,
                     metadata={
@@ -1365,7 +1365,7 @@ f"{self.app.lang['loading_instance']} ({modindex}/{len(lines)})",
                     if file in self.modfiles:
                         self.modfiles[file].append(mod)
                     else:
-                        self.modfiles[file] = [mod]
+                        self.modfiles[file] = [utils.mod]
         self.mods = mods
         self._loadorder = self.mods.copy()
         self._loadorder.reverse()
@@ -1420,7 +1420,7 @@ f"{self.app.lang['migrating_instance']} ({modindex}/{maximum})",
 
             # Copy mod to mod path
             modpath: Path = self.mods_path / mod.metadata['name']
-            modpath = clean_filepath(modpath)
+            modpath = utils.clean_filepath(modpath)
             for fileindex, file in enumerate(mod.files):
                 # Skip if destination file already exists
                 if (modpath / file).is_file():
@@ -1440,7 +1440,7 @@ f"{mod.metadata['name']} ({fileindex}/{len(mod.files)})",
 
                         show3=True,
                         text3=\
-f"{file.name} ({scale_value(os.path.getsize(src_path))})"
+f"{file.name} ({utils.scale_value(os.path.getsize(src_path))})"
                     )
 
                 # Fix too long paths (> 260 characters)
@@ -1463,7 +1463,7 @@ f"{file.name} ({scale_value(os.path.getsize(src_path))})"
                         os.link(src_path, dst_path)
 
             # Write metadata to 'meta.ini' in destination mod
-            metaini = IniParser(modpath / 'meta.ini')
+            metaini = utils.IniParser(modpath / 'meta.ini')
             metaini.data = {
                 'General': {
                     'gameName': self.app.game,
