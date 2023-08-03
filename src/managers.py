@@ -617,7 +617,7 @@ f"{self.app.lang['loading_instance']} ({modindex}/{len(profmods)})",
                 if file in self.modfiles:
                     self.modfiles[file].append(mod)
                 else:
-                    self.modfiles[file] = [utils.mod]
+                    self.modfiles[file] = [utils.Mod]
 
         # Get additional files
         profpath = apppath / game / 'profiles' / profid
@@ -1036,7 +1036,7 @@ f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
                 if file in self.modfiles:
                     self.modfiles[file].append(mod)
                 else:
-                    self.modfiles[file] = [utils.mod]
+                    self.modfiles[file] = [utils.Mod]
 
         self.log.debug("Creating conflict rules...")
         for file, mods in self.modfiles.items():
@@ -1228,7 +1228,7 @@ class MO2Instance(ModInstance):
         instance_path = app_path / name
         if (name not in self.instances) or (not instance_path.is_dir()):
             raise ValueError(f"Instance '{name}' not found!")
-        
+
         # Load settings from ini
         inifile = instance_path / 'ModOrganizer.ini'
         iniparser = utils.IniParser(inifile)
@@ -1365,7 +1365,7 @@ f"{self.app.lang['loading_instance']} ({modindex}/{len(lines)})",
                     if file in self.modfiles:
                         self.modfiles[file].append(mod)
                     else:
-                        self.modfiles[file] = [utils.mod]
+                        self.modfiles[file] = [utils.Mod]
         self.mods = mods
         self._loadorder = self.mods.copy()
         self._loadorder.reverse()
