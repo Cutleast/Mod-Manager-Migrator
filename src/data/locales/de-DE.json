@@ -89,5 +89,6 @@
     "enable_selected": "Ausgewählte Mods aktivieren",
     "disable_selected": "Ausgewählte Mods deaktivieren",
     "unselect_all": "Auswahl aufheben",
-    "number_of_mods": "Anzahl an Mods"
+    "number_of_mods": "Anzahl an Mods",
+    "saving_database": "Speichere Vortex Database..."
 }

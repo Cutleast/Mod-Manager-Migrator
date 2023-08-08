@@ -94,6 +94,9 @@ class SourceDialog(qtw.QDialog):
             col = i % columns # calculate column
             buttons.append(button)
             manager_layout.addWidget(button, row+1, col)
+            if modmanager == "ModOrganizer":
+                button.setDisabled(True)
+                button.setToolTip("Temporarily disabled")
 
         # Select first mod manager as default
         buttons[0].setChecked(True)

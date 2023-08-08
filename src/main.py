@@ -251,7 +251,7 @@ Updating with default config..."
         # Initalize Qt App and Main Window ###########################
         self.root = qtw.QMainWindow()
         self.root.setObjectName("root")
-        self.root.setWindowTitle(self.name)
+        self.root.setWindowTitle(f"{self.name} v{self.version}")
         self.root.setWindowIcon(qtg.QIcon(os.path.join(
             self.ico_path,
             "mmm.svg"
@@ -353,7 +353,7 @@ Updating with default config..."
             lambda: dialogs.SourceDialog(self.root, self).show()
         )
         self.mainlayout.addWidget(self.src_button, 0, 0)
-        
+
         # Add game icon
         self.game_icon = qtw.QLabel()
         #self.game_icon.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)

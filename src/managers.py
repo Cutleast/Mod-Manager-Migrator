@@ -529,8 +529,8 @@ Vortex is running!"
 
         return list(self.profiles.keys())
 
-    def load_instance(self, name: str, ldialog: LoadingDialog = None):
-        self.log.info(f"Loading profile '{name}'...")
+    def load_instance(self, profile_name: str, ldialog: LoadingDialog = None):
+        self.log.info(f"Loading profile '{profile_name}'...")
 
         self.mods = []
         self._loadorder = []
@@ -542,14 +542,14 @@ Vortex is running!"
             )
 
         # Raise exception if profile is not found
-        if name not in self.profiles:
+        if profile_name not in self.profiles:
             raise ValueError(
-                f"Profile '{name}' not found in database!"
+                f"Profile '{profile_name}' not found in database!"
             )
 
         # Load profile
         game = self.app.game.lower()
-        profid = self.profiles[name]
+        profid = self.profiles[profile_name]
         profile = self.database['persistent']['profiles'][profid]
         apppath = Path(os.getenv('APPDATA')) / 'Vortex'
 
@@ -617,7 +617,7 @@ f"{self.app.lang['loading_instance']} ({modindex}/{len(profmods)})",
                 if file in self.modfiles:
                     self.modfiles[file].append(mod)
                 else:
-                    self.modfiles[file] = [utils.Mod]
+                    self.modfiles[file] = [mod]
 
         # Get additional files
         profpath = apppath / game / 'profiles' / profid
@@ -629,9 +629,9 @@ f"{self.app.lang['loading_instance']} ({modindex}/{len(profmods)})",
         userlist_path = apppath / game / 'userlist.yaml'
         self.additional_files.append(userlist_path)
 
-        self.name = name
+        self.name = profile_name
 
-        self.log.info(f"Loaded profile '{name}' with id '{profid}'.")
+        self.log.info(f"Loaded profile '{profile_name}' with id '{profid}'.")
 
     def copy_mods(self, ldialog: LoadingDialog = None):
         self.log.info("Migrating mods to instance...")
@@ -744,7 +744,8 @@ f"{self.app.lang['migrating_instance']} ({modindex}/{maximum})",
 
                         'type': 'before',
                     }
-                    rules.append(rule)
+                    if rule not in rules:
+                        rules.append(rule)
 
                 moddata['rules'] = rules
 
@@ -813,6 +814,20 @@ f"{file.name} ({utils.scale_value(os.path.getsize(src_path))})"
                     os.link(src_path, dst_path)
 
         self.log.debug("Saving database...")
+        # Update progress bars
+        if ldialog:
+            ldialog.updateProgress(
+                # Update first progress bar
+                text1=self.app.lang['saving_database'],
+                value1=0,
+                max1=0,
+
+                # Hide second progress bar
+                show2=False,
+
+                # Hide third progress bar
+                show3=False
+            )
         self.db.save_db()
 
         self.log.info("Mod migration complete.")
@@ -920,7 +935,7 @@ f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
 
                     for overwriting_mod in overwriting_mods:
                         overwriting_mod.overwriting_files.append(file)
-    
+
     @property
     def loadorder(self, ldialog: LoadingDialog = None):
         if not self._loadorder:
@@ -1036,14 +1051,13 @@ f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
                 if file in self.modfiles:
                     self.modfiles[file].append(mod)
                 else:
-                    self.modfiles[file] = [utils.Mod]
+                    self.modfiles[file] = [mod]
 
         self.log.debug("Creating conflict rules...")
         for file, mods in self.modfiles.items():
             # Skip file if it comes from a single mod
             if len(mods) == 1:
                 continue
-            
 
             # Get indices of overwriting mods
             overwriting_mods = mods.copy()
@@ -1365,7 +1379,7 @@ f"{self.app.lang['loading_instance']} ({modindex}/{len(lines)})",
                     if file in self.modfiles:
                         self.modfiles[file].append(mod)
                     else:
-                        self.modfiles[file] = [utils.Mod]
+                        self.modfiles[file] = [mod]
         self.mods = mods
         self._loadorder = self.mods.copy()
         self._loadorder.reverse()

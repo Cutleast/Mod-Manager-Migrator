@@ -89,5 +89,6 @@
     "enable_selected": "Enable selected mods",
     "disable_selected": "Disable selected mods",
     "unselect_all": "Unselect all mods",
-    "number_of_mods": "Number of mods"
+    "number_of_mods": "Number of mods",
+    "saving_database": "Saving Vortex database..."
 }

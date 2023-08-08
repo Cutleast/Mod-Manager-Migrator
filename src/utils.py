@@ -128,6 +128,9 @@ class Mod:
     def __repr__(self):
         return self.name
 
+    def __str__(self):
+        return self.name
+
     def set_enabled(self, enabled: bool):
         self.enabled = enabled
     
@@ -223,6 +226,7 @@ class VortexDatabase:
                 in lines
             ):
                 raise DBAlreadyInUse
+            self.log.error("Command: " + " ".join(cmd))
             self.log.error("".join(lines[-10:])) # Just print last 10 lines
             raise Exception("Command failed! Check log for more details.")
 
