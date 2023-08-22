@@ -1436,13 +1436,13 @@ f"{self.app.lang['migrating_instance']} ({modindex}/{maximum})",
             modpath: Path = self.mods_path / mod.metadata['name']
             modpath = utils.clean_filepath(modpath)
             for fileindex, file in enumerate(mod.files):
-                # Skip if destination file already exists
-                if (modpath / file).is_file():
-                    continue
-
                 src_path = mod.path / file
                 dst_path = modpath / file
                 dst_dirs = dst_path.parent
+
+                # Skip if destination file already exists
+                if dst_path.is_file():
+                    continue
 
                 # Update progress bars
                 if ldialog:
@@ -1474,7 +1474,7 @@ f"{file.name} ({utils.scale_value(os.path.getsize(src_path))})"
                     shutil.copyfile(src_path, dst_path)
                 # Link file
                 else:
-                        os.link(src_path, dst_path)
+                    os.link(src_path, dst_path)
 
             # Write metadata to 'meta.ini' in destination mod
             metaini = utils.IniParser(modpath / 'meta.ini')
