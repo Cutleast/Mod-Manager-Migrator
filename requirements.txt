@@ -5,3 +5,4 @@ darkdetect
 requests
 nuitka
 pyperclip
+plyvel-ci

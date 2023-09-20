@@ -15,11 +15,10 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Union
 
-import subprocess
-import requests
-
-import qtpy.QtWidgets as qtw
+import plyvel as leveldb
 import qtpy.QtCore as qtc
+import qtpy.QtWidgets as qtw
+import requests
 
 from main import MainApp
 
@@ -174,10 +173,9 @@ class VortexDatabase:
 
     def __init__(self, app: MainApp):
         self.app = app
-        self.data = self.origin_data = {}
+        self.data = {}
         appdir = Path(os.getenv('APPDATA')) / 'Vortex'
         self.db_path = appdir / 'state.v2'
-        self.bin_path = app.res_path / 'bin' / 'leveldb.exe'
 
         # Set whitelist to just load relevant db keys
         self.whitelist = [
@@ -186,51 +184,41 @@ class VortexDatabase:
             'settings###mods###installPath',
             'settings###downloads###path'
         ]
-        self.blacklist = [
-            'description'
-        ]
 
         # Initialize class specific logger
         self.log = logging.getLogger(self.__repr__())
         self.log.addHandler(self.app.log_str)
         self.log.setLevel(self.app.log.level)
 
+        # Initialize database
+        try:
+            self.db = leveldb.DB(str(self.db_path))
+        except leveldb.IOError:
+            raise DBAlreadyInUse
+
     def __repr__(self):
         return "LevelDB"
 
-    def _exec_cmd(self, cmd: List[str]):
+    def open_db(self):
         """
-        Executes leveldb binary with <cmd> arguments
-        and returns output as list of lines.
+        Opens database if it is closed.
+
+        Internal use only! Use load_db instead!
         """
 
-        cmd.insert(0, str(self.bin_path))
+        if self.db.closed:
+            del self.db
+            self.db = leveldb.DB(str(self.db_path))
 
-        lines: List[str] = []
-        with subprocess.Popen(
-            cmd,
-            shell=True,
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            encoding="utf8",
-            errors="ignore"
-        ) as process:
-            for line in process.stdout:
-                lines.append(line)
+    def close_db(self):
+        """
+        Closes database if it is opened.
 
-        if process.returncode:
-            if (
-                "leveldb: error: The process cannot access the file because it is being used by another process.\n"
-                in lines
-            ):
-                raise DBAlreadyInUse
-            self.log.error("Command: " + " ".join(cmd))
-            self.log.error("".join(lines[-10:])) # Just print last 10 lines
-            raise Exception("Command failed! Check log for more details.")
+        Internal use only! Use save_db instead!
+        """
 
-        return lines
+        if not self.db.closed:
+            self.db.close()
 
     def load_db(self):
         """
@@ -239,33 +227,22 @@ class VortexDatabase:
 
         self.log.debug("Loading Vortex database...")
 
-        cmd = [
-            "-d", str(self.db_path),
-            "show",
-            "--raw",
-            "--no-json",
-            "--no-truncate",
-        ]
-        lines = self._exec_cmd(cmd)
+        self.open_db()
+        data: dict[str, str] = {}
+        for keys, value in self.db:
+            keys, value = keys.decode(), value.decode()
+            if any([
+                keys.startswith(match)
+                for match in self.whitelist
+            ]):
+                data[keys] = value
+        self.close_db()
 
-        data: Dict[str, str] = {}
-
-        for line in lines:
-            line = line.strip().removesuffix("\n")
-            key, value = line.split(': ', 1)
-            key = key.removeprefix('"')
-
-            data[key] = value
-
-        self.data = self.parse_flat_dict(data)
-
-        self.origin_data = data.copy()
-
-        # with open("debug.json", "w") as file:
-        #     json.dump(self.data, file, indent=4)
+        data = self.parse_flat_dict(data)
+        self.data = data
 
         self.log.debug("Loaded Vortex database.")
-        return self.data
+        return data
 
     def save_db(self):
         """
@@ -282,19 +259,13 @@ class VortexDatabase:
         shutil.copytree(self.db_path, f"{self.db_path}.mmm_backup")
         self.log.debug("Created database backup.")
 
-        flat_dict = self.flatten_nested_dict(self.data)
+        data = self.flatten_nested_dict(self.data)
 
-        diff = comp_dicts(flat_dict, self.origin_data, use_json=True)
-
-        for keys, value in diff.items():
-            cmd = [
-                "-d", str(self.db_path),
-                "put", keys,
-                value
-            ]
-            self._exec_cmd(cmd)
-
-        self.origin_data = flat_dict
+        self.open_db()
+        with self.db.write_batch() as batch:
+            for key, value in data.items():
+                batch.put(key.encode(), value.encode())
+        self.close_db()
 
         self.log.debug("Saved to database.")
 

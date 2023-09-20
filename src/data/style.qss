@@ -154,14 +154,14 @@ QScrollArea#scrollarea, QWidget#scrollframe {
 QScrollBar {
     background-color: transparent;
     border: 0px solid;
-    border-radius: 4px;
-    width: 10px;
+    border-radius: 3px;
+    width: 6px;
 }
 QScrollBar::handle {
     background-color: <highlight_bg>;
     border: 0px solid;
-    border-radius: 4px;
-    width: 10px;
+    border-radius: 3px;
+    width: 6px;
 }
 QScrollBar::handle:hover, QScrollBar::handle:pressed {
     background-color: <accent_color>;
