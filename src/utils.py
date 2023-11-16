@@ -49,7 +49,7 @@ class StdoutPipe:
 
     def write(self, string):
         """
-        Writes <string> to file and console.        
+        Writes <string> to file and console.
         """
 
         if string not in self.app.protocol:
@@ -65,7 +65,7 @@ class StdoutPipe:
 
     def flush(self):
         """
-        Flush.        
+        Flush.
         """
 
         self.file.flush()
@@ -75,7 +75,7 @@ class StdoutPipe:
 class UiException(Exception):
     """
     Subclass of Exception used for translated error messages.
-    
+
     Usage:
         raise UiException("[<error id>] <raw error message>")
     """
@@ -102,27 +102,26 @@ class Mod:
     """
 
     def __init__(
-            self,
-            name: str,
-            path: Path,
-            metadata: Dict[str, Any],
-            files: List[Path],
-            size: int,
-            enabled: bool,
-            installed: bool,
-        ):
-
-        self.name = name # full mod name
-        self.path = path # path of source mod folder
-        self.metadata = metadata # metadata
-        self.files = files # list of all files
-        self.size = size # size of all files
-        self.enabled = enabled # state in mod manager (True or False)
-        self.selected = True # True: mod is migrated; False: mod is ignored
-        self.installed = installed # state in instance (True or False)
-        self.overwriting_mods: List[Mod] = [] # list of overwriting mods
-        self.overwriting_files: List[Path] = [] # list of overwriting files (Vortex)
-        self.overwritten_files: List[Path] = [] # list of overwritten files (MO2)
+        self,
+        name: str,
+        path: Path,
+        metadata: Dict[str, Any],
+        files: List[Path],
+        size: int,
+        enabled: bool,
+        installed: bool,
+    ):
+        self.name = name  # full mod name
+        self.path = path  # path of source mod folder
+        self.metadata = metadata  # metadata
+        self.files = files  # list of all files
+        self.size = size  # size of all files
+        self.enabled = enabled  # state in mod manager (True or False)
+        self.selected = True  # True: mod is migrated; False: mod is ignored
+        self.installed = installed  # state in instance (True or False)
+        self.overwriting_mods: List[Mod] = []  # list of overwriting mods
+        self.overwriting_files: List[Path] = []  # list of overwriting files (Vortex)
+        self.overwritten_files: List[Path] = []  # list of overwritten files (MO2)
 
     def __repr__(self):
         return self.name
@@ -132,7 +131,7 @@ class Mod:
 
     def set_enabled(self, enabled: bool):
         self.enabled = enabled
-    
+
     def set_selected(self, selected: bool):
         self.selected = selected
 
@@ -156,8 +155,8 @@ class ModItem(qtw.QListWidgetItem):
             self.setCheckState(qtc.Qt.CheckState.Unchecked)
         else:
             self.setCheckState(qtc.Qt.CheckState.Checked)
-        
-        if self.mode == 'src':
+
+        if self.mode == "src":
             self.mod.set_selected(self.checked)
         else:
             self.mod.set_enabled(self.checked)
@@ -174,15 +173,15 @@ class VortexDatabase:
     def __init__(self, app: MainApp):
         self.app = app
         self.data = {}
-        appdir = Path(os.getenv('APPDATA')) / 'Vortex'
-        self.db_path = appdir / 'state.v2'
+        appdir = Path(os.getenv("APPDATA")) / "Vortex"
+        self.db_path = appdir / "state.v2"
 
         # Set whitelist to just load relevant db keys
         self.whitelist = [
-            'persistent###profiles',
-            'persistent###mods',
-            'settings###mods###installPath',
-            'settings###downloads###path'
+            "persistent###profiles",
+            "persistent###mods",
+            "settings###mods###installPath",
+            "settings###downloads###path",
         ]
 
         # Initialize class specific logger
@@ -231,10 +230,7 @@ class VortexDatabase:
         data: dict[str, str] = {}
         for keys, value in self.db:
             keys, value = keys.decode(), value.decode()
-            if any([
-                keys.startswith(match)
-                for match in self.whitelist
-            ]):
+            if any([keys.startswith(match) for match in self.whitelist]):
                 data[keys] = value
         self.close_db()
 
@@ -284,12 +280,12 @@ class VortexDatabase:
 
         flat_dict: Dict[str, str] = {}
 
-        def flatten_dict_helper(dictionary, prefix=''):
+        def flatten_dict_helper(dictionary, prefix=""):
             for key, value in dictionary.items():
                 if isinstance(value, dict):
-                    flatten_dict_helper(value, prefix + key + '###')
+                    flatten_dict_helper(value, prefix + key + "###")
                 else:
-                    flat_dict[prefix + key] = json.dumps(value, separators=(',', ':'))
+                    flat_dict[prefix + key] = json.dumps(value, separators=(",", ":"))
 
         flatten_dict_helper(nested_dict)
 
@@ -360,7 +356,7 @@ class IniParser:
         dir = f"\\\\?\\{self.filename.parent}"
         filename = f"\\\\?\\{self.filename}"
         os.makedirs(dir, exist_ok=True)
-        with open(filename, 'w', encoding='utf8') as file:
+        with open(filename, "w", encoding="utf8") as file:
             file.writelines(lines)
 
     def load_file(self):
@@ -368,7 +364,7 @@ class IniParser:
         Loads and parses data from file. Returns it as nested dict.
         """
 
-        with open(self.filename, 'r', encoding='utf8') as file:
+        with open(self.filename, "r", encoding="utf8") as file:
             lines = file.readlines()
 
         data = {}
@@ -382,7 +378,7 @@ class IniParser:
                 continue
             elif "=" in line:
                 key, value = line.split("=", 1)
-                cur_section[key] = value.strip('\n')
+                cur_section[key] = value.strip("\n")
 
         self.data = data
         return self.data
@@ -401,10 +397,7 @@ def get_latest_version():
         url = "https://raw.githubusercontent.com/Cutleast/Mod-Manager-Migrator/main/version"
         response = requests.get(url, timeout=3)
         if response.status_code == 200:
-            new_version = response.content.decode(
-                encoding='utf8',
-                errors='ignore'
-            )
+            new_version = response.content.decode(encoding="utf8", errors="ignore")
             new_version = float(new_version.strip())
             return new_version
 
@@ -412,14 +405,16 @@ def get_latest_version():
     except ValueError:
         return 0.0
 
+
 # Read blacklist
 blacklist = []
-with open('.\\data\\blacklist', 'r', encoding='utf8') as file:
+with open(".\\data\\blacklist", "r", encoding="utf8") as file:
     for line in file.readlines():
         line = line.strip()
         if line:
             blacklist.append(line)
 print(f"{blacklist = }")
+
 
 # Read folder and save files with relative paths to list #############
 def create_folder_list(folder: Path, lower=True):
@@ -434,7 +429,7 @@ def create_folder_list(folder: Path, lower=True):
 
     for root, _, _files in os.walk(folder):
         for f in _files:
-            if f not in blacklist: # check if in blacklist
+            if f not in blacklist:  # check if in blacklist
                 path = os.path.join(root, f)
                 path = path.removeprefix(f"{folder}\\")
                 if lower:
@@ -444,6 +439,7 @@ def create_folder_list(folder: Path, lower=True):
 
     return files
 
+
 # Define function to scale value to format ###########################
 def scale_value(value: Union[int, float], suffix="B"):
     """
@@ -452,14 +448,13 @@ def scale_value(value: Union[int, float], suffix="B"):
     and returns it as string; for e.g:
 
     1253656 => '1.20MB'
-    
+
     1253656678 => '1.17GB'
     """
 
     factor = 1024
     for unit in ["", "K", "M", "G", "T", "P", "H"]:
         if value < factor:
-
             if f"{value:.2f}".split(".")[1] == "00":
                 return f"{int(value)}{unit}{suffix}"
 
@@ -468,6 +463,7 @@ def scale_value(value: Union[int, float], suffix="B"):
         value /= factor
 
     return str(value)
+
 
 # Define function to calculate folder size ###########################
 def get_folder_size(folder: str):
@@ -492,12 +488,13 @@ def get_folder_size(folder: str):
 
     return total_size
 
+
 # Define function to move windows to center of parent ################
 def center(widget: qtw.QWidget, referent: qtw.QWidget = None):
     """
     Moves <widget> to center of its parent or if given to
     center of <referent>.
-    
+
     Parameters:
         widget: QWidget (widget to move)
         referent: QWidget (widget reference for center coords;
@@ -520,6 +517,7 @@ def center(widget: qtw.QWidget, referent: qtw.QWidget = None):
 
     widget.move(x, y)
 
+
 # Define function to get difference between two time strings #########
 def get_diff(start_time: str, end_time: str, str_format: str = "%H:%M:%S"):
     """
@@ -531,6 +529,7 @@ def get_diff(start_time: str, end_time: str, str_format: str = "%H:%M:%S"):
         - datetime.strptime(start_time, str_format)
     )
     return tdelta
+
 
 # Define function to wrap string #####################################
 def wrap_string(string: str, wrap_length: int):
@@ -546,9 +545,10 @@ def wrap_string(string: str, wrap_length: int):
                 characters.insert(i, " ")
                 w = 0
             w += 1
-        return ''.join(characters)
+        return "".join(characters)
     else:
         return string
+
 
 # Define function to clean string from illegal path chars ############
 def clean_string(source: str):
@@ -564,12 +564,10 @@ def clean_string(source: str):
 
     illegal_chars = """;<>\\/{}[]+=|*?&,:'"`"""
 
-    output = ''.join([
-        c for c in source
-        if c not in illegal_chars
-    ])
-    
+    output = "".join([c for c in source if c not in illegal_chars])
+
     return output
+
 
 # Define function to clean file paths from illegal chars #############
 def clean_filepath(filepath: Path):
@@ -591,10 +589,11 @@ def clean_filepath(filepath: Path):
         cleaned_part = clean_string(part)
 
         path_parts[i] = cleaned_part
-    
+
     cleaned_path = Path(*path_parts)
 
     return cleaned_path
+
 
 def comp_dicts(dict1: dict, dict2: dict, use_json: bool = False):
     """
@@ -609,11 +608,7 @@ def comp_dicts(dict1: dict, dict2: dict, use_json: bool = False):
     """
 
     if not use_json:
-        diff = {
-            key: value
-            for key, value in dict2.items()
-            if dict1.get(key) != value
-        }
+        diff = {key: value for key, value in dict2.items() if dict1.get(key) != value}
     else:
         diff = {}
 

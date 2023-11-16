@@ -637,7 +637,15 @@ f"{self.app.lang['loading_instance']} ({modindex}/{len(profmods)})",
         self.log.info("Migrating mods to instance...")
 
         game = self.app.game.lower()
-        installed_mods = self.database['persistent']['mods'][game]
+        if "mods" in self.database["persistent"].keys():
+            if game in self.database["persistent"]["mods"].keys():
+                installed_mods: dict = self.database['persistent']['mods'][game]
+            else:
+                installed_mods: dict = {}
+                self.database["persistent"]["mods"][game] = installed_mods
+        else:
+            installed_mods: dict = {}
+            self.database["persistent"] = {"mods": {game: installed_mods}}
 
         # Check installed mods
         for mod in self.mods:
@@ -814,6 +822,7 @@ f"{file.name} ({utils.scale_value(os.path.getsize(src_path))})"
                     os.link(src_path, dst_path)
 
         self.log.debug("Saving database...")
+        self.database["persistent"]["mods"][game] = installed_mods
         # Update progress bars
         if ldialog:
             ldialog.updateProgress(

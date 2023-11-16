@@ -46,9 +46,7 @@ class SourceDialog(qtw.QDialog):
         self.log.setLevel(self.app.log.level)
 
         # Configure dialog
-        self.setWindowTitle(
-            f"{self.app.name} - {self.app.lang['select_source']}"
-        )
+        self.setWindowTitle(f"{self.app.name} - {self.app.lang['select_source']}")
         self.setWindowIcon(self.app.root.windowIcon())
         self.setModal(True)
         self.setObjectName("root")
@@ -63,16 +61,17 @@ class SourceDialog(qtw.QDialog):
 
         # Create layout for mod managers
         manager_layout = qtw.QGridLayout()
-        columns = 2 # number of columns in grid
+        columns = 2  # number of columns in grid
         self.modmanagers_widget.setLayout(manager_layout)
 
         # Label with instruction
-        label = qtw.QLabel(self.app.lang['select_source_text'])
+        label = qtw.QLabel(self.app.lang["select_source_text"])
         label.setObjectName("titlelabel")
         label.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
         manager_layout.addWidget(label, 0, 0, 1, columns)
 
         buttons: List[qtw.QPushButton] = []
+
         # Define functions for selection logic
         def set_src(source: str):
             self.app.source = source
@@ -81,6 +80,7 @@ class SourceDialog(qtw.QDialog):
                     button.setChecked(False)
                 else:
                     button.setChecked(True)
+
         def func(source):
             return lambda: set_src(source)
 
@@ -90,10 +90,10 @@ class SourceDialog(qtw.QDialog):
             button.setText(modmanager)
             button.setCheckable(True)
             button.clicked.connect(func(modmanager))
-            row = i // columns # calculate row
-            col = i % columns # calculate column
+            row = i // columns  # calculate row
+            col = i % columns  # calculate column
             buttons.append(button)
-            manager_layout.addWidget(button, row+1, col)
+            manager_layout.addWidget(button, row + 1, col)
 
         # Select first mod manager as default
         buttons[0].setChecked(True)
@@ -102,7 +102,7 @@ class SourceDialog(qtw.QDialog):
 
         # Create second page (instance selection) ####################
         self.instances_widget = qtw.QWidget()
-        self.instances_widget.hide() # hide as default
+        self.instances_widget.hide()  # hide as default
         layout.addWidget(self.instances_widget)
 
         # Create layout for instances
@@ -111,7 +111,7 @@ class SourceDialog(qtw.QDialog):
 
         # Add label with instruction
         label = qtw.QLabel()
-        label.setText(self.app.lang['select_src_instance_text'])
+        label.setText(self.app.lang["select_src_instance_text"])
         label.setObjectName("titlelabel")
         label.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
         instances_layout.addWidget(label)
@@ -134,7 +134,7 @@ class SourceDialog(qtw.QDialog):
         layout.addLayout(self.button_layout)
 
         # Cancel button
-        self.src_cancel_button = qtw.QPushButton(self.app.lang['cancel'])
+        self.src_cancel_button = qtw.QPushButton(self.app.lang["cancel"])
         self.src_cancel_button.clicked.connect(self.accept)
         self.button_layout.addWidget(self.src_cancel_button)
 
@@ -142,24 +142,20 @@ class SourceDialog(qtw.QDialog):
         self.button_layout.addSpacing(200)
 
         # Back button with icon
-        self.back_button = qtw.QPushButton(self.app.lang['back'])
-        self.back_button.setIcon(qta.icon(
-            'fa5s.chevron-left',
-            color=self.app.theme['text_color']
-            )
+        self.back_button = qtw.QPushButton(self.app.lang["back"])
+        self.back_button.setIcon(
+            qta.icon("fa5s.chevron-left", color=self.app.theme["text_color"])
         )
         self.back_button.setDisabled(True)
         self.button_layout.addWidget(self.back_button)
 
         # Next button with icon
-        self.next_button = qtw.QPushButton(self.app.lang['next'])
-        self.next_button.setLayoutDirection( # Switch icon and text
+        self.next_button = qtw.QPushButton(self.app.lang["next"])
+        self.next_button.setLayoutDirection(  # Switch icon and text
             qtc.Qt.LayoutDirection.RightToLeft
         )
-        self.next_button.setIcon(qta.icon(
-            'fa5s.chevron-right',
-            color=self.app.theme['text_color']
-            )
+        self.next_button.setIcon(
+            qta.icon("fa5s.chevron-right", color=self.app.theme["text_color"])
         )
         self.next_button.clicked.connect(self.goto_secnd_page)
         self.button_layout.addWidget(self.next_button)
@@ -187,12 +183,10 @@ class SourceDialog(qtw.QDialog):
 
         # Update next button
         self.next_button.clicked.disconnect()
-        self.next_button.setText(self.app.lang['next'])
+        self.next_button.setText(self.app.lang["next"])
         self.next_button.clicked.connect(self.goto_secnd_page)
-        self.next_button.setIcon(qta.icon(
-            'fa5s.chevron-right',
-            color=self.app.theme['text_color']
-            )
+        self.next_button.setIcon(
+            qta.icon("fa5s.chevron-right", color=self.app.theme["text_color"])
         )
         self.next_button.setDisabled(False)
 
@@ -212,9 +206,9 @@ class SourceDialog(qtw.QDialog):
 
         # Create source mod manager instance
         # if not already done
-        if self.app.source == 'Vortex':
+        if self.app.source == "Vortex":
             self.modinstance = managers.VortexInstance(self.app)
-        elif self.app.source == 'ModOrganizer':
+        elif self.app.source == "ModOrganizer":
             self.modinstance = managers.MO2Instance(self.app)
         else:
             raise utils.UiException(
@@ -229,13 +223,11 @@ class SourceDialog(qtw.QDialog):
             self.instances_box.clear()
             self.instances_box.addItems(instances)
             self.instances_box.setCurrentRow(0)
-        
+
         # Show error message and
         # go to first page otherwise
         else:
-            raise utils.UiException(
-                "[error_no_instances] Found no instances!"
-            )
+            raise utils.UiException("[error_no_instances] Found no instances!")
 
         # Hide first page and show second page
         self.modmanagers_widget.hide()
@@ -243,7 +235,7 @@ class SourceDialog(qtw.QDialog):
 
         # Bind next button to done
         self.next_button.clicked.disconnect()
-        self.next_button.setText(self.app.lang['done'])
+        self.next_button.setText(self.app.lang["done"])
         self.next_button.clicked.connect(self.finish)
         self.next_button.setIcon(qtg.QIcon())
 
@@ -262,7 +254,7 @@ class SourceDialog(qtw.QDialog):
     def finish(self):
         """
         Loads selected instance, displays
-        it in main window and closes dialog.        
+        it in main window and closes dialog.
         """
 
         # Load instance from source mod manager
@@ -270,9 +262,7 @@ class SourceDialog(qtw.QDialog):
         loadingdialog = LoadingDialog(
             parent=self,
             app=self.app,
-            func=lambda ldialog: (
-                self.modinstance.load_instance(name, ldialog)
-            )
+            func=lambda ldialog: (self.modinstance.load_instance(name, ldialog)),
         )
         loadingdialog.exec()
         self.app.src_modinstance = self.modinstance
@@ -281,9 +271,9 @@ class SourceDialog(qtw.QDialog):
         self.modinstance.show_src_widget()
 
         # Update source button
-        self.app.src_button.setText(self.app.lang['edit_source'])
+        self.app.src_button.setText(self.app.lang["edit_source"])
         self.app.src_button.clicked.disconnect()
-        #self.back_button.setDisabled(True)
+        # self.back_button.setDisabled(True)
         self.app.src_button.clicked.connect(self.show)
 
         # Enable destination button
@@ -299,15 +289,15 @@ class SourceDialog(qtw.QDialog):
         self.app.dst_widget = None
         self.app.destination = None
         self.app.dst_modinstance = None
-        self.app.dst_button.setText(self.app.lang['select_source'])
+        self.app.dst_button.setText(self.app.lang["select_source"])
         self.app.dst_button.clicked.disconnect()
         self.app.dst_button.clicked.connect(
             lambda: DestinationDialog(self.app.root, self.app).show()
         )
-        self.app.mig_icon.setPixmap(qta.icon(
-            'fa5s.chevron-right',
-            color=self.app.theme['text_color']
-            ).pixmap(120, 120)
+        self.app.mig_icon.setPixmap(
+            qta.icon("fa5s.chevron-right", color=self.app.theme["text_color"]).pixmap(
+                120, 120
+            )
         )
 
         # Close dialog
@@ -334,9 +324,7 @@ class DestinationDialog(qtw.QDialog):
         self.log.setLevel(self.app.log.level)
 
         # Configure dialog
-        self.setWindowTitle(
-            f"{self.app.name} - {self.app.lang['select_destination']}"
-        )
+        self.setWindowTitle(f"{self.app.name} - {self.app.lang['select_destination']}")
         self.setWindowIcon(self.app.root.windowIcon())
         self.setModal(True)
         self.setObjectName("root")
@@ -351,16 +339,17 @@ class DestinationDialog(qtw.QDialog):
 
         # Create layout for mod managers
         manager_layout = qtw.QGridLayout()
-        columns = 2 # number of columns in grid
+        columns = 2  # number of columns in grid
         self.modmanagers_widget.setLayout(manager_layout)
 
         # Label with instruction
-        label = qtw.QLabel(self.app.lang['select_destination_text'])
+        label = qtw.QLabel(self.app.lang["select_destination_text"])
         label.setObjectName("titlelabel")
         label.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
         manager_layout.addWidget(label, 0, 0, 1, columns)
 
         buttons: List[qtw.QPushButton] = []
+
         # Define functions for selection logic
         def set_dst(destination: str):
             self.app.destination = destination
@@ -369,6 +358,7 @@ class DestinationDialog(qtw.QDialog):
                     button.setChecked(False)
                 else:
                     button.setChecked(True)
+
         def func(destination):
             return lambda: set_dst(destination)
 
@@ -378,10 +368,10 @@ class DestinationDialog(qtw.QDialog):
             button.setText(modmanager)
             button.setCheckable(True)
             button.clicked.connect(func(modmanager))
-            row = i // columns # calculate row
-            col = i % columns # calculate column
+            row = i // columns  # calculate row
+            col = i % columns  # calculate column
             buttons.append(button)
-            manager_layout.addWidget(button, row+1, col)
+            manager_layout.addWidget(button, row + 1, col)
 
             # Disable button if it is source
             if modmanager == self.app.source:
@@ -398,7 +388,7 @@ class DestinationDialog(qtw.QDialog):
 
         # Create second page (instance selection) ####################
         self.instance_widget = qtw.QWidget()
-        self.instance_widget.hide() # hide as default
+        self.instance_widget.hide()  # hide as default
         layout.addWidget(self.instance_widget)
 
         # Add layout for instance settings
@@ -412,37 +402,39 @@ class DestinationDialog(qtw.QDialog):
         instance_layout.addLayout(details_layout, 1)
 
         # Add info label for hardlink mode
-        hardlink_notice = qtw.QLabel(self.app.lang['hardlink_notice'])
+        hardlink_notice = qtw.QLabel(self.app.lang["hardlink_notice"])
         hardlink_notice.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
         details_layout.addWidget(hardlink_notice, 0, 0, 1, 3)
         # Add info label for copy mode
-        copy_notice = qtw.QLabel(self.app.lang['copy_notice'])
+        copy_notice = qtw.QLabel(self.app.lang["copy_notice"])
         copy_notice.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
         copy_notice.hide()
         details_layout.addWidget(copy_notice, 1, 0, 1, 3)
 
         # Add inputbox for name
-        label = qtw.QLabel(self.app.lang['instance_name'])
+        label = qtw.QLabel(self.app.lang["instance_name"])
         details_layout.addWidget(label, 2, 0)
         self.name_box = qtw.QLineEdit()
         self.name_box.setText(self.app.src_modinstance.name)
         details_layout.addWidget(self.name_box, 2, 1)
 
         # Add inputbox for instance path
-        label = qtw.QLabel(self.app.lang['instance_path'])
+        label = qtw.QLabel(self.app.lang["instance_path"])
         details_layout.addWidget(label, 3, 0)
         self.path_box = qtw.QLineEdit()
         if self.app.destination is not None:
-            self.path_box.setText(os.path.join(
-                    os.getenv('LOCALAPPDATA'),
+            self.path_box.setText(
+                os.path.join(
+                    os.getenv("LOCALAPPDATA"),
                     self.app.destination,
-                    self.name_box.text()
+                    self.name_box.text(),
                 )
             )
         details_layout.addWidget(self.path_box, 3, 1)
+
         def browse_path():
             file_dialog = qtw.QFileDialog(self)
-            file_dialog.setWindowTitle(self.app.lang['browse'])
+            file_dialog.setWindowTitle(self.app.lang["browse"])
             file_dialog.setDirectory(str(Path(self.path_box.text()).parent))
             file_dialog.setFileMode(qtw.QFileDialog.FileMode.Directory)
             if file_dialog.exec():
@@ -450,118 +442,97 @@ class DestinationDialog(qtw.QDialog):
                 folder = os.path.normpath(folder)
                 self.path_box.setText(folder)
                 self.name_box.setText(os.path.basename(folder))
-                self.dlpath_box.setText(
-                    os.path.join(folder, 'downloads')
-                )
-                self.modspath_box.setText(
-                    os.path.join(folder, 'mods')
-                )
-                self.profilespath_box.setText(
-                    os.path.join(folder, 'profiles')
-                )
-                self.overwritepath_box.setText(
-                    os.path.join(folder, 'overwrite')
-                )
-        self.browse_button = qtw.QPushButton(self.app.lang['browse'])
+                self.dlpath_box.setText(os.path.join(folder, "downloads"))
+                self.modspath_box.setText(os.path.join(folder, "mods"))
+                self.profilespath_box.setText(os.path.join(folder, "profiles"))
+                self.overwritepath_box.setText(os.path.join(folder, "overwrite"))
+
+        self.browse_button = qtw.QPushButton(self.app.lang["browse"])
         self.browse_button.clicked.connect(browse_path)
         details_layout.addWidget(self.browse_button, 3, 2)
 
         # Add inputbox for downloads path
-        label = qtw.QLabel(self.app.lang['download_path'])
+        label = qtw.QLabel(self.app.lang["download_path"])
         details_layout.addWidget(label, 4, 0)
         self.dlpath_box = qtw.QLineEdit()
-        self.dlpath_box.setText(os.path.join(
-                self.path_box.text(),
-                'downloads'
-            )
-        )
+        self.dlpath_box.setText(os.path.join(self.path_box.text(), "downloads"))
         details_layout.addWidget(self.dlpath_box, 4, 1)
+
         def browse_dlpath():
             file_dialog = qtw.QFileDialog(self)
-            file_dialog.setWindowTitle(self.app.lang['browse'])
+            file_dialog.setWindowTitle(self.app.lang["browse"])
             file_dialog.setDirectory(self.dlpath_box.text())
             file_dialog.setFileMode(qtw.QFileDialog.FileMode.Directory)
             if file_dialog.exec():
                 folder = file_dialog.selectedFiles()[0]
                 folder = os.path.normpath(folder)
                 self.dlpath_box.setText(folder)
-        self.browse_dlpath_button = qtw.QPushButton(self.app.lang['browse'])
+
+        self.browse_dlpath_button = qtw.QPushButton(self.app.lang["browse"])
         self.browse_dlpath_button.clicked.connect(browse_dlpath)
         details_layout.addWidget(self.browse_dlpath_button, 4, 2)
 
         # Add inputbox for mods path
-        label = qtw.QLabel(self.app.lang['mods_path'])
+        label = qtw.QLabel(self.app.lang["mods_path"])
         details_layout.addWidget(label, 5, 0)
         self.modspath_box = qtw.QLineEdit()
-        self.modspath_box.setText(os.path.join(
-                self.path_box.text(),
-                'mods'
-            )
-        )
+        self.modspath_box.setText(os.path.join(self.path_box.text(), "mods"))
         details_layout.addWidget(self.modspath_box, 5, 1)
+
         def browse_modspath():
             file_dialog = qtw.QFileDialog(self)
-            file_dialog.setWindowTitle(self.app.lang['browse'])
+            file_dialog.setWindowTitle(self.app.lang["browse"])
             file_dialog.setDirectory(self.modspath_box.text())
             file_dialog.setFileMode(qtw.QFileDialog.FileMode.Directory)
             if file_dialog.exec():
                 folder = file_dialog.selectedFiles()[0]
                 folder = os.path.normpath(folder)
                 self.modspath_box.setText(folder)
-        self.browse_mods_button = qtw.QPushButton(self.app.lang['browse'])
+
+        self.browse_mods_button = qtw.QPushButton(self.app.lang["browse"])
         self.browse_mods_button.clicked.connect(browse_modspath)
         details_layout.addWidget(self.browse_mods_button, 5, 2)
 
         # Add inputbox for profiles path
-        label = qtw.QLabel(self.app.lang['profiles_path'])
+        label = qtw.QLabel(self.app.lang["profiles_path"])
         details_layout.addWidget(label, 6, 0)
         self.profilespath_box = qtw.QLineEdit()
-        self.profilespath_box.setText(os.path.join(
-                self.path_box.text(),
-                'profiles'
-            )
-        )
+        self.profilespath_box.setText(os.path.join(self.path_box.text(), "profiles"))
         details_layout.addWidget(self.profilespath_box, 6, 1)
+
         def browse_profilespath():
             file_dialog = qtw.QFileDialog(self)
-            file_dialog.setWindowTitle(self.app.lang['browse'])
+            file_dialog.setWindowTitle(self.app.lang["browse"])
             file_dialog.setDirectory(self.profilespath_box.text())
             file_dialog.setFileMode(qtw.QFileDialog.FileMode.Directory)
             if file_dialog.exec():
                 folder = file_dialog.selectedFiles()[0]
                 folder = os.path.normpath(folder)
                 self.profilespath_box.setText(folder)
-        self.browse_profiles_button = qtw.QPushButton(
-            self.app.lang['browse']
-        )
+
+        self.browse_profiles_button = qtw.QPushButton(self.app.lang["browse"])
         self.browse_profiles_button.clicked.connect(browse_profilespath)
         details_layout.addWidget(self.browse_profiles_button, 6, 2)
 
         # Add inputbox for overwrite path
-        label = qtw.QLabel(self.app.lang['overwrite_path'])
+        label = qtw.QLabel(self.app.lang["overwrite_path"])
         details_layout.addWidget(label, 7, 0)
         self.overwritepath_box = qtw.QLineEdit()
-        self.overwritepath_box.setText(os.path.join(
-                self.path_box.text(),
-                'overwrite'
-            )
-        )
+        self.overwritepath_box.setText(os.path.join(self.path_box.text(), "overwrite"))
         details_layout.addWidget(self.overwritepath_box, 7, 1)
+
         def browse_overwritepath():
             file_dialog = qtw.QFileDialog(self)
-            file_dialog.setWindowTitle(self.app.lang['browse'])
+            file_dialog.setWindowTitle(self.app.lang["browse"])
             file_dialog.setDirectory(self.overwritepath_box.text())
             file_dialog.setFileMode(qtw.QFileDialog.FileMode.Directory)
             if file_dialog.exec():
                 folder = file_dialog.selectedFiles()[0]
                 folder = os.path.normpath(folder)
                 self.overwritepath_box.setText(folder)
-        self.browse_overwrites_button = qtw.QPushButton(
-            self.app.lang['browse']
-        )
-        self.browse_overwrites_button.clicked.connect(
-            browse_overwritepath
-        )
+
+        self.browse_overwrites_button = qtw.QPushButton(self.app.lang["browse"])
+        self.browse_overwrites_button.clicked.connect(browse_overwritepath)
         details_layout.addWidget(self.browse_overwrites_button, 7, 2)
         ##############################################################
 
@@ -571,31 +542,31 @@ class DestinationDialog(qtw.QDialog):
         instance_layout.addWidget(hardlink_mode_widget, 1)
 
         # Add button for hardlink mode
-        hardlink_mode_button = qtw.QPushButton(
-            self.app.lang['hardlink_mode']
+        hardlink_mode_button = qtw.QPushButton(self.app.lang["hardlink_mode"])
+        hardlink_mode_button.clicked.connect(
+            lambda: (
+                copy_mode_button.setChecked(False),
+                copy_notice.hide(),
+                hardlink_notice.show(),
+                hardlink_mode_button.setChecked(True),
+                self.app.set_mode("hardlink"),
+            )
         )
-        hardlink_mode_button.clicked.connect(lambda: (
-            copy_mode_button.setChecked(False),
-            copy_notice.hide(),
-            hardlink_notice.show(),
-            hardlink_mode_button.setChecked(True),
-            self.app.set_mode('hardlink'),
-        ))
         hardlink_mode_button.setCheckable(True)
         hardlink_mode_button.setChecked(True)
         mode_layout.addWidget(hardlink_mode_button)
 
         # Add button for copy mode
-        copy_mode_button = qtw.QPushButton(
-            self.app.lang['copy_mode']
+        copy_mode_button = qtw.QPushButton(self.app.lang["copy_mode"])
+        copy_mode_button.clicked.connect(
+            lambda: (
+                hardlink_mode_button.setChecked(False),
+                hardlink_notice.hide(),
+                copy_notice.show(),
+                copy_mode_button.setChecked(True),
+                self.app.set_mode("copy"),
+            )
         )
-        copy_mode_button.clicked.connect(lambda: (
-            hardlink_mode_button.setChecked(False),
-            hardlink_notice.hide(),
-            copy_notice.show(),
-            copy_mode_button.setChecked(True),
-            self.app.set_mode('copy'),
-        ))
         copy_mode_button.setCheckable(True)
         mode_layout.addWidget(copy_mode_button)
 
@@ -608,7 +579,7 @@ class DestinationDialog(qtw.QDialog):
 
         # Cancel button
         self.cancel_button = qtw.QPushButton()
-        self.cancel_button.setText(self.app.lang['cancel'])
+        self.cancel_button.setText(self.app.lang["cancel"])
         self.cancel_button.clicked.connect(self.accept)
         self.button_layout.addWidget(self.cancel_button)
 
@@ -617,25 +588,21 @@ class DestinationDialog(qtw.QDialog):
 
         # Back button with icon
         self.back_button = qtw.QPushButton()
-        self.back_button.setText(self.app.lang['back'])
-        self.back_button.setIcon(qta.icon(
-                'fa5s.chevron-left',
-                color=self.app.theme['text_color']
-            )
+        self.back_button.setText(self.app.lang["back"])
+        self.back_button.setIcon(
+            qta.icon("fa5s.chevron-left", color=self.app.theme["text_color"])
         )
         self.back_button.setDisabled(True)
         self.button_layout.addWidget(self.back_button)
 
         # Next button with icon
         self.next_button = qtw.QPushButton()
-        self.next_button.setLayoutDirection( # switch icon and text
+        self.next_button.setLayoutDirection(  # switch icon and text
             qtc.Qt.LayoutDirection.RightToLeft
         )
-        self.next_button.setText(self.app.lang['next'])
-        self.next_button.setIcon(qta.icon(
-                'fa5s.chevron-right',
-                color=self.app.theme['text_color']
-            )
+        self.next_button.setText(self.app.lang["next"])
+        self.next_button.setIcon(
+            qta.icon("fa5s.chevron-right", color=self.app.theme["text_color"])
         )
         self.next_button.clicked.connect(self.goto_secnd_page)
         self.button_layout.addWidget(self.next_button)
@@ -645,7 +612,7 @@ class DestinationDialog(qtw.QDialog):
 
     def goto_first_page(self):
         """
-        Hides second page and shows first page.        
+        Hides second page and shows first page.
         """
 
         # Hide second page and show first page
@@ -658,12 +625,10 @@ class DestinationDialog(qtw.QDialog):
 
         # Update next button
         self.next_button.clicked.disconnect(self.finish)
-        self.next_button.setText(self.app.lang['next'])
+        self.next_button.setText(self.app.lang["next"])
         self.next_button.clicked.connect(self.goto_secnd_page)
-        self.next_button.setIcon(qta.icon(
-                'fa5s.chevron-right',
-                color=self.app.theme['text_color']
-            )
+        self.next_button.setIcon(
+            qta.icon("fa5s.chevron-right", color=self.app.theme["text_color"])
         )
         self.next_button.setDisabled(False)
 
@@ -684,21 +649,17 @@ class DestinationDialog(qtw.QDialog):
         # Preconfigure instance if Vortex is
         # selected as destination since most of
         # the paths are fixed in its database
-        vortex = self.app.destination == 'Vortex'
-        mo2 = self.app.destination == 'ModOrganizer'
+        vortex = self.app.destination == "Vortex"
+        mo2 = self.app.destination == "ModOrganizer"
         if vortex:
             self.modinstance = managers.VortexInstance(self.app)
 
-            app_path = Path(os.getenv('APPDATA'))
-            app_path = app_path / 'Vortex' / self.app.game.lower()
+            app_path = Path(os.getenv("APPDATA"))
+            app_path = app_path / "Vortex" / self.app.game.lower()
             self.path_box.setText(str(app_path))
             self.modspath_box.setText(str(self.modinstance.mods_path))
-            self.dlpath_box.setText(
-                str(self.modinstance.paths.get('download_dir', ""))
-            )
-            self.profilespath_box.setText(
-                str(app_path / 'profiles')
-            )
+            self.dlpath_box.setText(str(self.modinstance.paths.get("download_dir", "")))
+            self.profilespath_box.setText(str(app_path / "profiles"))
             self.overwritepath_box.setText("")
         elif mo2:
             self.modinstance = managers.MO2Instance(self.app)
@@ -725,7 +686,7 @@ class DestinationDialog(qtw.QDialog):
 
         # Bind next button to done
         self.next_button.clicked.disconnect(self.goto_secnd_page)
-        self.next_button.setText(self.app.lang['done'])
+        self.next_button.setText(self.app.lang["done"])
         self.next_button.clicked.connect(self.finish)
         self.next_button.setIcon(qtg.QIcon())
 
@@ -744,7 +705,7 @@ class DestinationDialog(qtw.QDialog):
     def finish(self):
         """
         Merges instance settings with instance from source.
-        Displays data in main window and closes dialog.        
+        Displays data in main window and closes dialog.
         """
 
         # Get user input
@@ -765,7 +726,7 @@ class DestinationDialog(qtw.QDialog):
 source and destination paths must not be the same!"
             )
         # Check if drives match when mode is 'hardlink'
-        if (self.app.mode == 'hardlink') and (src_drive != dst_drive):
+        if (self.app.mode == "hardlink") and (src_drive != dst_drive):
             self.app.log.error(
                 f"\
 Failed to create destination instance: \
@@ -776,33 +737,31 @@ Hardlinks must be on the same drive. \
             ErrorDialog(
                 parent=self,
                 app=self.app,
-                title=self.app.lang['error'],
-                text=self.app.lang['hardlink_drive_error']\
-                .replace("[DESTDRIVE]", dst_drive)\
+                title=self.app.lang["error"],
+                text=self.app.lang["hardlink_drive_error"]
+                .replace("[DESTDRIVE]", dst_drive)
                 .replace("[SOURCEDRIVE]", src_drive),
-                yesno=False
+                yesno=False,
             ).exec()
             return
 
         # Create destination instance
-        if self.app.destination == 'Vortex':
+        if self.app.destination == "Vortex":
+            instance_data = {"name": name}
+        elif self.app.destination == "ModOrganizer":
             instance_data = {
-                'name': name
-            }
-        elif self.app.destination == 'ModOrganizer':
-            instance_data = {
-                'name': name,
-                'paths': {
-                    'base_dir': instance_path,
-                    'mods_dir': mods_path,
-                    'download_dir': dl_path,
-                    'profiles_dir': profs_path,
-                    'overwrite_dir': overw_path
-                }
+                "name": name,
+                "paths": {
+                    "base_dir": instance_path,
+                    "mods_dir": mods_path,
+                    "download_dir": dl_path,
+                    "profiles_dir": profs_path,
+                    "overwrite_dir": overw_path,
+                },
             }
 
-            appdata_path = Path(os.getenv('LOCALAPPDATA'))
-            appdata_path = appdata_path / 'ModOrganizer' / name
+            appdata_path = Path(os.getenv("LOCALAPPDATA"))
+            appdata_path = appdata_path / "ModOrganizer" / name
             # Check if folders already exist
             exist = False
             if appdata_path.is_dir():
@@ -817,9 +776,9 @@ Hardlinks must be on the same drive. \
                 self.app.log.warning("Instance data will be wiped!")
                 qtw.QMessageBox.warning(
                     self.app.root,
-                    self.app.lang['warning'],
-                    self.app.lang['wipe_notice'],
-                    buttons=qtw.QMessageBox.StandardButton.Ok
+                    self.app.lang["warning"],
+                    self.app.lang["wipe_notice"],
+                    buttons=qtw.QMessageBox.StandardButton.Ok,
                 )
         else:
             raise ValueError(f"Unsupported mod manager: {self.app.destination}")
@@ -835,17 +794,17 @@ Hardlinks must be on the same drive. \
         self.modinstance.show_dst_widget()
 
         # Update destination button
-        self.app.dst_button.setText(self.app.lang['edit_destination'])
+        self.app.dst_button.setText(self.app.lang["edit_destination"])
         self.app.dst_button.clicked.disconnect()
         self.back_button.setDisabled(True)
         self.app.dst_button.clicked.connect(self.show)
 
         # Update migrate button and icon
         self.app.mig_button.setDisabled(False)
-        self.app.mig_icon.setPixmap(qta.icon(
-                'fa5s.chevron-right',
-                color=self.app.theme['accent_color']
-            ).pixmap(120, 120)
+        self.app.mig_icon.setPixmap(
+            qta.icon("fa5s.chevron-right", color=self.app.theme["accent_color"]).pixmap(
+                120, 120
+            )
         )
 
         # Close dialog
@@ -871,9 +830,7 @@ class GameDialog(qtw.QDialog):
         self.log.setLevel(self.app.log.level)
 
         # Configure dialog
-        self.setWindowTitle(
-            f"{self.app.name} - {self.app.lang['select_game']}"
-        )
+        self.setWindowTitle(f"{self.app.name} - {self.app.lang['select_game']}")
         self.setWindowIcon(self.app.root.windowIcon())
         self.setModal(True)
         self.setObjectName("root")
@@ -885,16 +842,14 @@ class GameDialog(qtw.QDialog):
 
         # Add label with instruction
         label = qtw.QLabel()
-        label.setText(self.app.lang['select_game_text'])
+        label.setText(self.app.lang["select_game_text"])
         label.setObjectName("titlelabel")
         label.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
         layout.addWidget(label)
 
         # Add listbox for games
         self.games_box = qtw.QListWidget()
-        self.games_box.setSelectionMode(
-            qtw.QListWidget.SelectionMode.SingleSelection
-        )
+        self.games_box.setSelectionMode(qtw.QListWidget.SelectionMode.SingleSelection)
         self.games_box.doubleClicked.connect(self.finish)
         self.games_box.setMinimumHeight(200)
         layout.addWidget(self.games_box, 1)
@@ -903,24 +858,19 @@ class GameDialog(qtw.QDialog):
         for game in games.GAMES:
             game = game(self.app)
             text = game.name
-            #if game.name != "Skyrim Special Edition":
+            # if game.name != "Skyrim Special Edition":
             #    text += " (EXPERIMENTAL)"
             if game.icon_name:
                 icon = qtg.QIcon(str(self.app.ico_path / game.icon_name))
-                item = qtw.QListWidgetItem(
-                    icon,
-                    text
-                )
+                item = qtw.QListWidgetItem(icon, text)
             else:
-                item = qtw.QListWidgetItem(
-                    text=text
-                )
+                item = qtw.QListWidgetItem(text=text)
 
             self.games_box.addItem(item)
         self.games_box.setCurrentRow(0)
 
         # Add remember checkbox
-        self.rem_checkbox = qtw.QCheckBox(self.app.lang['do_not_ask_again'])
+        self.rem_checkbox = qtw.QCheckBox(self.app.lang["do_not_ask_again"])
         layout.addWidget(self.rem_checkbox, alignment=qtc.Qt.AlignmentFlag.AlignHCenter)
 
         # Add cancel and done button
@@ -928,7 +878,7 @@ class GameDialog(qtw.QDialog):
         layout.addLayout(button_layout)
 
         # Cancel button
-        cancel_button = qtw.QPushButton(self.app.lang['exit'])
+        cancel_button = qtw.QPushButton(self.app.lang["exit"])
         cancel_button.clicked.connect(self.app.exit)
         button_layout.addWidget(cancel_button)
 
@@ -936,12 +886,12 @@ class GameDialog(qtw.QDialog):
         button_layout.addSpacing(200)
 
         # Done button
-        done_button = qtw.QPushButton(self.app.lang['done'])
+        done_button = qtw.QPushButton(self.app.lang["done"])
         done_button.clicked.connect(self.finish)
         button_layout.addWidget(done_button)
 
         utils.center(self)
-    
+
     def __repr__(self):
         return "GameDialog"
 
@@ -953,8 +903,8 @@ class GameDialog(qtw.QDialog):
 
     def finish(self):
         sel_game = self.games_box.currentItem().text()
-        if '(EXPERIMENTAL)' in sel_game:
-            sel_game = sel_game.replace('(EXPERIMENTAL)', '').strip()
+        if "(EXPERIMENTAL)" in sel_game:
+            sel_game = sel_game.replace("(EXPERIMENTAL)", "").strip()
         for game in games.GAMES:
             if game(self.app).name == sel_game:
                 self.game_instance = game(self.app)
@@ -980,15 +930,15 @@ class GameDialog(qtw.QDialog):
 
             # Save game to config if rem checkbox is selected
             if self.rem_checkbox.isChecked():
-                self.app.config['default_game'] = self.app.game_instance.name
-                with open(self.app.con_path, 'w', encoding='utf8') as file:
+                self.app.config["default_game"] = self.app.game_instance.name
+                with open(self.app.con_path, "w", encoding="utf8") as file:
                     json.dump(self.app.config, file, indent=4)
 
 
 # Create class for settings dialog ###################################
 class SettingsDialog(qtw.QDialog):
     """
-    Shows settings dialog.    
+    Shows settings dialog.
     """
 
     def __init__(self, parent: qtw.QWidget, app: main.MainApp):
@@ -1005,9 +955,7 @@ class SettingsDialog(qtw.QDialog):
         # create popup window
         self.setModal(True)
         self.setStyleSheet(self.app.stylesheet)
-        self.setWindowTitle(
-            f"{self.app.name} - {self.app.lang['settings']}..."
-        )
+        self.setWindowTitle(f"{self.app.name} - {self.app.lang['settings']}...")
         self.setWindowIcon(self.app.root.windowIcon())
         self.setObjectName("root")
         self.setMinimumWidth(600)
@@ -1029,16 +977,10 @@ class SettingsDialog(qtw.QDialog):
             if isinstance(value, bool):
                 dropdown = qtw.QComboBox()
                 dropdown.setObjectName(config)
-                dropdown.addItems([
-                        self.app.lang['true'],
-                        self.app.lang['false']
-                    ]
-                )
+                dropdown.addItems([self.app.lang["true"], self.app.lang["false"]])
                 dropdown.setCurrentText(self.app.lang[str(value).lower()])
                 dropdown.setEditable(False)
-                dropdown.currentTextChanged.connect(
-                    lambda e: self.on_setting_change()
-                )
+                dropdown.currentTextChanged.connect(lambda e: self.on_setting_change())
                 dropdown.bool = None
                 self.settings_widgets.append(dropdown)
                 detail_layout.addWidget(dropdown, r, 1)
@@ -1047,70 +989,55 @@ class SettingsDialog(qtw.QDialog):
                 spinbox.setObjectName(config)
                 spinbox.setRange(1, 100)
                 spinbox.setValue(value)
-                spinbox.valueChanged.connect(
-                    lambda e: self.on_setting_change()
-                )
+                spinbox.valueChanged.connect(lambda e: self.on_setting_change())
                 self.settings_widgets.append(spinbox)
                 detail_layout.addWidget(spinbox, r, 1)
-            elif config == 'ui_mode':
+            elif config == "ui_mode":
                 dropdown = qtw.QComboBox()
                 dropdown.setObjectName(config)
-                dropdown.addItems([
-                        self.app.lang['dark'],
-                        self.app.lang['light'],
-                        "System"
-                    ]
+                dropdown.addItems(
+                    [self.app.lang["dark"], self.app.lang["light"], "System"]
                 )
-                dropdown.setCurrentText(
-                    self.app.lang.get(value.lower(), value)
-                )
+                dropdown.setCurrentText(self.app.lang.get(value.lower(), value))
                 dropdown.setEditable(False)
-                dropdown.currentTextChanged.connect(
-                    lambda e: self.on_setting_change()
-                )
+                dropdown.currentTextChanged.connect(lambda e: self.on_setting_change())
                 self.settings_widgets.append(dropdown)
                 detail_layout.addWidget(dropdown, r, 1)
-            elif config == 'language':
+            elif config == "language":
                 dropdown = qtw.QComboBox()
                 dropdown.setObjectName(config)
                 dropdown.addItem("System")
-                loc_path = self.app.res_path / 'locales'
-                for lang in loc_path.glob('??-??.json'):
+                loc_path = self.app.res_path / "locales"
+                for lang in loc_path.glob("??-??.json"):
                     lang = lang.stem
                     dropdown.addItem(lang)
-                dropdown.setCurrentText(self.app.config['language'])
+                dropdown.setCurrentText(self.app.config["language"])
                 dropdown.setEditable(False)
-                dropdown.currentTextChanged.connect(
-                    lambda e: self.on_setting_change()
-                )
+                dropdown.currentTextChanged.connect(lambda e: self.on_setting_change())
                 self.settings_widgets.append(dropdown)
                 detail_layout.addWidget(dropdown, r, 1)
-            elif config == 'log_level':
+            elif config == "log_level":
                 dropdown = qtw.QComboBox()
                 dropdown.setObjectName(config)
-                dropdown.addItems([
-                        loglevel.capitalize()
-                        for loglevel in main.LOG_LEVELS.values()
-                    ]
+                dropdown.addItems(
+                    [loglevel.capitalize() for loglevel in main.LOG_LEVELS.values()]
                 )
                 dropdown.setCurrentText(value.capitalize())
                 dropdown.setEditable(False)
-                dropdown.currentTextChanged.connect(
-                    lambda e: self.on_setting_change()
-                )
+                dropdown.currentTextChanged.connect(lambda e: self.on_setting_change())
                 self.settings_widgets.append(dropdown)
                 detail_layout.addWidget(dropdown, r, 1)
-            elif config == 'accent_color':
+            elif config == "accent_color":
                 button = qtw.QPushButton()
                 button.setObjectName(config)
-                button.color = self.app.config['accent_color']
+                button.color = self.app.config["accent_color"]
+
                 def choose_color():
                     colordialog = qtw.QColorDialog(self)
                     colordialog.setOption(
-                        colordialog.ColorDialogOption.DontUseNativeDialog,
-                        on=True
+                        colordialog.ColorDialogOption.DontUseNativeDialog, on=True
                     )
-                    colordialog.setCustomColor(0, qtg.QColor('#d78f46'))
+                    colordialog.setCustomColor(0, qtg.QColor("#d78f46"))
                     color = button.color
                     if qtg.QColor.isValidColor(color):
                         colordialog.setCurrentColor(qtg.QColor(color))
@@ -1119,34 +1046,27 @@ class SettingsDialog(qtw.QDialog):
                             qtg.QColor.NameFormat.HexRgb
                         )
                         button.setIcon(
-                            qta.icon('mdi6.square-rounded', color=button.color)
+                            qta.icon("mdi6.square-rounded", color=button.color)
                         )
                         self.on_setting_change()
-                button.setText(self.app.lang['select_color'])
-                button.setIcon(
-                    qta.icon('mdi6.square-rounded', color=button.color)
-                )
+
+                button.setText(self.app.lang["select_color"])
+                button.setIcon(qta.icon("mdi6.square-rounded", color=button.color))
                 button.setIconSize(qtc.QSize(24, 24))
                 button.clicked.connect(choose_color)
                 self.settings_widgets.append(button)
                 detail_layout.addWidget(button, r, 1)
-            elif config == 'default_game':
+            elif config == "default_game":
                 dropdown = qtw.QComboBox()
                 dropdown.setObjectName(config)
-                dropdown.addItems([
-                        game(self.app).name
-                        for game in games.GAMES
-                    ]
-                )
-                dropdown.addItem(self.app.lang['ask_always'])
+                dropdown.addItems([game(self.app).name for game in games.GAMES])
+                dropdown.addItem(self.app.lang["ask_always"])
                 if value is not None:
                     dropdown.setCurrentText(value)
                 else:
-                    dropdown.setCurrentText(self.app.lang['ask_always'])
+                    dropdown.setCurrentText(self.app.lang["ask_always"])
                 dropdown.setEditable(False)
-                dropdown.currentTextChanged.connect(
-                    lambda e: self.on_setting_change()
-                )
+                dropdown.currentTextChanged.connect(lambda e: self.on_setting_change())
                 self.settings_widgets.append(dropdown)
                 detail_layout.addWidget(dropdown, r, 1)
 
@@ -1156,11 +1076,11 @@ class SettingsDialog(qtw.QDialog):
         command_frame.setLayout(command_layout)
         layout.addWidget(command_frame)
         # cancel
-        cancel_button = qtw.QPushButton(self.app.lang['cancel'])
+        cancel_button = qtw.QPushButton(self.app.lang["cancel"])
         cancel_button.clicked.connect(self.cancel_settings)
         command_layout.addWidget(cancel_button)
         # done
-        self.settings_done_button = qtw.QPushButton(self.app.lang['done'])
+        self.settings_done_button = qtw.QPushButton(self.app.lang["done"])
         self.settings_done_button.clicked.connect(self.finish_settings)
         self.settings_done_button.setDisabled(True)
         command_layout.addWidget(self.settings_done_button)
@@ -1175,10 +1095,10 @@ class SettingsDialog(qtw.QDialog):
 
     def __repr__(self):
         return "Settings"
-    
+
     def finish_settings(self):
         """
-        Gets user input and saves config to file.        
+        Gets user input and saves config to file.
         """
 
         # Get config
@@ -1186,27 +1106,25 @@ class SettingsDialog(qtw.QDialog):
         for widget in self.settings_widgets:
             name = widget.objectName()
             if isinstance(widget, qtw.QComboBox):
-                if hasattr(widget, 'bool'):
+                if hasattr(widget, "bool"):
+                    config[name] = widget.currentText() == self.app.lang["true"]
+                elif name == "ui_mode":
                     config[name] = (
-                        widget.currentText() == self.app.lang['true']
-                    )
-                elif name == 'ui_mode':
-                    config[name] = (
-                        'System'
-                        if widget.currentText() == 'System'
+                        "System"
+                        if widget.currentText() == "System"
                         else (
-                            'Dark'
-                            if widget.currentText() == self.app.lang['dark']
-                            else 'Light'
+                            "Dark"
+                            if widget.currentText() == self.app.lang["dark"]
+                            else "Light"
                         )
                     )
-                elif name == 'language':
+                elif name == "language":
                     config[name] = widget.currentText()
-                elif name == 'log_level':
+                elif name == "log_level":
                     config[name] = widget.currentText().lower()
-                elif name == 'default_game':
+                elif name == "default_game":
                     value = widget.currentText()
-                    if value == self.app.lang['ask_always']:
+                    if value == self.app.lang["ask_always"]:
                         value = None
                     config[name] = value
             elif isinstance(widget, qtw.QSpinBox):
@@ -1215,8 +1133,8 @@ class SettingsDialog(qtw.QDialog):
                 config[name] = widget.color
 
         # Save config
-        if config['ui_mode'] != self.app.config['ui_mode']:
-            self.app._theme.set_mode(config['ui_mode'].lower())
+        if config["ui_mode"] != self.app.config["ui_mode"]:
+            self.app._theme.set_mode(config["ui_mode"].lower())
             self.app.theme = self.app._theme.load_theme()
             self.app.stylesheet = self.app._theme.load_stylesheet()
             self.app.root.setStyleSheet(self.app.stylesheet)
@@ -1224,38 +1142,37 @@ class SettingsDialog(qtw.QDialog):
             self.app.help_menu.setStyleSheet(self.app.stylesheet)
             self.app.theme_change_sign.emit()
         self.app.config = config
-        with open(self.app.con_path, 'w', encoding='utf8') as file:
+        with open(self.app.con_path, "w", encoding="utf8") as file:
             json.dump(self.app.config, file, indent=4)
         self.app.unsaved_settings = False
         self.log.info("Saved config to file.")
 
         # Update accent color
-        self.app.theme['accent_color'] = self.app.config['accent_color']
+        self.app.theme["accent_color"] = self.app.config["accent_color"]
         self.stylesheet = self.app._theme.load_stylesheet()
         self.app.root.setStyleSheet(self.app.stylesheet)
 
         # Update icons
         self.app.mig_button.setIcon(
-            qta.icon('fa5s.chevron-right', color=self.app.theme['text_color'])
+            qta.icon("fa5s.chevron-right", color=self.app.theme["text_color"])
         )
         if self.app.source and self.app.destination:
-            self.app.mig_icon.setPixmap(qta.icon(
-                    'fa5s.chevron-right',
-                    color=self.app.theme['accent_color']
+            self.app.mig_icon.setPixmap(
+                qta.icon(
+                    "fa5s.chevron-right", color=self.app.theme["accent_color"]
                 ).pixmap(120, 120)
             )
         else:
-            self.app.mig_icon.setPixmap(qta.icon(
-                    'fa5s.chevron-right',
-                    color=self.app.theme['text_color']
+            self.app.mig_icon.setPixmap(
+                qta.icon(
+                    "fa5s.chevron-right", color=self.app.theme["text_color"]
                 ).pixmap(120, 120)
             )
 
         # Fix link color
         palette = self.app.palette()
         palette.setColor(
-            palette.ColorRole.Link,
-            qtg.QColor(self.app.config['accent_color'])
+            palette.ColorRole.Link, qtg.QColor(self.app.config["accent_color"])
         )
         self.app.setPalette(palette)
 
@@ -1264,7 +1181,7 @@ class SettingsDialog(qtw.QDialog):
 
     def on_setting_change(self):
         """
-        Callback for user actions. Triggers unsaved state.        
+        Callback for user actions. Triggers unsaved state.
         """
 
         if (not self.unsaved_settings) and (self is not None):
@@ -1275,26 +1192,25 @@ class SettingsDialog(qtw.QDialog):
     def cancel_settings(self, event=None):
         """
         Closes dialog without saving.
-        Asks user to continue if state is unsaved.        
+        Asks user to continue if state is unsaved.
         """
 
         if self.unsaved_settings:
             message_box = qtw.QMessageBox(self)
             message_box.setWindowIcon(self.app.root.windowIcon())
             message_box.setStyleSheet(self.app.stylesheet)
-            message_box.setWindowTitle(self.app.lang['cancel'])
-            message_box.setText(self.app.lang['unsaved_cancel'])
+            message_box.setWindowTitle(self.app.lang["cancel"])
+            message_box.setText(self.app.lang["unsaved_cancel"])
             message_box.setStandardButtons(
-                qtw.QMessageBox.StandardButton.No
-                | qtw.QMessageBox.StandardButton.Yes
+                qtw.QMessageBox.StandardButton.No | qtw.QMessageBox.StandardButton.Yes
             )
             message_box.setDefaultButton(qtw.QMessageBox.StandardButton.No)
-            message_box.button(
-                qtw.QMessageBox.StandardButton.No
-            ).setText(self.app.lang['no'])
-            message_box.button(
-                qtw.QMessageBox.StandardButton.Yes
-            ).setText(self.app.lang['yes'])
+            message_box.button(qtw.QMessageBox.StandardButton.No).setText(
+                self.app.lang["no"]
+            )
+            message_box.button(qtw.QMessageBox.StandardButton.Yes).setText(
+                self.app.lang["yes"]
+            )
             choice = message_box.exec()
 
             if choice == qtw.QMessageBox.StandardButton.Yes:
@@ -1324,14 +1240,14 @@ class ErrorDialog(qtw.QMessageBox):
     """
 
     def __init__(
-            self,
-            parent: qtw.QWidget,
-            app: main.MainApp,
-            title: str,
-            text: str,
-            details: str="",
-            yesno: bool=True,
-        ):
+        self,
+        parent: qtw.QWidget,
+        app: main.MainApp,
+        title: str,
+        text: str,
+        details: str = "",
+        yesno: bool = True,
+    ):
         super().__init__(parent)
         self.app = app
 
@@ -1339,43 +1255,40 @@ class ErrorDialog(qtw.QMessageBox):
         self.setWindowTitle(title)
         self.setIcon(qtw.QMessageBox.Icon.Critical)
         self.setText(text)
-        
+
         # Show 'continue' and 'cancel' button
         if yesno:
             self.setStandardButtons(
-                qtw.QMessageBox.StandardButton.Yes
-                | qtw.QMessageBox.StandardButton.No
+                qtw.QMessageBox.StandardButton.Yes | qtw.QMessageBox.StandardButton.No
             )
-            self.button(
-                qtw.QMessageBox.StandardButton.Yes
-            ).setText(self.app.lang['continue'])
-            self.button(
-                qtw.QMessageBox.StandardButton.No
-            ).setText(self.app.lang['exit'])
-        
+            self.button(qtw.QMessageBox.StandardButton.Yes).setText(
+                self.app.lang["continue"]
+            )
+            self.button(qtw.QMessageBox.StandardButton.No).setText(
+                self.app.lang["exit"]
+            )
+
         # Only show 'ok' button
         else:
-            self.setStandardButtons(
-                qtw.QMessageBox.StandardButton.Ok
-            )
+            self.setStandardButtons(qtw.QMessageBox.StandardButton.Ok)
 
         # Add details button if details are given
         if details:
             self.details_button: qtw.QPushButton = self.addButton(
-                self.app.lang['show_details'],
-                qtw.QMessageBox.ButtonRole.AcceptRole
+                self.app.lang["show_details"], qtw.QMessageBox.ButtonRole.AcceptRole
             )
 
             self._details = False
+
             def toggle_details():
                 # toggle details
                 if not self._details:
                     self._details = True
-                    self.details_button.setText(self.app.lang['hide_details'])
+                    self.details_button.setText(self.app.lang["hide_details"])
                     self.setInformativeText(details)
                 else:
                     self._details = False
-                    self.details_button.setText(self.app.lang['show_details'])
+                    self.details_button.setText(self.app.lang["show_details"])
                     self.setInformativeText("")
 
                 # update messagebox size
@@ -1386,16 +1299,10 @@ class ErrorDialog(qtw.QMessageBox):
             self.details_button.clicked.disconnect()
             self.details_button.clicked.connect(toggle_details)
             self.copy_button: qtw.QPushButton = self.addButton(
-                "",
-                qtw.QMessageBox.ButtonRole.AcceptRole
+                "", qtw.QMessageBox.ButtonRole.AcceptRole
             )
-            self.copy_button.setIcon(qta.icon(
-                    'mdi6.content-copy',
-                    color=self.app.theme['text_color']
-                )
+            self.copy_button.setIcon(
+                qta.icon("mdi6.content-copy", color=self.app.theme["text_color"])
             )
             self.copy_button.clicked.disconnect()
-            self.copy_button.clicked.connect(
-                lambda: clipboard.copy(details)
-            )
-
+            self.copy_button.clicked.connect(lambda: clipboard.copy(details))

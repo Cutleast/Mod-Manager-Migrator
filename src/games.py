@@ -66,11 +66,9 @@ SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App {self.steamid
 
                         if installdir.is_dir() and str(installdir) != ".":
                             self.installdir = installdir
-                            #return self.installdir
+                            # return self.installdir
                 except Exception as ex:
-                    self.log.error(
-                        f"Failed to get install path from Steam: {ex}"
-                    )
+                    self.log.error(f"Failed to get install path from Steam: {ex}")
 
             # Try to get Skyrim path from GOG if installed
             if self.gogid and (not self.installdir):
@@ -78,13 +76,11 @@ SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App {self.steamid
                     reg_path = f"\
 SOFTWARE\\WOW6432Node\\GOG.com\\Games\\{self.gogid}"
                     with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, reg_path) as hkey:
-                        installdir = Path(
-                            winreg.QueryValueEx(hkey, "path")[0]
-                        )
+                        installdir = Path(winreg.QueryValueEx(hkey, "path")[0])
 
                     if installdir.is_dir() and str(installdir) != ".":
                         self.installdir = installdir
-                        #return self.installdir
+                        # return self.installdir
                 except Exception as ex:
                     self.log.error(f"Failed to get install path from GOG: {ex}")
 
@@ -94,12 +90,12 @@ SOFTWARE\\WOW6432Node\\GOG.com\\Games\\{self.gogid}"
             dialog.setWindowTitle(self.app.name)
             dialog.setWindowIcon(self.app.root.windowIcon())
             dialog.setStyleSheet(self.app.stylesheet)
-            #dialog.setWindowFlag(qtc.Qt.WindowType.WindowCloseButtonHint, False)
+            # dialog.setWindowFlag(qtc.Qt.WindowType.WindowCloseButtonHint, False)
 
             layout = qtw.QGridLayout()
             dialog.setLayout(layout)
 
-            label = qtw.QLabel(self.app.lang['game_not_found'])
+            label = qtw.QLabel(self.app.lang["game_not_found"])
             label.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
             layout.addWidget(label, 0, 0, 1, 2)
 
@@ -113,11 +109,12 @@ SOFTWARE\\WOW6432Node\\GOG.com\\Games\\{self.gogid}"
                 # Disable it otherwise
                 else:
                     continue_button.setDisabled(True)
+
             lineedit.textChanged.connect(on_edit)
 
             def browse_path():
                 file_dialog = qtw.QFileDialog(dialog)
-                file_dialog.setWindowTitle(self.app.lang['browse'])
+                file_dialog.setWindowTitle(self.app.lang["browse"])
                 file_dialog.setDirectory(lineedit.text())
                 file_dialog.setFileMode(qtw.QFileDialog.FileMode.Directory)
                 if file_dialog.exec():
@@ -125,11 +122,11 @@ SOFTWARE\\WOW6432Node\\GOG.com\\Games\\{self.gogid}"
                     folder = Path(folder)
                     lineedit.setText(str(folder))
 
-            browse_button = qtw.QPushButton(self.app.lang['browse'])
+            browse_button = qtw.QPushButton(self.app.lang["browse"])
             browse_button.clicked.connect(browse_path)
             layout.addWidget(browse_button, 1, 1)
 
-            continue_button = qtw.QPushButton(self.app.lang['continue'])
+            continue_button = qtw.QPushButton(self.app.lang["continue"])
             continue_button.setDisabled(True)
             continue_button.clicked.connect(dialog.accept)
             layout.addWidget(continue_button, 2, 1)
@@ -161,11 +158,11 @@ class SkyrimSEInstance(GameInstance):
 
         self.name = "Skyrim Special Edition"
         self.id = "SkyrimSE"
-        self.inidir = self.app.doc_path / 'My Games' / self.name
+        self.inidir = self.app.doc_path / "My Games" / self.name
         self.inifiles = [
-            self.inidir / 'Skyrim.ini',
-            self.inidir / 'SkyrimPrefs.ini',
-            self.inidir / 'SkyrimCustom.ini'
+            self.inidir / "Skyrim.ini",
+            self.inidir / "SkyrimPrefs.ini",
+            self.inidir / "SkyrimCustom.ini",
         ]
         self.steamid = 489830
         self.gogid = 1711230643
@@ -188,11 +185,11 @@ class SkyrimInstance(GameInstance):
 
         self.name = "Skyrim"
         self.id = "Skyrim"
-        self.inidir = self.app.doc_path / 'My Games' / self.name
+        self.inidir = self.app.doc_path / "My Games" / self.name
         self.inifiles = [
-            self.inidir / 'Skyrim.ini',
-            self.inidir / 'SkyrimPrefs.ini',
-            self.inidir / 'SkyrimCustom.ini'
+            self.inidir / "Skyrim.ini",
+            self.inidir / "SkyrimPrefs.ini",
+            self.inidir / "SkyrimCustom.ini",
         ]
         self.steamid = 72850
 
@@ -214,11 +211,11 @@ class Fallout4Instance(GameInstance):
 
         self.name = "Fallout 4"
         self.id = "Fallout4"
-        self.inidir = self.app.doc_path / 'My Games' / 'Fallout4'
+        self.inidir = self.app.doc_path / "My Games" / "Fallout4"
         self.inifiles = [
-            self.inidir / 'Fallout4.ini',
-            self.inidir / 'Fallout4Prefs.ini',
-            self.inidir / 'Fallout4Custom.ini'
+            self.inidir / "Fallout4.ini",
+            self.inidir / "Fallout4Prefs.ini",
+            self.inidir / "Fallout4Custom.ini",
         ]
         self.steamid = 377160
 
@@ -240,11 +237,11 @@ class EnderalInstance(GameInstance):
 
         self.name = "Enderal"
         self.id = "Enderal"
-        self.inidir = self.app.doc_path / 'My Games' / self.name
+        self.inidir = self.app.doc_path / "My Games" / self.name
         self.inifiles = [
-            self.inidir / 'Enderal.ini',
-            self.inidir / 'EnderalPrefs.ini',
-            self.inidir / 'EnderalCustom.ini'
+            self.inidir / "Enderal.ini",
+            self.inidir / "EnderalPrefs.ini",
+            self.inidir / "EnderalCustom.ini",
         ]
         self.steamid = 933480
 
@@ -266,11 +263,11 @@ class EnderalSEInstance(GameInstance):
 
         self.name = "Enderal Special Edition"
         self.id = "EnderalSE"
-        self.inidir = self.app.doc_path / 'My Games' / self.name
+        self.inidir = self.app.doc_path / "My Games" / self.name
         self.inifiles = [
-            self.inidir / 'Enderal.ini',
-            self.inidir / 'EnderalPrefs.ini',
-            self.inidir / 'EnderalCustom.ini'
+            self.inidir / "Enderal.ini",
+            self.inidir / "EnderalPrefs.ini",
+            self.inidir / "EnderalCustom.ini",
         ]
         self.steamid = 976620
 
@@ -283,5 +280,5 @@ GAMES: List[Type[GameInstance]] = [
     SkyrimInstance,
     Fallout4Instance,
     EnderalSEInstance,
-    EnderalInstance
+    EnderalInstance,
 ]
