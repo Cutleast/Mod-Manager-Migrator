@@ -8,7 +8,7 @@ from pathlib import Path
 
 DIST_FOLDER = Path("main.dist").resolve()
 APPNAME="Mod Manager Migrator"
-VERSION="2.31"
+VERSION="2.32"
 AUTHOR="Cutleast"
 LICENSE="Attribution-NonCommercial-NoDerivatives 4.0 International"
 UNUSED_FILES = [
