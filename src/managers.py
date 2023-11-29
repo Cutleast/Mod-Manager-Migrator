@@ -1453,6 +1453,11 @@ f"{self.app.lang['migrating_instance']} ({modindex}/{maximum})",
                 if dst_path.is_file():
                     continue
 
+                # Fix too long paths (> 260 characters)
+                dst_dirs = f"\\\\?\\{dst_dirs}"
+                src_path = f"\\\\?\\{src_path}"
+                dst_path = f"\\\\?\\{dst_path}"
+
                 # Update progress bars
                 if ldialog:
                     ldialog.updateProgress(
@@ -1465,11 +1470,6 @@ f"{mod.metadata['name']} ({fileindex}/{len(mod.files)})",
                         text3=\
 f"{file.name} ({utils.scale_value(os.path.getsize(src_path))})"
                     )
-
-                # Fix too long paths (> 260 characters)
-                dst_dirs = f"\\\\?\\{dst_dirs}"
-                src_path = f"\\\\?\\{src_path}"
-                dst_path = f"\\\\?\\{dst_path}"
 
                 # Add .mohidden to path if file is overwritten
                 if file in mod.overwritten_files:
