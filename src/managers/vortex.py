@@ -143,7 +143,7 @@ Vortex is running!"
 
         # Update progress bar
         if ldialog:
-            ldialog.updateProgress(text1=self.app.lang["loading_instance"])
+            ldialog.updateProgress(text1=self.loc.main.loading_instance)
 
         # Raise exception if profile is not found
         if profile_name not in self.profiles:
@@ -166,7 +166,7 @@ Vortex is running!"
             # Update progress bar
             if ldialog:
                 ldialog.updateProgress(
-                    text1=f"{self.app.lang['loading_instance']} ({modindex}/{len(profmods)})",
+                    text1=f"{self.loc.main.loading_instance} ({modindex}/{len(profmods)})",
                     value1=modindex,
                     max1=len(profmods),
                 )
@@ -260,7 +260,7 @@ Vortex is running!"
             if ldialog:
                 ldialog.updateProgress(
                     # Update first progress bar
-                    text1=f"{self.app.lang['migrating_instance']} ({modindex}/{maximum})",
+                    text1=f"{self.loc.main.migrating_instance} ({modindex}/{maximum})",
                     value1=modindex,
                     max1=maximum,
                     # Display and update second progress bar
@@ -419,7 +419,7 @@ Vortex is running!"
         if ldialog:
             ldialog.updateProgress(
                 # Update first progress bar
-                text1=self.app.lang["saving_database"],
+                text1=self.loc.main.saving_database,
                 value1=0,
                 max1=0,
                 # Hide second progress bar
@@ -456,7 +456,7 @@ Vortex is running!"
                 if ldialog:
                     ldialog.updateProgress(
                         # Update first progress bar
-                        text1=f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
+                        text1=f"{self.loc.main.copying_files} ({fileindex}/{maximum})",
                         value1=fileindex,
                         max1=maximum,
                         # Display and update second progress bar

@@ -244,7 +244,7 @@ class LoadingDialog(qtw.QDialog):
 
         self.setWindowTitle(
             f"\
-{self.app.name} - {self.app.lang['elapsed']}: \
+{self.app.name} - {self.app.loc.main.elapsed}: \
 {utils.get_diff(self.starttime, time.strftime('%H:%M:%S'))}"
         )
 

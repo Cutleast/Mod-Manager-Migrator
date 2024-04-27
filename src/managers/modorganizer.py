@@ -152,7 +152,7 @@ class MO2Instance(ModInstance):
 
         # Update progress bar
         if ldialog:
-            ldialog.updateProgress(text1=self.app.lang["loading_instance"])
+            ldialog.updateProgress(text1=self.loc.main.loading_instance)
 
         # Raise exception if instance is not found
         app_path = Path(os.getenv("LOCALAPPDATA")) / "ModOrganizer"
@@ -223,7 +223,7 @@ class MO2Instance(ModInstance):
                 # Update progress bar
                 if ldialog:
                     ldialog.updateProgress(
-                        text1=f"{self.app.lang['loading_instance']} ({modindex}/{len(lines)})",
+                        text1=f"{self.loc.main.loading_instance} ({modindex}/{len(lines)})",
                         value1=modindex,
                         max1=len(lines),
                         show2=True,
@@ -329,7 +329,7 @@ class MO2Instance(ModInstance):
             if ldialog:
                 ldialog.updateProgress(
                     # Update first progress bar
-                    text1=f"{self.app.lang['migrating_instance']} ({modindex}/{maximum})",
+                    text1=f"{self.loc.main.migrating_instance} ({modindex}/{maximum})",
                     value1=modindex,
                     max1=maximum,
                     # Display and update second progress bar
@@ -425,7 +425,7 @@ class MO2Instance(ModInstance):
                 if ldialog:
                     ldialog.updateProgress(
                         # Update first progress bar
-                        text1=f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
+                        text1=f"{self.loc.main.copying_files} ({fileindex}/{maximum})",
                         value1=fileindex,
                         max1=maximum,
                         # Display and update second progress bar

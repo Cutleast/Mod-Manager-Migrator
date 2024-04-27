@@ -6,3 +6,4 @@ requests
 nuitka
 pyperclip
 plyvel-ci
+pywin32

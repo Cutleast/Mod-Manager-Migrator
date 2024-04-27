@@ -50,10 +50,10 @@ class ErrorDialog(qtw.QMessageBox):
                 qtw.QMessageBox.StandardButton.Yes | qtw.QMessageBox.StandardButton.No
             )
             self.button(qtw.QMessageBox.StandardButton.Yes).setText(
-                self.app.lang["continue"]
+                self.app.loc.main._continue
             )
             self.button(qtw.QMessageBox.StandardButton.No).setText(
-                self.app.lang["exit"]
+                self.app.loc.main.exit
             )
 
         # Only show 'ok' button
@@ -63,7 +63,7 @@ class ErrorDialog(qtw.QMessageBox):
         # Add details button if details are given
         if details:
             self.details_button: qtw.QPushButton = self.addButton(
-                self.app.lang["show_details"], qtw.QMessageBox.ButtonRole.AcceptRole
+                self.app.loc.main.show_details, qtw.QMessageBox.ButtonRole.AcceptRole
             )
 
             self._details = False
@@ -72,11 +72,11 @@ class ErrorDialog(qtw.QMessageBox):
                 # toggle details
                 if not self._details:
                     self._details = True
-                    self.details_button.setText(self.app.lang["hide_details"])
+                    self.details_button.setText(self.app.loc.main.hide_details)
                     self.setInformativeText(details)
                 else:
                     self._details = False
-                    self.details_button.setText(self.app.lang["show_details"])
+                    self.details_button.setText(self.app.loc.main.show_details)
                     self.setInformativeText("")
 
                 # update messagebox size

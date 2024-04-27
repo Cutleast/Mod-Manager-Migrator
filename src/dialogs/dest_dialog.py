@@ -30,6 +30,7 @@ class DestinationDialog(qtw.QDialog):
         super().__init__(parent)
 
         self.app = app
+        self.loc = app.loc
         self.modinstance: managers.ModInstance = None
         self.destination_widget: qtw.QWidget = None
         self.mods_box: qtw.QListWidget = None
@@ -38,7 +39,7 @@ class DestinationDialog(qtw.QDialog):
         self.log = logging.getLogger("DestinationDialog")
 
         # Configure dialog
-        self.setWindowTitle(self.app.lang['select_destination'])
+        self.setWindowTitle(self.loc.main.select_destination)
         self.setModal(True)
         self.setObjectName("root")
 
@@ -56,7 +57,7 @@ class DestinationDialog(qtw.QDialog):
         self.modmanagers_widget.setLayout(manager_layout)
 
         # Label with instruction
-        label = qtw.QLabel(self.app.lang["select_destination_text"])
+        label = qtw.QLabel(self.loc.main.select_destination_text)
         label.setObjectName("titlelabel")
         label.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
         manager_layout.addWidget(label, 0, 0, 1, columns)
@@ -115,24 +116,24 @@ class DestinationDialog(qtw.QDialog):
         instance_layout.addLayout(details_layout, 1)
 
         # Add info label for hardlink mode
-        hardlink_notice = qtw.QLabel(self.app.lang["hardlink_notice"])
+        hardlink_notice = qtw.QLabel(self.loc.main.hardlink_notice)
         hardlink_notice.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
         details_layout.addWidget(hardlink_notice, 0, 0, 1, 3)
         # Add info label for copy mode
-        copy_notice = qtw.QLabel(self.app.lang["copy_notice"])
+        copy_notice = qtw.QLabel(self.loc.main.copy_notice)
         copy_notice.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
         copy_notice.hide()
         details_layout.addWidget(copy_notice, 1, 0, 1, 3)
 
         # Add inputbox for name
-        label = qtw.QLabel(self.app.lang["instance_name"])
+        label = qtw.QLabel(self.loc.main.instance_name)
         details_layout.addWidget(label, 2, 0)
         self.name_box = qtw.QLineEdit()
         self.name_box.setText(self.app.src_modinstance.name)
         details_layout.addWidget(self.name_box, 2, 1)
 
         # Add inputbox for instance path
-        label = qtw.QLabel(self.app.lang["instance_path"])
+        label = qtw.QLabel(self.loc.main.instance_path)
         details_layout.addWidget(label, 3, 0)
         self.path_box = qtw.QLineEdit()
         if self.app.destination is not None:
@@ -147,7 +148,7 @@ class DestinationDialog(qtw.QDialog):
 
         def browse_path():
             file_dialog = qtw.QFileDialog(self)
-            file_dialog.setWindowTitle(self.app.lang["browse"])
+            file_dialog.setWindowTitle(self.loc.main.browse)
             file_dialog.setDirectory(str(Path(self.path_box.text()).parent))
             file_dialog.setFileMode(qtw.QFileDialog.FileMode.Directory)
             if file_dialog.exec():
@@ -160,12 +161,12 @@ class DestinationDialog(qtw.QDialog):
                 self.profilespath_box.setText(os.path.join(folder, "profiles"))
                 self.overwritepath_box.setText(os.path.join(folder, "overwrite"))
 
-        self.browse_button = qtw.QPushButton(self.app.lang["browse"])
+        self.browse_button = qtw.QPushButton(self.loc.main.browse)
         self.browse_button.clicked.connect(browse_path)
         details_layout.addWidget(self.browse_button, 3, 2)
 
         # Add inputbox for downloads path
-        label = qtw.QLabel(self.app.lang["download_path"])
+        label = qtw.QLabel(self.loc.main.download_path)
         details_layout.addWidget(label, 4, 0)
         self.dlpath_box = qtw.QLineEdit()
         self.dlpath_box.setText(os.path.join(self.path_box.text(), "downloads"))
@@ -173,7 +174,7 @@ class DestinationDialog(qtw.QDialog):
 
         def browse_dlpath():
             file_dialog = qtw.QFileDialog(self)
-            file_dialog.setWindowTitle(self.app.lang["browse"])
+            file_dialog.setWindowTitle(self.loc.main.browse)
             file_dialog.setDirectory(self.dlpath_box.text())
             file_dialog.setFileMode(qtw.QFileDialog.FileMode.Directory)
             if file_dialog.exec():
@@ -181,12 +182,12 @@ class DestinationDialog(qtw.QDialog):
                 folder = os.path.normpath(folder)
                 self.dlpath_box.setText(folder)
 
-        self.browse_dlpath_button = qtw.QPushButton(self.app.lang["browse"])
+        self.browse_dlpath_button = qtw.QPushButton(self.loc.main.browse)
         self.browse_dlpath_button.clicked.connect(browse_dlpath)
         details_layout.addWidget(self.browse_dlpath_button, 4, 2)
 
         # Add inputbox for mods path
-        label = qtw.QLabel(self.app.lang["mods_path"])
+        label = qtw.QLabel(self.loc.main.mods_path)
         details_layout.addWidget(label, 5, 0)
         self.modspath_box = qtw.QLineEdit()
         self.modspath_box.setText(os.path.join(self.path_box.text(), "mods"))
@@ -194,7 +195,7 @@ class DestinationDialog(qtw.QDialog):
 
         def browse_modspath():
             file_dialog = qtw.QFileDialog(self)
-            file_dialog.setWindowTitle(self.app.lang["browse"])
+            file_dialog.setWindowTitle(self.loc.main.browse)
             file_dialog.setDirectory(self.modspath_box.text())
             file_dialog.setFileMode(qtw.QFileDialog.FileMode.Directory)
             if file_dialog.exec():
@@ -202,12 +203,12 @@ class DestinationDialog(qtw.QDialog):
                 folder = os.path.normpath(folder)
                 self.modspath_box.setText(folder)
 
-        self.browse_mods_button = qtw.QPushButton(self.app.lang["browse"])
+        self.browse_mods_button = qtw.QPushButton(self.loc.main.browse)
         self.browse_mods_button.clicked.connect(browse_modspath)
         details_layout.addWidget(self.browse_mods_button, 5, 2)
 
         # Add inputbox for profiles path
-        label = qtw.QLabel(self.app.lang["profiles_path"])
+        label = qtw.QLabel(self.loc.main.profiles_path)
         details_layout.addWidget(label, 6, 0)
         self.profilespath_box = qtw.QLineEdit()
         self.profilespath_box.setText(os.path.join(self.path_box.text(), "profiles"))
@@ -215,7 +216,7 @@ class DestinationDialog(qtw.QDialog):
 
         def browse_profilespath():
             file_dialog = qtw.QFileDialog(self)
-            file_dialog.setWindowTitle(self.app.lang["browse"])
+            file_dialog.setWindowTitle(self.loc.main.browse)
             file_dialog.setDirectory(self.profilespath_box.text())
             file_dialog.setFileMode(qtw.QFileDialog.FileMode.Directory)
             if file_dialog.exec():
@@ -223,12 +224,12 @@ class DestinationDialog(qtw.QDialog):
                 folder = os.path.normpath(folder)
                 self.profilespath_box.setText(folder)
 
-        self.browse_profiles_button = qtw.QPushButton(self.app.lang["browse"])
+        self.browse_profiles_button = qtw.QPushButton(self.loc.main.browse)
         self.browse_profiles_button.clicked.connect(browse_profilespath)
         details_layout.addWidget(self.browse_profiles_button, 6, 2)
 
         # Add inputbox for overwrite path
-        label = qtw.QLabel(self.app.lang["overwrite_path"])
+        label = qtw.QLabel(self.loc.main.overwrite_path)
         details_layout.addWidget(label, 7, 0)
         self.overwritepath_box = qtw.QLineEdit()
         self.overwritepath_box.setText(os.path.join(self.path_box.text(), "overwrite"))
@@ -236,7 +237,7 @@ class DestinationDialog(qtw.QDialog):
 
         def browse_overwritepath():
             file_dialog = qtw.QFileDialog(self)
-            file_dialog.setWindowTitle(self.app.lang["browse"])
+            file_dialog.setWindowTitle(self.loc.main.browse)
             file_dialog.setDirectory(self.overwritepath_box.text())
             file_dialog.setFileMode(qtw.QFileDialog.FileMode.Directory)
             if file_dialog.exec():
@@ -244,7 +245,7 @@ class DestinationDialog(qtw.QDialog):
                 folder = os.path.normpath(folder)
                 self.overwritepath_box.setText(folder)
 
-        self.browse_overwrites_button = qtw.QPushButton(self.app.lang["browse"])
+        self.browse_overwrites_button = qtw.QPushButton(self.loc.main.browse)
         self.browse_overwrites_button.clicked.connect(browse_overwritepath)
         details_layout.addWidget(self.browse_overwrites_button, 7, 2)
         ##############################################################
@@ -255,7 +256,7 @@ class DestinationDialog(qtw.QDialog):
         instance_layout.addWidget(hardlink_mode_widget, 1)
 
         # Add button for hardlink mode
-        hardlink_mode_button = qtw.QPushButton(self.app.lang["hardlink_mode"])
+        hardlink_mode_button = qtw.QPushButton(self.loc.main.hardlink_mode)
         hardlink_mode_button.clicked.connect(
             lambda: (
                 copy_mode_button.setChecked(False),
@@ -270,7 +271,7 @@ class DestinationDialog(qtw.QDialog):
         mode_layout.addWidget(hardlink_mode_button)
 
         # Add button for copy mode
-        copy_mode_button = qtw.QPushButton(self.app.lang["copy_mode"])
+        copy_mode_button = qtw.QPushButton(self.loc.main.copy_mode)
         copy_mode_button.clicked.connect(
             lambda: (
                 hardlink_mode_button.setChecked(False),
@@ -292,7 +293,7 @@ class DestinationDialog(qtw.QDialog):
 
         # Cancel button
         self.cancel_button = qtw.QPushButton()
-        self.cancel_button.setText(self.app.lang["cancel"])
+        self.cancel_button.setText(self.loc.main.cancel)
         self.cancel_button.clicked.connect(self.accept)
         self.button_layout.addWidget(self.cancel_button)
 
@@ -301,7 +302,7 @@ class DestinationDialog(qtw.QDialog):
 
         # Back button with icon
         self.back_button = qtw.QPushButton()
-        self.back_button.setText(self.app.lang["back"])
+        self.back_button.setText(self.loc.main.back)
         self.back_button.setIcon(
             qta.icon("fa5s.chevron-left", color=self.app.theme["text_color"])
         )
@@ -313,7 +314,7 @@ class DestinationDialog(qtw.QDialog):
         self.next_button.setLayoutDirection(  # switch icon and text
             qtc.Qt.LayoutDirection.RightToLeft
         )
-        self.next_button.setText(self.app.lang["next"])
+        self.next_button.setText(self.loc.main.next)
         self.next_button.setIcon(
             qta.icon("fa5s.chevron-right", color=self.app.theme["text_color"])
         )
@@ -335,7 +336,7 @@ class DestinationDialog(qtw.QDialog):
 
         # Update next button
         self.next_button.clicked.disconnect(self.finish)
-        self.next_button.setText(self.app.lang["next"])
+        self.next_button.setText(self.loc.main.next)
         self.next_button.clicked.connect(self.goto_secnd_page)
         self.next_button.setIcon(
             qta.icon("fa5s.chevron-right", color=self.app.theme["text_color"])
@@ -396,7 +397,7 @@ class DestinationDialog(qtw.QDialog):
 
         # Bind next button to done
         self.next_button.clicked.disconnect(self.goto_secnd_page)
-        self.next_button.setText(self.app.lang["done"])
+        self.next_button.setText(self.loc.main.done)
         self.next_button.clicked.connect(self.finish)
         self.next_button.setIcon(qtg.QIcon())
 
@@ -447,8 +448,8 @@ Hardlinks must be on the same drive. \
             ErrorDialog(
                 parent=self,
                 app=self.app,
-                title=self.app.lang["error"],
-                text=self.app.lang["hardlink_drive_error"]
+                title=self.loc.main.error,
+                text=self.loc.main.hardlink_drive_error
                 .replace("[DESTDRIVE]", dst_drive)
                 .replace("[SOURCEDRIVE]", src_drive),
                 yesno=False,
@@ -486,8 +487,8 @@ Hardlinks must be on the same drive. \
                 self.log.warning("Instance data will be wiped!")
                 qtw.QMessageBox.warning(
                     self.app.root,
-                    self.app.lang["warning"],
-                    self.app.lang["wipe_notice"],
+                    self.loc.main.warning,
+                    self.loc.main.wipe_notice,
                     buttons=qtw.QMessageBox.StandardButton.Ok,
                 )
         else:
@@ -504,7 +505,7 @@ Hardlinks must be on the same drive. \
         self.modinstance.show_dst_widget()
 
         # Update destination button
-        self.app.dst_button.setText(self.app.lang["edit_destination"])
+        self.app.dst_button.setText(self.loc.main.edit_destination)
         self.app.dst_button.clicked.disconnect()
         self.back_button.setDisabled(True)
         self.app.dst_button.clicked.connect(self.show)

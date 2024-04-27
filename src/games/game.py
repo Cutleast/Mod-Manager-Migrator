@@ -24,6 +24,7 @@ class GameInstance:
 
     def __init__(self, app: MainApp):
         self.app = app
+        self.loc = app.loc
         self.name: str = ""
         self.id: str = ""
         self.installdir: Path = ""
@@ -92,7 +93,7 @@ SOFTWARE\\WOW6432Node\\GOG.com\\Games\\{self.gogid}"
             layout = qtw.QGridLayout()
             dialog.setLayout(layout)
 
-            label = qtw.QLabel(self.app.lang["game_not_found"])
+            label = qtw.QLabel(self.loc.main.game_not_found)
             label.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
             layout.addWidget(label, 0, 0, 1, 2)
 
@@ -111,7 +112,7 @@ SOFTWARE\\WOW6432Node\\GOG.com\\Games\\{self.gogid}"
 
             def browse_path():
                 file_dialog = qtw.QFileDialog(dialog)
-                file_dialog.setWindowTitle(self.app.lang["browse"])
+                file_dialog.setWindowTitle(self.loc.main.browse)
                 file_dialog.setDirectory(lineedit.text())
                 file_dialog.setFileMode(qtw.QFileDialog.FileMode.Directory)
                 if file_dialog.exec():
@@ -119,11 +120,11 @@ SOFTWARE\\WOW6432Node\\GOG.com\\Games\\{self.gogid}"
                     folder = Path(folder)
                     lineedit.setText(str(folder))
 
-            browse_button = qtw.QPushButton(self.app.lang["browse"])
+            browse_button = qtw.QPushButton(self.loc.main.browse)
             browse_button.clicked.connect(browse_path)
             layout.addWidget(browse_button, 1, 1)
 
-            continue_button = qtw.QPushButton(self.app.lang["continue"])
+            continue_button = qtw.QPushButton(self.loc.main._continue)
             continue_button.setDisabled(True)
             continue_button.clicked.connect(dialog.accept)
             layout.addWidget(continue_button, 2, 1)

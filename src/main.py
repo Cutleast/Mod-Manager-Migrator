@@ -35,6 +35,8 @@ class MainApp(qtw.QApplication):
     theme_change_sign = qtc.Signal()
     migrate_mods_change_sign = qtc.Signal()
 
+    loc: "utils.Localisator" = None
+
     def __init__(self):
         super().__init__([])
 
@@ -232,11 +234,11 @@ Updating with default config..."
         # Initialize main user interface #############################
         # Create menu bar
         # Create file menu actions
-        self.exit_action = qtg.QAction(self.lang["exit"], self.root)
+        self.exit_action = qtg.QAction(self.loc.main.exit, self.root)
 
         # Create file menu
         self.file_menu = qtw.QMenu()
-        self.file_menu.setTitle(self.lang["file"])
+        self.file_menu.setTitle(self.loc.main.file)
         self.file_menu.setWindowFlags(
             qtc.Qt.WindowType.FramelessWindowHint
             | qtc.Qt.WindowType.Popup
@@ -251,15 +253,15 @@ Updating with default config..."
         self.root.menuBar().addMenu(self.file_menu)
 
         # Create help menu actions
-        self.config_action = qtg.QAction(self.lang["settings"], self)
-        self.log_action = qtg.QAction(self.lang["open_log_file"], self)
+        self.config_action = qtg.QAction(self.loc.main.settings, self)
+        self.log_action = qtg.QAction(self.loc.main.open_log_file, self)
         self.exception_test_action = qtg.QAction("Exception test", self)
-        self.about_action = qtg.QAction(self.lang["about"], self)
-        self.about_qt_action = qtg.QAction(f"{self.lang['about']} Qt", self)
+        self.about_action = qtg.QAction(self.loc.main.about, self)
+        self.about_qt_action = qtg.QAction(f"{self.loc.main.about} Qt", self)
 
         # Create help menu
         self.help_menu = qtw.QMenu()
-        self.help_menu.setTitle(self.lang["help"])
+        self.help_menu.setTitle(self.loc.main.help)
         self.help_menu.setWindowFlags(
             qtc.Qt.WindowType.FramelessWindowHint
             | qtc.Qt.WindowType.Popup
@@ -303,7 +305,7 @@ Updating with default config..."
         self.root.setCentralWidget(self.mainframe)
 
         # Create source button
-        self.src_button = qtw.QPushButton(self.lang["select_source"])
+        self.src_button = qtw.QPushButton(self.loc.main.select_source)
         self.src_button.clicked.connect(
             lambda: dialogs.SourceDialog(self.root, self).show()
         )
@@ -319,7 +321,7 @@ Updating with default config..."
         # self.mainlayout.addWidget(self.game_icon, 0, 1)
 
         # Create migrate button
-        self.mig_button = qtw.QPushButton(self.lang["migrate"])
+        self.mig_button = qtw.QPushButton(self.loc.main.migrate)
         self.mig_button.setIcon(
             qta.icon("fa5s.chevron-right", color=self.theme["text_color"])
         )
@@ -329,7 +331,7 @@ Updating with default config..."
         self.mainlayout.addWidget(self.mig_button, 0, 1)
 
         # Create destination button
-        self.dst_button = qtw.QPushButton(self.lang["select_destination"])
+        self.dst_button = qtw.QPushButton(self.loc.main.select_destination)
         self.dst_button.clicked.connect(
             lambda: dialogs.DestinationDialog(self.root, self).show()
         )
@@ -361,7 +363,7 @@ Current version: {self.version} | Latest version: {new_version}"
             message_box.setStyleSheet(self.stylesheet)
             message_box.setWindowTitle(self.name)
             message_box.setText(
-                self.lang["update_available"]
+                self.loc.main.update_available
                 .replace("[OLD_VERSION]", self.version)
                 .replace("[NEW_VERSION]", str(new_version))
             )
@@ -370,10 +372,10 @@ Current version: {self.version} | Latest version: {new_version}"
             )
             message_box.setDefaultButton(qtw.QMessageBox.StandardButton.Yes)
             message_box.button(qtw.QMessageBox.StandardButton.Yes).setText(
-                self.lang["yes"]
+                self.loc.main.yes
             )
             message_box.button(qtw.QMessageBox.StandardButton.No).setText(
-                self.lang["no"]
+                self.loc.main.no
             )
             choice = message_box.exec()
 
@@ -424,7 +426,7 @@ Current version: {self.version} | Latest version: {new_version}"
             error_type = str(exc_value)
             error_type = error_type.strip("[")
             error_type, error_msg = error_type.split("]", 1)
-            error_msg = self.lang.get(error_type, error_msg).strip()
+            error_msg = getattr(self.loc.main, error_type, error_msg).strip()
             detailed_msg = ""
             yesno = False
 
@@ -436,7 +438,7 @@ Current version: {self.version} | Latest version: {new_version}"
             )
 
             # Get exception info
-            error_msg = f"{self.lang['error_text']} {exc_value}"
+            error_msg = f"{self.loc.main.error_text} {exc_value}"
             detailed_msg = "".join(
                 traceback.format_exception(exc_type, exc_value, exc_traceback)
             )
@@ -451,7 +453,7 @@ Current version: {self.version} | Latest version: {new_version}"
         messagebox = dialogs.ErrorDialog(
             parent=self.root,
             app=self,
-            title=f"{self.root.windowTitle()} - {self.lang['error']}",
+            title=self.loc.main.error,
             text=error_msg,
             details=detailed_msg,
             yesno=yesno,
@@ -499,8 +501,8 @@ Current version: {self.version} | Latest version: {new_version}"
                 self.log.error("Migration failed: not enough free space!")
                 qtw.QMessageBox.critical(
                     self.root,
-                    self.lang["error"],
-                    self.lang["enough_space_text"]
+                    self.loc.main.error,
+                    self.loc.main.enough_space_text
                     .replace("FREE_SPACE", utils.scale_value(self.fspace))
                     .replace("REQUIRED_SPACE", utils.scale_value(self.rspace)),
                 )
@@ -520,12 +522,12 @@ Current version: {self.version} | Latest version: {new_version}"
 
                     appdata_path = f"\\\\?\\{appdata_path}"
 
-                    def process(ldialog: dialogs.LoadingDialog):
-                        ldialog.updateProgress(text1=self.lang["wiping_instance"])
+                    def process(ldialog: widgets.LoadingDialog):
+                        ldialog.updateProgress(text1=self.loc.main.wiping_instance)
 
                         shutil.rmtree(appdata_path)
 
-                    loadingdialog = dialogs.LoadingDialog(
+                    loadingdialog = widgets.LoadingDialog(
                         parent=self.root, app=self, func=process
                     )
                     loadingdialog.exec()
@@ -539,12 +541,12 @@ Current version: {self.version} | Latest version: {new_version}"
 
                     instance_path = f"\\\\?\\{instance_path}"
 
-                    def process(ldialog: dialogs.LoadingDialog):
-                        ldialog.updateProgress(text1=self.lang["wiping_instance_data"])
+                    def process(ldialog: widgets.LoadingDialog):
+                        ldialog.updateProgress(text1=self.loc.main.wiping_instance_data)
 
                         shutil.rmtree(instance_path)
 
-                    loadingdialog = dialogs.LoadingDialog(
+                    loadingdialog = widgets.LoadingDialog(
                         parent=self.root, app=self, func=process
                     )
                     loadingdialog.exec()
@@ -572,17 +574,17 @@ Current version: {self.version} | Latest version: {new_version}"
             message_box = qtw.QMessageBox(self.root)
             message_box.setWindowIcon(self.root.windowIcon())
             message_box.setStyleSheet(self.stylesheet)
-            message_box.setWindowTitle(self.lang["migrating_instance"])
-            message_box.setText(self.lang["detected_root_files"])
+            message_box.setWindowTitle(self.loc.main.migrating_instance)
+            message_box.setText(self.loc.main.detected_root_files)
             message_box.setStandardButtons(
                 qtw.QMessageBox.StandardButton.Ignore
                 | qtw.QMessageBox.StandardButton.Yes
             )
             message_box.setDefaultButton(qtw.QMessageBox.StandardButton.Yes)
             ignore_button = message_box.button(qtw.QMessageBox.StandardButton.Ignore)
-            ignore_button.setText(self.lang["ignore"])
+            ignore_button.setText(self.loc.main.ignore)
             continue_button = message_box.button(qtw.QMessageBox.StandardButton.Yes)
-            continue_button.setText(self.lang["continue"])
+            continue_button.setText(self.loc.main._continue)
 
             # Wait for purge if source is Vortex
             if self.source == "Vortex":
@@ -608,13 +610,13 @@ Current version: {self.version} | Latest version: {new_version}"
 
             if choice == qtw.QMessageBox.StandardButton.Yes:
                 # Copy root files directly into game directory
-                def process(ldialog: dialogs.LoadingDialog):
-                    ldialog.updateProgress(text1=self.lang["copying_files"])
+                def process(ldialog: widgets.LoadingDialog):
+                    ldialog.updateProgress(text1=self.loc.main.copying_files)
 
                     installdir = self.game_instance.get_install_dir()
                     for i, mod in enumerate(self.src_modinstance.root_mods):
                         ldialog.updateProgress(
-                            text1=f"{self.lang['copying_files']} \
+                            text1=f"{self.loc.main.copying_files} \
 - {i}/{len(self.src_modinstance.root_mods)}",
                             value1=i,
                             max1=len(self.src_modinstance.root_mods),
@@ -632,7 +634,7 @@ Current version: {self.version} | Latest version: {new_version}"
                                 f"Failed to copy following files/folders: {ex}"
                             )
 
-                loadingdialog = dialogs.LoadingDialog(
+                loadingdialog = widgets.LoadingDialog(
                     parent=self.root, app=self, func=process
                 )
                 loadingdialog.exec()
@@ -641,7 +643,7 @@ Current version: {self.version} | Latest version: {new_version}"
         starttime = time.time()
 
         # Copy mods to new instance
-        loadingdialog = dialogs.LoadingDialog(
+        loadingdialog = widgets.LoadingDialog(
             parent=self.root,
             app=self,
             func=self.dst_modinstance.copy_mods,
@@ -664,12 +666,12 @@ Current version: {self.version} | Latest version: {new_version}"
         if self.source == "Vortex" and deploy_file.is_file():
             qtw.QMessageBox.information(
                 self.root,
-                self.lang["success"],
-                self.lang["migration_complete_purge_notice"],
+                self.loc.main.success,
+                self.loc.main.migration_complete_purge_notice,
             )
         else:
             qtw.QMessageBox.information(
-                self.root, self.lang["success"], self.lang["migration_complete"]
+                self.root, self.loc.main.success, self.loc.main.migration_complete
             )
 
     ##################################################################
@@ -690,23 +692,23 @@ Current version: {self.version} | Latest version: {new_version}"
         icon = self.root.windowIcon()
         pixmap = icon.pixmap(128, 128)
         dialog.setIconPixmap(pixmap)
-        dialog.setWindowTitle(self.lang["about"])
+        dialog.setWindowTitle(self.loc.main.about)
         dialog.setWindowIcon(self.root.windowIcon())
         dialog.setTextFormat(qtc.Qt.TextFormat.RichText)
-        text = self.lang["about_text"]
+        text = self.loc.main.about_text
 
         # Add translator credit if available
-        if self.lang["translator_url"].startswith("http"):
+        if self.loc.main.translator_url.startswith("http"):
             text += "<br><br>Translation by "
-            text += f"<a href='{self.lang['translator_url']}'>"
-            text += f"{self.lang['translator_name']}</a>"
+            text += f"<a href='{self.loc.main.translator_url}'>"
+            text += f"{self.loc.main.translator_name}</a>"
 
         dialog.setText(text)
         dialog.setStandardButtons(qtw.QMessageBox.StandardButton.Ok)
 
         # hacky way to set label width
         for label in dialog.findChildren(qtw.QLabel):
-            if label.text() == self.lang["about_text"]:
+            if label.text() == self.loc.main.about_text:
                 label.setFixedWidth(400)
                 break
 
@@ -717,7 +719,7 @@ Current version: {self.version} | Latest version: {new_version}"
         Displays about Qt dialog.
         """
 
-        qtw.QMessageBox.aboutQt(self.root, f"{self.lang['about']} Qt")
+        qtw.QMessageBox.aboutQt(self.root, f"{self.loc.main.about} Qt")
 
     def exec(self):
         """
@@ -746,39 +748,9 @@ Current version: {self.version} | Latest version: {new_version}"
         # Get language strings
         if not language:
             language = self.config["language"]
-        if language.lower() == "system":
-            language = getlocale()[0]
-        language = language.replace("_", "-")
-
-        # Get language path
-        langpath = self.res_path / "locales" / f"{language}.json"
-        if not os.path.isfile(langpath):
-            self.log.error(
-                f"Failed loading localisation for language '{language}': Not found."
-            )
-            language = "en-US"
-            langpath = self.res_path / "locales" / f"{language}.json"
-
-        # Load language
-        with open(langpath, "r", encoding="utf-8") as langfile:
-            lang: dict[str, str] = json.load(langfile)
-
-        # Load english language as fallback
-        eng_path = self.res_path / "locales" / "en-US.json"
-        with open(eng_path, "r", encoding="utf-8") as engfile:
-            eng_lang: dict[str, str] = json.load(engfile)
-
-        if len(eng_lang) > len(lang):
-            self.log.warning(f"Detected outdated localisation: '{language}'!")
-            self.log.debug(f"Missing strings: {len(eng_lang) - len(lang)}")
-
-            for key, value in eng_lang.items():
-                if key not in lang.keys():
-                    lang[key] = value
-
-            self.log.debug("Filled missing strings from en-US strings.")
-
-        self.lang: dict[str, str] = lang
+        
+        self.loc = utils.Localisator(language, self.res_path / "locales")
+        self.loc.load_lang()
 
         self.log.info(f"{'Program language':21}: {language}")
 
@@ -788,6 +760,7 @@ if __name__ == "__main__":
     import games as games
     import managers as managers
     import utilities as utils
+    import widgets
 
     mainapp = MainApp()
     mainapp.exec()

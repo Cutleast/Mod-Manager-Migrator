@@ -25,6 +25,7 @@ class GameDialog(qtw.QDialog):
         super().__init__(parent)
 
         self.app = app
+        self.loc = app.loc
         self.game: str = None
         self.game_instance: games.GameInstance = None
 
@@ -32,7 +33,7 @@ class GameDialog(qtw.QDialog):
         self.log = logging.getLogger("GameDialog")
 
         # Configure dialog
-        self.setWindowTitle(self.app.lang['select_game'])
+        self.setWindowTitle(self.loc.main.select_game)
         self.setModal(True)
         self.setObjectName("root")
         self.setFixedSize(720, 350)
@@ -43,7 +44,7 @@ class GameDialog(qtw.QDialog):
 
         # Add label with instruction
         label = qtw.QLabel()
-        label.setText(self.app.lang["select_game_text"])
+        label.setText(self.loc.main.select_game_text)
         label.setObjectName("titlelabel")
         label.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
         layout.addWidget(label)
@@ -71,7 +72,7 @@ class GameDialog(qtw.QDialog):
         self.games_box.setCurrentRow(0)
 
         # Add remember checkbox
-        self.rem_checkbox = qtw.QCheckBox(self.app.lang["do_not_ask_again"])
+        self.rem_checkbox = qtw.QCheckBox(self.loc.main.do_not_ask_again)
         layout.addWidget(self.rem_checkbox, alignment=qtc.Qt.AlignmentFlag.AlignHCenter)
 
         # Add cancel and done button
@@ -79,7 +80,7 @@ class GameDialog(qtw.QDialog):
         layout.addLayout(button_layout)
 
         # Cancel button
-        cancel_button = qtw.QPushButton(self.app.lang["exit"])
+        cancel_button = qtw.QPushButton(self.loc.main.exit)
         cancel_button.clicked.connect(self.app.exit)
         button_layout.addWidget(cancel_button)
 
@@ -87,7 +88,7 @@ class GameDialog(qtw.QDialog):
         button_layout.addSpacing(200)
 
         # Done button
-        done_button = qtw.QPushButton(self.app.lang["done"])
+        done_button = qtw.QPushButton(self.loc.main.done)
         done_button.clicked.connect(self.finish)
         button_layout.addWidget(done_button)
 

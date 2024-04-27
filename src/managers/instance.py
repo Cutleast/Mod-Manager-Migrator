@@ -25,6 +25,7 @@ class ModInstance:
 
     def __init__(self, app: MainApp):
         self.app = app
+        self.loc = app.loc
 
         # Initialize class specific logger
         self.log = logging.getLogger(self.__repr__())
@@ -156,7 +157,7 @@ class ModInstance:
         self.widget.setLayout(layout)
 
         # Add label with mod manager icon
-        label = qtw.QLabel(f"{self.app.lang['mod_manager']}:")
+        label = qtw.QLabel(f"{self.loc.main.mod_manager}:")
         layout.addWidget(label, 0, 0)
         icon = qtg.QPixmap(str(self.app.ico_path / self.icon_name))
         label = qtw.QLabel()
@@ -170,19 +171,19 @@ class ModInstance:
         layout.addWidget(label, 0, 1)
 
         # Add label with instance name
-        label = qtw.QLabel(f"{self.app.lang['instance_name']}:")
+        label = qtw.QLabel(f"{self.loc.main.instance_name}:")
         layout.addWidget(label, 1, 0)
         label = qtw.QLabel(self.name)
         layout.addWidget(label, 1, 1)
 
         # Add label with game name
-        label = qtw.QLabel(f"{self.app.lang['game']}:")
+        label = qtw.QLabel(f"{self.loc.main.game}:")
         layout.addWidget(label, 2, 0)
         label = qtw.QLabel(self.app.game_instance.name)
         layout.addWidget(label, 2, 1)
 
         # Add label with mods path
-        label = qtw.QLabel(f"{self.app.lang['mods_path']}:")
+        label = qtw.QLabel(f"{self.loc.main.mods_path}:")
         layout.addWidget(label, 3, 0)
         path = str(self.mods_path)
         path = utils.wrap_string(path, 50)
@@ -194,18 +195,18 @@ class ModInstance:
 
         # Add label with instance size
         if pos == "src":
-            label = qtw.QLabel(f"{self.app.lang['size']}:")
+            label = qtw.QLabel(f"{self.loc.main.size}:")
             layout.addWidget(label, 4, 0)
             label = qtw.QLabel(utils.scale_value(self.size))
             layout.addWidget(label, 4, 1)
         else:
-            label = qtw.QLabel(f"{self.app.lang['mode']}:")
+            label = qtw.QLabel(f"{self.loc.main.mode}:")
             layout.addWidget(label, 4, 0)
-            label = qtw.QLabel(self.app.lang[f"{self.app.mode}_mode"])
+            label = qtw.QLabel(getattr(self.loc.main, f"{self.app.mode}_mode"))
             layout.addWidget(label, 4, 1)
 
         # Add label with mods count
-        label = qtw.QLabel(f"{self.app.lang['number_of_mods']}:")
+        label = qtw.QLabel(f"{self.loc.main.number_of_mods}:")
         layout.addWidget(label, 5, 0)
         self.mods_count_label = qtw.QLabel(str(len(self.mods)))
         layout.addWidget(self.mods_count_label, 5, 1)
@@ -217,9 +218,9 @@ class ModInstance:
 
         # Add listbox for source mods
         if pos == "src":
-            label = qtw.QLabel(self.app.lang["mods_to_migrate"])
+            label = qtw.QLabel(self.loc.main.mods_to_migrate)
         else:
-            label = qtw.QLabel(self.app.lang["mods_to_enable"])
+            label = qtw.QLabel(self.loc.main.mods_to_enable)
         layout.addWidget(label, 7, 0)
         self.mods_box = qtw.QListWidget()
         self.mods_box.setSelectionMode(qtw.QListWidget.SelectionMode.MultiSelection)
@@ -263,11 +264,11 @@ class ModInstance:
         Shows context menu. Internal use only!
         """
 
-        select_action = qtg.QAction(self.app.lang["enable_selected"])
+        select_action = qtg.QAction(self.loc.main.enable_selected)
         select_action.triggered.connect(self._enable_selected)
-        unselect_action = qtg.QAction(self.app.lang["disable_selected"])
+        unselect_action = qtg.QAction(self.loc.main.disable_selected)
         unselect_action.triggered.connect(self._disable_selected)
-        unsel_all_action = qtg.QAction(self.app.lang["unselect_all"])
+        unsel_all_action = qtg.QAction(self.loc.main.unselect_all)
         unsel_all_action.triggered.connect(self._unselect_all)
         context_menu = qtw.QMenu()
         context_menu.setWindowFlags(

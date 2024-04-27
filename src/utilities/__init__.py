@@ -14,6 +14,7 @@ import requests
 
 from .exceptions import *
 from .ini_parser import IniParser
+from .localisation import Localisator
 from .mod import Mod
 from .mod_item import ModItem
 from .stdout_pipe import StdoutPipe

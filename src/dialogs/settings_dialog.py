@@ -25,6 +25,7 @@ class SettingsDialog(qtw.QDialog):
     def __init__(self, parent: qtw.QWidget, app: main.MainApp):
         super().__init__(parent)
         self.app = app
+        self.loc = app.loc
 
         self.stylesheet = self.app._theme.load_stylesheet()
 
@@ -33,7 +34,7 @@ class SettingsDialog(qtw.QDialog):
 
         # create popup window
         self.setModal(True)
-        self.setWindowTitle(self.app.lang['settings'])
+        self.setWindowTitle(self.loc.main.settings)
         self.setObjectName("root")
         self.setMinimumWidth(600)
         self.closeEvent = self.cancel_settings
@@ -49,13 +50,13 @@ class SettingsDialog(qtw.QDialog):
         self.settings_widgets = []
         for r, (config, value) in enumerate(self.app.config.items()):
             label = qtw.QLabel()
-            label.setText(self.app.lang.get(config, config))
+            label.setText(getattr(self.loc.main, config, config))
             detail_layout.addWidget(label, r, 0)
             if isinstance(value, bool):
                 dropdown = qtw.QComboBox()
                 dropdown.setObjectName(config)
-                dropdown.addItems([self.app.lang["true"], self.app.lang["false"]])
-                dropdown.setCurrentText(self.app.lang[str(value).lower()])
+                dropdown.addItems([self.loc.main.true, self.loc.main.false])
+                dropdown.setCurrentText(getattr(self.loc.main, str(value).lower()))
                 dropdown.setEditable(False)
                 dropdown.currentTextChanged.connect(lambda e: self.on_setting_change())
                 dropdown.bool = None
@@ -73,9 +74,9 @@ class SettingsDialog(qtw.QDialog):
                 dropdown = qtw.QComboBox()
                 dropdown.setObjectName(config)
                 dropdown.addItems(
-                    [self.app.lang["dark"], self.app.lang["light"], "System"]
+                    [self.loc.main.dark, self.loc.main.light, "System"]
                 )
-                dropdown.setCurrentText(self.app.lang.get(value.lower(), value))
+                dropdown.setCurrentText = getattr(self.loc.main, value.lower(), value)
                 dropdown.setEditable(False)
                 dropdown.currentTextChanged.connect(lambda e: self.on_setting_change())
                 self.settings_widgets.append(dropdown)
@@ -127,7 +128,7 @@ class SettingsDialog(qtw.QDialog):
                         )
                         self.on_setting_change()
 
-                button.setText(self.app.lang["select_color"])
+                button.setText(self.loc.main.select_color)
                 button.setIcon(qta.icon("mdi6.square-rounded", color=button.color))
                 button.setIconSize(qtc.QSize(24, 24))
                 button.clicked.connect(choose_color)
@@ -137,11 +138,11 @@ class SettingsDialog(qtw.QDialog):
                 dropdown = qtw.QComboBox()
                 dropdown.setObjectName(config)
                 dropdown.addItems([game(self.app).name for game in games.GAMES])
-                dropdown.addItem(self.app.lang["ask_always"])
+                dropdown.addItem(self.loc.main.ask_always)
                 if value is not None:
                     dropdown.setCurrentText(value)
                 else:
-                    dropdown.setCurrentText(self.app.lang["ask_always"])
+                    dropdown.setCurrentText(self.loc.main.ask_always)
                 dropdown.setEditable(False)
                 dropdown.currentTextChanged.connect(lambda e: self.on_setting_change())
                 self.settings_widgets.append(dropdown)
@@ -153,11 +154,11 @@ class SettingsDialog(qtw.QDialog):
         command_frame.setLayout(command_layout)
         layout.addWidget(command_frame)
         # cancel
-        cancel_button = qtw.QPushButton(self.app.lang["cancel"])
+        cancel_button = qtw.QPushButton(self.loc.main.cancel)
         cancel_button.clicked.connect(self.cancel_settings)
         command_layout.addWidget(cancel_button)
         # done
-        self.settings_done_button = qtw.QPushButton(self.app.lang["done"])
+        self.settings_done_button = qtw.QPushButton(self.loc.main.done)
         self.settings_done_button.clicked.connect(self.finish_settings)
         self.settings_done_button.setDisabled(True)
         command_layout.addWidget(self.settings_done_button)
@@ -181,14 +182,14 @@ class SettingsDialog(qtw.QDialog):
             name = widget.objectName()
             if isinstance(widget, qtw.QComboBox):
                 if hasattr(widget, "bool"):
-                    config[name] = widget.currentText() == self.app.lang["true"]
+                    config[name] = widget.currentText() == self.loc.main.true
                 elif name == "ui_mode":
                     config[name] = (
                         "System"
                         if widget.currentText() == "System"
                         else (
                             "Dark"
-                            if widget.currentText() == self.app.lang["dark"]
+                            if widget.currentText() == self.loc.main.dark
                             else "Light"
                         )
                     )
@@ -198,7 +199,7 @@ class SettingsDialog(qtw.QDialog):
                     config[name] = widget.currentText().lower()
                 elif name == "default_game":
                     value = widget.currentText()
-                    if value == self.app.lang["ask_always"]:
+                    if value == self.loc.main.ask_always:
                         value = None
                     config[name] = value
             elif isinstance(widget, qtw.QSpinBox):
@@ -273,17 +274,17 @@ class SettingsDialog(qtw.QDialog):
             message_box = qtw.QMessageBox(self)
             message_box.setWindowIcon(self.app.root.windowIcon())
             message_box.setStyleSheet(self.app.stylesheet)
-            message_box.setWindowTitle(self.app.lang["cancel"])
-            message_box.setText(self.app.lang["unsaved_cancel"])
+            message_box.setWindowTitle(self.loc.main.cancel)
+            message_box.setText(self.loc.main.unsaved_cancel)
             message_box.setStandardButtons(
                 qtw.QMessageBox.StandardButton.No | qtw.QMessageBox.StandardButton.Yes
             )
             message_box.setDefaultButton(qtw.QMessageBox.StandardButton.No)
             message_box.button(qtw.QMessageBox.StandardButton.No).setText(
-                self.app.lang["no"]
+                self.loc.main.no
             )
             message_box.button(qtw.QMessageBox.StandardButton.Yes).setText(
-                self.app.lang["yes"]
+                self.loc.main.yes
             )
             choice = message_box.exec()
 

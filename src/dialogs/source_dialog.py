@@ -28,12 +28,13 @@ class SourceDialog(qtw.QDialog):
         super().__init__(parent)
 
         self.app = app
+        self.loc = app.loc
         self.modinstance: managers.ModInstance = None
         self.source_widget: qtw.QWidget = None
         self.mods_box: qtw.QListWidget = None
 
         # Configure dialog
-        self.setWindowTitle(self.app.lang['select_source'])
+        self.setWindowTitle(self.loc.main.select_source)
         self.setModal(True)
         self.setObjectName("root")
 
@@ -51,7 +52,7 @@ class SourceDialog(qtw.QDialog):
         self.modmanagers_widget.setLayout(manager_layout)
 
         # Label with instruction
-        label = qtw.QLabel(self.app.lang["select_source_text"])
+        label = qtw.QLabel(self.loc.main.select_source_text)
         label.setObjectName("titlelabel")
         label.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
         manager_layout.addWidget(label, 0, 0, 1, columns)
@@ -97,7 +98,7 @@ class SourceDialog(qtw.QDialog):
 
         # Add label with instruction
         label = qtw.QLabel()
-        label.setText(self.app.lang["select_src_instance_text"])
+        label.setText(self.loc.main.select_src_instance_text)
         label.setObjectName("titlelabel")
         label.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
         instances_layout.addWidget(label)
@@ -120,7 +121,7 @@ class SourceDialog(qtw.QDialog):
         layout.addLayout(self.button_layout)
 
         # Cancel button
-        self.src_cancel_button = qtw.QPushButton(self.app.lang["cancel"])
+        self.src_cancel_button = qtw.QPushButton(self.loc.main.cancel)
         self.src_cancel_button.clicked.connect(self.accept)
         self.button_layout.addWidget(self.src_cancel_button)
 
@@ -128,7 +129,7 @@ class SourceDialog(qtw.QDialog):
         self.button_layout.addSpacing(200)
 
         # Back button with icon
-        self.back_button = qtw.QPushButton(self.app.lang["back"])
+        self.back_button = qtw.QPushButton(self.loc.main.back)
         self.back_button.setIcon(
             qta.icon("fa5s.chevron-left", color=self.app.theme["text_color"])
         )
@@ -136,7 +137,7 @@ class SourceDialog(qtw.QDialog):
         self.button_layout.addWidget(self.back_button)
 
         # Next button with icon
-        self.next_button = qtw.QPushButton(self.app.lang["next"])
+        self.next_button = qtw.QPushButton(self.loc.main.next)
         self.next_button.setLayoutDirection(  # Switch icon and text
             qtc.Qt.LayoutDirection.RightToLeft
         )
@@ -166,7 +167,7 @@ class SourceDialog(qtw.QDialog):
 
         # Update next button
         self.next_button.clicked.disconnect()
-        self.next_button.setText(self.app.lang["next"])
+        self.next_button.setText(self.loc.main.next)
         self.next_button.clicked.connect(self.goto_secnd_page)
         self.next_button.setIcon(
             qta.icon("fa5s.chevron-right", color=self.app.theme["text_color"])
@@ -218,7 +219,7 @@ class SourceDialog(qtw.QDialog):
 
         # Bind next button to done
         self.next_button.clicked.disconnect()
-        self.next_button.setText(self.app.lang["done"])
+        self.next_button.setText(self.loc.main.done)
         self.next_button.clicked.connect(self.finish)
         self.next_button.setIcon(qtg.QIcon())
 
@@ -259,7 +260,7 @@ class SourceDialog(qtw.QDialog):
         self.modinstance.show_src_widget()
 
         # Update source button
-        self.app.src_button.setText(self.app.lang["edit_source"])
+        self.app.src_button.setText(self.loc.main.edit_source)
         self.app.src_button.clicked.disconnect()
         # self.back_button.setDisabled(True)
         self.app.src_button.clicked.connect(self.show)
@@ -277,7 +278,7 @@ class SourceDialog(qtw.QDialog):
         self.app.dst_widget = None
         self.app.destination = None
         self.app.dst_modinstance = None
-        self.app.dst_button.setText(self.app.lang["select_source"])
+        self.app.dst_button.setText(self.loc.main.select_source)
         self.app.dst_button.clicked.disconnect()
         self.app.dst_button.clicked.connect(
             lambda: DestinationDialog(self.app.root, self.app).show()
