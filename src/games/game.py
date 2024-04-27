@@ -1,21 +1,20 @@
 """
-Part of MMM. Contains game classes.
-
-Falls under license
+This file is part of Mod Manager Migrator
+by Cutleast and falls under the license
 Attribution-NonCommercial-NoDerivatives 4.0 International.
 """
 
-# Import libraries ###################################################
 import logging
 import winreg
 from pathlib import Path
-from typing import Type
 
-from main import MainApp, qtc, qtw
-from utils import UiException
+import qtpy.QtCore as qtc
+import qtpy.QtWidgets as qtw
+
+from main import MainApp
+from utilities import UiException
 
 
-# Create class for Game instance #####################################
 class GameInstance:
     """
     General class for game instances.
@@ -142,143 +141,3 @@ SOFTWARE\\WOW6432Node\\GOG.com\\Games\\{self.gogid}"
 
         self.log.debug(f"Game install path: {self.installdir}")
         return self.installdir
-
-
-# Create class for SkyrimSE instance #################################
-class SkyrimSEInstance(GameInstance):
-    """
-    Class for SkyrimSE GameInstance.
-    Inherited from GameInstance class.
-    """
-
-    icon_name = "Skyrimse.ico"
-
-    def __init__(self, app: MainApp):
-        super().__init__(app)
-
-        self.name = "Skyrim Special Edition"
-        self.id = "SkyrimSE"
-        self.inidir = self.app.doc_path / "My Games" / self.name
-        self.inifiles = [
-            self.inidir / "Skyrim.ini",
-            self.inidir / "SkyrimPrefs.ini",
-            self.inidir / "SkyrimCustom.ini",
-        ]
-        self.steamid = 489830
-        self.gogid = 1711230643
-
-    def __repr__(self):
-        return "SkyrimSEInstance"
-
-
-# Create class for Skyrim ("Oldrim") instance ########################
-class SkyrimInstance(GameInstance):
-    """
-    Class for Skyrim ("Oldrim") GameInstance.
-    Inherited from GameInstance class.
-    """
-
-    icon_name = "Skyrim.ico"
-
-    def __init__(self, app: MainApp):
-        super().__init__(app)
-
-        self.name = "Skyrim"
-        self.id = "Skyrim"
-        self.inidir = self.app.doc_path / "My Games" / self.name
-        self.inifiles = [
-            self.inidir / "Skyrim.ini",
-            self.inidir / "SkyrimPrefs.ini",
-            self.inidir / "SkyrimCustom.ini",
-        ]
-        self.steamid = 72850
-
-    def __repr__(self):
-        return "SkyrimInstance"
-
-
-# Create class for Fallout4 instance #################################
-class Fallout4Instance(GameInstance):
-    """
-    Class for Fallout 4 GameInstance.
-    Inherited from GameInstance class.
-    """
-
-    icon_name = "Fallout4.ico"
-
-    def __init__(self, app: MainApp):
-        super().__init__(app)
-
-        self.name = "Fallout 4"
-        self.id = "Fallout4"
-        self.inidir = self.app.doc_path / "My Games" / "Fallout4"
-        self.inifiles = [
-            self.inidir / "Fallout4.ini",
-            self.inidir / "Fallout4Prefs.ini",
-            self.inidir / "Fallout4Custom.ini",
-        ]
-        self.steamid = 377160
-
-    def __repr__(self):
-        return "Fallout4Instance"
-
-
-# Create class for Enderal instance ##################################
-class EnderalInstance(GameInstance):
-    """
-    Class for Enderal GameInstance.
-    Inherited from GameInstance class.
-    """
-
-    icon_name = "Enderal.ico"
-
-    def __init__(self, app: MainApp):
-        super().__init__(app)
-
-        self.name = "Enderal"
-        self.id = "Enderal"
-        self.inidir = self.app.doc_path / "My Games" / self.name
-        self.inifiles = [
-            self.inidir / "Enderal.ini",
-            self.inidir / "EnderalPrefs.ini",
-            self.inidir / "EnderalCustom.ini",
-        ]
-        self.steamid = 933480
-
-    def __repr__(self):
-        return "EnderalInstance"
-
-
-# Create class for EnderalSE instance ##################################
-class EnderalSEInstance(GameInstance):
-    """
-    Class for EnderalSE GameInstance.
-    Inherited from GameInstance class.
-    """
-
-    icon_name = "Enderalse.ico"
-
-    def __init__(self, app: MainApp):
-        super().__init__(app)
-
-        self.name = "Enderal Special Edition"
-        self.id = "EnderalSE"
-        self.inidir = self.app.doc_path / "My Games" / self.name
-        self.inifiles = [
-            self.inidir / "Enderal.ini",
-            self.inidir / "EnderalPrefs.ini",
-            self.inidir / "EnderalCustom.ini",
-        ]
-        self.steamid = 976620
-
-    def __repr__(self):
-        return "EnderalSEInstance"
-
-
-GAMES: list[Type[GameInstance]] = [
-    SkyrimSEInstance,
-    SkyrimInstance,
-    Fallout4Instance,
-    EnderalSEInstance,
-    EnderalInstance,
-]

@@ -26,7 +26,7 @@ cmd = f'nuitka \
 --standalone \
 --disable-console \
 --include-data-dir="./src/data=./data" \
---include-data-dir="./src/venv/Lib/site-packages/qtawesome=./qtawesome" \
+--include-data-dir="./.venv/Lib/site-packages/qtawesome=./qtawesome" \
 --enable-plugin=pyside6 \
 --remove-output \
 --company-name="{AUTHOR}" \
@@ -47,5 +47,7 @@ for file in UNUSED_FILES:
         continue
     os.remove(file)
     print(f"Removed '{file.name}'.")
+
+os.rename(DIST_FOLDER, DIST_FOLDER.with_name("Mod Manager Migrator"))
 
 print("Done!")

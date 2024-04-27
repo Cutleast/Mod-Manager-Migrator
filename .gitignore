@@ -1,9 +1,9 @@
-**venv
-**.vscode
+.venv
+.vscode
+tests
+main.build
+main.dist
 **__pycache__
-**tests
-**main.build
-**main.dist
 *.txt
 **.old
 **_old.py

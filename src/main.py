@@ -1,13 +1,11 @@
 """
 Name: Mod Manager Migrator
 Author: Cutleast
-Python Version: 3.9.13
-Qt Version: 6.4.3
-Type: Main File
-License: Attribution-NonCommercial-NoDerivative 4.0 International (see repo for more info)
+Python Version: 3.11.2
+Qt Version: 6.6.1
+License: Attribution-NonCommercial-NoDerivative 4.0 International
 """
 
-# Import libraries ###################################################
 import argparse
 import ctypes
 import json
@@ -23,25 +21,12 @@ from pathlib import Path
 from shutil import disk_usage
 from winsound import MessageBeep as alert
 
-import darkdetect
 import qtawesome as qta
 import qtpy.QtCore as qtc
 import qtpy.QtGui as qtg
 import qtpy.QtWidgets as qtw
 
-# Constant variables #################################################
-LOG_LEVELS = {
-    10: "debug",  # DEBUG
-    20: "info",  # INFO
-    30: "warning",  # WARNING
-    40: "error",  # ERROR
-    50: "critical",  # CRITICAL
-}
-SUPPORTED_MODMANAGERS = ["Vortex", "ModOrganizer"]
-SUPPORTED_GAMES = ["SkyrimSE", "Skyrim", "Fallout4", "EnderalSE", "Enderal"]
 
-
-# Create class for main application ##################################
 class MainApp(qtw.QApplication):
     """
     Main application class for ui.
@@ -80,7 +65,7 @@ class MainApp(qtw.QApplication):
         self.start_time = time.strftime("%H:%M:%S")
         self.os_type = str("linux" if "Linux" in platform.system() else "windows")
         print(f"Current datetime: {self.start_date} {self.start_time}")
-        # paths
+
         self.cur_path = Path(__file__).parent
         self.app_path = Path(os.getenv("APPDATA")) / self.name
         self.con_path = self.app_path / "config.json"
@@ -90,7 +75,7 @@ class MainApp(qtw.QApplication):
         _buf = ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)
         ctypes.windll.shell32.SHGetFolderPathW(None, 5, None, 0, _buf)
         self.doc_path = Path(_buf.value)
-        # logging
+
         self.log_name = (
             f"{self.name}_{self.start_date}_-_{self.start_time.replace(':', '.')}.log"
         )
@@ -100,7 +85,7 @@ class MainApp(qtw.QApplication):
         if not self.log_path.parent.is_dir():
             os.mkdir(self.log_path.parent)
         self.protocol = ""
-        # config
+
         self.default_conf = {
             "save_logs": False,
             "log_level": "debug",
@@ -177,7 +162,7 @@ Updating with default config..."
             "-l",
             "--log-level",
             help="Specify logging level.",
-            choices=list(LOG_LEVELS.values()),
+            choices=list(utils.LOG_LEVELS.values()),
         )
         parser.add_argument(  # keep log
             "--keep-log",
@@ -195,7 +180,6 @@ Updating with default config..."
             self.log.setLevel(self.log_level)
 
         # Start by logging basic information #########################
-        # log_title = "-" * 40 + f" {self.name} " + "-" * 40
         width = 100
         log_title = self.name.center(width, "=")
         self.log.info(f"\n{'=' * width}\n{log_title}\n{'=' * width}")
@@ -208,7 +192,7 @@ Updating with default config..."
         self.log.info(f"{'Resource path':22}: {self.res_path}")
         self.log.info(f"{'Config path':22}: {self.con_path}")
         self.log.info(f"{'Log path':22}: {self.log_path}")
-        self.log.info(f"{'Log level':22}: {LOG_LEVELS[self.log.level]}")
+        self.log.info(f"{'Log level':22}: {utils.LOG_LEVELS[self.log.level]}")
         self.log.info(f"{'UI mode':22}: {self.config['ui_mode']}")
         self.log.info(f"{'System language':22}: {getlocale()[0]}")
         self.log.debug(
@@ -225,13 +209,13 @@ Updating with default config..."
         self.root = qtw.QMainWindow()
         self.root.setObjectName("root")
         self.root.setWindowTitle(f"{self.name} v{self.version}")
-        self.root.setWindowIcon(qtg.QIcon(os.path.join(self.ico_path, "mmm.svg")))
-        self._theme = Theme(self)
+        self.setWindowIcon(qtg.QIcon(os.path.join(self.ico_path, "mmm.svg")))
+        self._theme = utils.Theme(self)
         self._theme.set_mode(self.config["ui_mode"])
         self.theme = self._theme.load_theme()
         self.theme["accent_color"] = self.config["accent_color"]
         self.stylesheet = self._theme.load_stylesheet()
-        self.root.setStyleSheet(self.stylesheet)
+        self.setStyleSheet(self.stylesheet)
 
         # Fix link color
         palette = self.palette()
@@ -386,7 +370,6 @@ Current version: {self.version} | Latest version: {new_version}"
             message_box.button(qtw.QMessageBox.StandardButton.No).setText(
                 self.lang["no"]
             )
-            utils.center(message_box, self.root)
             choice = message_box.exec()
 
             # Handle the user's choice
@@ -532,12 +515,12 @@ Current version: {self.version} | Latest version: {new_version}"
 
                     appdata_path = f"\\\\?\\{appdata_path}"
 
-                    def process(ldialog: LoadingDialog):
+                    def process(ldialog: dialogs.LoadingDialog):
                         ldialog.updateProgress(text1=self.lang["wiping_instance"])
 
                         shutil.rmtree(appdata_path)
 
-                    loadingdialog = LoadingDialog(
+                    loadingdialog = dialogs.LoadingDialog(
                         parent=self.root, app=self, func=process
                     )
                     loadingdialog.exec()
@@ -551,12 +534,12 @@ Current version: {self.version} | Latest version: {new_version}"
 
                     instance_path = f"\\\\?\\{instance_path}"
 
-                    def process(ldialog: LoadingDialog):
+                    def process(ldialog: dialogs.LoadingDialog):
                         ldialog.updateProgress(text1=self.lang["wiping_instance_data"])
 
                         shutil.rmtree(instance_path)
 
-                    loadingdialog = LoadingDialog(
+                    loadingdialog = dialogs.LoadingDialog(
                         parent=self.root, app=self, func=process
                     )
                     loadingdialog.exec()
@@ -620,7 +603,7 @@ Current version: {self.version} | Latest version: {new_version}"
 
             if choice == qtw.QMessageBox.StandardButton.Yes:
                 # Copy root files directly into game directory
-                def process(ldialog: LoadingDialog):
+                def process(ldialog: dialogs.LoadingDialog):
                     ldialog.updateProgress(text1=self.lang["copying_files"])
 
                     installdir = self.game_instance.get_install_dir()
@@ -644,14 +627,16 @@ Current version: {self.version} | Latest version: {new_version}"
                                 f"Failed to copy following files/folders: {ex}"
                             )
 
-                loadingdialog = LoadingDialog(parent=self.root, app=self, func=process)
+                loadingdialog = dialogs.LoadingDialog(
+                    parent=self.root, app=self, func=process
+                )
                 loadingdialog.exec()
 
         # Get start time for performance measurement
         starttime = time.time()
 
         # Copy mods to new instance
-        loadingdialog = LoadingDialog(
+        loadingdialog = dialogs.LoadingDialog(
             parent=self.root,
             app=self,
             func=self.dst_modinstance.copy_mods,
@@ -793,128 +778,11 @@ Current version: {self.version} | Latest version: {new_version}"
         self.log.info(f"{'Program language':21}: {language}")
 
 
-# Create class for ui theme ##########################################
-class Theme:
-    """Class for ui theme. Manages theme and stylesheet."""
-
-    default_dark_theme = {
-        "primary_bg": "#202020",
-        "secondary_bg": "#2d2d2d",
-        "tertiary_bg": "#383838",
-        "highlight_bg": "#696969",
-        "accent_color": "#d78f46",
-        "text_color": "#ffffff",
-        "font": "Arial",
-        "font_size": "14px",
-        "title_font": "Arial Black",
-        "title_size": "28px",
-        "subtitle_size": "22px",
-        "console_font": "Cascadia Mono",
-        "console_size": "14px",
-        "checkbox_indicator": "url(./data/icons/checkmark_light.svg)",
-        "dropdown_arrow": "url(./data/icons/dropdown_light.svg)",
-    }
-    default_light_theme = {
-        "primary_bg": "#f3f3f3",
-        "secondary_bg": "#e9e9e9",
-        "tertiary_bg": "#dadada",
-        "highlight_bg": "#b6b6b6",
-        "accent_color": "#d78f46",
-        "text_color": "black",
-        "font": "Arial",
-        "font_size": "14px",
-        "title_font": "Arial Black",
-        "title_size": "28px",
-        "subtitle_size": "22px",
-        "console_font": "Cascadia Mono",
-        "console_size": "14px",
-        "checkbox_indicator": "url(./data/icons/checkmark.svg)",
-        "dropdown_arrow": "url(./data/icons/dropdown.svg)",
-    }
-    default_mode = "dark"
-    default_theme = default_dark_theme
-    default_stylesheet = ""
-    stylesheet = ""
-
-    def __init__(self, app: MainApp):
-        self.app = app
-        self.mode = self.default_mode
-        self.theme = self.default_theme
-
-    def set_mode(self, mode: str):
-        """
-        Sets <mode> as ui mode.
-        """
-
-        mode = mode.lower()
-        if mode == "system":
-            mode = darkdetect.theme().lower()
-        self.mode = mode
-        if self.mode == "light":
-            self.default_theme = self.default_light_theme
-        elif self.mode == "dark":
-            self.default_theme = self.default_dark_theme
-
-        return self.default_theme
-
-    def load_theme(self):
-        """
-        Loads theme according to mode
-        """
-
-        if self.mode == "light":
-            self.theme = self.default_light_theme
-        elif self.mode == "dark":
-            self.theme = self.default_dark_theme
-
-        return self.theme
-
-    def load_stylesheet(self):
-        """
-        Loads stylesheet from data\\style.qss.
-        """
-
-        # load stylesheet from qss file
-        with open(self.app.qss_path, "r", encoding="utf8") as file:
-            stylesheet = file.read()
-
-        self.default_stylesheet = stylesheet
-
-        # parse stylesheet with theme
-        self.stylesheet = self.parse_stylesheet(self.theme, stylesheet)
-
-        return self.stylesheet
-
-    def set_stylesheet(self, stylesheet: str = None):
-        """
-        Sets <stylesheet> as current stylesheet.
-        """
-
-        if not stylesheet:
-            stylesheet = self.stylesheet
-        self.app.root.setStyleSheet(stylesheet)
-        self.app.setStyleSheet(stylesheet)
-
-    @staticmethod
-    def parse_stylesheet(theme: dict, stylesheet: str):
-        """
-        Parses <stylesheet> by replacing placeholders with values
-        from <theme>.
-        """
-
-        for setting, value in theme.items():
-            stylesheet = stylesheet.replace(f"<{setting}>", value)
-
-        return stylesheet
-
-
-# Start main application #############################################
 if __name__ == "__main__":
     import dialogs
-    import games
-    import managers
-    import utils
-    from loadingdialog import LoadingDialog
+    import games as games
+    import managers as managers
+    import utilities as utils
 
     mainapp = MainApp()
     mainapp.exec()

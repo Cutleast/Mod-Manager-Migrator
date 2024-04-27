@@ -1,11 +1,9 @@
 """
-Part of MMM. Contains loadingdialog.
-
-Falls under license
+This file is part of Mod Manager Migrator
+by Cutleast and falls under the license
 Attribution-NonCommercial-NoDerivatives 4.0 International.
 """
 
-# Import libraries ###################################################
 import threading
 import time
 from typing import Callable
@@ -14,10 +12,9 @@ import qtpy.QtCore as qtc
 import qtpy.QtWidgets as qtw
 
 import main
-import utils
+import utilities as utils
 
 
-# Create class for loading dialog ####################################
 class LoadingDialog(qtw.QDialog):
     """
     QDialog designed for multiple progress bars.
