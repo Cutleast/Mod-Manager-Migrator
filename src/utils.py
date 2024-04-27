@@ -13,7 +13,7 @@ import shutil
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Union
+from typing import Any
 
 import plyvel as leveldb
 import qtpy.QtCore as qtc
@@ -105,8 +105,8 @@ class Mod:
         self,
         name: str,
         path: Path,
-        metadata: Dict[str, Any],
-        files: List[Path],
+        metadata: dict[str, Any],
+        files: list[Path],
         size: int,
         enabled: bool,
         installed: bool,
@@ -119,9 +119,9 @@ class Mod:
         self.enabled = enabled  # state in mod manager (True or False)
         self.selected = True  # True: mod is migrated; False: mod is ignored
         self.installed = installed  # state in instance (True or False)
-        self.overwriting_mods: List[Mod] = []  # list of overwriting mods
-        self.overwriting_files: List[Path] = []  # list of overwriting files (Vortex)
-        self.overwritten_files: List[Path] = []  # list of overwritten files (MO2)
+        self.overwriting_mods: list[Mod] = []  # list of overwriting mods
+        self.overwriting_files: list[Path] = []  # list of overwriting files (Vortex)
+        self.overwritten_files: list[Path] = []  # list of overwritten files (MO2)
 
     def __repr__(self):
         return self.name
@@ -266,7 +266,7 @@ class VortexDatabase:
         self.log.debug("Saved to database.")
 
     @staticmethod
-    def flatten_nested_dict(nested_dict: dict) -> Dict[str, str]:
+    def flatten_nested_dict(nested_dict: dict) -> dict[str, str]:
         """
         This function takes a nested dictionary
         and converts it back to a flat dictionary in the format of
@@ -278,7 +278,7 @@ class VortexDatabase:
                 dict (dictionary in the format above.)
         """
 
-        flat_dict: Dict[str, str] = {}
+        flat_dict: dict[str, str] = {}
 
         def flatten_dict_helper(dictionary, prefix=""):
             for key, value in dictionary.items():
@@ -292,7 +292,7 @@ class VortexDatabase:
         return flat_dict
 
     @staticmethod
-    def parse_flat_dict(data: Dict[str, str]):
+    def parse_flat_dict(data: dict[str, str]):
         """
         This function takes a dict in the
         format of
@@ -317,7 +317,7 @@ class VortexDatabase:
                 for key in keys[:-1]:
                     if key not in current:
                         current[key] = {}
-                    current: Dict[str, dict] = current[key]
+                    current: dict[str, dict] = current[key]
                 value = json.loads(value)
                 current[keys[-1]] = value
             except ValueError:
@@ -333,7 +333,7 @@ class IniParser:
     Parser for ini files. Supports loading, changing and saving.
     """
 
-    def __init__(self, filename: Union[str, Path]):
+    def __init__(self, filename: str | Path):
         self.filename = filename
         self.data = {}
 
@@ -425,7 +425,7 @@ def create_folder_list(folder: Path, lower=True):
     Lowers filenames if <lower> is True.
     """
 
-    files: List[Path] = []
+    files: list[Path] = []
 
     for root, _, _files in os.walk(folder):
         for f in _files:
@@ -441,7 +441,7 @@ def create_folder_list(folder: Path, lower=True):
 
 
 # Define function to scale value to format ###########################
-def scale_value(value: Union[int, float], suffix="B"):
+def scale_value(value: int | float, suffix="B"):
     """
     Scales <value> to its proper format
     with <suffix> as unit

@@ -9,10 +9,10 @@ Attribution-NonCommercial-NoDerivatives 4.0 International.
 import logging
 import winreg
 from pathlib import Path
-from typing import List, Type
+from typing import Type
 
+from main import MainApp, qtc, qtw
 from utils import UiException
-from main import MainApp, qtw, qtc
 
 
 # Create class for Game instance #####################################
@@ -29,7 +29,7 @@ class GameInstance:
         self.id: str = ""
         self.installdir: Path = ""
         self.inidir: Path = ""
-        self.inifiles: List[Path] = []
+        self.inifiles: list[Path] = []
         self.steamid: int = 0
         self.gogid: int = 0
 
@@ -275,7 +275,7 @@ class EnderalSEInstance(GameInstance):
         return "EnderalSEInstance"
 
 
-GAMES: List[Type[GameInstance]] = [
+GAMES: list[Type[GameInstance]] = [
     SkyrimSEInstance,
     SkyrimInstance,
     Fallout4Instance,

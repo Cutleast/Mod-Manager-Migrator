@@ -21,9 +21,9 @@ import utils
 class LoadingDialog(qtw.QDialog):
     """
     QDialog designed for multiple progress bars.
-    
+
     Use updateProgress to update dialog.
-    
+
     Parameters:
         parent: QWidget
         app: main.MainApp
@@ -34,12 +34,7 @@ class LoadingDialog(qtw.QDialog):
     stop_signal = qtc.Signal()
     progress_signal = qtc.Signal(dict)
 
-    def __init__(
-            self,
-            parent: qtw.QWidget,
-            app: main.MainApp,
-            func: Callable
-        ):
+    def __init__(self, parent: qtw.QWidget, app: main.MainApp, func: Callable):
         super().__init__(parent)
 
         # Force focus
@@ -51,13 +46,10 @@ class LoadingDialog(qtw.QDialog):
         self.func = lambda: (
             self.start_signal.emit(),
             func(self),
-            self.stop_signal.emit()
+            self.stop_signal.emit(),
         )
         self.dialog_thread = LoadingDialogThread(
-            dialog=self,
-            target=self.func,
-            daemon=True,
-            name='BackgroundThread'
+            dialog=self, target=self.func, daemon=True, name="BackgroundThread"
         )
         self.starttime = None
 
@@ -117,21 +109,18 @@ class LoadingDialog(qtw.QDialog):
         return "LoadingDialog"
 
     def updateProgress(
-            self,
-
-            text1: str = None,
-            value1: int = None,
-            max1: int = None,
-            
-            show2: bool = None,
-            text2: str = None,
-            value2: int = None,
-            max2: int = None,
-
-            show3: bool = None,
-            text3: str = None,
-            value3: int = None,
-            max3: int = None,
+        self,
+        text1: str = None,
+        value1: int = None,
+        max1: int = None,
+        show2: bool = None,
+        text2: str = None,
+        value2: int = None,
+        max2: int = None,
+        show3: bool = None,
+        text3: str = None,
+        value3: int = None,
+        max3: int = None,
     ):
         """
         Updates progress of progressbars.
@@ -153,22 +142,22 @@ class LoadingDialog(qtw.QDialog):
             max3: int (maximum value of third progressbar)
         """
 
-        self.progress_signal.emit({
-            'text': text1,
-            'value': value1,
-            'max': max1,
+        self.progress_signal.emit(
+            {
+                "text": text1,
+                "value": value1,
+                "max": max1,
+                "show2": show2,
+                "text2": text2,
+                "value2": value2,
+                "max2": max2,
+                "show3": show3,
+                "text3": text3,
+                "value3": value3,
+                "max3": max3,
+            }
+        )
 
-            'show2': show2,
-            'text2': text2,
-            'value2': value2,
-            'max2': max2,
-
-            'show3': show3,
-            'text3': text3,
-            'value3': value3,
-            'max3': max3,
-        })
-    
     def setProgress(self, progress: dict):
         """
         Sets progress from <progress>.
@@ -177,19 +166,19 @@ class LoadingDialog(qtw.QDialog):
             progress: dict ('value': int, 'max': int, 'text': str)
         """
 
-        text1: str = progress.get('text', None)
-        value1: int = progress.get('value', None)
-        max1: int = progress.get('max', None)
+        text1: str = progress.get("text", None)
+        value1: int = progress.get("value", None)
+        max1: int = progress.get("max", None)
 
-        show2: bool = progress.get('show2', None)
-        text2: str = progress.get('text2', None)
-        value2: int = progress.get('value2', None)
-        max2: int = progress.get('max2', None)
+        show2: bool = progress.get("show2", None)
+        text2: str = progress.get("text2", None)
+        value2: int = progress.get("value2", None)
+        max2: int = progress.get("max2", None)
 
-        show3: bool = progress.get('show3', None)
-        value3: int = progress.get('value3', None)
-        max3: int = progress.get('max3', None)
-        text3: str = progress.get('text3', None)
+        show3: bool = progress.get("show3", None)
+        value3: int = progress.get("value3", None)
+        max3: int = progress.get("max3", None)
+        text3: str = progress.get("text3", None)
 
         # Update first row (always shown)
         if max1 is not None:
@@ -231,7 +220,7 @@ class LoadingDialog(qtw.QDialog):
 
         # Resize dialog
         self.setFixedHeight(self.sizeHint().height())
-        #self.setFixedSize(self.sizeHint())
+        # self.setFixedSize(self.sizeHint())
         widthbefore = self.width()
         widthhint = self.sizeHint().width()
 
@@ -251,7 +240,7 @@ class LoadingDialog(qtw.QDialog):
     def timerEvent(self, event: qtc.QTimerEvent):
         """
         Callback for timer timeout.
-        Updates window title time.        
+        Updates window title time.
         """
 
         super().timerEvent(event)
@@ -266,10 +255,10 @@ class LoadingDialog(qtw.QDialog):
         """
         Shows dialog and executes thread.
         Blocks code until thread is done
-        and dialog is closed.        
+        and dialog is closed.
         """
 
-        #self.start_signal.emit()
+        # self.start_signal.emit()
         self.dialog_thread.start()
 
         self.starttime = time.strftime("%H:%M:%S")
@@ -282,7 +271,7 @@ class LoadingDialog(qtw.QDialog):
 
     def on_start(self):
         """
-        Callback for thread start.        
+        Callback for thread start.
         """
 
         self.pbar1.setRange(0, 0)
@@ -312,13 +301,7 @@ class LoadingDialogThread(threading.Thread):
 
     exception = None
 
-    def __init__(
-            self,
-            dialog: LoadingDialog,
-            target: Callable,
-            *args,
-            **kwargs
-        ):
+    def __init__(self, dialog: LoadingDialog, target: Callable, *args, **kwargs):
 
         super().__init__(target=target, *args, **kwargs)
 
@@ -326,7 +309,7 @@ class LoadingDialogThread(threading.Thread):
 
     def run(self):
         """
-        Runs thread and raises errors that could occur.        
+        Runs thread and raises errors that could occur.
         """
 
         try:

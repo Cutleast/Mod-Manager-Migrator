@@ -18,11 +18,10 @@ import shutil
 import sys
 import time
 import traceback
-from winsound import MessageBeep as alert
 from locale import getlocale
 from pathlib import Path
 from shutil import disk_usage
-from typing import Dict
+from winsound import MessageBeep as alert
 
 import darkdetect
 import qtawesome as qta
@@ -637,11 +636,13 @@ Current version: {self.version} | Latest version: {new_version}"
 
                         src_path = mod.path
                         dst_path = installdir
-                        
+
                         try:
                             shutil.copytree(src_path, dst_path, dirs_exist_ok=True)
                         except shutil.Error as ex:
-                            self.log.error(f"Failed to copy following files/folders: {ex}")
+                            self.log.error(
+                                f"Failed to copy following files/folders: {ex}"
+                            )
 
                 loadingdialog = LoadingDialog(parent=self.root, app=self, func=process)
                 loadingdialog.exec()
@@ -770,12 +771,12 @@ Current version: {self.version} | Latest version: {new_version}"
 
         # Load language
         with open(langpath, "r", encoding="utf-8") as langfile:
-            lang: Dict[str, str] = json.load(langfile)
+            lang: dict[str, str] = json.load(langfile)
 
         # Load english language as fallback
         eng_path = self.res_path / "locales" / "en-US.json"
         with open(eng_path, "r", encoding="utf-8") as engfile:
-            eng_lang: Dict[str, str] = json.load(engfile)
+            eng_lang: dict[str, str] = json.load(engfile)
 
         if len(eng_lang) > len(lang):
             self.log.warning(f"Detected outdated localisation: '{language}'!")
@@ -787,7 +788,7 @@ Current version: {self.version} | Latest version: {new_version}"
 
             self.log.debug("Filled missing strings from en-US strings.")
 
-        self.lang: Dict[str, str] = lang
+        self.lang: dict[str, str] = lang
 
         self.log.info(f"{'Program language':21}: {language}")
 
@@ -909,10 +910,10 @@ class Theme:
 
 # Start main application #############################################
 if __name__ == "__main__":
-    import utils
     import dialogs
     import games
     import managers
+    import utils
     from loadingdialog import LoadingDialog
 
     mainapp = MainApp()

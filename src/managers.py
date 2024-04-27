@@ -52,7 +52,7 @@ class ModInstance:
         self.root_mods: List[utils.Mod] = []
 
         # file: [origin mod, origin mod, etc...]
-        self.modfiles: Dict[Path, List[utils.Mod]] = {}
+        self.modfiles: dict[Path, List[utils.Mod]] = {}
 
         # size in bytes as integer
         self._size: int = 0
@@ -70,7 +70,7 @@ class ModInstance:
         self.instances: List[str] = []
 
         # contains additional paths like download folder
-        self.paths: Dict[str, Path] = {}
+        self.paths: dict[str, Path] = {}
 
         # instance data like name, paths
         self.instance_data = {}
@@ -104,7 +104,7 @@ class ModInstance:
     def copy_mods(self, ldialog: LoadingDialog = None):
         """
         Copies mods from source instance to destination instance.
-        
+
         Gets called by destination instance.
         """
 
@@ -126,21 +126,21 @@ class ModInstance:
         """
 
         return
-    
+
     def set_file_conflicts(self):
         """
         Converts source's file conflicts to this mod manager's format.
         """
 
         return
-    
+
     def show_src_widget(self):
         """
         Shows widget with instance details and mods
-        at source position.        
+        at source position.
         """
 
-        self._show_widget('src')
+        self._show_widget("src")
 
     def show_dst_widget(self):
         """
@@ -148,13 +148,13 @@ class ModInstance:
         at source position.
         """
 
-        self._show_widget('dst')
+        self._show_widget("dst")
 
     def _show_widget(self, pos: str):
         """
         Shows widget. Internal use only!
-        
-        Use 'show_src_widget' or 'show_dst_widget' instead!        
+
+        Use 'show_src_widget' or 'show_dst_widget' instead!
         """
 
         # Create widget with instance details
@@ -170,17 +170,14 @@ class ModInstance:
         # Add label with mod manager icon
         label = qtw.QLabel(f"{self.app.lang['mod_manager']}:")
         layout.addWidget(label, 0, 0)
-        icon = qtg.QPixmap(str(
-                self.app.ico_path / self.icon_name
-            )
-        )
+        icon = qtg.QPixmap(str(self.app.ico_path / self.icon_name))
         label = qtw.QLabel()
         label.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)
         size = qtc.QSize(375, 125)
         label.resize(size)
         label.setFixedSize(size)
         label.setScaledContents(True)
-        #icon = icon.scaled(size, qtc.Qt.AspectRatioMode.KeepAspectRatio)
+        # icon = icon.scaled(size, qtc.Qt.AspectRatioMode.KeepAspectRatio)
         label.setPixmap(icon)
         layout.addWidget(label, 0, 1)
 
@@ -202,15 +199,13 @@ class ModInstance:
         path = str(self.mods_path)
         path = utils.wrap_string(path, 50)
         label = qtw.QLabel(path)
-        label.setTextInteractionFlags(
-            qtc.Qt.TextInteractionFlag.TextSelectableByMouse
-        )
+        label.setTextInteractionFlags(qtc.Qt.TextInteractionFlag.TextSelectableByMouse)
         label.setCursor(qtc.Qt.CursorShape.IBeamCursor)
         label.setWordWrap(True)
         layout.addWidget(label, 3, 1)
 
         # Add label with instance size
-        if pos == 'src':
+        if pos == "src":
             label = qtw.QLabel(f"{self.app.lang['size']}:")
             layout.addWidget(label, 4, 0)
             label = qtw.QLabel(utils.scale_value(self.size))
@@ -218,7 +213,7 @@ class ModInstance:
         else:
             label = qtw.QLabel(f"{self.app.lang['mode']}:")
             layout.addWidget(label, 4, 0)
-            label = qtw.QLabel(self.app.lang[f'{self.app.mode}_mode'])
+            label = qtw.QLabel(self.app.lang[f"{self.app.mode}_mode"])
             layout.addWidget(label, 4, 1)
 
         # Add label with mods count
@@ -233,24 +228,18 @@ class ModInstance:
         layout.addWidget(spacer, 6, 0)
 
         # Add listbox for source mods
-        if pos == 'src':
-            label = qtw.QLabel(self.app.lang['mods_to_migrate'])
+        if pos == "src":
+            label = qtw.QLabel(self.app.lang["mods_to_migrate"])
         else:
-            label = qtw.QLabel(self.app.lang['mods_to_enable'])
+            label = qtw.QLabel(self.app.lang["mods_to_enable"])
         layout.addWidget(label, 7, 0)
         self.mods_box = qtw.QListWidget()
-        self.mods_box.setSelectionMode(
-            qtw.QListWidget.SelectionMode.MultiSelection
-        )
+        self.mods_box.setSelectionMode(qtw.QListWidget.SelectionMode.MultiSelection)
         self.mods_box.setHorizontalScrollBarPolicy(
             qtc.Qt.ScrollBarPolicy.ScrollBarAsNeeded
         )
-        self.mods_box.itemDoubleClicked.connect(
-            lambda item: item.onClick()
-        )
-        self.mods_box.setContextMenuPolicy(
-            qtc.Qt.ContextMenuPolicy.CustomContextMenu
-        )
+        self.mods_box.itemDoubleClicked.connect(lambda item: item.onClick())
+        self.mods_box.setContextMenuPolicy(qtc.Qt.ContextMenuPolicy.CustomContextMenu)
         self.mods_box.customContextMenuRequested.connect(
             lambda pos: self._contextmenu(self.mods_box.mapToGlobal(pos))
         )
@@ -260,7 +249,7 @@ class ModInstance:
         self._update_listbox(pos)
 
         # Show widget as source
-        if pos == 'src':
+        if pos == "src":
             self.mods_box.itemChanged.connect(
                 lambda item: self.app.migrate_mods_change_sign.emit()
             )
@@ -270,14 +259,12 @@ class ModInstance:
             self.app.src_widget = self.widget
 
         # Or show widget as destination
-        elif pos == 'dst':
+        elif pos == "dst":
             try:
                 self.app.migrate_mods_change_sign.disconnect()
             except:
                 pass
-            self.app.migrate_mods_change_sign.connect(
-                lambda: self._update_listbox(pos)
-            )
+            self.app.migrate_mods_change_sign.connect(lambda: self._update_listbox(pos))
             if self.app.dst_widget is not None:
                 self.app.dst_widget.destroy()
             self.app.mainlayout.addWidget(self.widget, 1, 2)
@@ -285,14 +272,14 @@ class ModInstance:
 
     def _contextmenu(self, pos: qtc.QPoint):
         """
-        Shows context menu. Internal use only!        
+        Shows context menu. Internal use only!
         """
 
-        select_action = qtg.QAction(self.app.lang['enable_selected'])
+        select_action = qtg.QAction(self.app.lang["enable_selected"])
         select_action.triggered.connect(self._enable_selected)
-        unselect_action = qtg.QAction(self.app.lang['disable_selected'])
+        unselect_action = qtg.QAction(self.app.lang["disable_selected"])
         unselect_action.triggered.connect(self._disable_selected)
-        unsel_all_action = qtg.QAction(self.app.lang['unselect_all'])
+        unsel_all_action = qtg.QAction(self.app.lang["unselect_all"])
         unsel_all_action.triggered.connect(self._unselect_all)
         context_menu = qtw.QMenu()
         context_menu.setWindowFlags(
@@ -301,8 +288,7 @@ class ModInstance:
             | qtc.Qt.WindowType.NoDropShadowWindowHint
         )
         context_menu.setAttribute(
-            qtc.Qt.WidgetAttribute.WA_TranslucentBackground,
-            on=True
+            qtc.Qt.WidgetAttribute.WA_TranslucentBackground, on=True
         )
         context_menu.setStyleSheet(self.app.stylesheet)
         context_menu.addAction(select_action)
@@ -314,7 +300,7 @@ class ModInstance:
 
     def _enable_selected(self):
         """
-        Enables selected mods. Internal use only!        
+        Enables selected mods. Internal use only!
         """
 
         for item in self.mods_box.selectedItems():
@@ -323,16 +309,16 @@ class ModInstance:
 
     def _disable_selected(self):
         """
-        Disables selected mods. Internal use only!        
+        Disables selected mods. Internal use only!
         """
 
         for item in self.mods_box.selectedItems():
             if item.checkState() != qtc.Qt.CheckState.Unchecked:
                 self.mods_box.itemDoubleClicked.emit(item)
-    
+
     def _unselect_all(self):
         """
-        Unselects all mods. Internal use only!        
+        Unselects all mods. Internal use only!
         """
 
         for item in self.mods_box.selectedItems():
@@ -350,16 +336,11 @@ class ModInstance:
                 pass
             self.mods_box.clear()
             for mod in self.loadorder:
-                if not mod.selected and pos == 'dst':
+                if not mod.selected and pos == "dst":
                     continue
-                item = utils.ModItem(
-                    mod,
-                    pos,
-                    mod.name,
-                    self.mods_box
-                )
+                item = utils.ModItem(mod, pos, mod.name, self.mods_box)
                 item.setFlags(item.flags() | qtc.Qt.ItemFlag.ItemIsUserCheckable)
-                if pos == 'dst':
+                if pos == "dst":
                     if mod.enabled:
                         item.setCheckState(qtc.Qt.CheckState.Checked)
                     else:
@@ -371,9 +352,7 @@ class ModInstance:
 
             self.mods_count_label.setText(str(self.mods_box.count()))
 
-            self.mods_box.itemChanged.connect(
-                lambda item: item.onClick()
-            )
+            self.mods_box.itemChanged.connect(lambda item: item.onClick())
 
     @property
     def loadorder(self):
@@ -383,9 +362,7 @@ class ModInstance:
 
         if not self._loadorder:
             self._loadorder = self.mods.copy()
-            self._loadorder.sort(
-                key=lambda mod: mod.name
-            )
+            self._loadorder.sort(key=lambda mod: mod.name)
         return self._loadorder
 
     @loadorder.setter
@@ -423,55 +400,53 @@ class VortexInstance(ModInstance):
             self.db = utils.VortexDatabase(app)
             self.database = self.db.load_db()
         except utils.DBAlreadyInUse:
-            raise utils.UiException(\
-"[vortex_running] Failed to access Vortex database: \
+            raise utils.UiException(
+                "[vortex_running] Failed to access Vortex database: \
 Vortex is running!"
             )
-        self.profiles: Dict[str, str] = {}
+        self.profiles: dict[str, str] = {}
 
         # Files and overwrites
-        self.overwrites: Dict[utils.Mod, List[utils.Mod]] = {} # mod: [overwriting mod, overwriting mod, etc...]
+        self.overwrites: dict[
+            utils.Mod, List[utils.Mod]
+        ] = {}  # mod: [overwriting mod, overwriting mod, etc...]
 
         # Current profile
         self.profname: str = None
         self.profid: str = None
 
         # Get settings from database
-        settings = self.database['settings']
+        settings = self.database["settings"]
 
         game = self.app.game.lower()
 
         # Get paths from settings
-        apppath = Path(os.getenv('APPDATA')) / 'Vortex'
-        installpaths: Dict[str, str] = settings['mods'].get('installPath', {})
-        modspath: str = installpaths.get(game, str(apppath / game / 'mods'))
-        modspath = Path(modspath.replace('{game}', self.app.game.lower()))
-        dlpath: str = settings['downloads']['path']
-        dlpath = Path(dlpath.replace('{USERDATA}', str(apppath)))
+        apppath = Path(os.getenv("APPDATA")) / "Vortex"
+        installpaths: dict[str, str] = settings["mods"].get("installPath", {})
+        modspath: str = installpaths.get(game, str(apppath / game / "mods"))
+        modspath = Path(modspath.replace("{game}", self.app.game.lower()))
+        dlpath: str = settings["downloads"]["path"]
+        dlpath = Path(dlpath.replace("{USERDATA}", str(apppath)))
 
         self.mods_path = modspath
-        self.paths['download_dir'] = dlpath
+        self.paths["download_dir"] = dlpath
 
     def __repr__(self):
         return "VortexInstance"
 
     def setup_instance(self):
         game = self.app.game.lower()
-        profname = self.instance_data['name']
+        profname = self.instance_data["name"]
 
-        self.log.info(
-            f"Setting up Vortex profile with name '{profname}'..."
-        )
+        self.log.info(f"Setting up Vortex profile with name '{profname}'...")
 
         # Generate unique profile id
         self.load_instances()
         profids = list(self.profiles.values())
-        while (profid := ''.join([
-                random.choice(
-                    string.ascii_letters
-                    + string.digits
-                ) for n in range(9)
-            ])
+        while (
+            profid := "".join(
+                [random.choice(string.ascii_letters + string.digits) for n in range(9)]
+            )
         ) in profids:
             pass
         self.profid = profid
@@ -481,51 +456,48 @@ Vortex is running!"
         ini_files = [
             os.path.basename(file).lower()
             for file in self.app.src_modinstance.additional_files
-            if str(file).endswith('.ini')
+            if str(file).endswith(".ini")
         ]
         local_game_settings = str(bool(ini_files)).lower()
         profile = {
-            'features': {
-                'local_game_settings': local_game_settings,
-                'local_saves': 'false',
+            "features": {
+                "local_game_settings": local_game_settings,
+                "local_saves": "false",
             },
-            'gameId': game,
-            'modState': {},
-            'id': profid,
-            'lastActivated': time.time(),
-            'name': profname,
+            "gameId": game,
+            "modState": {},
+            "id": profid,
+            "lastActivated": time.time(),
+            "name": profname,
         }
 
         # Add profile to database
-        self.database['persistent']['profiles'][profid] = profile
+        self.database["persistent"]["profiles"][profid] = profile
 
         # Create profile folder
-        apppath = Path(os.path.join(os.getenv('APPDATA'), 'Vortex'))
-        profpath = Path(os.path.join(apppath, game, 'profiles', profid))
+        apppath = Path(os.path.join(os.getenv("APPDATA"), "Vortex"))
+        profpath = Path(os.path.join(apppath, game, "profiles", profid))
         os.mkdir(profpath)
 
-        self.log.info(
-            f"Created Vortex profile '{profname}' with id '{profid}'."
-        )
+        self.log.info(f"Created Vortex profile '{profname}' with id '{profid}'.")
 
     def load_instances(self):
         if not self.profiles:
             self.log.debug("Loading profiles from database...")
 
-            persistent: Dict[str, dict] = self.database['persistent']
-            profiles: Dict[str, dict] = persistent['profiles']
+            persistent: dict[str, dict] = self.database["persistent"]
+            profiles: dict[str, dict] = persistent["profiles"]
             for profid, profdata in profiles.items():
                 # Check if profile is from selected game
-                if ((profdata['gameId'] == self.app.game.lower())
+                if (
+                    (profdata["gameId"] == self.app.game.lower())
                     # And if it has mods installed
-                    and ('modState' in profdata.keys())):
-
-                    profname = profdata['name']
+                    and ("modState" in profdata.keys())
+                ):
+                    profname = profdata["name"]
                     self.profiles[profname] = profid
 
-            self.log.debug(
-                f"Loaded {len(self.profiles)} profile(s) from database."
-            )
+            self.log.debug(f"Loaded {len(self.profiles)} profile(s) from database.")
 
         return list(self.profiles.keys())
 
@@ -537,26 +509,22 @@ Vortex is running!"
 
         # Update progress bar
         if ldialog:
-            ldialog.updateProgress(
-                text1=self.app.lang['loading_instance']
-            )
+            ldialog.updateProgress(text1=self.app.lang["loading_instance"])
 
         # Raise exception if profile is not found
         if profile_name not in self.profiles:
-            raise ValueError(
-                f"Profile '{profile_name}' not found in database!"
-            )
+            raise ValueError(f"Profile '{profile_name}' not found in database!")
 
         # Load profile
         game = self.app.game.lower()
         profid = self.profiles[profile_name]
-        profile = self.database['persistent']['profiles'][profid]
-        apppath = Path(os.getenv('APPDATA')) / 'Vortex'
+        profile = self.database["persistent"]["profiles"][profid]
+        apppath = Path(os.getenv("APPDATA")) / "Vortex"
 
         # Load mods from profile and their data from database
-        profmods: dict = profile['modState']
-        persistent: dict = self.database['persistent']
-        modsdata: dict = persistent['mods'][game]
+        profmods: dict = profile["modState"]
+        persistent: dict = self.database["persistent"]
+        modsdata: dict = persistent["mods"][game]
         for modindex, (modname, modstate) in enumerate(profmods.items()):
             if modname not in modsdata:
                 continue
@@ -564,33 +532,29 @@ Vortex is running!"
             # Update progress bar
             if ldialog:
                 ldialog.updateProgress(
-                    text1=\
-f"{self.app.lang['loading_instance']} ({modindex}/{len(profmods)})",
+                    text1=f"{self.app.lang['loading_instance']} ({modindex}/{len(profmods)})",
                     value1=modindex,
-                    max1=len(profmods)
+                    max1=len(profmods),
                 )
 
             moddata = modsdata[modname]
-            attributes: Dict[str, str] = moddata['attributes']
+            attributes: dict[str, str] = moddata["attributes"]
             filename = modname
-            if not (name := attributes.get('customFileName')):
-                name = attributes.get('logicalFileName', modname)
+            if not (name := attributes.get("customFileName")):
+                name = attributes.get("logicalFileName", modname)
             modname = name
 
             # Update progress bar
             if ldialog:
-                ldialog.updateProgress(
-                    show2=True,
-                    text2=modname
-                )
+                ldialog.updateProgress(show2=True, text2=modname)
 
             modpath = self.mods_path / filename
-            modid = attributes.get('modId', None)
-            fileid = attributes.get('fileId', None)
-            version = attributes.get('version', None)
-            enabled = modstate['enabled']
-            if 'modSize' in attributes:
-                modsize = attributes['modSize']
+            modid = attributes.get("modId", None)
+            fileid = attributes.get("fileId", None)
+            version = attributes.get("version", None)
+            enabled = modstate["enabled"]
+            if "modSize" in attributes:
+                modsize = attributes["modSize"]
             else:
                 modsize = utils.get_folder_size(modpath)
             modfiles = utils.create_folder_list(modpath, lower=False)
@@ -599,16 +563,16 @@ f"{self.app.lang['loading_instance']} ({modindex}/{len(profmods)})",
                 name=modname,
                 path=modpath,
                 metadata={
-                    'name': modname,
-                    'modid': modid,
-                    'fileid': fileid,
-                    'version': version,
-                    'filename': filename,
+                    "name": modname,
+                    "modid": modid,
+                    "fileid": fileid,
+                    "version": version,
+                    "filename": filename,
                 },
                 files=modfiles,
                 size=modsize,
                 enabled=enabled,
-                installed=False
+                installed=False,
             )
             self.mods.append(mod)
 
@@ -620,13 +584,11 @@ f"{self.app.lang['loading_instance']} ({modindex}/{len(profmods)})",
                     self.modfiles[file] = [mod]
 
         # Get additional files
-        profpath = apppath / game / 'profiles' / profid
+        profpath = apppath / game / "profiles" / profid
         self.additional_files = [
-            profpath / file
-            for file in profpath.iterdir()
-            if file.is_file()
+            profpath / file for file in profpath.iterdir() if file.is_file()
         ]
-        userlist_path = apppath / game / 'userlist.yaml'
+        userlist_path = apppath / game / "userlist.yaml"
         self.additional_files.append(userlist_path)
 
         self.name = profile_name
@@ -639,7 +601,7 @@ f"{self.app.lang['loading_instance']} ({modindex}/{len(profmods)})",
         game = self.app.game.lower()
         if "mods" in self.database["persistent"].keys():
             if game in self.database["persistent"]["mods"].keys():
-                installed_mods: dict = self.database['persistent']['mods'][game]
+                installed_mods: dict = self.database["persistent"]["mods"][game]
             else:
                 installed_mods: dict = {}
                 self.database["persistent"]["mods"][game] = installed_mods
@@ -649,136 +611,135 @@ f"{self.app.lang['loading_instance']} ({modindex}/{len(profmods)})",
 
         # Check installed mods
         for mod in self.mods:
-            mod.installed = mod.metadata['filename'] in installed_mods
+            mod.installed = mod.metadata["filename"] in installed_mods
 
         maximum = len(self.mods)
         for modindex, mod in enumerate(self.mods):
-            self.log.debug(
-                f"Migrating mod '{mod.name}' ({modindex}/{maximum})..."
-            )
+            self.log.debug(f"Migrating mod '{mod.name}' ({modindex}/{maximum})...")
 
             # Skip mod if it is not selected in source box
             if not mod.selected:
                 self.log.debug("Skipped mod: Mod is not selected.")
                 continue
-            
+
             # Update progress bars
             if ldialog:
                 ldialog.updateProgress(
                     # Update first progress bar
-                    text1=\
-f"{self.app.lang['migrating_instance']} ({modindex}/{maximum})",
+                    text1=f"{self.app.lang['migrating_instance']} ({modindex}/{maximum})",
                     value1=modindex,
                     max1=maximum,
-
                     # Display and update second progress bar
                     show2=True,
-                    text2=mod.metadata['name'],
+                    text2=mod.metadata["name"],
                     value2=0,
-                    max2=0
+                    max2=0,
                 )
 
             # Merge rules if mod is already installed
             if mod.installed:
-                moddata = installed_mods[mod.metadata['filename']]
-                rules: list = moddata.get('rules', [])
+                moddata = installed_mods[mod.metadata["filename"]]
+                rules: list = moddata.get("rules", [])
                 # Check for rules
                 for overwriting_mod in mod.overwriting_mods:
-                    overwriting_mod_filename = overwriting_mod.metadata['filename']
+                    overwriting_mod_filename = overwriting_mod.metadata["filename"]
 
                     # Skip mod if both mods already exist in database
                     # since rule is very likely to exist, too
-                    #if overwriting_mod_filename in installed_mods:
+                    # if overwriting_mod_filename in installed_mods:
                     if overwriting_mod.installed:
                         continue
-                    
+
                     # Merge rules
                     rule = {
-                        'reference': {
-                            'id': overwriting_mod_filename,
-                            'idHint': overwriting_mod_filename,
-                            'versionMatch': '*'
+                        "reference": {
+                            "id": overwriting_mod_filename,
+                            "idHint": overwriting_mod_filename,
+                            "versionMatch": "*",
                         },
-
-                        'type': 'before'
+                        "type": "before",
                     }
                     rules.append(rule)
 
-                installed_mods[mod.metadata['filename']]['rules'] = rules
+                installed_mods[mod.metadata["filename"]]["rules"] = rules
 
                 # Add file conflicts
                 if mod.overwriting_files:
-                    overrides: List[str] = installed_mods[mod.metadata['filename']].get('fileOverrides', [])
-                    overrides.extend([
-                        str(file)
-                        for file in mod.overwriting_files
-                        if str(file) not in overrides
-                    ])
+                    overrides: List[str] = installed_mods[mod.metadata["filename"]].get(
+                        "fileOverrides", []
+                    )
+                    overrides.extend(
+                        [
+                            str(file)
+                            for file in mod.overwriting_files
+                            if str(file) not in overrides
+                        ]
+                    )
 
-                    installed_mods[mod.metadata['filename']]['fileOverrides'] = overrides
+                    installed_mods[mod.metadata["filename"]][
+                        "fileOverrides"
+                    ] = overrides
 
             # Add mod to database otherwise
             else:
-                source = 'nexus' if mod.metadata['modid'] else 'other'
+                source = "nexus" if mod.metadata["modid"] else "other"
                 moddata = {
-                    'attributes': {
-                        'customFileName': mod.metadata['name'],
-                        'downloadGame': game,
-                        'installTime': datetime.datetime.utcfromtimestamp(time.time()).isoformat() + 'Z',
-                        'fileId': mod.metadata['fileid'],
-                        'modId': mod.metadata['modid'],
-                        'logicalFileName': mod.metadata['filename'],
-                        'version': mod.metadata['version'],
-                        'source': source,
+                    "attributes": {
+                        "customFileName": mod.metadata["name"],
+                        "downloadGame": game,
+                        "installTime": datetime.datetime.utcfromtimestamp(
+                            time.time()
+                        ).isoformat()
+                        + "Z",
+                        "fileId": mod.metadata["fileid"],
+                        "modId": mod.metadata["modid"],
+                        "logicalFileName": mod.metadata["filename"],
+                        "version": mod.metadata["version"],
+                        "source": source,
                     },
-
-                    'id': mod.metadata['filename'],
-                    'installationPath': mod.metadata['filename'],
-                    'state': 'installed',
-                    'type': None,
+                    "id": mod.metadata["filename"],
+                    "installationPath": mod.metadata["filename"],
+                    "state": "installed",
+                    "type": None,
                 }
 
                 # Add rules
                 rules = []
                 for overwriting_mod in mod.overwriting_mods:
-                    overwriting_mod_filename = overwriting_mod.metadata['filename']
+                    overwriting_mod_filename = overwriting_mod.metadata["filename"]
 
                     rule = {
-                        'reference': {
-                            'id': overwriting_mod_filename,
-                            'idHint': overwriting_mod_filename,
-                            'versionMatch': '*',
+                        "reference": {
+                            "id": overwriting_mod_filename,
+                            "idHint": overwriting_mod_filename,
+                            "versionMatch": "*",
                         },
-
-                        'type': 'before',
+                        "type": "before",
                     }
                     if rule not in rules:
                         rules.append(rule)
 
-                moddata['rules'] = rules
+                moddata["rules"] = rules
 
                 # Add file conflicts
                 if mod.overwriting_files:
-                    overrides = [
-                        str(file)
-                        for file in mod.overwriting_files
-                    ]
-                    
-                    moddata['fileOverrides'] = overrides
+                    overrides = [str(file) for file in mod.overwriting_files]
 
-                installed_mods[mod.metadata['filename']] = moddata
+                    moddata["fileOverrides"] = overrides
+
+                installed_mods[mod.metadata["filename"]] = moddata
 
             # Add mod to profile
-            profiles = self.database['persistent']['profiles']
-            profile_mods = profiles[self.profid]['modState']
+            profiles = self.database["persistent"]["profiles"]
+            profile_mods = profiles[self.profid]["modState"]
             modstate = {
-                'enabled': True,
-                'enabledTime': int(time.time()),
+                "enabled": True,
+                "enabledTime": int(time.time()),
             }
-            profile_mods[mod.metadata['filename']] = modstate
+            profile_mods[mod.metadata["filename"]] = modstate
 
             # Skip mod if it is already installed
-            modpath: Path = self.mods_path / mod.metadata['filename']
+            modpath: Path = self.mods_path / mod.metadata["filename"]
             modpath = utils.clean_filepath(modpath)
             if modpath.is_dir():
                 if list(modpath.iterdir()):
@@ -801,21 +762,18 @@ f"{self.app.lang['migrating_instance']} ({modindex}/{maximum})",
                 # Update progress bars
                 if ldialog:
                     ldialog.updateProgress(
-                        text2=\
-f"{mod.metadata['name']} ({fileindex}/{len(mod.files)})",
+                        text2=f"{mod.metadata['name']} ({fileindex}/{len(mod.files)})",
                         value2=fileindex,
                         max2=len(mod.files),
-
                         show3=True,
-                        text3=\
-f"{file.name} ({utils.scale_value(os.path.getsize(src_path))})"
+                        text3=f"{file.name} ({utils.scale_value(os.path.getsize(src_path))})",
                     )
 
                 # Create directory structure and hardlink file
                 os.makedirs(dst_dirs, exist_ok=True)
 
                 # Copy file
-                if self.app.mode == 'copy':
+                if self.app.mode == "copy":
                     shutil.copyfile(src_path, dst_path)
                 # Link file
                 else:
@@ -827,15 +785,13 @@ f"{file.name} ({utils.scale_value(os.path.getsize(src_path))})"
         if ldialog:
             ldialog.updateProgress(
                 # Update first progress bar
-                text1=self.app.lang['saving_database'],
+                text1=self.app.lang["saving_database"],
                 value1=0,
                 max1=0,
-
                 # Hide second progress bar
                 show2=False,
-
                 # Hide third progress bar
-                show3=False
+                show3=False,
             )
         self.db.save_db()
 
@@ -845,14 +801,12 @@ f"{file.name} ({utils.scale_value(os.path.getsize(src_path))})"
         # Copy additional files like inis
         additional_files = self.app.src_modinstance.additional_files
         if additional_files:
-            self.log.info(
-                "Copying additional files from source to destination..."
-            )
+            self.log.info("Copying additional files from source to destination...")
 
             # Get paths
             game = self.app.game.lower()
-            app_dir = Path(os.getenv('APPDATA')) / 'Vortex' / game
-            dst_dir = app_dir / 'profiles' / self.profid
+            app_dir = Path(os.getenv("APPDATA")) / "Vortex" / game
+            dst_dir = app_dir / "profiles" / self.profid
 
             # Copy files
             maximum = len(additional_files)
@@ -868,16 +822,14 @@ f"{file.name} ({utils.scale_value(os.path.getsize(src_path))})"
                 if ldialog:
                     ldialog.updateProgress(
                         # Update first progress bar
-                        text1=\
-f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
+                        text1=f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
                         value1=fileindex,
                         max1=maximum,
-
                         # Display and update second progress bar
                         show2=True,
                         text2=file.name,
                         value2=0,
-                        max2=0
+                        max2=0,
                     )
 
                 filename = file.name
@@ -889,16 +841,14 @@ f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
                         continue
 
                     # Create 'userlist.yaml' backup if it already exists
-                    userlists = list(app_dir.glob('userlist.yaml.mmm_*'))
+                    userlists = list(app_dir.glob("userlist.yaml.mmm_*"))
                     c = len(userlists) + 1
                     if dst_path.is_file():
                         old_name = dst_path
-                        new_name = app_dir / f'userlist.yaml.mmm_{c}'
+                        new_name = app_dir / f"userlist.yaml.mmm_{c}"
                         os.rename(old_name, new_name)
 
-                        self.log.debug(
-                            "Created backup of Vortex's userlist.yaml."
-                        )
+                        self.log.debug("Created backup of Vortex's userlist.yaml.")
 
                     # Copy userlist.yaml from source to destination
                     os.makedirs(app_dir, exist_ok=True)
@@ -913,18 +863,20 @@ f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
 
     def get_file_conflicts(self):
         game = self.app.game.lower()
-        installed_mods: Dict[str, dict] = self.database['persistent']['mods'][game]
+        installed_mods: dict[str, dict] = self.database["persistent"]["mods"][game]
 
         for mod in self.mods:
-            if 'fileOverrides' in installed_mods[mod.metadata['filename']]:
+            if "fileOverrides" in installed_mods[mod.metadata["filename"]]:
                 mod.overwriting_files = [
                     Path(file)
-                    for file in installed_mods[mod.metadata['filename']]['fileOverrides']
+                    for file in installed_mods[mod.metadata["filename"]][
+                        "fileOverrides"
+                    ]
                 ]
-    
+
     def set_file_conflicts(self):
         """
-        Converts Mod.overwritten_files to Mod.overwriting_files.        
+        Converts Mod.overwritten_files to Mod.overwriting_files.
         """
 
         for file, mods in self.modfiles.items():
@@ -954,59 +906,63 @@ f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
             new_loadorder.sort(key=lambda mod: mod.name)
 
             game = self.app.game.lower()
-            installed_mods: Dict[str, dict] = self.database['persistent']['mods'][game]
+            installed_mods: dict[str, dict] = self.database["persistent"]["mods"][game]
             for mod in self.mods.copy():
-                modtype = installed_mods[mod.metadata['filename']]['type']
+                modtype = installed_mods[mod.metadata["filename"]]["type"]
 
                 # Skip mod if it is a root mod
-                if modtype and modtype != 'collection':
+                if modtype and modtype != "collection":
                     print(f"{mod}: {modtype}")
                     self.root_mods.append(mod)
                     self.mods.remove(mod)
                     new_loadorder.remove(mod)
                     continue
                 # Ignore collection bundle
-                elif modtype == 'collection':
+                elif modtype == "collection":
                     self.mods.remove(mod)
                     new_loadorder.remove(mod)
                     continue
 
                 # Get rules of mod
-                rules = installed_mods[mod.metadata['filename']].get('rules', [])
+                rules = installed_mods[mod.metadata["filename"]].get("rules", [])
                 for rule in rules:
-                    reference = rule['reference']
-                    if 'id' in reference:
-                        ref_mod = reference['id'].strip()
-                    elif 'fileExpression' in reference:
-                        ref_mod = reference['fileExpression'].strip()
+                    reference = rule["reference"]
+                    if "id" in reference:
+                        ref_mod = reference["id"].strip()
+                    elif "fileExpression" in reference:
+                        ref_mod = reference["fileExpression"].strip()
                     # Skip mod if reference mod does not exist
                     else:
                         continue
-                    
+
                     # Get referenced mod from mod list if available
-                    if (ref_mods := list(filter(lambda _mod: _mod.metadata['filename'] == ref_mod, self.mods))):
+                    if ref_mods := list(
+                        filter(
+                            lambda _mod: _mod.metadata["filename"] == ref_mod, self.mods
+                        )
+                    ):
                         ref_mod: utils.Mod = ref_mods[0]
                     else:
                         ref_mod = None
                     # Check if mod is in migrated mods
                     if ref_mod in self.mods:
-                        ruletype = rule['type']
+                        ruletype = rule["type"]
                         # Before
-                        if ruletype == 'before':
+                        if ruletype == "before":
                             mod.overwriting_mods.append(ref_mod)
                         # After
-                        elif ruletype == 'after':
+                        elif ruletype == "after":
                             ref_mod.overwriting_mods.append(mod)
                         # Ignore if it is a dependency
-                        elif ruletype == 'requires':
+                        elif ruletype == "requires":
                             continue
                         # Ignore but warn if a mod conflict is detected
                         # for eg. when two mods are incompatible
-                        elif ruletype == 'conflicts':
+                        elif ruletype == "conflicts":
                             self.log.warning(f"Detected incompatible mod conflict!")
                             self.log.debug(f"Mod: {mod}")
                             self.log.debug(f"Conflicting mod: {ref_mod}")
-                            if (version_match := reference.get('versionMatch', None)):
+                            if version_match := reference.get("versionMatch", None):
                                 self.log.debug(f"Version match: {version_match}")
                             continue
                         # Raise error if rule type is unknown
@@ -1015,11 +971,11 @@ f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
                             self.log.debug(f"Ref mod: {ref_mod}")
                             self.log.debug(f"Rule type: {rule['type']}")
                             self.log.debug(f"Rule reference: {reference}")
-                            raise ValueError(f"Invalid rule type '{rule['type']}'!")
+                            raise ValueError(f"Unknown rule type '{rule['type']}'!")
 
                 # Sort mod
                 if mod.overwriting_mods:
-                    #self.log.debug(f"Sorting mod '{mod}'...")
+                    # self.log.debug(f"Sorting mod '{mod}'...")
 
                     old_index = index = new_loadorder.index(mod)
 
@@ -1029,18 +985,18 @@ f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
                         for overwriting_mod in mod.overwriting_mods
                     ]
                     index = min(overwriting_mods)
-                    #self.log.debug(
+                    # self.log.debug(
                     #    f"Current index: {old_index} | Minimal index of overwriting_mods: {index}"
-                    #)
+                    # )
 
                     if old_index > index:
                         new_loadorder.insert(index, new_loadorder.pop(old_index))
-                        #self.log.debug(f"Moved mod '{mod}' from index {old_index} to {index}.")
+                        # self.log.debug(f"Moved mod '{mod}' from index {old_index} to {index}.")
 
             # Replace Vortex's full mod names displayed name
             final_loadorder = []
             for mod in new_loadorder:
-                modname = mod.metadata['name']
+                modname = mod.metadata["name"]
                 final_loadorder.append(modname)
 
             self._loadorder = new_loadorder
@@ -1107,29 +1063,27 @@ class MO2Instance(ModInstance):
 
     def setup_instance(self):
         game_path = self.app.game_instance.get_install_dir()
-        name = self.instance_data['name']
+        name = self.instance_data["name"]
 
         self.log.info(f"Setting up MO2 instance '{name}'...")
 
         # Get paths from instance data
-        appdata_path = Path(os.path.join(
-            os.getenv('LOCALAPPDATA'),
-            'ModOrganizer',
-            name
-        ))
-        base_dir = Path(self.instance_data['paths']['base_dir'])
-        dl_dir = Path(self.instance_data['paths']['download_dir'])
-        mods_dir = Path(self.instance_data['paths']['mods_dir'])
-        profs_dir = Path(self.instance_data['paths']['profiles_dir'])
-        prof_dir = Path(os.path.join(profs_dir, 'Default'))
-        overw_dir = Path(self.instance_data['paths']['overwrite_dir'])
+        appdata_path = Path(
+            os.path.join(os.getenv("LOCALAPPDATA"), "ModOrganizer", name)
+        )
+        base_dir = Path(self.instance_data["paths"]["base_dir"])
+        dl_dir = Path(self.instance_data["paths"]["download_dir"])
+        mods_dir = Path(self.instance_data["paths"]["mods_dir"])
+        profs_dir = Path(self.instance_data["paths"]["profiles_dir"])
+        prof_dir = Path(os.path.join(profs_dir, "Default"))
+        overw_dir = Path(self.instance_data["paths"]["overwrite_dir"])
         self.paths = {
-            'base_dir': base_dir,
-            'dl_dir': dl_dir,
-            'mods_dir': mods_dir,
-            'profs_dir': profs_dir,
-            'prof_dir': prof_dir,
-            'overw_dir': overw_dir,
+            "base_dir": base_dir,
+            "dl_dir": dl_dir,
+            "mods_dir": mods_dir,
+            "profs_dir": profs_dir,
+            "prof_dir": prof_dir,
+            "overw_dir": overw_dir,
         }
 
         # Create directories
@@ -1142,52 +1096,47 @@ class MO2Instance(ModInstance):
         self.log.debug("Created instance folders.")
 
         # Create ini file with instance configuration
-        inipath = Path(os.path.join(appdata_path, 'ModOrganizer.ini'))
+        inipath = Path(os.path.join(appdata_path, "ModOrganizer.ini"))
         iniparser = utils.IniParser(inipath)
         iniparser.data = {
-            'General': {
-                'gameName': self.app.game_instance.name,
-                'selected_profile': "@ByteArray(Default)",
-                'gamePath': str(game_path).replace('\\', '/'),
-                'first_start': 'true'
+            "General": {
+                "gameName": self.app.game_instance.name,
+                "selected_profile": "@ByteArray(Default)",
+                "gamePath": str(game_path).replace("\\", "/"),
+                "first_start": "true",
             },
-
-            'Settings': {
-                'base_directory': str(base_dir).replace('\\', '/'),
-                'download_directory': str(dl_dir).replace('\\', '/'),
-                'mod_directory': str(mods_dir).replace('\\', '/'),
-                'profiles_directory': str(profs_dir).replace('\\', '/'),
-                'overwrite_directory': str(overw_dir).replace('\\', '/'),
-                'style': 'Paper Dark.qss'
-            }
+            "Settings": {
+                "base_directory": str(base_dir).replace("\\", "/"),
+                "download_directory": str(dl_dir).replace("\\", "/"),
+                "mod_directory": str(mods_dir).replace("\\", "/"),
+                "profiles_directory": str(profs_dir).replace("\\", "/"),
+                "overwrite_directory": str(overw_dir).replace("\\", "/"),
+                "style": "Paper Dark.qss",
+            },
         }
         iniparser.save_file()
         self.log.debug("Created 'ModOrganizer.ini'.")
 
         # Create profile files
         # Create initweaks.ini
-        inipath = Path(os.path.join(prof_dir, 'initweaks.ini'))
+        inipath = Path(os.path.join(prof_dir, "initweaks.ini"))
         iniparser = utils.IniParser(inipath)
-        iniparser.data = {
-            'Archive': {
-                'InvalidateOlderFiles': 1
-            }
-        }
+        iniparser.data = {"Archive": {"InvalidateOlderFiles": 1}}
         iniparser.save_file()
         self.log.debug("Created 'initweaks.ini'.")
 
         # Create modlist.txt
-        modlist = Path(os.path.join(prof_dir, 'modlist.txt'))
+        modlist = Path(os.path.join(prof_dir, "modlist.txt"))
         loadorder = self.loadorder.copy()
         loadorder.reverse()
-        with open(modlist, 'w', encoding='utf8') as file:
+        with open(modlist, "w", encoding="utf8") as file:
             mods = "# This file was automatically generated by Mod Organizer"
             for mod in loadorder:
                 # Skip mod if it is not selected in source box
                 if not mod.selected:
                     continue
 
-                modname = utils.clean_string(mod.metadata['name'])
+                modname = utils.clean_string(mod.metadata["name"])
 
                 # Enable mod in destination
                 if mod.enabled:
@@ -1204,26 +1153,28 @@ class MO2Instance(ModInstance):
 
     def load_instances(self):
         if not self.instances:
-            instances_path = Path(os.path.join(
-                os.getenv('LOCALAPPDATA'),
-                'ModOrganizer'
-                )
+            instances_path = Path(
+                os.path.join(os.getenv("LOCALAPPDATA"), "ModOrganizer")
             )
             # Check if there are any instances
             if instances_path.is_dir():
                 # Get all instance folders
                 instances = [
-                    obj for obj in os.listdir(instances_path)
-                    if (instances_path / obj / 'ModOrganizer.ini').is_file()
+                    obj
+                    for obj in os.listdir(instances_path)
+                    if (instances_path / obj / "ModOrganizer.ini").is_file()
                 ]
 
                 # Remove instances from other games
                 for instance in instances.copy():
                     instance_ini = utils.IniParser(
-                        instances_path / instance / 'ModOrganizer.ini'
+                        instances_path / instance / "ModOrganizer.ini"
                     )
                     instance_data = instance_ini.load_file()
-                    if instance_data['General']['gameName'] != self.app.game_instance.name:
+                    if (
+                        instance_data["General"]["gameName"]
+                        != self.app.game_instance.name
+                    ):
                         instances.remove(instance)
 
                 self.instances = instances
@@ -1242,115 +1193,103 @@ class MO2Instance(ModInstance):
 
         # Update progress bar
         if ldialog:
-            ldialog.updateProgress(
-                text1=self.app.lang['loading_instance']
-            )
+            ldialog.updateProgress(text1=self.app.lang["loading_instance"])
 
         # Raise exception if instance is not found
-        app_path = Path(os.getenv('LOCALAPPDATA')) / 'ModOrganizer'
+        app_path = Path(os.getenv("LOCALAPPDATA")) / "ModOrganizer"
         instance_path = app_path / name
         if (name not in self.instances) or (not instance_path.is_dir()):
             raise ValueError(f"Instance '{name}' not found!")
 
         # Load settings from ini
-        inifile = instance_path / 'ModOrganizer.ini'
+        inifile = instance_path / "ModOrganizer.ini"
         iniparser = utils.IniParser(inifile)
         data = iniparser.load_file()
-        settings: Dict[str, str] = data['Settings']
+        settings: dict[str, str] = data["Settings"]
 
         # Get instance paths from ini
-        base_dir = Path(settings.get('base_directory', instance_path))
-        dl_dir = settings.get('download_directory', None)
-        dl_dir = Path((base_dir / 'downloads')
-                        if dl_dir is None
-                        else dl_dir.replace(
-                            "%BASE_DIR",
-                            str(base_dir)
-                        )
+        base_dir = Path(settings.get("base_directory", instance_path))
+        dl_dir = settings.get("download_directory", None)
+        dl_dir = Path(
+            (base_dir / "downloads")
+            if dl_dir is None
+            else dl_dir.replace("%BASE_DIR", str(base_dir))
         )
-        mods_dir = settings.get('mod_directory', None)
-        mods_dir = Path((base_dir / 'mods')
-                        if mods_dir is None
-                        else mods_dir.replace(
-                            "%BASE_DIR",
-                            str(base_dir)
-                        )
+        mods_dir = settings.get("mod_directory", None)
+        mods_dir = Path(
+            (base_dir / "mods")
+            if mods_dir is None
+            else mods_dir.replace("%BASE_DIR", str(base_dir))
         )
-        profs_dir = settings.get('profiles_directory', None)
-        profs_dir = Path((base_dir / 'profiles')
-                            if profs_dir is None
-                            else profs_dir.replace(
-                                "%BASE_DIR",
-                                str(base_dir)
-                            )
+        profs_dir = settings.get("profiles_directory", None)
+        profs_dir = Path(
+            (base_dir / "profiles")
+            if profs_dir is None
+            else profs_dir.replace("%BASE_DIR", str(base_dir))
         )
-        prof_dir = profs_dir / 'Default'
-        overw_dir = settings.get('overwrite_directory', None)
-        overw_dir = Path((base_dir / 'overwrite')
-                            if overw_dir is None
-                            else overw_dir.replace(
-                                "%BASE_DIR",
-                                str(base_dir)
-                            )
+        prof_dir = profs_dir / "Default"
+        overw_dir = settings.get("overwrite_directory", None)
+        overw_dir = Path(
+            (base_dir / "overwrite")
+            if overw_dir is None
+            else overw_dir.replace("%BASE_DIR", str(base_dir))
         )
 
         self.mods_path = mods_dir
         self.paths = {
-            'base_dir': base_dir,
-            'dl_dir': dl_dir,
-            'mods_dir': mods_dir,
-            'profs_dir': profs_dir,
-            'prof_dir': prof_dir,
-            'overw_dir': overw_dir,
+            "base_dir": base_dir,
+            "dl_dir": dl_dir,
+            "mods_dir": mods_dir,
+            "profs_dir": profs_dir,
+            "prof_dir": prof_dir,
+            "overw_dir": overw_dir,
         }
 
         # Load mods from modlist.txt and their data from meta.ini
         mods = []
-        modlist = prof_dir / 'modlist.txt'
+        modlist = prof_dir / "modlist.txt"
         if not modlist.is_file():
             raise utils.UiException(f"[no_mods] Instance '{name}' has no mods!")
-        with open(modlist, 'r', encoding='utf8') as modlist:
+        with open(modlist, "r", encoding="utf8") as modlist:
             lines = modlist.readlines()
 
         for modindex, line in enumerate(lines):
             line = line.strip()
-            if ((line.startswith("+") or line.startswith("-"))
-                and (not line.endswith("_separator"))):
+            if (line.startswith("+") or line.startswith("-")) and (
+                not line.endswith("_separator")
+            ):
                 modname = line[1:]
                 modpath = self.mods_path / modname
 
                 # Update progress bar
                 if ldialog:
                     ldialog.updateProgress(
-                        text1=\
-f"{self.app.lang['loading_instance']} ({modindex}/{len(lines)})",
+                        text1=f"{self.app.lang['loading_instance']} ({modindex}/{len(lines)})",
                         value1=modindex,
                         max1=len(lines),
-
                         show2=True,
-                        text2=modname
+                        text2=modname,
                     )
 
                 # Load mod metadata from meta.ini
-                metaini = modpath / 'meta.ini'
+                metaini = modpath / "meta.ini"
                 if metaini.is_file():
                     iniparser = utils.IniParser(metaini)
                     data = iniparser.load_file()
 
-                    general = data['General']
-                    modid = general.get('modid', 0)
-                    version = general.get('version', '1.0')
-                    _ver = '-'.join(version.split('.'))
-                    installedfiles = data.get('installedFiles')
+                    general = data["General"]
+                    modid = general.get("modid", 0)
+                    version = general.get("version", "1.0")
+                    _ver = "-".join(version.split("."))
+                    installedfiles = data.get("installedFiles")
                     if not installedfiles:
                         filename = f"{modname}-{_ver}"
                     else:
-                        fileid = installedfiles.get('1\\fileid', 0)
+                        fileid = installedfiles.get("1\\fileid", 0)
                         filename = general.get(
-                            'installationFile',
-                            f"{modname}-{modid}-{_ver}-{fileid}.7z"
+                            "installationFile", f"{modname}-{modid}-{_ver}-{fileid}.7z"
                         )
-                        filename = filename.rsplit(".", 1)[0] # remove file type
+                        filename = filename.rsplit(".", 1)[0]  # remove file type
 
                 # Create metadata if 'meta.ini' does not exist
                 else:
@@ -1359,27 +1298,27 @@ f"{self.app.lang['loading_instance']} ({modindex}/{len(lines)})",
 
                     modid = 0
                     fileid = 0
-                    version = '1.0'
+                    version = "1.0"
                     filename = f"{modname}-1-0"
-                
+
                 modfiles = utils.create_folder_list(modpath, lower=False)
                 modsize = utils.get_folder_size(modpath)
-                enabled = line.startswith('+')
+                enabled = line.startswith("+")
 
                 mod = utils.Mod(
                     name=modname,
                     path=modpath,
                     metadata={
-                        'name': modname,
-                        'modid': modid,
-                        'fileid': fileid,
-                        'version': version,
-                        'filename': filename,
+                        "name": modname,
+                        "modid": modid,
+                        "fileid": fileid,
+                        "version": version,
+                        "filename": filename,
                     },
                     files=modfiles,
                     size=modsize,
                     enabled=enabled,
-                    installed=True
+                    installed=True,
                 )
                 mods.append(mod)
 
@@ -1397,14 +1336,16 @@ f"{self.app.lang['loading_instance']} ({modindex}/{len(lines)})",
         self.additional_files = [
             (prof_dir / file)
             for file in prof_dir.iterdir()
-            if (file.name != 'initweaks.ini'
-            and file.name != 'modlist.txt'
-            and file.name != 'archives.txt'
-            and file.name != 'settings.ini')
+            if (
+                file.name != "initweaks.ini"
+                and file.name != "modlist.txt"
+                and file.name != "archives.txt"
+                and file.name != "settings.ini"
+            )
         ]
-        userlist_path = Path(os.getenv('LOCALAPPDATA')) / 'LOOT' / 'games'
+        userlist_path = Path(os.getenv("LOCALAPPDATA")) / "LOOT" / "games"
         userlist_path = userlist_path / self.app.game_instance.name
-        userlist_path = userlist_path / 'userlist.yaml'
+        userlist_path = userlist_path / "userlist.yaml"
         self.additional_files.append(userlist_path)
 
         self.name = name
@@ -1424,25 +1365,23 @@ f"{self.app.lang['loading_instance']} ({modindex}/{len(lines)})",
             if not mod.selected:
                 self.log.debug("Skipped mod: Mod is not selected.")
                 continue
-            
+
             # Update progress bars
             if ldialog:
                 ldialog.updateProgress(
                     # Update first progress bar
-                    text1=\
-f"{self.app.lang['migrating_instance']} ({modindex}/{maximum})",
+                    text1=f"{self.app.lang['migrating_instance']} ({modindex}/{maximum})",
                     value1=modindex,
                     max1=maximum,
-
                     # Display and update second progress bar
                     show2=True,
-                    text2=mod.metadata['name'],
+                    text2=mod.metadata["name"],
                     value2=0,
-                    max2=0
+                    max2=0,
                 )
 
             # Copy mod to mod path
-            modpath: Path = self.mods_path / mod.metadata['name']
+            modpath: Path = self.mods_path / mod.metadata["name"]
             modpath = utils.clean_filepath(modpath)
             for fileindex, file in enumerate(mod.files):
                 src_path = mod.path / file
@@ -1461,14 +1400,11 @@ f"{self.app.lang['migrating_instance']} ({modindex}/{maximum})",
                 # Update progress bars
                 if ldialog:
                     ldialog.updateProgress(
-                        text2=\
-f"{mod.metadata['name']} ({fileindex}/{len(mod.files)})",
+                        text2=f"{mod.metadata['name']} ({fileindex}/{len(mod.files)})",
                         value2=fileindex,
                         max2=len(mod.files),
-
                         show3=True,
-                        text3=\
-f"{file.name} ({utils.scale_value(os.path.getsize(src_path))})"
+                        text3=f"{file.name} ({utils.scale_value(os.path.getsize(src_path))})",
                     )
 
                 # Add .mohidden to path if file is overwritten
@@ -1479,28 +1415,27 @@ f"{file.name} ({utils.scale_value(os.path.getsize(src_path))})"
                 os.makedirs(dst_dirs, exist_ok=True)
 
                 # Copy file
-                if self.app.mode == 'copy':
+                if self.app.mode == "copy":
                     shutil.copyfile(src_path, dst_path)
                 # Link file
                 else:
                     os.link(src_path, dst_path)
 
             # Write metadata to 'meta.ini' in destination mod
-            metaini = utils.IniParser(modpath / 'meta.ini')
+            metaini = utils.IniParser(modpath / "meta.ini")
             metaini.data = {
-                'General': {
-                    'gameName': self.app.game,
-                    'modid': mod.metadata['modid'],
-                    'version': mod.metadata['version'],
-                    'installationFile': f"{mod.metadata['filename']}.7z",
-                    'repository': 'Nexus',
-                    'validated': 'true'
+                "General": {
+                    "gameName": self.app.game,
+                    "modid": mod.metadata["modid"],
+                    "version": mod.metadata["version"],
+                    "installationFile": f"{mod.metadata['filename']}.7z",
+                    "repository": "Nexus",
+                    "validated": "true",
                 },
-
-                'installedFiles': {
-                    '1\\modid': mod.metadata['modid'],
-                    '1\\fileid': mod.metadata['fileid']
-                }
+                "installedFiles": {
+                    "1\\modid": mod.metadata["modid"],
+                    "1\\fileid": mod.metadata["fileid"],
+                },
             }
             metaini.save_file()
 
@@ -1510,14 +1445,12 @@ f"{file.name} ({utils.scale_value(os.path.getsize(src_path))})"
         # Copy additional files like inis
         additional_files = self.app.src_modinstance.additional_files
         if additional_files:
-            self.log.info(
-                "Copying additional files from source to destination..."
-            )
+            self.log.info("Copying additional files from source to destination...")
 
             game = self.app.game_instance.name
             paths = self.paths
-            app_dir = Path(os.getenv('LOCALAPPDATA')) / 'LOOT' / game
-            dst_dir = paths['prof_dir']
+            app_dir = Path(os.getenv("LOCALAPPDATA")) / "LOOT" / game
+            dst_dir = paths["prof_dir"]
 
             # Copy files
             maximum = len(additional_files)
@@ -1533,16 +1466,14 @@ f"{file.name} ({utils.scale_value(os.path.getsize(src_path))})"
                 if ldialog:
                     ldialog.updateProgress(
                         # Update first progress bar
-                        text1=\
-f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
+                        text1=f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
                         value1=fileindex,
                         max1=maximum,
-
                         # Display and update second progress bar
                         show2=True,
                         text2=file.name,
                         value2=0,
-                        max2=0
+                        max2=0,
                     )
 
                 filename = file.name
@@ -1554,11 +1485,11 @@ f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
                         continue
 
                     # Create userlist.yaml backup if it already exists
-                    userlists = list(app_dir.glob('userlist.yaml.mmm_*'))
+                    userlists = list(app_dir.glob("userlist.yaml.mmm_*"))
                     c = len(userlists) + 1
                     if dst_path.is_file():
-                        old_name = app_dir / 'userlist.yaml'
-                        new_name = app_dir / f'userlist.yaml.mmm_{c}'
+                        old_name = app_dir / "userlist.yaml"
+                        new_name = app_dir / f"userlist.yaml.mmm_{c}"
                         os.rename(old_name, new_name)
 
                         self.log.debug(
@@ -1610,7 +1541,7 @@ f"{self.app.lang['copying_files']} ({fileindex}/{maximum})",
 
     def set_file_conflicts(self):
         """
-        Converts Mod.overwriting_files to Mod.overwritten_files.        
+        Converts Mod.overwriting_files to Mod.overwritten_files.
         """
 
         for mod in self.mods:

@@ -7,22 +7,21 @@ Attribution-NonCommercial-NoDerivatives 4.0 International.
 
 # Import libraries ###################################################
 import json
-import os
 import logging
-import pyperclip as clipboard
-from winsound import MessageBeep as alert
-from typing import List
+import os
 from pathlib import Path
+from winsound import MessageBeep as alert
 
+import pyperclip as clipboard
 import qtawesome as qta
 import qtpy.QtCore as qtc
 import qtpy.QtGui as qtg
 import qtpy.QtWidgets as qtw
 
-import utils
+import games
 import main
 import managers
-import games
+import utils
 from loadingdialog import LoadingDialog
 
 
@@ -70,7 +69,7 @@ class SourceDialog(qtw.QDialog):
         label.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
         manager_layout.addWidget(label, 0, 0, 1, columns)
 
-        buttons: List[qtw.QPushButton] = []
+        buttons: list[qtw.QPushButton] = []
 
         # Define functions for selection logic
         def set_src(source: str):
@@ -348,7 +347,7 @@ class DestinationDialog(qtw.QDialog):
         label.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
         manager_layout.addWidget(label, 0, 0, 1, columns)
 
-        buttons: List[qtw.QPushButton] = []
+        buttons: list[qtw.QPushButton] = []
 
         # Define functions for selection logic
         def set_dst(destination: str):
