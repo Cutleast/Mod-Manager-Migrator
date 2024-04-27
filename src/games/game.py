@@ -34,8 +34,6 @@ class GameInstance:
 
         # Initialize class specific logger
         self.log = logging.getLogger(self.__repr__())
-        self.log.addHandler(self.app.log_str)
-        self.log.setLevel(self.app.log.level)
 
     def __repr__(self):
         return "GameInstance"

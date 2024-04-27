@@ -35,11 +35,10 @@ class DestinationDialog(qtw.QDialog):
         self.mods_box: qtw.QListWidget = None
 
         # Initialize class specific logger
-        self.log = logging.getLogger(self.__repr__())
+        self.log = logging.getLogger("DestinationDialog")
 
         # Configure dialog
-        self.setWindowTitle(f"{self.app.name} - {self.app.lang['select_destination']}")
-        self.setWindowIcon(self.app.root.windowIcon())
+        self.setWindowTitle(self.app.lang['select_destination'])
         self.setModal(True)
         self.setObjectName("root")
 
@@ -321,9 +320,6 @@ class DestinationDialog(qtw.QDialog):
         self.next_button.clicked.connect(self.goto_secnd_page)
         self.button_layout.addWidget(self.next_button)
 
-    def __repr__(self):
-        return "DestinationDialog"
-
     def goto_first_page(self):
         """
         Hides second page and shows first page.
@@ -441,7 +437,7 @@ source and destination paths must not be the same!"
             )
         # Check if drives match when mode is 'hardlink'
         if (self.app.mode == "hardlink") and (src_drive != dst_drive):
-            self.app.log.error(
+            self.log.error(
                 f"\
 Failed to create destination instance: \
 Hardlinks must be on the same drive. \
@@ -487,7 +483,7 @@ Hardlinks must be on the same drive. \
 
             # Warn user that they will be wiped
             if exist:
-                self.app.log.warning("Instance data will be wiped!")
+                self.log.warning("Instance data will be wiped!")
                 qtw.QMessageBox.warning(
                     self.app.root,
                     self.app.lang["warning"],

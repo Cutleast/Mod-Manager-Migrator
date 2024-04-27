@@ -37,18 +37,13 @@ class VortexDatabase:
         ]
 
         # Initialize class specific logger
-        self.log = logging.getLogger(self.__repr__())
-        self.log.addHandler(self.app.log_str)
-        self.log.setLevel(self.app.log.level)
+        self.log = logging.getLogger("VortexDatabase")
 
         # Initialize database
         try:
             self.db = leveldb.DB(str(self.db_path))
         except leveldb.IOError:
             raise DBAlreadyInUse
-
-    def __repr__(self):
-        return "LevelDB"
 
     def open_db(self):
         """

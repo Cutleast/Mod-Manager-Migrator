@@ -133,7 +133,7 @@ Updating with default config..."
                 json.dump(self.config, conffile, indent=4)
 
         # Set up protocol structure ##################################
-        self.log = logging.getLogger(self.__repr__())
+        self.log = logging.getLogger()
         log_fmt = "[%(asctime)s.%(msecs)03d]"
         log_fmt += "[%(levelname)s]"
         log_fmt += "[%(threadName)s.%(name)s.%(funcName)s]: "
@@ -206,16 +206,21 @@ Updating with default config..."
         self.load_lang()
 
         # Initalize Qt App and Main Window ###########################
-        self.root = qtw.QMainWindow()
-        self.root.setObjectName("root")
-        self.root.setWindowTitle(f"{self.name} v{self.version}")
-        self.setWindowIcon(qtg.QIcon(os.path.join(self.ico_path, "mmm.svg")))
+        self.setApplicationName(self.name)
+        self.setApplicationDisplayName(f"{self.name} v{self.version}")
+        self.setApplicationVersion(self.version)
+        self.setWindowIcon(qtg.QIcon(str(self.ico_path / "mmm.svg")))
+
         self._theme = utils.Theme(self)
         self._theme.set_mode(self.config["ui_mode"])
         self.theme = self._theme.load_theme()
         self.theme["accent_color"] = self.config["accent_color"]
         self.stylesheet = self._theme.load_stylesheet()
         self.setStyleSheet(self.stylesheet)
+
+        self.root = qtw.QMainWindow()
+        self.root.setObjectName("root")
+        self.root.setWindowTitle(f"{self.name} v{self.version}")
 
         # Fix link color
         palette = self.palette()

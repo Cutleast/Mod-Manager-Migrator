@@ -32,14 +32,8 @@ class SourceDialog(qtw.QDialog):
         self.source_widget: qtw.QWidget = None
         self.mods_box: qtw.QListWidget = None
 
-        # Initialize class specific logger
-        self.log = logging.getLogger(self.__repr__())
-        self.log.addHandler(self.app.log_str)
-        self.log.setLevel(self.app.log.level)
-
         # Configure dialog
-        self.setWindowTitle(f"{self.app.name} - {self.app.lang['select_source']}")
-        self.setWindowIcon(self.app.root.windowIcon())
+        self.setWindowTitle(self.app.lang['select_source'])
         self.setModal(True)
         self.setObjectName("root")
 
@@ -157,9 +151,6 @@ class SourceDialog(qtw.QDialog):
             lambda: self.next_button.setDisabled(False)
         )
 
-    def __repr__(self):
-        return "SourceDialog"
-
     def goto_first_page(self):
         """
         Hides second page and shows first page.
@@ -258,6 +249,11 @@ class SourceDialog(qtw.QDialog):
         )
         loadingdialog.exec()
         self.app.src_modinstance = self.modinstance
+
+        # Hide old source panel if existing
+        if self.app.src_widget:
+            self.app.src_widget.hide()
+            self.app.src_widget.destroy()
 
         # Create source widget with instance details
         self.modinstance.show_src_widget()

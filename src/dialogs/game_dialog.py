@@ -29,13 +29,10 @@ class GameDialog(qtw.QDialog):
         self.game_instance: games.GameInstance = None
 
         # Initialize class specific logger
-        self.log = logging.getLogger(self.__repr__())
-        self.log.addHandler(self.app.log_str)
-        self.log.setLevel(self.app.log.level)
+        self.log = logging.getLogger("GameDialog")
 
         # Configure dialog
-        self.setWindowTitle(f"{self.app.name} - {self.app.lang['select_game']}")
-        self.setWindowIcon(self.app.root.windowIcon())
+        self.setWindowTitle(self.app.lang['select_game'])
         self.setModal(True)
         self.setObjectName("root")
         self.setFixedSize(720, 350)
@@ -93,9 +90,6 @@ class GameDialog(qtw.QDialog):
         done_button = qtw.QPushButton(self.app.lang["done"])
         done_button.clicked.connect(self.finish)
         button_layout.addWidget(done_button)
-
-    def __repr__(self):
-        return "GameDialog"
 
     def closeEvent(self, event):
         super().closeEvent(event)

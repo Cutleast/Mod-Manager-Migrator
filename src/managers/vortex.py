@@ -88,9 +88,9 @@ Vortex is running!"
 
         # Configure profile data
         ini_files = [
-            os.path.basename(file).lower()
+            file.name.lower()
             for file in self.app.src_modinstance.additional_files
-            if str(file).endswith(".ini")
+            if file.suffix.lower() == ".ini"
         ]
         local_game_settings = str(bool(ini_files)).lower()
         profile = {
@@ -109,8 +109,8 @@ Vortex is running!"
         self.database["persistent"]["profiles"][profid] = profile
 
         # Create profile folder
-        apppath = Path(os.path.join(os.getenv("APPDATA"), "Vortex"))
-        profpath = Path(os.path.join(apppath, game, "profiles", profid))
+        apppath = Path(os.getenv("APPDATA")) / "Vortex"
+        profpath = apppath / game / "profiles" / profid
         os.mkdir(profpath)
 
         self.log.info(f"Created Vortex profile '{profname}' with id '{profid}'.")

@@ -29,15 +29,11 @@ class SettingsDialog(qtw.QDialog):
         self.stylesheet = self.app._theme.load_stylesheet()
 
         # initialize class specific logger
-        self.log = logging.getLogger(self.__repr__())
-        self.log.addHandler(self.app.log_str)
-        self.log.setLevel(self.app.log.level)
+        self.log = logging.getLogger("Settings")
 
         # create popup window
         self.setModal(True)
-        self.setStyleSheet(self.app.stylesheet)
-        self.setWindowTitle(f"{self.app.name} - {self.app.lang['settings']}...")
-        self.setWindowIcon(self.app.root.windowIcon())
+        self.setWindowTitle(self.app.lang['settings'])
         self.setObjectName("root")
         self.setMinimumWidth(600)
         self.closeEvent = self.cancel_settings
@@ -173,9 +169,6 @@ class SettingsDialog(qtw.QDialog):
 
         # show popup
         self.exec()
-
-    def __repr__(self):
-        return "Settings"
 
     def finish_settings(self):
         """
