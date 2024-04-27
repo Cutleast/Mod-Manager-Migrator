@@ -637,8 +637,11 @@ Current version: {self.version} | Latest version: {new_version}"
 
                         src_path = mod.path
                         dst_path = installdir
-
-                        shutil.copytree(src_path, dst_path, dirs_exist_ok=True)
+                        
+                        try:
+                            shutil.copytree(src_path, dst_path, dirs_exist_ok=True)
+                        except shutil.Error as ex:
+                            self.log.error(f"Failed to copy following files/folders: {ex}")
 
                 loadingdialog = LoadingDialog(parent=self.root, app=self, func=process)
                 loadingdialog.exec()
