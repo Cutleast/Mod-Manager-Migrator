@@ -13,10 +13,10 @@ class Theme:
     """Class for ui theme. Manages theme and stylesheet."""
 
     default_dark_theme = {
-        "primary_bg": "#202020",
-        "secondary_bg": "#2d2d2d",
-        "tertiary_bg": "#383838",
-        "highlight_bg": "#696969",
+        "root_bg": "#202020",
+        "primary_bg": "#08ffffff",
+        "highlight_bg": "#1cffffff",
+        "disabled_bg": "#66ffffff",
         "accent_color": "#d78f46",
         "text_color": "#ffffff",
         "font": "Segoe UI",
@@ -30,10 +30,10 @@ class Theme:
         "dropdown_arrow": "url(./data/icons/dropdown_light.svg)",
     }
     default_light_theme = {
-        "primary_bg": "#f3f3f3",
-        "secondary_bg": "#e9e9e9",
-        "tertiary_bg": "#dadada",
-        "highlight_bg": "#b6b6b6",
+        "root_bg": "#ffffff",
+        "primary_bg": "#15000000",
+        "highlight_bg": "#1c000000",
+        "disabled_bg": "#66000000",
         "accent_color": "#d78f46",
         "text_color": "black",
         "font": "Segoe UI",

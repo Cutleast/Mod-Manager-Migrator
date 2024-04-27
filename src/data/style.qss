@@ -1,64 +1,67 @@
 /* QWidget */
 QWidget#root, QDialog {
-    background-color: <primary_bg>;
+    background: <root_bg>;
     spacing: 15px;
 }
 QWidget#mainframe {
-    background-color: <secondary_bg>;
+    background: <primary_bg>;
     spacing: 15px;
     border: 0px;
     border-radius: 8px;
 }
 QWidget#commandframe {
-    background-color: <tertiary_bg>;
+    background: <primary_bg>;
     spacing: 15px;
     border: 0px;
     border-radius: 8px;
 }
 QWidget#panel {
-    background-color: <secondary_bg>;
+    background: <highlight_bg>;
     border: 0px;
     border-radius: 8px;
     padding: 15px;
     spacing: 15px;
 }
+QWidget:disabled {
+    color: <disabled_bg>;
+}
 
 /* QMenuBar, QMenu, QAction */
 QMenuBar {
-    background-color: <primary_bg>;
+    background: <root_bg>;
     color: <text_color>;
 }
 QMenuBar::item {
     padding: 4px;
-    background-color: transparent;
+    background: transparent;
     border-radius: 4px;
 }
 QMenuBar::item:selected {
-    background-color: <highlight_bg>;
+    background: <highlight_bg>;
 }
 QMenu {
-    background-color: <primary_bg>;
+    background: <root_bg>;
     padding: 4px;
     border-radius: 8px;
 }
 QMenu::item {
-    background-color: transparent;
+    background: transparent;
     color: <text_color>;
     border-radius: 4px;
     margin: 2px;
     padding: 6px;
 }
 QMenu::item:selected {
-    background-color: <highlight_bg>;
+    background: <highlight_bg>;
 }
 QAction {
-    background-color: transparent;
+    background: transparent;
     color: <text_color>;
     padding: 8px;
     border-radius: 8px;
 }
 QAction:selected {
-    background-color: <highlight_bg>;
+    background: <highlight_bg>;
 }
 
 /* QLabel */
@@ -81,33 +84,30 @@ QLabel#subtitlelabel {
 
 /* QPushButton */
 QPushButton {
-    background-color: <secondary_bg>;
+    background: <primary_bg>;
     color: <text_color>;
     font-family: <font>;
     font-size: <font_size>;
     padding: 10px;
     spacing: 15px;
-    border: 1px solid <secondary_bg>;
-    border-bottom: 1px solid <secondary_bg>;
+    border: 1px solid <primary_bg>;
+    border-bottom: 1px solid <primary_bg>;
     border-radius: 4px;
 }
 QPushButton:hover {
-    background-color: <tertiary_bg>;
+    background: <highlight_bg>;
 }
 QPushButton:pressed {
-    background-color: <primary_bg>;
+    background: <primary_bg>;
 }
 QPushButton:checked {
     border: 1px solid <accent_color>;
     color: <accent_color>;
 }
-QPushButton:disabled {
-    color: <highlight_bg>;
-}
 
 /* QSpinBox, QLineEdit */
 QSpinBox, QLineEdit {
-    background-color: <secondary_bg>;
+    background: <primary_bg>;
     color: <text_color>;
     selection-background-color: <accent_color>;
     font-family: <font>;
@@ -117,14 +117,11 @@ QSpinBox, QLineEdit {
     border: 0px solid;
     border-radius: 4px;
 }
-QSpinBox:disabled, QLineEdit:disabled {
-    color: <highlight_bg>;
-}
 QSpinBox::down-button, QSpinBox::up-button {
     border: 0px solid;
 }
 QLineEdit, QSpinBox {
-    border-bottom: 2px solid <secondary_bg>;
+    border-bottom: 2px solid <primary_bg>;
 }
 QLineEdit:hover, QLineEdit:focus,
 QSpinBox:hover, QSpinBox:focus {
@@ -133,7 +130,7 @@ QSpinBox:hover, QSpinBox:focus {
 
 /* QToolTip */
 QToolTip {
-    background-color: <primary_bg>;
+    background: <root_bg>;
     color: <text_color>;
     font-family: <font>;
     font-size: <font_size>;
@@ -145,26 +142,26 @@ QToolTip {
 
 /* QScrollArea & QScrollBar */
 QScrollArea#scrollarea, QWidget#scrollframe {
-    background-color: <tertiary_bg>;
+    background: transparent;
     border: 0px solid;
     border-radius: 8px;
     padding: 15px;
     spacing: 15px;
 }
 QScrollBar {
-    background-color: transparent;
+    background: transparent;
     border: 0px solid;
     border-radius: 3px;
     width: 6px;
 }
 QScrollBar::handle {
-    background-color: <highlight_bg>;
+    background: <highlight_bg>;
     border: 0px solid;
     border-radius: 3px;
     width: 6px;
 }
 QScrollBar::handle:hover, QScrollBar::handle:pressed {
-    background-color: <accent_color>;
+    background: <accent_color>;
 }
 QScrollBar::up-button, QScrollBar::down-button {
     width: 0px;
@@ -180,14 +177,14 @@ QScrollBar::add-page, QScrollBar::sub-page {
 
 /* QMessageBox */
 QMessageBox {
-    background-color: <primary_bg>;
+    background: <root_bg>;
     color: <text_color>;
     text-align: center;
 }
 
 /* QProgressBar */
 QProgressBar {
-    background-color: <secondary_bg>;
+    background: <primary_bg>;
     color: <text_color>;
     border: 0px solid;
     border-radius: 8px;
@@ -195,7 +192,7 @@ QProgressBar {
     height: 2px;
 }
 QProgressBar::chunk {
-    background-color: <accent_color>;
+    background: <accent_color>;
     border-radius: 8px;
 }
 
@@ -209,7 +206,7 @@ QRadioButton, QCheckBox {
     spacing: 15px;
 }
 QCheckBox::indicator, QListWidget::indicator {
-    background-color: <primary_bg>;
+    background: <primary_bg>;
     width: 15px;
     height: 15px;
     border: 2px solid <primary_bg>;
@@ -217,26 +214,26 @@ QCheckBox::indicator, QListWidget::indicator {
     padding: 2px;
 }
 QCheckBox::indicator:checked, QListWidget::indicator:checked {
-    background-color: <accent_color>;
+    background: <accent_color>;
     image: <checkbox_indicator>;
     color: <text_color>;
 }
 QRadioButton::indicator {
-    background-color: <secondary_bg>;
+    background: <primary_bg>;
     width: 15px;
     height: 15px;
-    border: 2px solid <secondary_bg>;
+    border: 2px solid <primary_bg>;
     border-radius: 8px;
 }
 QRadioButton::indicator:checked {
-    background-color: <accent_color>;
-    border: 2px solid <secondary_bg>;
+    background: <accent_color>;
+    border: 2px solid <primary_bg>;
     border-radius: 8px;
 }
 
 /* QComboBox */
 QComboBox {
-    background-color: <secondary_bg>;
+    background: <primary_bg>;
     color: <text_color>;
     font-family: <font>;
     font-size: <font_size>;
@@ -263,23 +260,23 @@ QComboBox::down-arrow {
     color: <text_color>;
 }
 QComboBox:hover {
-    background-color: <tertiary_bg>;
+    background: <highlight_bg>;
 }
 QComboBox QAbstractItemView {
     border-radius: 4px;
     border: 0px solid;
-    background-color: <secondary_bg>;
+    background: <root_bg>;
     color: <text_color>;
     font-family: <font>;
     font-size: <font_size>;
 }
 QComboBox QAbstractItemView {
-    background-color: <secondary_bg>;
+    background: <root_bg>;
     padding: 4px;
     border-radius: 4px;
 }
 QComboBox QAbstractItemView::item {
-    background-color: transparent;
+    background: transparent;
     color: <text_color>;
     border-radius: 4px;
     margin: 2px;
@@ -291,7 +288,7 @@ QComboBox QAbstractItemView::item:selected {
 
 /* QListWidget */
 QListWidget {
-    background-color: <tertiary_bg>;
+    background: <primary_bg>;
     color: <text_color>;
     font-family: <font>;
     font-size: <font_size>;
@@ -307,6 +304,10 @@ QListWidget::item {
     padding: 3px;
     margin: 3px;
 }
+QListWidget::item:hover,
 QListWidget::item:selected {
-    background-color: <highlight_bg>;
+    background: <highlight_bg>;
+}
+QListWidget::item:selected {
+    color: <accent_color>;
 }
