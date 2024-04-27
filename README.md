@@ -74,7 +74,7 @@ This is a tool for migrating modding instances between various mod managers.
 
 ### 1. Translations
 
-Create your translation for your desired language from en-US.json under `<Path to MMM>`/data/locales and give it a proper name: for example: "en-US.json" or "de-DE.json". Put it in the locales folder and make a pull request.
+Create your translation for your desired language from en_US under `<Path to MMM>`/data/locales. Put it in the locales folder and make a pull request.
 
 ### 2. Feedback (Suggestions/Issues)
 
@@ -88,14 +88,14 @@ If you encountered an issue/error or have a suggestion, open an issue with suffi
 4. Type in following command to set up a virtual environment and install all requirements:
    `setup_venv.bat`
 5. Activate virtual environment by typing:
-   `src\venv\Scripts\activate`
+   `.venv\Scripts\activate`
 
 ### 4. Execute from source
 
 1. If virtual environment not already set up follow steps under "3. Code contributions"
-2. Open terminal in src folder
+2. Open terminal in root folder of this repository
 3. Type following command to activate virtual environment:
-   `venv\Scripts\activate`
+   `.venv\Scripts\activate`
 4. Execute main file:
    `python main.py`
 
