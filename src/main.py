@@ -49,9 +49,6 @@ class MainApp(qtw.QApplication):
         self.compiled = bool(
             ("__compiled__" in globals()) or (sys.argv[0].endswith(".exe"))
         )
-        self.exception: bool = (
-            False  # will be set to True if an uncatched exception occurs
-        )
         self.source: str = None  # has to be in SUPPORTED_MODMANAGERS
         self.destination: str = None  # has to be in SUPPORTED_MODMANAGERS
         self.src_modinstance: managers.ModInstance = None
@@ -419,11 +416,6 @@ Current version: {self.version} | Latest version: {new_version}"
                 traceback.format_exception(exc_type, exc_value, exc_traceback)
             )
             yesno = True
-
-            # Set exception to True
-            # to save log file when exit
-            # this ignores user configuration
-            self.exception = True
 
         # Create error messagebox
         messagebox = dialogs.ErrorDialog(
