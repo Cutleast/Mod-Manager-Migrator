@@ -21,7 +21,7 @@ class EnderalSEInstance(GameInstance):
         super().__init__(app)
 
         self.name = "Enderal Special Edition"
-        self.id = "EnderalSE"
+        self.id = "EnderalSpecialEdition"
         self.inidir = self.app.doc_path / "My Games" / self.name
         self.inifiles = [
             self.inidir / "Enderal.ini",
