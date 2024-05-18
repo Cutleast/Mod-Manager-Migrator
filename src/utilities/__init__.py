@@ -214,7 +214,9 @@ def clean_filepath(filepath: Path):
     for i, part in enumerate(path_parts):
         if i == 0 and Path(part).is_dir():
             continue
+
         cleaned_part = clean_string(part)
+        cleaned_part = cleaned_part.strip(".")
 
         path_parts[i] = cleaned_part
 
