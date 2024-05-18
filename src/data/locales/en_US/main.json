@@ -90,5 +90,7 @@
     "disable_selected": "Disable selected mods",
     "unselect_all": "Unselect all mods",
     "number_of_mods": "Number of mods",
-    "saving_database": "Saving Vortex database..."
+    "saving_database": "Saving Vortex database...",
+    "keep_logs_num": "Number of newest log files to keep",
+    "system": "System"
 }

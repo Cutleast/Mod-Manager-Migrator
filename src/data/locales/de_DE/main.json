@@ -90,5 +90,7 @@
     "disable_selected": "Ausgewählte Mods deaktivieren",
     "unselect_all": "Auswahl aufheben",
     "number_of_mods": "Anzahl an Mods",
-    "saving_database": "Speichere Vortex Database..."
+    "saving_database": "Speichere Vortex Database...",
+    "keep_logs_num": "Anzahl der neuesten zu behaltenden Log-Dateien",
+    "system": "System"
 }

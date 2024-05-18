@@ -16,6 +16,7 @@ import shutil
 import sys
 import time
 import traceback
+from datetime import datetime
 from locale import getlocale
 from pathlib import Path
 from shutil import disk_usage
@@ -78,9 +79,7 @@ class MainApp(qtw.QApplication):
         ctypes.windll.shell32.SHGetFolderPathW(None, 5, None, 0, _buf)
         self.doc_path = Path(_buf.value)
 
-        self.log_name = (
-            f"{self.name}_{self.start_date}_-_{self.start_time.replace(':', '.')}.log"
-        )
+        self.log_name = time.strftime("%d.%m.%Y-%H.%M.%S.log")
         self.log_path = self.app_path / "logs" / self.log_name
         if not self.app_path.is_dir():
             os.mkdir(self.app_path)
@@ -89,7 +88,7 @@ class MainApp(qtw.QApplication):
         self.protocol = ""
 
         self.default_conf = {
-            "save_logs": False,
+            "keep_logs_num": 5,  # Only keep 5 newest log files and delete rest
             "log_level": "debug",
             "ui_mode": "System",
             "language": "System",
@@ -101,31 +100,15 @@ class MainApp(qtw.QApplication):
         try:
             # load config
             with open(self.con_path, "r", encoding="utf8") as file:
-                config = json.load(file)
+                config: dict = json.load(file)
 
-            if len(config.keys()) < len(self.default_conf.keys()):
-                # update outdated config
-                print(
-                    "Detected incomplete (outdated) config file. \
-Updating with default config..."
-                )
-                new_keys = [
-                    key for key in self.default_conf if key not in config.keys()
-                ]
-                for key in new_keys:
-                    config[key] = self.default_conf[key]
+            # Remove deprecated/unsupported settings
+            if any(key not in self.default_conf for key in config):
+                for key in config.copy():
+                    if key not in self.default_conf:
+                        config.pop(key)
 
-                # try to save updated config to config file
-                try:
-                    with open(self.con_path, "w", encoding="utf8") as conffile:
-                        json.dump(config, conffile, indent=4)
-                    print("Saved updated config to config file.")
-                # ignore if access denied by os
-                except OSError:
-                    print("Failed to update config file: Access denied.")
-
-            # apply config
-            self.config = config
+            self.config = self.default_conf | config
         except (FileNotFoundError, json.decoder.JSONDecodeError):
             # apply default config
             self.config = self.default_conf
@@ -166,14 +149,7 @@ Updating with default config..."
             help="Specify logging level.",
             choices=list(utils.LOG_LEVELS.values()),
         )
-        parser.add_argument(  # keep log
-            "--keep-log",
-            help="Keep log file. (Overwrites user config.)",
-            action="store_true",
-        )
         self.args = parser.parse_args()
-        if self.args.keep_log:
-            self.config["save_logs"] = True
         if self.args.log_level:
             self.log_level = getattr(  # log level integer from name
                 logging, self.args.log_level.upper(), 20  # info level
@@ -363,9 +339,9 @@ Current version: {self.version} | Latest version: {new_version}"
             message_box.setStyleSheet(self.stylesheet)
             message_box.setWindowTitle(self.name)
             message_box.setText(
-                self.loc.main.update_available
-                .replace("[OLD_VERSION]", self.version)
-                .replace("[NEW_VERSION]", str(new_version))
+                self.loc.main.update_available.replace(
+                    "[OLD_VERSION]", self.version
+                ).replace("[NEW_VERSION]", str(new_version))
             )
             message_box.setStandardButtons(
                 qtw.QMessageBox.StandardButton.No | qtw.QMessageBox.StandardButton.Yes
@@ -502,9 +478,9 @@ Current version: {self.version} | Latest version: {new_version}"
                 qtw.QMessageBox.critical(
                     self.root,
                     self.loc.main.error,
-                    self.loc.main.enough_space_text
-                    .replace("FREE_SPACE", utils.scale_value(self.fspace))
-                    .replace("REQUIRED_SPACE", utils.scale_value(self.rspace)),
+                    self.loc.main.enough_space_text.replace(
+                        "FREE_SPACE", utils.scale_value(self.fspace)
+                    ).replace("REQUIRED_SPACE", utils.scale_value(self.rspace)),
                 )
                 return
 
@@ -730,13 +706,20 @@ Current version: {self.version} | Latest version: {new_version}"
 
         # Exit and clean up
         self.log.info("Exiting program...")
-        # self.exception = False
-        if (not self.config["save_logs"] or (self.config["save_logs"] == "False")) and (
-            not self.exception
-        ):
-            self.log.info("Cleaning log file...")
-            self.stdout.close()
-            os.remove(self.log_path)
+        if self.config["keep_logs_num"] >= 0:
+            while (
+                len(log_files := os.listdir(self.log_path.parent))
+                > self.config["keep_logs_num"]
+            ):
+
+                def func(name: str):
+                    if name.startswith(self.name):
+                        return datetime.strptime(name, f"{self.name}_%d.%m.%Y_-_%H.%M.%S.log")
+                    else:
+                        return datetime.strptime(name, "%d.%m.%Y-%H.%M.%S.log")
+
+                log_files.sort(key=func)
+                os.remove(self.log_path.parent / log_files[0])
 
     def load_lang(self, language=None):
         """
@@ -748,7 +731,7 @@ Current version: {self.version} | Latest version: {new_version}"
         # Get language strings
         if not language:
             language = self.config["language"]
-        
+
         self.loc = utils.Localisator(language, self.res_path / "locales")
         self.loc.load_lang()
 
