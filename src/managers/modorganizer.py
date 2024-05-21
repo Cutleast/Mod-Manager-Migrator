@@ -98,7 +98,7 @@ class MO2Instance(ModInstance):
                     continue
 
                 modname = utils.clean_string(mod.metadata["name"])
-
+                modname = modname.strip(". ")
                 # Enable mod in destination
                 if mod.enabled:
                     mods += "\n+" + modname
@@ -106,7 +106,7 @@ class MO2Instance(ModInstance):
                 # Disable mod in destination
                 else:
                     mods += "\n-" + modname
-            mods = mods.strip(" .")
+            mods = mods.strip()
             file.write(mods)
         self.log.debug("Created 'modlist.txt'.")
 
