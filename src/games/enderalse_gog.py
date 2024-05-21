@@ -6,13 +6,13 @@ Attribution-NonCommercial-NoDerivatives 4.0 International.
 
 from main import MainApp
 
-from .game import GameInstance
+from .enderalse import EnderalSEInstance
 
 
-class EnderalSEInstance(GameInstance):
+class EnderalSEGOGInstance(EnderalSEInstance):
     """
     Class for EnderalSE GameInstance.
-    Inherited from GameInstance class.
+    Inherited from EnderalSEInstance class.
     """
 
     icon_name = "Enderalse.ico"
@@ -20,18 +20,13 @@ class EnderalSEInstance(GameInstance):
     def __init__(self, app: MainApp):
         super().__init__(app)
 
-        self.name = "Enderal Special Edition"
-        self.id = "EnderalSpecialEdition"
+        self.name = "Enderal Special Edition GOG"
         self.inidir = self.app.doc_path / "My Games" / self.name
         self.inifiles = [
             self.inidir / "Enderal.ini",
             self.inidir / "EnderalPrefs.ini",
             self.inidir / "EnderalCustom.ini",
         ]
-        self.reg_paths = [
-            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\SureAI\\Enderal SE\\installed path",
-            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\GOG.com\\Games\\1708684988\\path",
-        ]
 
     def __repr__(self):
-        return "EnderalSEInstance"
+        return "EnderalSEGOGInstance"

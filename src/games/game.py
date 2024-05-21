@@ -30,8 +30,7 @@ class GameInstance:
         self.installdir: Path = ""
         self.inidir: Path = ""
         self.inifiles: list[Path] = []
-        self.steamid: int = 0
-        self.gogid: int = 0
+        self.reg_paths: list[str] = []
 
         # Initialize class specific logger
         self.log = logging.getLogger(self.__repr__())
@@ -53,34 +52,22 @@ class GameInstance:
         # Only search for installdir if not already done
         if not installdir:
             # Try to get Skyrim path from Steam if installed
-            if self.steamid:
+            for reg_path in self.reg_paths:
                 try:
-                    reg_path = f"\
-SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App {self.steamid}"
-                    with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, reg_path) as hkey:
+                    key, reg_path = reg_path.split("\\", 1)
+                    reg_path, value_name = reg_path.rsplit("\\", 1)
+                    key: int = getattr(winreg, key, winreg.HKEY_LOCAL_MACHINE)
+                    with winreg.OpenKey(key, reg_path) as hkey:
                         installdir = Path(
-                            winreg.QueryValueEx(hkey, "installLocation")[0]
+                            winreg.QueryValueEx(hkey, value_name)[0]
                         )
 
                         if installdir.is_dir() and str(installdir) != ".":
                             self.installdir = installdir
-                            # return self.installdir
-                except Exception as ex:
-                    self.log.error(f"Failed to get install path from Steam: {ex}")
+                            return self.installdir
 
-            # Try to get Skyrim path from GOG if installed
-            if self.gogid and (not self.installdir):
-                try:
-                    reg_path = f"\
-SOFTWARE\\WOW6432Node\\GOG.com\\Games\\{self.gogid}"
-                    with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, reg_path) as hkey:
-                        installdir = Path(winreg.QueryValueEx(hkey, "path")[0])
-
-                    if installdir.is_dir() and str(installdir) != ".":
-                        self.installdir = installdir
-                        # return self.installdir
                 except Exception as ex:
-                    self.log.error(f"Failed to get install path from GOG: {ex}")
+                    self.log.error(f"Failed to get install path from Registry Key {reg_path!r}: {ex}")
 
         if not self.installdir:
             dialog = qtw.QDialog()

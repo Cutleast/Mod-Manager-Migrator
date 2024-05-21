@@ -6,32 +6,25 @@ Attribution-NonCommercial-NoDerivatives 4.0 International.
 
 from main import MainApp
 
-from .game import GameInstance
+from .skyrimse import SkyrimSEInstance
 
 
-class SkyrimSEInstance(GameInstance):
+class SkyrimSEGOGInstance(SkyrimSEInstance):
     """
-    Class for SkyrimSE GameInstance.
-    Inherited from GameInstance class.
+    Class for SkyrimSE GOG GameInstance.
+    Inherited from SkyrimSEInstance class.
     """
-
-    icon_name = "Skyrimse.ico"
 
     def __init__(self, app: MainApp):
         super().__init__(app)
 
-        self.name = "Skyrim Special Edition"
-        self.id = "SkyrimSE"
+        self.name = "Skyrim Special Edition GOG"
         self.inidir = self.app.doc_path / "My Games" / self.name
         self.inifiles = [
             self.inidir / "Skyrim.ini",
             self.inidir / "SkyrimPrefs.ini",
             self.inidir / "SkyrimCustom.ini",
         ]
-        self.reg_paths = [
-            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\Skyrim\\installed path",
-            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\GOG.com\\Games\\1711230643\\path",
-        ]
 
     def __repr__(self):
-        return "SkyrimSEInstance"
+        return "SkyrimSEGOGInstance"

@@ -28,7 +28,9 @@ class SkyrimInstance(GameInstance):
             self.inidir / "SkyrimPrefs.ini",
             self.inidir / "SkyrimCustom.ini",
         ]
-        self.steamid = 72850
+        self.reg_paths = [
+            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\Skyrim\\installed path"
+        ]
 
     def __repr__(self):
         return "SkyrimInstance"

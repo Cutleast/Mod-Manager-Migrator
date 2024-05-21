@@ -28,8 +28,9 @@ class OblivionInstance(GameInstance):
             self.inidir / "OblivionPrefs.ini",
             self.inidir / "BlendSettings.ini",
         ]
-        self.steamid = 22330
-        self.gogid = 1242989820
+        self.reg_paths = [
+            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\Oblivion\\installed path"
+        ]
 
     def __repr__(self):
         return "OblivionInstance"

@@ -28,7 +28,10 @@ class Fallout4Instance(GameInstance):
             self.inidir / "Fallout4Prefs.ini",
             self.inidir / "Fallout4Custom.ini",
         ]
-        self.steamid = 377160
+        self.reg_paths = [
+            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\Fallout4\\installed path",
+            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\GOG.com\\Games\\1998527297\\path",
+        ]
 
     def __repr__(self):
         return "Fallout4Instance"

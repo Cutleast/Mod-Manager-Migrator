@@ -28,7 +28,9 @@ class EnderalInstance(GameInstance):
             self.inidir / "EnderalPrefs.ini",
             self.inidir / "EnderalCustom.ini",
         ]
-        self.steamid = 933480
+        self.reg_paths = [
+            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\SureAI\\Enderal\\installed path",
+        ]
 
     def __repr__(self):
         return "EnderalInstance"

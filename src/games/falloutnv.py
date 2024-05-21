@@ -27,8 +27,10 @@ class FalloutNVInstance(GameInstance):
             self.inidir / "Fallout.ini",
             self.inidir / "FalloutPrefs.ini",
         ]
-        self.steamid = 22380
-        self.gogid = 1312824873
+        self.reg_paths = [
+            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\falloutnv\\installed path",
+            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\GOG.com\\Games\\1998527297\\path",
+        ]
 
     def __repr__(self):
         return "FalloutNVInstance"

@@ -27,8 +27,10 @@ class Fallout3Instance(GameInstance):
             self.inidir / "Fallout.ini",
             self.inidir / "FalloutPrefs.ini",
         ]
-        self.steamid = 22370
-        self.gogid = 1248282609
+        self.reg_paths = [
+            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\Fallout3\\installed path",
+            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\GOG.com\\Games\\1248282609\\path",
+        ]
 
     def __repr__(self):
         return "Fallout3Instance"
