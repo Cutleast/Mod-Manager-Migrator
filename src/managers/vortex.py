@@ -607,7 +607,7 @@ Vortex is running!"
                             self.log.debug(f"Rule reference: {reference}")
                             raise ValueError(f"Unknown rule type '{rule['type']}'!")
 
-            conflict_graph = utils.ConflictGraph(new_loadorder.copy())
+            conflict_graph = utils.ConflictGraph(new_loadorder)
             new_loadorder = conflict_graph.to_loadorder()
 
             # Replace Vortex's full mod names displayed name
