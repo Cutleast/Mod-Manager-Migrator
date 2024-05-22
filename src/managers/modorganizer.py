@@ -98,7 +98,7 @@ class MO2Instance(ModInstance):
                     continue
 
                 modname = utils.clean_string(mod.metadata["name"])
-
+                modname = modname.strip(". ")
                 # Enable mod in destination
                 if mod.enabled:
                     mods += "\n+" + modname

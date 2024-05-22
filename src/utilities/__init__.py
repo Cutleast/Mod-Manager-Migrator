@@ -20,6 +20,7 @@ from .mod_item import ModItem
 from .stdout_pipe import StdoutPipe
 from .theme import Theme
 from .vortex_database import VortexDatabase
+from .conflict_graph import ConflictGraph
 
 
 def get_latest_version():
