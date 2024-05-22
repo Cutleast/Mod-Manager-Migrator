@@ -607,25 +607,8 @@ Vortex is running!"
                             self.log.debug(f"Rule reference: {reference}")
                             raise ValueError(f"Unknown rule type '{rule['type']}'!")
 
-                # Sort mod
-                if mod.overwriting_mods:
-                    # self.log.debug(f"Sorting mod '{mod}'...")
-
-                    old_index = index = new_loadorder.index(mod)
-
-                    # Get smallest index of all overwriting mods
-                    overwriting_mods = [
-                        new_loadorder.index(overwriting_mod)
-                        for overwriting_mod in mod.overwriting_mods
-                    ]
-                    index = min(overwriting_mods)
-                    # self.log.debug(
-                    #    f"Current index: {old_index} | Minimal index of overwriting_mods: {index}"
-                    # )
-
-                    if old_index > index:
-                        new_loadorder.insert(index, new_loadorder.pop(old_index))
-                        # self.log.debug(f"Moved mod '{mod}' from index {old_index} to {index}.")
+            conflict_graph = utils.ConflictGraph(new_loadorder)
+            new_loadorder = conflict_graph.to_loadorder()
 
             # Replace Vortex's full mod names displayed name
             final_loadorder = []
