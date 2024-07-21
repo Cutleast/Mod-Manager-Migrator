@@ -6,7 +6,7 @@
     "error_text": "An error occured:",
     "show_details": "Show details...",
     "hide_details": "Hide details...",
-    "continue": "Continue",
+    "_continue": "Continue",
     "ignore": "Ignore",
     "next": "Next",
     "back": "Back",

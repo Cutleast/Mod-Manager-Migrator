@@ -6,7 +6,7 @@
     "error_text": "Ein Fehler ist aufgetreten:",
     "show_details": "Details anzeigen...",
     "hide_details": "Details verstecken...",
-    "continue": "Fortfahren",
+    "_continue": "Fortfahren",
     "ignore": "Ignorieren",
     "next": "Weiter",
     "back": "Zurück",

@@ -6,7 +6,7 @@
     "error_text": "发生了一个错误：",
     "show_details": "详细显示...",
     "hide_details": "隐藏...",
-    "continue": "继续",
+    "_continue": "继续",
     "ignore": "忽略",
     "next": "下一步",
     "back": "返回",
