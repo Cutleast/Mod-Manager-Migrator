@@ -12,8 +12,8 @@ import qtpy.QtGui as qtg
 import qtpy.QtWidgets as qtw
 
 import utilities as utils
-from widgets import LoadingDialog
 from main import MainApp
+from widgets import LoadingDialog
 
 
 class ModInstance:
