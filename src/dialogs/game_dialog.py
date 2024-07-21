@@ -36,7 +36,7 @@ class GameDialog(qtw.QDialog):
         self.setWindowTitle(self.loc.main.select_game)
         self.setModal(True)
         self.setObjectName("root")
-        self.setFixedSize(720, 350)
+        self.resize(720, 350)
 
         # Create main layout
         layout = qtw.QVBoxLayout()
