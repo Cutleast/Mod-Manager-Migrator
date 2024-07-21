@@ -9,3 +9,5 @@ main.dist
 **_old.py
 !requirements.txt
 Mod-Manager-Migrator.code-workspace
+MMM
+MMM *.zip

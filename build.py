@@ -4,13 +4,15 @@ all its dependencies in one folder.
 """
 
 import os
+import shutil
 from pathlib import Path
 
 DIST_FOLDER = Path("main.dist").resolve()
-APPNAME="Mod Manager Migrator"
-VERSION="2.4"
-AUTHOR="Cutleast"
-LICENSE="Attribution-NonCommercial-NoDerivatives 4.0 International"
+APPNAME = "Mod Manager Migrator"
+VERSION = "2.5"
+AUTHOR = "Cutleast"
+LICENSE = "Attribution-NonCommercial-NoDerivatives 4.0 International"
+OUTPUT_FOLDER = DIST_FOLDER.with_name("MMM")
 UNUSED_FILES = [
     DIST_FOLDER / "qt6datavisualization.dll",
     DIST_FOLDER / "qt6network.dll",
@@ -48,6 +50,10 @@ for file in UNUSED_FILES:
     os.remove(file)
     print(f"Removed '{file.name}'.")
 
-os.rename(DIST_FOLDER, DIST_FOLDER.with_name("Mod Manager Migrator"))
+print("Renaming Output folder...")
+if OUTPUT_FOLDER.is_dir():
+    shutil.rmtree(OUTPUT_FOLDER)
+    print(f"Deleted already existing {OUTPUT_FOLDER.name!r} folder.")
+os.rename(DIST_FOLDER, OUTPUT_FOLDER)
 
 print("Done!")
