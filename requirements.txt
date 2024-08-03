@@ -3,7 +3,8 @@ qtpy
 qtawesome
 darkdetect
 requests
-nuitka
+nuitka  # had issues with AV detections, recently
+cx_freeze
 pyperclip
 plyvel-ci
 pywin32

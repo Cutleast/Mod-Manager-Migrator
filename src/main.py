@@ -66,7 +66,11 @@ class MainApp(qtw.QApplication):
         self.os_type = str("linux" if "Linux" in platform.system() else "windows")
         print(f"Current datetime: {self.start_date} {self.start_time}")
 
-        self.cur_path = Path(__file__).parent
+        self.cur_path = (  # Get path of executable/script depending on building status
+            Path(sys.executable).parent.resolve()
+            if getattr(sys, "frozen", False)
+            else Path(__file__).parent.resolve()
+        )
         self.app_path = Path(os.getenv("APPDATA")) / self.name
         self.con_path = self.app_path / "config.json"
         self.res_path = self.cur_path / "data"
@@ -405,16 +409,18 @@ Current version: {self.version} | Latest version: {new_version}"
 
         # Show normal uncatched exceptions
         else:
-            self.log.critical(
-                "An uncaught exception occured:",
-                exc_info=(exc_type, exc_value, exc_traceback),
+            tb = "".join(traceback.format_exception(exc_type, exc_value, exc_traceback))
+            # Remove dev environment paths from traceback
+            # cx_freeze, why ever, keeps them when building
+            tb = tb.replace(
+                "C:\\Users\\robin\\OneDrive\\Development\\SSE-Auto-Translator\\src\\",
+                "",
             )
+            self.log.critical("An uncaught exception occured:\n" + tb)
 
             # Get exception info
             error_msg = f"{self.loc.main.error_text} {exc_value}"
-            detailed_msg = "".join(
-                traceback.format_exception(exc_type, exc_value, exc_traceback)
-            )
+            detailed_msg = tb
             yesno = True
 
         # Create error messagebox
