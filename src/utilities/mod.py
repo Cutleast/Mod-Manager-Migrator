@@ -41,4 +41,4 @@ class Mod:
         self.selected = selected
     
     def __hash__(self):
-        return hash((self.name, self.path, self.files, self.size))
+        return hash((self.name, self.path, self.size))
