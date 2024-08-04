@@ -58,7 +58,11 @@ Vortex is running!"
         apppath = Path(os.getenv("APPDATA")) / "Vortex"
         installpaths: dict[str, str] = settings["mods"].get("installPath", {})
         modspath: str = installpaths.get(game, str(apppath / game / "mods"))
-        modspath = Path(modspath.replace("{game}", self.app.game.lower()))
+        modspath = Path(
+            modspath.replace("{game}", self.app.game.lower()).replace(
+                "{USERDATA}", str(apppath)
+            )
+        )
         dlpath: str = settings["downloads"]["path"]
         dlpath = Path(dlpath.replace("{USERDATA}", str(apppath)))
 
