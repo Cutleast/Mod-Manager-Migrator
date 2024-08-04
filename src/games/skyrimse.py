@@ -29,7 +29,7 @@ class SkyrimSEInstance(GameInstance):
             self.inidir / "SkyrimCustom.ini",
         ]
         self.reg_paths = [
-            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\Skyrim\\installed path",
+            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\Skyrim Special Edition\\installed path",
             "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\GOG.com\\Games\\1711230643\\path",
         ]
 
