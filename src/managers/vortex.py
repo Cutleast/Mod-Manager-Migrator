@@ -110,6 +110,8 @@ Vortex is running!"
         }
 
         # Add profile to database
+        if not "profiles" in self.database["persistent"]:
+            self.database["persistent"]["profiles"] = {}
         self.database["persistent"]["profiles"][profid] = profile
 
         # Create profile folder
