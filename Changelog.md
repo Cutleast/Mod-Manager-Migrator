@@ -1,3 +1,15 @@
+# v2.5
+- Fix AV detections by changing the builder from Nuitka to cx_Freeze
+- Add support for FO3, FO:NV and Oblivion
+- Improve installation path detection
+- Improve conflict rule sorting for Vortex -> MO2 (thanks to [FORMless000](https://github.com/Cutleast/Mod-Manager-Migrator/commits?author=FORMless000)!)
+- Fix "continue" localisation
+- Fix game dialog layout
+- Fix TypeError when hashing utilities.mod.Mod
+- Fix "{USERDATA}" not resolving when migrating to Vortex
+- Fix migration to Vortex if there are no profiles
+- Fix UnboundLocalError when loading a mod with an incomplete meta.ini (MO2)
+
 # v2.41
 - (Hopefully) fixed Virus warning
 
