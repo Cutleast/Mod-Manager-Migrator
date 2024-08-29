@@ -56,6 +56,7 @@ elif COMPILER == "cx_freeze":
     from cx_Freeze import Executable, setup
 
     build_options = {
+        "replace_paths": [("*", "")],
         "include_files": [("./.venv/Lib/site-packages/plyvel_ci.libs", "./lib/plyvel")],
         "include_path": "./src",
         "build_exe": DIST_FOLDER.name,

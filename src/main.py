@@ -410,12 +410,6 @@ Current version: {self.version} | Latest version: {new_version}"
         # Show normal uncatched exceptions
         else:
             tb = "".join(traceback.format_exception(exc_type, exc_value, exc_traceback))
-            # Remove dev environment paths from traceback
-            # cx_freeze, why ever, keeps them when building
-            tb = tb.replace(
-                "C:\\Users\\robin\\OneDrive\\Development\\Mod-Manager-Migrator\\src\\",
-                "",
-            )
             self.log.critical("An uncaught exception occured:\n" + tb)
 
             # Get exception info
