@@ -238,6 +238,7 @@ class MO2Instance(ModInstance):
 
                     general = data["General"]
                     modid = general.get("modid", 0)
+                    fileid = 0
                     version = general.get("version", "1.0")
                     _ver = "-".join(version.split("."))
                     installedfiles = data.get("installedFiles")
