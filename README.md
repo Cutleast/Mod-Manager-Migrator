@@ -1,6 +1,6 @@
 <p align="center">
 <picture>
-  <img alt="" src="src/data/icons/mmm.svg" width=256 height=256>
+  <img alt="" src="res/icons/mmm.svg" width=256 height=256>
 </picture>
 </p>
 <p align="center">
@@ -32,17 +32,17 @@ This is a tool for migrating modding instances between various mod managers.
 
 ### Supported Games
 
-- Skyrim (Special Edition)
 - Enderal (Special Edition)
+- Fallout 3
 - Fallout 4
+- Fallout: New Vegas
+- Oblivion
+- Skyrim (all versions incl. GOG)
 
 #### Planned games
 
-- Oblivion
 - Nehrim
 - Morrowind
-- Fallout 3
-- Fallout: New Vegas
 - You (the community) decide, feel free to suggest
 
 ### Supported Mod Managers
@@ -55,10 +55,10 @@ This is a tool for migrating modding instances between various mod managers.
 - Nexus Mod Manager Community Edition
 - Feel free to suggest
 
-### Known Issues
+### Known Issues/Limitations
 
 - Cannot migrate from Vortex if it is used in "Shared" mode ([Vortex &gt; Settings &gt; Vortex](https://imgur.com/fyKAgK7))
-- Some Windows Defender versions detect MMM as malware and delete the executable
+- Some Windows Defender versions may detect MMM as malware and delete the executable
 
 # 🔧Usage
 
@@ -74,36 +74,32 @@ This is a tool for migrating modding instances between various mod managers.
 
 ### 1. Translations
 
-Create your translation for your desired language from en_US under `<Path to MMM>`/data/locales. Put it in the locales folder and make a pull request.
+Create your translation for your desired language from en_US under `<Path to MMM>`/res/loc. Put it in the locales folder and make a pull request.
+I strongly recommend using QtLinguist. A VS Code task is already set up in the .code-workspace file to open QtLinguist with the German localisation.
 
 ### 2. Feedback (Suggestions/Issues)
 
 If you encountered an issue/error or have a suggestion, open an issue with sufficient information.
 
-### 3. Code contributions
+### 3. Install requirements
 
-1. Install Python 3.11 (Make sure that you add it to PATH!)
-2. Clone repository
-3. Open terminal in repository folder
-4. Type in following command to set up a virtual environment and install all requirements:
-   `setup_venv.bat`
-5. Activate virtual environment by typing:
-   `.venv\Scripts\activate`
+1. Install [Python 3.12](https://www.python.org/downloads/) (Make sure that you add it to PATH!)
+2. Install [uv](https://github.com/astral-sh/uv#installation)
+3. Clone repository
+4. Open terminal in repository folder
+5. Run the following command to init your local environment and to install all dependencies
+   `uv sync`
 
 ### 4. Execute from source
 
-1. If virtual environment not already set up follow steps under "3. Code contributions"
-2. Open terminal in root folder of this repository
-3. Type following command to activate virtual environment:
-   `.venv\Scripts\activate`
-4. Execute main file:
-   `python main.py`
+1. Open terminal in src folder
+2. Execute main file with uv
+   `uv run src\main.py`
 
 ### 5. Compile and build executable
 
-1. Follow the steps on this page [Nuitka.net](https://nuitka.net/doc/user-manual.html#usage) to install a C Compiler
-2. Run `build.bat` with activated virtual environment from the root folder of this repo.
-3. The executable and all dependencies are built in the main.dist-Folder.
+1. Run `build.bat` with activated virtual environment from the root folder of this repo.
+2. The executable and all dependencies are built in the `dist/MMM`-Folder and gets packed in a `dist/MMM v[version].zip`.
 
 # 💻How it works
 

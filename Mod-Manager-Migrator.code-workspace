@@ -1,0 +1,247 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"extensions": {
+		"recommendations": [
+			"njpwerner.autodocstring",
+			"aeschli.vscode-css-formatter",
+			"ms-python.mypy-type-checker",
+			"ms-python.vscode-pylance",
+			"ms-python.python",
+			"ms-python.debugpy",
+			"ms-python.vscode-python-envs",
+			"theqtcompany.qt",
+			"charliermarsh.ruff",
+			"redhat.vscode-xml"
+		]
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "update-project-file",
+				"type": "shell",
+				"command": "${workspaceFolder}/.venv/scripts/python",
+				"args": [
+					"${workspaceFolder}/scripts/generate_qt_project_file.py",
+					"--relative-to",
+					"${workspaceFolder}",
+					"--include-directory",
+					"${workspaceFolder}/src",
+					"--out-file",
+					"${workspaceFolder}/qt_project.pyproject"
+				]
+			},
+			{
+				"label": "update-lupdate-file",
+				"type": "shell",
+				"command": "${workspaceFolder}/.venv/scripts/python",
+				"args": [
+					"${workspaceFolder}/scripts/generate_qt_lupdate_file.py",
+					"--include-directory",
+					"${workspaceFolder}/src/ui",
+					"--include-directory",
+					"${workspaceFolder}/src/core",
+					"--include-file",
+					"${workspaceFolder}/src/app.py",
+					"--relative-to",
+					"${workspaceFolder}",
+					"--add-translation",
+					"${workspaceFolder}/res/loc/de.ts",
+					"--out-file",
+					"${workspaceFolder}/qt_lupdate.json"
+				]
+			},
+			{
+				"label": "compile-qrc",
+				"type": "shell",
+				"command": "${workspaceFolder}/.venv/scripts/pyside6-rcc",
+				"args": [
+					"${workspaceFolder}/res/resources.qrc",
+					"-o",
+					"${workspaceFolder}/src/resources_rc.py"
+				],
+				"dependsOn": [
+					"compile-qts"
+				],
+				"problemMatcher": [],
+				"detail": "Compiles Qt resources into a usable Python module."
+			},
+			{
+				"label": "run-main",
+				"type": "shell",
+				"command": "${workspaceFolder}/.venv/scripts/python",
+				"args": [
+					"${workspaceFolder}/src/main.py"
+				],
+				"dependsOn": [
+					"compile-qrc"
+				],
+				"detail": "Runs main.py without debugger.",
+				"problemMatcher": []
+			},
+			{
+				"label": "update-venv",
+				"type": "shell",
+				"command": "${workspaceFolder}/.venv/scripts/pip",
+				"args": [
+					"install",
+					"--upgrade",
+					"-r",
+					"${workspaceFolder}/requirements.txt"
+				],
+				"detail": "Updates virtual environment with requirements.txt",
+				"problemMatcher": []
+			},
+			{
+				"label": "update-qts",
+				"type": "shell",
+				"command": "${workspaceFolder}/.venv/scripts/pyside6-lupdate",
+				"args": [
+					"-ts",
+					"${workspaceFolder}/res/loc/de.ts",
+					"-project",
+					"${workspaceFolder}/qt_lupdate.json",
+					"-no-obsolete"
+				],
+				"dependsOn": [
+					"update-lupdate-file"
+				],
+				"detail": "Updates Qt language files"
+			},
+			{
+				"label": "compile-qts",
+				"type": "shell",
+				"command": "${workspaceFolder}/.venv/scripts/pyside6-lrelease",
+				"args": [
+					"-project",
+					"${workspaceFolder}/qt_lupdate.json"
+				],
+				"dependsOn": [
+					"update-qts"
+				],
+				"detail": "Compiles Qt language files"
+			},
+			{
+				"label": "deploy",
+				"type": "shell",
+				"command": "${workspaceFolder}/build.bat",
+				"dependsOn": [
+					"compile-qrc"
+				],
+				"group": {
+					"kind": "build",
+					"isDefault": true
+				},
+				"detail": "Deploys MMM with cx_freeze in ./dist"
+			},
+			{
+				"label": "run-linguist",
+				"type": "shell",
+				"command": "${workspaceFolder}/.venv/scripts/pyside6-linguist",
+				"args": [
+					"${workspaceFolder}/res/loc/de.ts"
+				],
+				"options": {
+					"cwd": "${workspaceFolder}"
+				},
+				"dependsOn": [
+					"update-qts"
+				],
+				"detail": "Opens Qt Linguist with German language file",
+				"problemMatcher": []
+			},
+			{
+				"label": "dump-vortex-sse-mods",
+				"type": "shell",
+				"command": "${workspaceFolder}/.venv/scripts/python",
+				"args": [
+					"${workspaceFolder}/scripts/dump_leveldb_to_json.py",
+					"--prefix",
+					"persistent###mods###skyrimse###",
+					"--out-file",
+					"${workspaceFolder}/sse_mods.json"
+				],
+				"options": {
+					"cwd": "${workspaceFolder}"
+				},
+				"detail": "Dumps the Vortex database to a JSON file.",
+				"problemMatcher": []
+			},
+			{
+				"label": "dump-vortex-settings",
+				"type": "shell",
+				"command": "${workspaceFolder}/.venv/scripts/python",
+				"args": [
+					"${workspaceFolder}/scripts/dump_leveldb_to_json.py",
+					"--prefix",
+					"settings###",
+					"--out-file",
+					"${workspaceFolder}/vortex_settings.json"
+				],
+				"options": {
+					"cwd": "${workspaceFolder}"
+				},
+				"detail": "Dumps the Vortex database to a JSON file.",
+				"problemMatcher": []
+			}
+		]
+	},
+	"settings": {
+		"editor.formatOnSave": true,
+		"[qss]": {
+			"editor.defaultFormatter": "vscode.css-language-features"
+		},
+		"[python]": {
+			"editor.codeActionsOnSave": {
+				"source.organizeImports.ruff": "explicit",
+			},
+		},
+		"files.associations": {
+			"*.ts": "xml",
+			"*.qrc": "xml"
+		},
+		"python.testing.pytestArgs": [
+			"--ignore-glob=experiments/**/*.py",
+			"--ignore-glob=src/**/*.py",
+			"--log-level=DEBUG"
+		],
+		"python.testing.pytestEnabled": true,
+		"python.testing.unittestEnabled": false,
+		"xml.format.maxLineWidth": 0,
+		"mypy-type-checker.args": [
+			"--no-namespace-packages"
+		],
+		"mypy-type-checker.interpreter": [
+			"${workspaceFolder}\\.venv\\Scripts\\python.exe"
+		],
+		"mypy-type-checker.reportingScope": "workspace",
+		"mypy-type-checker.ignorePatterns": [
+			"dist/**/*.py",
+			"dist/**/*.pyi"
+		]
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"type": "debugpy",
+				"request": "launch",
+				"name": "Debug MMM",
+				"program": "${workspaceFolder}/src/main.py",
+				"cwd": "${workspaceFolder}",
+				"preLaunchTask": "compile-qrc"
+			},
+			{
+				"type": "debugpy",
+				"request": "launch",
+				"name": "Debug current file",
+				"program": "${file}",
+				"cwd": "${workspaceFolder}",
+			}
+		]
+	}
+}

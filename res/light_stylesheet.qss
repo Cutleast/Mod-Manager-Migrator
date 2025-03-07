@@ -1,0 +1,238 @@
+/* General Font */
+*
+{
+    color: #000000;
+}
+
+/* Windows, Messageboxes and Dialogs */
+QMainWindow, QDialog
+{
+    background: #ffffff;
+}
+
+/* QLCDNumber */
+QLCDNumber
+{
+    background: #0c000000;
+}
+
+/* Buttons */
+QPushButton
+{
+    background: #ffffff;
+    border-color: #20000000;
+}
+QPushButton:hover:!disabled
+{
+    background: #0c000000;
+    border-color: #20000000;
+}
+QPushButton:pressed
+{
+    background: #20000000;
+    border-color: #40000000;
+}
+QPushButton#primary:disabled
+{
+    color: #ffffff;
+}
+
+/* Text Fields */
+QLineEdit,
+QSpinBox,
+QDoubleSpinBox,
+QPlainTextEdit
+{
+    background: #ffffff;
+    border-color: #0c000000;
+}
+QLineEdit:hover:!disabled:!focus,
+QSpinBox:hover:!disabled:!focus,
+QDoubleSpinBox:hover:!disabled:!focus
+{
+    background: #0c000000;
+}
+
+/* Spinbox */
+QSpinBox::up-button:hover, QSpinBox::down-button:hover,
+QDoubleSpinBox::up-button:hover, QDoubleSpinBox::down-button:hover
+{
+    background: #1c000000;
+}
+QSpinBox::up-button,
+QDoubleSpinBox::up-button
+{
+    image: url(:/icons/arrow_up_dark.svg);
+}
+QSpinBox::down-button,
+QDoubleSpinBox::down-button
+{
+    image: url(:/icons/arrow_down_dark.svg);
+}
+
+/* ScrollArea & ScrollBar */
+QScrollArea
+{
+    background: #ffffff;
+}
+QScrollBar
+{
+    background: #0c000000;
+}
+QScrollBar::handle
+{
+    background: #15000000;
+}
+QScrollBar::handle:hover
+{
+    background: #20000000;
+}
+QScrollBar::handle:pressed
+{
+    background: #40000000;
+}
+
+/* Checkboxes */
+QCheckBox::indicator,
+QRadioButton::indicator,
+QAbstractItemView::indicator
+{
+    background: #0c000000;
+}
+QCheckBox::indicator:hover,
+QRadioButton::indicator:hover,
+QAbstractItemView::indicator:hover
+{
+    background: #1c000000;
+}
+QCheckBox::indicator:disabled:checked,
+QRadioButton::indicator:disabled:checked,
+QAbstractItemView::indicator:disabled:checked
+{
+    background: #666666;
+}
+QCheckBox::indicator:checked,
+QAbstractItemView::indicator:checked
+{
+    image: url(:/icons/checkmark_dark.svg);
+}
+QRadioButton::indicator:checked
+{
+    border-color: #0c000000;
+}
+
+/* Dropdowns */
+QComboBox
+{
+    background: #0c000000;
+    border-color: #0c000000;
+}
+QComboBox::down-arrow
+{
+    image: url(:/icons/arrow_down_dark.svg);
+}
+QComboBox:hover:!disabled
+{
+    background: #15000000;
+}
+QComboBox QAbstractItemView
+{
+    background-color: #ffffff;
+    border-color: #20000000;
+}
+QComboBox QAbstractItemView::item:selected
+{
+    background: #15000000;
+}
+
+/* List Widget */
+QListWidget
+{
+    border-color: #1c000000;
+    alternate-background-color: #08000000;
+}
+QListWidget::item:selected,
+QListWidget::item:hover
+{
+    background: #15000000;
+}
+
+/* TreeWidget */
+QTreeView
+{
+    alternate-background-color: #0c000000;
+    selection-background-color: #15000000;
+    border-color: #20000000;
+}
+QTreeView::item:disabled
+{
+    color: #666666;
+}
+QTreeView::item:selected,
+QTreeView::item:hover
+{
+    background: #15000000;
+}
+
+/* Header View */
+QHeaderView::section
+{
+    border-color: #15000000;
+}
+
+/* Menubar, Menu and Actions */
+QMenu,
+QMenu:disabled
+{
+    background: #ffffff;
+    border-color: #20000000;
+}
+QMenu::right-arrow
+{
+    image: url(:/icons/arrow_right_dark.svg);
+}
+QAction,
+QAction:selected:!disabled,
+QMenuBar::item:selected:!disabled,
+QMenu::separator,
+QMenu::item:selected:!disabled,
+QToolBar::separator,
+QToolButton
+{
+    background: #1c000000;
+}
+
+/* Splitter */
+QSplitter::handle
+{
+    image: url(:/icons/grip_dark.png);
+}
+
+/* Tab Widget & Tab Bar */
+QTabWidget::pane
+{
+    background: #ffffff;
+}
+QTabBar
+{
+    background: #0c000000;
+}
+QTabBar::tab:hover:!selected
+{
+    background: #20000000;
+}
+QTabBar::tab:selected
+{
+    background: #15000000;
+}
+QTabBar::close-button:hover
+{
+    background: #20000000;
+}
+
+/* Tooltips */
+QToolTip
+{
+    background: #ffffff;
+    border-color: #20000000;
+}

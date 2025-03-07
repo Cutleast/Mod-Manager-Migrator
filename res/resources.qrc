@@ -1,0 +1,54 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource>
+        <!-- Icons -->
+        <file>icons/arrow_down_dark.svg</file>
+        <file>icons/arrow_down_light.svg</file>
+        <file>icons/arrow_left_dark.svg</file>
+        <file>icons/arrow_left_light.svg</file>
+        <file>icons/arrow_right_dark.svg</file>
+        <file>icons/arrow_right_light.svg</file>
+        <file>icons/arrow_up_dark.svg</file>
+        <file>icons/arrow_up_light.svg</file>
+        <file>icons/checkmark_dark.svg</file>
+        <file>icons/checkmark_light.svg</file>
+        <file>icons/close.svg</file>
+        <file>icons/Enderal.ico</file>
+        <file>icons/EnderalSE.ico</file>
+        <file>icons/exit_dark.svg</file>
+        <file>icons/exit_light.svg</file>
+        <file>icons/Fallout3.ico</file>
+        <file>icons/Fallout4.ico</file>
+        <file>icons/FalloutNV.ico</file>
+        <file>icons/grip_dark.png</file>
+        <file>icons/grip_light.png</file>
+        <file>icons/mmm.ico</file>
+        <file>icons/mmm.svg</file>
+        <file>icons/MO2_Label.svg</file>
+        <file>icons/nexus_mods.png</file>
+        <file>icons/NMM_Label.svg</file>
+        <file>icons/Oblivion.ico</file>
+        <file>icons/Skyrim.ico</file>
+        <file>icons/SkyrimSE.ico</file>
+        <file>icons/Vortex_Label.svg</file>
+
+        <!-- Fonts -->
+        <file>fonts/BebasNeue Book.otf</file>
+
+        <!-- Default Config Files -->
+        <file>default_configs/app.json</file>
+
+        <!-- Localisation Files -->
+        <file>loc/de.qm</file>
+
+        <!-- Other -->
+        <file>blacklist</file>
+
+        <!-- Stylesheets & Theme files -->
+        <file>base_stylesheet.qss</file>
+        <file>dark_stylesheet.qss</file>
+        <file>dark_theme.json</file>
+        <file>light_stylesheet.qss</file>
+        <file>light_theme.json</file>
+    </qresource>
+</RCC>

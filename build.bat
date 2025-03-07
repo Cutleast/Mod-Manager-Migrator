@@ -1,2 +1,2 @@
 @echo off
-python build.py
+python scripts\build.py build_exe

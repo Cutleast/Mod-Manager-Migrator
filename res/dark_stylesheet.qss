@@ -1,0 +1,255 @@
+/* General Font */
+*
+{
+    color: #ffffff;
+}
+
+/* Windows, Messageboxes and Dialogs */
+QMainWindow, QDialog
+{
+    background: #202020;
+}
+
+#secondary
+{
+    background: #1cffffff;
+}
+
+/* QLCDNumber */
+QLCDNumber
+{
+    background: #0cffffff;
+}
+
+/* Buttons */
+QPushButton
+{
+    background: #0cffffff;
+    border-color: #0cffffff;
+}
+QPushButton:hover:!disabled
+{
+    background: #15ffffff;
+    border-color: #15ffffff;
+}
+QPushButton#primary:disabled
+{
+    color: #ffffff;
+}
+
+/* Text Fields */
+QLineEdit,
+QSpinBox,
+QDoubleSpinBox,
+QPlainTextEdit
+{
+    background: #0cffffff;
+    border-color: #0cffffff;
+}
+QLineEdit:hover:!disabled:!focus,
+QSpinBox:hover:!disabled:!focus,
+QDoubleSpinBox:hover:!disabled:!focus
+{
+    background: #15ffffff;
+}
+QPlainTextEdit#protocol
+{
+    background: #202020;
+}
+
+/* Spinbox */
+QSpinBox::up-button:hover, QSpinBox::down-button:hover,
+QDoubleSpinBox::up-button:hover, QDoubleSpinBox::down-button:hover
+{
+    background: #1cffffff;
+}
+QSpinBox::up-button,
+QDoubleSpinBox::up-button
+{
+    image: url(:/icons/arrow_up_light.svg);
+}
+QSpinBox::down-button,
+QDoubleSpinBox::down-button
+{
+    image: url(:/icons/arrow_down_light.svg);
+}
+
+/* ScrollArea & ScrollBar */
+QScrollArea
+{
+    background: #202020;
+}
+QScrollBar::handle
+{
+    background: #0cffffff;
+}
+QScrollBar::handle:hover
+{
+    background: #15ffffff;
+}
+QScrollBar::handle:pressed
+{
+    background: #202020;
+}
+QScrollBar::up-arrow
+{
+    image: url(:/icons/arrow_up_light.svg);
+}
+QScrollBar::down-arrow
+{
+    image: url(:/icons/arrow_down_light.svg);
+}
+
+/* Checkboxes */
+QCheckBox::indicator,
+QRadioButton::indicator,
+QAbstractItemView::indicator
+{
+    background: #0affffff;
+}
+QCheckBox::indicator:hover,
+QRadioButton::indicator:hover,
+QAbstractItemView::indicator:hover
+{
+    background: #1cffffff;
+}
+QCheckBox::indicator:disabled:checked,
+QRadioButton::indicator:disabled:checked,
+QAbstractItemView::indicator:disabled:checked
+{
+    background: #1cffffff;
+}
+QCheckBox::indicator:checked,
+QAbstractItemView::indicator:checked
+{
+    image: url(:/icons/checkmark_light.svg);
+}
+QRadioButton::indicator:checked
+{
+    border-color: #0affffff;
+}
+
+/* Dropdowns */
+QComboBox
+{
+    background: #0cffffff;
+    border-color: #0cffffff;
+}
+QComboBox::down-arrow
+{
+    image: url(:/icons/arrow_down_light.svg);
+}
+QComboBox:hover:!disabled
+{
+    background: #15ffffff;
+}
+QComboBox QAbstractItemView
+{
+    /* background-color: #202020; */
+    background: #292929;
+    border-color: #303030;
+}
+QComboBox QAbstractItemView::item:selected
+{
+    background: #15ffffff;
+}
+
+/* List Widget */
+QListWidget
+{
+    border-color: #1cffffff;
+    alternate-background-color: #08ffffff;
+}
+QListWidget::item:selected,
+QListWidget::item:hover
+{
+    background: #15ffffff;
+}
+
+/* TreeWidget */
+QTreeView
+{
+    alternate-background-color: #08ffffff;
+    selection-background-color: #15ffffff;
+    border-color: #1cffffff;
+}
+QTreeView::item:disabled
+{
+    color: #66ffffff;
+}
+QTreeView::item:selected,
+QTreeView::item:hover
+{
+    background: #15ffffff;
+}
+
+/* Header View */
+QHeaderView::section
+{
+    border-color: #0cffffff;
+}
+QHeaderView::down-arrow
+{
+    image: url(:/icons/arrow_down_light.svg);
+}
+QHeaderView::up-arrow
+{
+    image: url(:/icons/arrow_up_light.svg);
+}
+
+/* Menubar, Menu and Actions */
+QMenu,
+QMenu:disabled
+{
+    background: #292929;
+    border-color: #303030;
+}
+QMenu::right-arrow
+{
+    image: url(:/icons/arrow_right_light.svg);
+}
+QAction,
+QAction:selected:!disabled,
+QMenuBar::item:selected:!disabled,
+QMenu::separator,
+QMenu::item:selected:!disabled,
+QToolBar::separator,
+QToolButton
+{
+    background: #1cffffff;
+}
+
+/* Splitter */
+QSplitter::handle
+{
+    image: url(:/icons/grip_light.png);
+}
+
+/* Tab Widget & Tab Bar */
+QTabWidget::pane
+{
+    background: #202020;
+}
+QTabBar
+{
+    background: #08ffffff;
+}
+QTabBar::tab:hover:!selected
+{
+    background: #1cffffff;
+}
+QTabBar::tab:selected
+{
+    background: #15ffffff;
+}
+QTabBar::close-button:hover
+{
+    background: #1cffffff;
+}
+
+/* Tooltips */
+QToolTip
+{
+    background: #292929;
+    border-color: #303030;
+}

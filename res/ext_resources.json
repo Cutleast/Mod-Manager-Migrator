@@ -1,0 +1,6 @@
+// This file contains all the resource files and folders 
+// that are not included in the Qt resource file
+[
+    "path_limit.reg",
+    "TaskbarLib.tlb"
+]

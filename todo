@@ -1,9 +1,0 @@
-
-Technical Features
-- Nexus Mod Manager implementation
-- Support for Vortex's shared mode
-
-Bug Fixes
-- Check for multiple installed versions of a mod in Vortex
-- Check for invalid path name characters before creating folder for a mod (for eg. ":")
-

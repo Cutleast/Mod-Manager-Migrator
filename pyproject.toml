@@ -1,0 +1,31 @@
+[project]
+name = "mod-manager-migrator"
+version = "3.0.0-alpha-1"
+description = "A tool for migrating modding instances between mod managers, mainly for Bethesda games."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "comtypes>=1.4.10",
+    "darkdetect>=0.8.0",
+    "jstyleson>=0.0.2",
+    "plyvel-ci>=1.5.1",
+    "py7zr>=0.22.0",
+    "pyside6>=6.8.2.1",
+    "pyuac>=0.0.3",
+    "pywin32>=308",
+    "qtawesome<1.4.0",
+    "rarfile>=4.2",
+    "requests>=2.32.3",
+    "semantic-version>=2.10.0",
+    "virtual-glob>=0.2.0",
+]
+
+[dependency-groups]
+dev = [
+    "cx-freeze>=7.2.10",
+    "mypy>=1.15.0",
+    "pytest>=8.3.5",
+    "pytest-cov>=6.0.0",
+    "pytest-mock>=3.14.0",
+    "pytest-qt>=4.4.0",
+]
