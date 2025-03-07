@@ -29,3 +29,9 @@ dev = [
     "pytest-mock>=3.14.0",
     "pytest-qt>=4.4.0",
 ]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+log_cli = true
+log_cli_level = "DEBUG"
+log_cli_format = "[%(asctime)s.%(msecs)03d][%(levelname)s][%(name)s.%(funcName)s]: %(message)s"
