@@ -89,7 +89,7 @@ class LevelDB:
 
             self.log.debug("Symlink deleted.")
 
-    def load(self, prefix: Optional[str | bytes] = None) -> dict:
+    def load(self, prefix: Optional[str | bytes] = None) -> dict[str, Any]:
         """
         Loads all keys with a given prefix from the database.
 
@@ -100,7 +100,7 @@ class LevelDB:
             prefix (str | bytes, optional): The prefix to filter by. Defaults to None.
 
         Returns:
-            dict: Nested database structure containing the data.
+            dict[str, Any]: Nested database structure containing the data.
         """
 
         db_path = self.get_symlink_path()
@@ -112,9 +112,12 @@ class LevelDB:
         with ldb.DB(str(db_path)) as database:
             if isinstance(prefix, str):
                 prefix = prefix.encode()
+
+            decoded_key: str
+            decoded_value: str
             for key, value in database.iterator(prefix=prefix):
-                key, value = key.decode(), value.decode()
-                flat_data[key] = value
+                decoded_key, decoded_value = key.decode(), value.decode()
+                flat_data[decoded_key] = decoded_value
 
         self.log.debug(f"Parsing {len(flat_data)} key(s)...")
 
@@ -183,7 +186,7 @@ class LevelDB:
         self.log.info(f"Loading database from {str(db_path)!r}...")
 
         with ldb.DB(str(db_path)) as database:
-            value: bytes = database.get(key.encode())
+            value: Optional[bytes] = database.get(key.encode())
 
         data: Optional[Any] = None
         if value is not None:
