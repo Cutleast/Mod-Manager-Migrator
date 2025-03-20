@@ -357,6 +357,7 @@ class Vortex(ModManager):
         instance_data: ProfileInfo,
         use_hardlinks: bool,
         replace: bool,
+        blacklist: list[str] = [],
         ldialog: Optional[LoadingDialog] = None,
     ) -> None:
         self.log.info(f"Installing mod {mod.display_name!r}...")
@@ -405,7 +406,12 @@ class Vortex(ModManager):
             staging_folder: Path = self.__get_staging_folder(instance_data.game)
 
             self._migrate_mod_files(
-                mod, staging_folder / file_name, use_hardlinks, replace, ldialog
+                mod,
+                staging_folder / file_name,
+                use_hardlinks,
+                replace,
+                blacklist,
+                ldialog,
             )
         else:
             self.log.info(f"Mod {mod.display_name!r} already installed.")
@@ -482,6 +488,7 @@ class Vortex(ModManager):
         instance_data: ProfileInfo,
         use_hardlinks: bool,
         replace: bool,
+        blacklist: list[str] = [],
         ldialog: Optional[LoadingDialog] = None,
     ) -> None:
         self.log.info(f"Adding tool {tool.display_name!r}...")

@@ -136,6 +136,7 @@ class ModManager(QObject):
         instance_data: InstanceInfo,
         use_hardlinks: bool,
         replace: bool,
+        blacklist: list[str] = [],
         ldialog: Optional[LoadingDialog] = None,
     ) -> None:
         """
@@ -147,6 +148,7 @@ class ModManager(QObject):
             instance_data (InstanceData): The data of the instance above.
             use_hardlinks (bool): Whether to use hardlinks if possible.
             replace (bool): Whether to replace existing files.
+            blacklist (list[str], optional): A list of files to not migrate.
             ldialog (Optional[LoadingDialog], optional):
                 Optional loading dialog. Defaults to None.
         """
@@ -159,6 +161,7 @@ class ModManager(QObject):
         instance_data: InstanceInfo,
         use_hardlinks: bool,
         replace: bool,
+        blacklist: list[str] = [],
         ldialog: Optional[LoadingDialog] = None,
     ) -> None:
         """
@@ -170,6 +173,7 @@ class ModManager(QObject):
             instance_data (InstanceData): The data of the instance above.
             use_hardlinks (bool): Whether to use hardlinks if possible.
             replace (bool): Whether to replace existing files.
+            blacklist (list[str], optional): A list of files to not migrate.
             ldialog (Optional[LoadingDialog], optional):
                 Optional loading dialog. Defaults to None.
         """
@@ -180,6 +184,7 @@ class ModManager(QObject):
         mod_folder: Path,
         use_hardlinks: bool,
         replace: bool,
+        blacklist: list[str] = [],
         ldialog: Optional[LoadingDialog] = None,
     ) -> None:
         """
@@ -190,11 +195,18 @@ class ModManager(QObject):
             mod_folder (Path): The destination path.
             use_hardlinks (bool): Whether to use hardlinks if possible.
             replace (bool): Whether to replace existing files.
+            blacklist (list[str], optional): A list of files to not migrate.
             ldialog (Optional[LoadingDialog], optional):
                 Optional loading dialog. Defaults to None.
         """
 
         for f, file in enumerate(mod.files):
+            if file.name.lower() in blacklist:
+                self.log.info(
+                    f"Skipped file due to configured blacklist: {file.name!r}"
+                )
+                continue
+
             src_path: Path = mod.path / file
             dst_path: Path = mod_folder / file
 

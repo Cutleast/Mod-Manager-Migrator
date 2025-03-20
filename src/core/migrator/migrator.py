@@ -14,6 +14,7 @@ from core.instance.tool import Tool
 from core.mod_manager.exceptions import InstanceNotFoundError
 from core.mod_manager.instance_info import InstanceInfo
 from core.mod_manager.mod_manager import ModManager
+from core.utilities.qt_res_provider import read_resource
 from ui.widgets.loading_dialog import LoadingDialog
 
 
@@ -23,6 +24,28 @@ class Migrator(QObject):
     """
 
     log: logging.Logger = logging.getLogger("Migrator")
+
+    class FileBlacklist:
+        """
+        Class that holds a list of files that should not be migrated.
+        """
+
+        _files: Optional[list[str]] = None
+
+        @classmethod
+        def get_files(cls) -> list[str]:
+            """
+            Gets the list of files that should not be migrated. Reads the blacklist
+            resource if not already done.
+
+            Returns:
+                list[str]: The list of files that should not be migrated.
+            """
+
+            if cls._files is None:
+                cls._files = read_resource(":/blacklist").splitlines()
+
+            return cls._files
 
     def migrate(
         self,
@@ -68,6 +91,9 @@ class Migrator(QObject):
 
         self.log.info(f"Use hardlinks: {use_hardlinks}")
 
+        blacklist: list[str] = Migrator.FileBlacklist.get_files()
+        self.log.info(f"File blacklist: {', '.join(blacklist)}")
+
         dst_mod_manager.check_destination_disk_space(dst_info, src_instance.size)
 
         if ldialog is not None:
@@ -99,7 +125,13 @@ class Migrator(QObject):
             try:
                 if not dst_instance.is_mod_installed(mod) or replace:
                     dst_mod_manager.install_mod(
-                        mod, dst_instance, dst_info, use_hardlinks, replace, ldialog
+                        mod,
+                        dst_instance,
+                        dst_info,
+                        use_hardlinks,
+                        replace,
+                        blacklist,
+                        ldialog,
                     )
                 else:
                     self.log.info(
@@ -124,7 +156,13 @@ class Migrator(QObject):
 
             try:
                 dst_mod_manager.add_tool(
-                    tool, dst_instance, dst_info, use_hardlinks, replace, ldialog
+                    tool,
+                    dst_instance,
+                    dst_info,
+                    use_hardlinks,
+                    replace,
+                    blacklist,
+                    ldialog,
                 )
             except Exception as ex:
                 self.log.error(

@@ -126,3 +126,11 @@ class BaseTest:
             dst = Path(tmp_dir) / "state.v2.json"
             shutil.copyfile(src, dst)
             yield dst
+
+    @pytest.fixture
+    def qt_resources(self) -> None:
+        """
+        Provides the compiled Qt resources by importing them.
+        """
+
+        import src.resources_rc  # noqa: F401

@@ -465,6 +465,7 @@ class ModOrganizer(ModManager):
         instance_data: MO2InstanceInfo,
         use_hardlinks: bool,
         replace: bool,
+        blacklist: list[str] = [],
         ldialog: Optional[LoadingDialog] = None,
     ) -> None:
         self.log.info(f"Installing mod {mod.display_name!r}...")
@@ -510,7 +511,9 @@ class ModOrganizer(ModManager):
         elif Path("meta.ini") in mod.files:
             self.log.warning(f"Mod {mod.display_name!r} already has a meta.ini file.")
 
-        self._migrate_mod_files(mod, mod_folder, use_hardlinks, replace, ldialog)
+        self._migrate_mod_files(
+            mod, mod_folder, use_hardlinks, replace, blacklist, ldialog
+        )
 
         if regular:
             instance.mods.append(mod)
@@ -522,6 +525,7 @@ class ModOrganizer(ModManager):
         instance_data: MO2InstanceInfo,
         use_hardlinks: bool,
         replace: bool,
+        blacklist: list[str] = [],
         ldialog: Optional[LoadingDialog] = None,
     ) -> None:
         # TODO: Implement this
