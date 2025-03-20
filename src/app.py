@@ -19,9 +19,9 @@ from core.utilities.exception_handler import ExceptionHandler
 from core.utilities.filesystem import get_documents_folder
 from core.utilities.localisation import detect_system_locale
 from core.utilities.logger import Logger
+from core.utilities.path_limit_fixer import PathLimitFixer
 from core.utilities.updater import Updater
 from ui.main_window import MainWindow
-from ui.menubar import PathLimitFixer
 from ui.utilities.stylesheet_processor import StylesheetProcessor
 from ui.utilities.ui_mode import UIMode
 
