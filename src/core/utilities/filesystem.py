@@ -125,11 +125,10 @@ def clean_fs_string(text: str) -> str:
         text (str): the string to be cleaned.
 
     Returns:
-        (str): A cleaned-up string.
+        str: A cleaned-up string.
     """
 
-    illegal_chars = """;<>\\/{}[]+=|*?&,:'"`"""
-
-    output = "".join([c for c in text if c not in illegal_chars]).strip()
+    illegal_chars: str = """;<>\\/{}[]+=|*?&,:'"`"""
+    output: str = "".join([c for c in text if c not in illegal_chars]).strip()
 
     return output

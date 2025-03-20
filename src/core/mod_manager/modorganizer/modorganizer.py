@@ -22,7 +22,7 @@ from core.mod_manager.modorganizer.exceptions import (
 from core.utilities.downloader import Downloader
 from core.utilities.env_resolver import resolve
 from core.utilities.exceptions import NotEnoughSpaceError
-from core.utilities.filesystem import get_free_disk_space
+from core.utilities.filesystem import clean_fs_string, get_free_disk_space
 from core.utilities.ini_file import INIFile
 from core.utilities.progress_update import ProgressUpdate
 from core.utilities.scale import scale_value
@@ -462,7 +462,7 @@ class ModOrganizer(ModManager):
         game: Game = instance_data.game
 
         regular: bool = True
-        mod_folder: Path = instance_data.mods_folder / mod.display_name
+        mod_folder: Path = instance_data.mods_folder / clean_fs_string(mod.display_name)
         if mod.deploy_path is not None and mod.deploy_path == Path("."):
             if instance_data.use_root_builder:
                 mod_folder /= "Root"
