@@ -334,17 +334,6 @@ class ModOrganizer(ModManager):
         mo2_ini_path: Path = instance_data.base_folder / "ModOrganizer.ini"
         game: Game = instance_data.game
 
-        if instance_data.is_global and not mo2_ini_path.is_relative_to(
-            self.appdata_path
-        ):
-            raise InvalidGlobalInstancePathError
-
-        if instance_data.is_global and instance_data.install_mo2:
-            raise CannotInstallGlobalMo2Error
-
-        if not instance_data.is_global and self.detect_global_instances():
-            raise GlobalInstanceDetectedError
-
         mods_dir: str
         if instance_data.mods_folder.is_relative_to(instance_data.base_folder):
             mods_dir = "%BASE_DIR%/" + str(
@@ -533,6 +522,18 @@ class ModOrganizer(ModManager):
 
     def get_additional_files_folder(self, instance_data: MO2InstanceInfo) -> Path:
         return instance_data.profiles_folder / instance_data.profile
+
+    def prepare_migration(self, instance_data: MO2InstanceInfo) -> None:
+        if not instance_data.is_global and self.detect_global_instances():
+            raise GlobalInstanceDetectedError
+
+        elif instance_data.is_global:
+            mo2_ini_path: Path = instance_data.base_folder / "ModOrganizer.ini"
+            if not mo2_ini_path.is_relative_to(self.appdata_path):
+                raise InvalidGlobalInstancePathError
+
+            if instance_data.install_mo2:
+                raise CannotInstallGlobalMo2Error
 
     def finalize_migration(
         self, migrated_instance: Instance, migrated_instance_data: MO2InstanceInfo

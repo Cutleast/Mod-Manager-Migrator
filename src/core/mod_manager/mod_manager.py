@@ -317,6 +317,18 @@ class ModManager(QObject):
             Path: The path for the additional files.
         """
 
+    def prepare_migration(self, instance_data: InstanceInfo) -> None:
+        """
+        Prepares the migration process. Runs pre-migration checks, if necessary
+        and raises an Exception if there are issues or potential error sources.
+
+        Args:
+            instance_data (InstanceInfo): The data of the instance.
+
+        Raises:
+            PreMigrationCheckFailedError: when the pre-migration check fails.
+        """
+
     def finalize_migration(
         self, migrated_instance: Instance, migrated_instance_data: InstanceInfo
     ) -> None:

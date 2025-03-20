@@ -95,6 +95,7 @@ class Migrator(QObject):
         self.log.info(f"File blacklist: {', '.join(blacklist)}")
 
         dst_mod_manager.check_destination_disk_space(dst_info, src_instance.size)
+        dst_mod_manager.prepare_migration(dst_info)
 
         if ldialog is not None:
             ldialog.updateProgress(

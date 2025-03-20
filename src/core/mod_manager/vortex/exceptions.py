@@ -4,7 +4,7 @@ Copyright (c) Cutleast
 
 from PySide6.QtWidgets import QApplication
 
-from ..exceptions import ModManagerError
+from ..exceptions import ModManagerError, PreMigrationCheckFailedError
 
 
 class VortexIsRunningError(ModManagerError):
@@ -31,4 +31,18 @@ class VortexIsDeployedError(ModManagerError):
             "Migration cannot continue while Vortex is deployed!\n"
             "Open Vortex and purge the game directory.\n"
             "Then click 'Continue' to complete the migration process.",
+        )
+
+
+class VortexNotInstalledError(PreMigrationCheckFailedError):
+    """
+    Exception that occurs when Vortex is not installed or ready for a migration.
+    """
+
+    def getLocalizedMessage(self) -> str:
+        return QApplication.translate(
+            "exceptions",
+            "Vortex is not installed or fully setup.\nFollow these steps and try again:",
+            "1. Install Vortex\n2. Start Vortex and enable the mod management for the "
+            "game.\n3. Enable profile management in Vortex' settings.",
         )

@@ -4,10 +4,10 @@ Copyright (c) Cutleast
 
 from PySide6.QtWidgets import QApplication
 
-from ..exceptions import ModManagerError
+from ..exceptions import PreMigrationCheckFailedError
 
 
-class InvalidGlobalInstancePathError(ModManagerError):
+class InvalidGlobalInstancePathError(PreMigrationCheckFailedError):
     """
     Exception when the path for a global instance is outside of the
     `%LOCALAPPDATA%\ModOrganizer` folder.
@@ -22,7 +22,7 @@ class InvalidGlobalInstancePathError(ModManagerError):
         )
 
 
-class CannotInstallGlobalMo2Error(ModManagerError):
+class CannotInstallGlobalMo2Error(PreMigrationCheckFailedError):
     """
     Exception when a global instance is selected as destination and
     the install MO2 checkbox is checked.
@@ -35,7 +35,7 @@ class CannotInstallGlobalMo2Error(ModManagerError):
         )
 
 
-class GlobalInstanceDetectedError(ModManagerError):
+class GlobalInstanceDetectedError(PreMigrationCheckFailedError):
     """
     Exception when at least one global instance was detected
     and it was tried to create a portable instance.

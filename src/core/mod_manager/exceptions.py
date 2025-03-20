@@ -28,3 +28,9 @@ class InstanceNotFoundError(ModManagerError):
         return QApplication.translate(
             "exceptions", "The mod instance {0} could not be found!"
         )
+
+
+class PreMigrationCheckFailedError(ModManagerError):
+    """
+    Exception when the pre-migration check fails.
+    """

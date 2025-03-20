@@ -16,7 +16,10 @@ from core.instance.metadata import Metadata
 from core.instance.mod import Mod
 from core.instance.tool import Tool
 from core.mod_manager.exceptions import InstanceNotFoundError
-from core.mod_manager.vortex.exceptions import VortexIsRunningError
+from core.mod_manager.vortex.exceptions import (
+    VortexIsRunningError,
+    VortexNotInstalledError,
+)
 from core.utilities.env_resolver import resolve
 from core.utilities.exceptions import NotEnoughSpaceError
 from core.utilities.filesystem import clean_fs_string, get_free_disk_space
@@ -513,6 +516,13 @@ class Vortex(ModManager):
         """
 
         return (self.__get_staging_folder(game) / "vortex.deployment.msgpack").is_file()
+
+    def prepare_migration(self, instance_data: ProfileInfo) -> None:
+        appdata_path: Path = resolve(Path("%APPDATA%") / "Vortex")
+        game_folder: Path = appdata_path / instance_data.game.id.lower()
+
+        if not game_folder.is_dir():
+            raise VortexNotInstalledError
 
     def finalize_migration(
         self, migrated_instance: Instance, migrated_instance_data: ProfileInfo
