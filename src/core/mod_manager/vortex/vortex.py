@@ -55,7 +55,9 @@ class Vortex(ModManager):
     def __init__(self) -> None:
         super().__init__()
 
-        self.__level_db = LevelDB(self.db_path)
+        self.__level_db = LevelDB(
+            self.db_path, use_symlink=not LevelDB.is_db_readable(self.db_path)
+        )
 
     def __repr__(self) -> str:
         return "Vortex"

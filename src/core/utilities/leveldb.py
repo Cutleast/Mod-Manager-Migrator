@@ -262,3 +262,27 @@ class LevelDB:
                 continue
 
         return result
+
+    @staticmethod
+    def is_db_readable(path: Path) -> bool:
+        """
+        Checks if the level database at the specified path is readable.
+
+        Args:
+            path (Path): The path to the level database.
+
+        Returns:
+            bool: True if the database is readable, False otherwise.
+        """
+
+        try:
+            with ldb.DB(str(path)) as database:
+                # Attempt to read and decode the first key
+                for k, v in database.iterator():
+                    k.decode()
+                    v.decode()
+                    return True
+        except Exception:
+            pass
+
+        return False
