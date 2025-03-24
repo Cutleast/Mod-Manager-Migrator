@@ -11,7 +11,7 @@ from ..instance_info import InstanceInfo
 @dataclass(frozen=True)
 class MO2InstanceInfo(InstanceInfo):
     """
-    Class for holding general information about an MO2 instance.
+    Class for identifying an MO2 instance and profile.
     """
 
     profile: str

@@ -12,7 +12,7 @@ from ..instance_info import InstanceInfo
 @dataclass(frozen=True)
 class ProfileInfo(InstanceInfo):
     """
-    Class for holding general profile attributes.
+    Class for identifying a Vortex profile.
     """
 
     id: str

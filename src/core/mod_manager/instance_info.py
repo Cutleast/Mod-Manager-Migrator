@@ -11,9 +11,7 @@ from core.game.game import Game
 @dataclass(frozen=True)
 class InstanceInfo(ABC):
     """
-    Base class for holding general instance attributes like name, id, etc.
-
-    Used for identifying or creating an instance within a mod manager.
+    Base class for identifying an instance within a mod manager.
     """
 
     display_name: str

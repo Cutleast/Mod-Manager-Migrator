@@ -28,7 +28,7 @@ class Game(ABC):
 
     id: str
     """
-    Game identifier.
+    Game identifier, should match the one used by Vortex.
     """
 
     nexus_id: str
