@@ -6,7 +6,7 @@ import os
 from pathlib import Path
 from unittest.mock import patch
 
-from src.core.utilities.env_resolver import resolve
+from core.utilities.env_resolver import resolve
 
 from .._setup.mock_path import MockPath
 

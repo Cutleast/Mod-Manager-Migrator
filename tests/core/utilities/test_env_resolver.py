@@ -5,7 +5,7 @@ Copyright (c) Cutleast
 import os
 from pathlib import Path
 
-from src.core.utilities.env_resolver import resolve
+from core.utilities.env_resolver import resolve
 
 
 class TestEnvResolver:

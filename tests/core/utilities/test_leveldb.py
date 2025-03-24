@@ -12,7 +12,7 @@ from unittest.mock import MagicMock
 import pytest
 from pytest_mock import MockerFixture
 
-from src.core.utilities.leveldb import LevelDB
+from core.utilities.leveldb import LevelDB
 
 from .._setup.mock_plyvel import MockPlyvelDB
 from ..base_test import BaseTest

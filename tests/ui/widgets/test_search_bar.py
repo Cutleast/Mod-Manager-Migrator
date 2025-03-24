@@ -10,7 +10,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QPushButton
 from pytestqt.qtbot import QtBot
 
-from src.ui.widgets.search_bar import SearchBar
+from ui.widgets.search_bar import SearchBar
 
 os.environ["QT_QPA_PLATFORM"] = "offscreen"  # render widgets off-screen
 

@@ -2,14 +2,9 @@
 Copyright (c) Cutleast
 """
 
-import os
-import sys
+from core.migrator.migrator import Migrator
 
 from ..base_test import BaseTest
-
-sys.path.append(os.path.join(os.getcwd(), "src"))
-
-from src.core.migrator.migrator import Migrator
 
 
 class TestMigrator(BaseTest):

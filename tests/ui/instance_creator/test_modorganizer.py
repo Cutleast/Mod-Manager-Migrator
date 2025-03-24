@@ -3,17 +3,14 @@ Copyright (c) Cutleast
 """
 
 import os
-import sys
 from typing import Any, Optional
 
 import pytest
 from PySide6.QtWidgets import QLineEdit, QRadioButton
 from pytestqt.qtbot import QtBot
 
-sys.path.append(os.path.join(os.getcwd(), "src"))  # fix relative imports within src
-
-from src.core.utilities.env_resolver import resolve
-from src.ui.instance_creator.modorganizer import ModOrganizerWidget
+from core.utilities.env_resolver import resolve
+from ui.instance_creator.modorganizer import ModOrganizerWidget
 
 os.environ["QT_QPA_PLATFORM"] = "offscreen"  # render widgets off-screen
 

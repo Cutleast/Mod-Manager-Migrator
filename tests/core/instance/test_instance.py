@@ -2,8 +2,8 @@
 Copyright (c) Cutleast
 """
 
-from src.core.instance.instance import Instance
-from src.core.instance.mod import Mod
+from core.instance.instance import Instance
+from core.instance.mod import Mod
 
 from ..base_test import BaseTest
 

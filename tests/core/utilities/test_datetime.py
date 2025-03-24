@@ -4,7 +4,7 @@ Copyright (c) Cutleast
 
 import pytest
 
-from src.core.utilities.datetime import datetime_format_to_regex, get_diff
+from core.utilities.datetime import datetime_format_to_regex, get_diff
 
 
 class TestDatetime:
@@ -58,7 +58,7 @@ class TestDatetime:
         # then
         assert expected_output == real_output
 
-    @pytest.mark.skip
+    @pytest.mark.skip("get_diff() doesn't support a custom format, yet")
     def test_get_diff_with_custom_format(self) -> None:
         """
         Tests `core.utilities.datetime.get_diff()` with a custom format.

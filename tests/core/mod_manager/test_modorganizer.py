@@ -2,17 +2,13 @@
 Copyright (c) Cutleast
 """
 
-import os
-import sys
 from pathlib import Path
 
+from core.game.skyrimse import SkyrimSE
+from core.instance.metadata import Metadata
+from core.mod_manager.modorganizer.modorganizer import ModOrganizer
+
 from ..base_test import BaseTest
-
-sys.path.append(os.path.join(os.getcwd(), "src"))
-
-from src.core.game.skyrimse import SkyrimSE
-from src.core.instance.metadata import Metadata
-from src.core.mod_manager.modorganizer.modorganizer import ModOrganizer
 
 
 class TestModOrganizer(BaseTest):
