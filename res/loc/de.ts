@@ -63,19 +63,6 @@
     </message>
 </context>
 <context>
-    <name>ErrorSummaryDialog</name>
-    <message>
-        <location filename="src/ui/widgets/error_summary_dialog.py" line="35"/>
-        <source>Error Summary</source>
-        <translation>Fehlerzusammenfassung</translation>
-    </message>
-    <message>
-        <location filename="src/ui/widgets/error_summary_dialog.py" line="44"/>
-        <source>The following errors occured while migrating:</source>
-        <translation>Die folgenden Fehler sind während der Migration aufgetreten:</translation>
-    </message>
-</context>
-<context>
     <name>ExceptionHandler</name>
     <message>
         <location filename="src/core/utilities/exception_handler.py" line="74"/>
@@ -114,7 +101,7 @@
 <context>
     <name>InstanceOverviewWidget</name>
     <message>
-        <location filename="src/ui/instance/instance_overview_widget.py" line="169"/>
+        <location filename="src/ui/instance/instance_overview_widget.py" line="162"/>
         <source>Migration Complete</source>
         <translation>Migration abgeschlossen</translation>
     </message>
@@ -261,27 +248,65 @@
     </message>
 </context>
 <context>
+    <name>MigrationReportDialog</name>
+    <message>
+        <location filename="src/ui/migrator/migration_report_dialog.py" line="90"/>
+        <source>Migration Report</source>
+        <translation>Migrationsbericht</translation>
+    </message>
+    <message>
+        <location filename="src/ui/migrator/migration_report_dialog.py" line="112"/>
+        <source>Ok</source>
+        <translation>Ok</translation>
+    </message>
+    <message>
+        <location filename="src/ui/migrator/migration_report_dialog.py" line="124"/>
+        <source>Failed Mods</source>
+        <translation>Fehlgeschlagene Mods</translation>
+    </message>
+    <message>
+        <location filename="src/ui/migrator/migration_report_dialog.py" line="136"/>
+        <source>Failed Tools</source>
+        <translation>Fehlgeschlagene Tools</translation>
+    </message>
+    <message>
+        <location filename="src/ui/migrator/migration_report_dialog.py" line="148"/>
+        <source>Other Errors</source>
+        <translation>Sonstige Fehler</translation>
+    </message>
+</context>
+<context>
     <name>Migrator</name>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="75"/>
+        <location filename="src/core/migrator/migrator.py" line="105"/>
         <source>Migrating instance {0}...</source>
         <translation>Instanz {0} wird migriert...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="92"/>
+        <location filename="src/core/migrator/migrator.py" line="122"/>
         <source>Migrating mods...</source>
         <translation>Mods werden migriert...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="118"/>
+        <location filename="src/core/migrator/migrator.py" line="154"/>
         <source>Migrating tools...</source>
         <translation>Tools werden migriert...</translation>
+    </message>
+    <message>
+        <location filename="src/core/migrator/migrator.py" line="194"/>
+        <source>Failed to migrate INI files.</source>
+        <translation>Migration der INI-Dateien fehlgeschlagen.</translation>
+    </message>
+    <message>
+        <location filename="src/core/migrator/migrator.py" line="208"/>
+        <source>Failed to migrate additional files.</source>
+        <translation>Migration der zusätzlichen Dateien fehlgeschlagen.</translation>
     </message>
 </context>
 <context>
     <name>ModManager</name>
     <message>
-        <location filename="src/core/mod_manager/mod_manager.py" line="332"/>
+        <location filename="src/core/mod_manager/mod_manager.py" line="464"/>
         <source>Migration completed successfully!</source>
         <translation>Migration erfolgreich abgeschlossen!</translation>
     </message>
@@ -306,22 +331,22 @@
         <translation>Tools von {0} &gt; {1} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="413"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="402"/>
         <source>Downloading and installing ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen und installiert...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="433"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="422"/>
         <source>Downloading ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="455"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="444"/>
         <source>Extracting archive...</source>
         <translation>Archiv wird entpackt...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="659"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="682"/>
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of the new MO2 installation.</source>
         <translation>Die Nutzung von Root Builder wurde aktiviert.
@@ -579,18 +604,18 @@ Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von
 <context>
     <name>Vortex</name>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="101"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="106"/>
         <source>Loading profile {0}...</source>
         <translation>Profil {0} wird geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="132"/>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="179"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="137"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="184"/>
         <source>Loading mods from profile {0}...</source>
         <translation>Mods von Profil {0} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="554"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="592"/>
         <source>Vortex is currently deployed to the game folder. It is strongly recommended to purge the game directory before using the migrated instance.</source>
         <translation>Vortex ist zurzeit in das Spielverzeichnis deployed. Es wird empfohlen, das Spielverzeichnis vor der Nutzung der migrierten Instanz zu säubern.</translation>
     </message>
@@ -622,24 +647,19 @@ Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von
         <translation>Ein Mod Manager-Fehler ist aufgetreten!</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/exceptions.py" line="31"/>
+        <location filename="src/core/mod_manager/exceptions.py" line="33"/>
         <source>The mod instance {0} could not be found!</source>
         <translation>Die Modinstanz {0} konnte nicht gefunden werden!</translation>
     </message>
     <message>
-        <location filename="src/core/utilities/exceptions.py" line="38"/>
-        <source>A migration error occured!</source>
-        <translation>Ein Migrationsfehler ist aufgetreten!</translation>
-    </message>
-    <message>
-        <location filename="src/core/utilities/exceptions.py" line="53"/>
+        <location filename="src/core/utilities/exceptions.py" line="59"/>
         <source>Not enough space ({2}) on the destination disk ({0})!
 Required space: {1}</source>
         <translation>Nicht genug Speicher ({2}) auf dem Zieldatenträger ({0}) vorhanden!
 Benötigter Speicherplatz: {1}</translation>
     </message>
     <message>
-        <location filename="src/core/utilities/exceptions.py" line="63"/>
+        <location filename="src/core/utilities/exceptions.py" line="69"/>
         <source>The installation folder for the selected game could not be found!</source>
         <translation>Das Installationsverzeichnis des ausgewählten Spiels konnte nicht gefunden werden!</translation>
     </message>
@@ -649,7 +669,7 @@ Benötigter Speicherplatz: {1}</translation>
         <translation>Vortex ist offen und blockiert seine Datenbank. Vortex schließen und erneut versuchen!</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/exceptions.py" line="35"/>
+        <location filename="src/core/mod_manager/vortex/exceptions.py" line="37"/>
         <source>Migration cannot continue while Vortex is deployed!
 Open Vortex and purge the game directory.
 Then click &apos;Continue&apos; to complete the migration process.</source>
