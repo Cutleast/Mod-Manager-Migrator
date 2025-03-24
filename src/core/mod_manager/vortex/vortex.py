@@ -15,11 +15,6 @@ from core.instance.instance import Instance
 from core.instance.metadata import Metadata
 from core.instance.mod import Mod
 from core.instance.tool import Tool
-from core.mod_manager.exceptions import InstanceNotFoundError
-from core.mod_manager.vortex.exceptions import (
-    VortexIsRunningError,
-    VortexNotInstalledError,
-)
 from core.utilities.env_resolver import resolve
 from core.utilities.exceptions import NotEnoughSpaceError
 from core.utilities.filesystem import clean_fs_string, get_free_disk_space
@@ -27,7 +22,12 @@ from core.utilities.leveldb import LevelDB
 from core.utilities.scale import scale_value
 from ui.widgets.loading_dialog import LoadingDialog
 
+from ..exceptions import InstanceNotFoundError
 from ..mod_manager import ModManager
+from .exceptions import (
+    VortexIsRunningError,
+    VortexNotInstalledError,
+)
 from .profile_info import ProfileInfo
 
 

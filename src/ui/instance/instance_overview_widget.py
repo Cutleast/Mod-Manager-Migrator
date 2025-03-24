@@ -2,7 +2,6 @@
 Copyright (c) Cutleast
 """
 
-import traceback
 from typing import Optional
 
 import qtawesome as qta
@@ -14,11 +13,11 @@ from core.config.app_config import AppConfig
 from core.game.game import Game
 from core.instance.instance import Instance
 from core.instance.mod import Mod
-from core.instance.tool import Tool
+from core.migrator.migration_report import MigrationReport
 from core.migrator.migrator import Migrator
 from core.mod_manager.instance_info import InstanceInfo
 from core.mod_manager.mod_manager import ModManager
-from ui.widgets.error_summary_dialog import ErrorSummaryDialog
+from ui.migrator.migration_report_dialog import MigrationReportDialog
 from ui.widgets.loading_dialog import LoadingDialog
 from ui.widgets.smooth_scroll_area import SmoothScrollArea
 
@@ -141,7 +140,7 @@ class InstanceOverviewWidget(QSplitter):
 
         app_config: AppConfig = AppContext.get_app().app_config
 
-        errors: dict[Mod | Tool, Exception] = LoadingDialog.run_callable(
+        report: MigrationReport = LoadingDialog.run_callable(
             lambda ldialog: Migrator().migrate(
                 src_instance=src_instance,
                 src_info=src_info,
@@ -155,14 +154,8 @@ class InstanceOverviewWidget(QSplitter):
             parent=AppContext.get_app().main_window,
         )
 
-        if errors:
-            ErrorSummaryDialog(
-                AppContext.get_app().main_window,
-                {
-                    item.display_name: "".join(traceback.format_exception(error))
-                    for item, error in errors.items()
-                },
-            ).exec()
+        if report.has_errors:
+            MigrationReportDialog(report).exec()
         else:
             QMessageBox.information(
                 AppContext.get_app().main_window,

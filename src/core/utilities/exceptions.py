@@ -2,10 +2,25 @@
 Copyright (c) Cutleast
 """
 
+import traceback
 from abc import abstractmethod
 from typing import Any
 
 from PySide6.QtWidgets import QApplication
+
+
+def format_exception(exception: Exception) -> str:
+    """
+    Formats an exception to a string.
+
+    Args:
+        exception (Exception): The exception to format.
+
+    Returns:
+        str: Formatted exception
+    """
+
+    return "".join(traceback.format_exception(exception))
 
 
 class ExceptionBase(Exception):
@@ -24,15 +39,6 @@ class ExceptionBase(Exception):
         Returns:
             str: Localized message
         """
-
-
-class MigrationError(ExceptionBase):
-    """
-    General exception for migration errors.
-    """
-
-    def getLocalizedMessage(self) -> str:
-        return QApplication.translate("exceptions", "A migration error occured!")
 
 
 class NotEnoughSpaceError(ExceptionBase):
