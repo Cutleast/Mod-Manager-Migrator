@@ -532,6 +532,8 @@ class Vortex(ModManager):
         if not game_folder.is_dir():
             raise VortexNotInstalledError
 
+        # TODO: Check database for enabled game and profile management
+
     def finalize_migration(
         self, migrated_instance: Instance, migrated_instance_data: ProfileInfo
     ) -> None:
