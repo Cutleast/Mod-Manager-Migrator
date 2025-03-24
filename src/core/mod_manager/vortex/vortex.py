@@ -496,6 +496,14 @@ class Vortex(ModManager):
     ) -> None:
         self.log.info(f"Adding tool {tool.display_name!r}...")
 
+    def get_instance_ini_dir(self, instance_data: ProfileInfo) -> Path:
+        appdata_path: Path = resolve(Path("%APPDATA%") / "Vortex")
+        prof_path: Path = (
+            appdata_path / instance_data.game.id.lower() / "profiles" / instance_data.id
+        )
+
+        return prof_path
+
     def get_additional_files_folder(self, instance_data: ProfileInfo) -> Path:
         appdata_path: Path = resolve(Path("%APPDATA%") / "Vortex")
         prof_path: Path = (
@@ -527,6 +535,15 @@ class Vortex(ModManager):
     def finalize_migration(
         self, migrated_instance: Instance, migrated_instance_data: ProfileInfo
     ) -> None:
+        profile_data: dict[str, Any] = self.__level_db.load(
+            f"persistent###profiles###{migrated_instance_data.id}"
+        )
+        profile_data["settings"]["local_game_settings"] = (
+            migrated_instance.separate_ini_files
+        )
+        profile_data["settings"]["local_saves"] = migrated_instance.separate_save_games
+        self.__level_db.dump(profile_data)
+
         settings_data: dict[str, Any] = self.__level_db.load("settings###").setdefault(
             "settings", {}
         )

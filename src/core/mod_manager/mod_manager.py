@@ -233,6 +233,114 @@ class ModManager(QObject):
             else:
                 shutil.copyfile(src_path, dst_path)
 
+    def get_ini_files(
+        self, instance: Instance, instance_data: InstanceInfo
+    ) -> list[Path]:
+        """
+        Returns a list of ini files to migrate.
+
+        Args:
+            instance (Instance): The instance.
+            instance_data (InstanceInfo): The data of the instance.
+
+        Returns:
+            list[Path]: The list of ini files.
+        """
+
+        ini_files: list[Path] = instance_data.game.inifiles
+        ini_filenames: list[Path] = [
+            file.relative_to(instance_data.game.inidir) for file in ini_files
+        ]
+        ini_dir: Path = self.get_ini_dir(instance_data, instance.separate_ini_files)
+
+        return [(ini_dir / file) for file in ini_filenames]
+
+    def get_ini_dir(
+        self, instance_data: InstanceInfo, separate_ini_files: bool
+    ) -> Path:
+        """
+        Returns path to folder for INI files, either game's INI folder or
+        instance's INI folder.
+
+        Args:
+            instance_data (InstanceInfo): The data of the instance.
+            separate_ini_files (bool): Whether to use separate INI folders.
+
+        Returns:
+            Path: The path to the INI folder.
+        """
+
+        if separate_ini_files:
+            return self.get_instance_ini_dir(instance_data)
+
+        return instance_data.game.inidir
+
+    @abstractmethod
+    def get_instance_ini_dir(self, instance_data: InstanceInfo) -> Path:
+        """
+        Returns the path to the instance's INI folder.
+
+        Args:
+            instance_data (InstanceInfo): The data of the instance.
+
+        Returns:
+            Path: The path to the instance's INI folder.
+        """
+
+    def migrate_ini_files(
+        self,
+        files: list[Path],
+        instance_data: InstanceInfo,
+        separate_ini_files: bool,
+        use_hardlinks: bool,
+        replace: bool,
+        ldialog: Optional[LoadingDialog] = None,
+    ) -> None:
+        """
+        Migrates the specified INI files to the destination path.
+
+        Args:
+            files (list[Path]): The INI files to migrate.
+            instance_data (InstanceInfo): The data of the instance.
+            separate_ini_files (bool): Whether to use separate INI folders.
+            use_hardlinks (bool): Whether to use hardlinks if possible.
+            replace (bool): Whether to replace existing files.
+            ldialog (Optional[LoadingDialog], optional):
+                Optional loading dialog. Defaults to None.
+        """
+
+        dest_folder: Path = self.get_ini_dir(instance_data, separate_ini_files)
+
+        for f, file in enumerate(files):
+            dst_path: Path = dest_folder / file.name
+
+            self.log.info(
+                f"Migrating ini file {file.name!r} from "
+                f"{str(file.parent)!r} to {str(dest_folder)!r}..."
+            )
+            if ldialog:
+                ldialog.updateProgress(
+                    text2=f"{file.name} ({f}/{len(files)})",
+                    value2=f,
+                    max2=len(files),
+                    show3=True,
+                    text3=f"{file.name} ({scale_value(file.stat().st_size)})",
+                )
+
+            dest_folder.mkdir(parents=True, exist_ok=True)
+
+            if dst_path.is_file() and replace:
+                dst_path.unlink()
+                self.log.warning(f"Deleted existing file: {str(dst_path)!r}")
+            elif not replace:
+                self.log.info(f"Skipped existing file: {str(dst_path)!r}")
+                continue
+
+            if file.drive.lower() == dst_path.drive.lower() and use_hardlinks:
+                os.link(file, dst_path)
+            else:
+                shutil.copyfile(file, dst_path)
+
     def get_additional_files(self, instance_data: InstanceInfo) -> list[Path]:
         """
         Returns a list of additional files to migrate.

@@ -40,6 +40,16 @@ class Instance:
     Whether the mods have a fixed order that matters.
     """
 
+    separate_ini_files: bool = True
+    """
+    Whether the instance has its own separate ini files.
+    """
+
+    separate_save_games: bool = True
+    """
+    Whether the instance has its own separate save games.
+    """
+
     def is_mod_installed(self, mod: Mod) -> bool:
         """
         Checks if a mod is already installed in this instance.

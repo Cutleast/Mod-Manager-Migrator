@@ -520,6 +520,9 @@ class ModOrganizer(ModManager):
         # TODO: Implement this
         ...
 
+    def get_instance_ini_dir(self, instance_data: MO2InstanceInfo) -> Path:
+        return instance_data.profiles_folder / instance_data.profile
+
     def get_additional_files_folder(self, instance_data: MO2InstanceInfo) -> Path:
         return instance_data.profiles_folder / instance_data.profile
 
@@ -545,6 +548,21 @@ class ModOrganizer(ModManager):
         )
         self.__dump_modlist_txt(modlist_txt_path, migrated_instance.loadorder)
         self.log.debug(f"Dumped modlist to {str(modlist_txt_path)!r}.")
+
+        settings_ini_path: Path = (
+            migrated_instance_data.profiles_folder
+            / migrated_instance_data.profile
+            / "settings.ini"
+        )
+        settings_ini = INIFile(settings_ini_path)
+        settings_ini.data = {
+            "General": {
+                "LocalSaves": str(migrated_instance.separate_save_games).lower(),
+                "LocalSettings": str(migrated_instance.separate_ini_files).lower(),
+            }
+        }
+        settings_ini.save_file()
+        self.log.debug(f"Dumped settings to {str(settings_ini_path)!r}.")
 
     @staticmethod
     def get_mods_folder(mo2_ini_path: Path) -> Path:

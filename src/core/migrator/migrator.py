@@ -90,6 +90,9 @@ class Migrator(QObject):
         self.log_instance_info(dst_info)
 
         self.log.info(f"Use hardlinks: {use_hardlinks}")
+        self.log.info(f"Replace existing files: {replace}")
+        self.log.info(f"Separate ini files: {src_instance.separate_ini_files}")
+        self.log.info(f"Separate save games: {src_instance.separate_save_games}")
 
         blacklist: list[str] = Migrator.FileBlacklist.get_files()
         self.log.info(f"File blacklist: {', '.join(blacklist)}")
@@ -170,6 +173,25 @@ class Migrator(QObject):
                     f"Failed to migrate tool {tool.display_name!r}: {ex}", exc_info=ex
                 )
                 report.failed_tools[tool] = ex
+
+        try:
+            ini_files: list[Path] = src_mod_manager.get_ini_files(
+                src_instance, src_info
+            )
+            dst_mod_manager.migrate_ini_files(
+                ini_files,
+                dst_info,
+                src_instance.separate_ini_files,
+                use_hardlinks,
+                replace,
+                ldialog,
+            )
+        except Exception as ex:
+            self.log.error(
+                f"Failed to migrate ini files from source to destination: {ex}",
+                exc_info=ex,
+            )
+            report.other_errors[self.tr("Failed to migrate INI files.")] = ex
 
         try:
             additional_files: list[Path] = src_mod_manager.get_additional_files(
