@@ -1,0 +1,1283 @@
+{
+    "persistent": {
+        "mods": {
+            "skyrimse": {
+                "(Part 1) SSE Engine Fixes for 1.5.39 - 1.5.97-17230-5-9-1-1664974289": {
+                    "archiveId": "S1gqJ2HO0A",
+                    "attributes": {
+                        "allowRating": true,
+                        "author": "aers - Nukem - Ryan",
+                        "bugMessage": "",
+                        "category": 95,
+                        "description": "[center][b][size=6]Engine Fixes for Skyrim Special Edition[/size][/b][/center]\n<br />A WIP skse64 plugin for Skyrim Special Edition to fix bugs and patch issues.\n<br />\n<br />The majority of current work on this plugin (5.0+) is being done by Ryan, who deserves more credit than you can imagine :^)\n<br />\n<br />[size=4][b][center]Installation[/center][/b][/size]\n<br />[list]\n<br />[*]Install the Part 1 zip as you would any SKSE plugin, be that through your mod manager or directly to your data folder.\n<br />[/list]   \ufeffThe \"_preload.txt\" file is required to be in the directory if you want to use the memory manager patch, so if your Mod Manager warns you about it, make sure it gets added.[list]\n<br />[*]Install the Part 2 zip by extracting it to your Skyrim SE folder (the three dlls should be alongside SkyrimSE.exe, etc)\n<br />[/list]\n<br />\n<br />For configuration see the INI Settings below. The defaults should be stable for all users.\n<br />\n<br />[color=#ff7700][b]If you prefer SSE Fixes' version of the same fixes to this one, you can install them together and Engine Fixes will automatically disable its conflicting patches :)\n<br />[/b][/color]\n<br />\n<br />[b][size=4][center]INI Settings/Configuration[/center][/size][/b]\n<br />[b][size=3]EngineFixes[/size][/b]\n<br />[list]\n<br />[*]VerboseLogging (default: false) - Enables more verbose logging in the log file.\n<br />[*]CleanSKSECosaves (default: true) - Deletes SKSE cosaves with no matching save on launch.\n<br />[/list]\n<br />[b][size=3]Patches[/size][/b]\n<br />[list]\n<br />[*]DisableChargenPrecache (default: false) - \"Precache Killer\" function, duplicated from RaceMenu.\n<br />[*]EnableAchievementsWIthMods (default: true) - Enables achievements when you have mods installed.\n<br />[*]FormCaching (default: true) - Caches recently accessed forms. Similar to SSE Fixes.\n<br />[*]MaxStdio (default: true) - Raises max file handle limit from 512 to 2048, which should fix \"False Save Corruption\" bug in most cases.\n<br />[*]RegularQuicksaves (default: false) - Makes quick saves use the regular save handler.\n<br />[*]SaveAddedSoundCategories (default: true) - Saves volume settings for mod-added sound categories to a separate ini file. This functionality is the same as Audio Overhaul for Skyrim SE's dll, but they will not conflict.\n<br />[*]ScrollingDoesntSwitchPOV (default: false) - Makes it so using your scroll wheel won't swap between 1st/3rd person. See LE mod\u00a0[url=https://www.nexusmods.com/skyrim/mods/95800]here[/url]\ufeff\n<br />[*]SleepWaitTime (default: false) - Lets you change the time it takes to sleep or wait. See LE mod\u00a0[url=https://www.nexusmods.com/skyrim/mods/95796]here[/url]\ufeff\n<br />[*]SleepWaitTimeModifier (default: 0.3) - The in-game default time is 1.0; smaller values speed up the sleep/wait time, higher values slow it down\n<br />[*]TreeLODReferenceCaching (default: true) - Requires FormCaching. Fixes the very slow Tree LOD function that causes framerate drops most noticeable in Riften. Similar to SSE Fixes.\n<br />[*]WaterflowAnimation (default: true) - Decouples water flow animation from\u00a0in-game timescale, so that decreasing/increasing your timescale doesnt mess with the water animation speed.\n<br />[*]WaterflowSpeed (default: 20.0) - Sets the waterflow speed for the animation patch. The default of 20 is equal to the default timescale, and is probably OK unless you want the water to appear slower/faster for some reason.\n<br />[/list]\n<br />[b][size=3]Fixes[/size][/b]\n<br />[list]\n<br />[*]ArcheryDownwardAiming (default: true) - Fix a bug where projectiles sometimes don't fire properly if you're aiming downward. Ported from Cobb's LE fix (see [url=https://www.nexusmods.com/skyrim/articles/52111]here[/url])\n<br />[*]AnimationLoadSignedCrash (default: true) - Fix an improper unsigned/signed conversion. Should allow loading more animations before a CTD. [b]If you use [url=https://www.nexusmods.com/skyrimspecialedition/mods/31146]Animation Limit Crash Fix SSE[/url] I suggest disabling this to use that mod's fix instead.[/b]\n<br />[*]BethesdaNetCrash (default: true) - Fixes a crash on startup caused by improper handling of non-ASCII characters in Bethesda.net HTTP response headers. \n<br />[*]BSLightingAmbientSpecular (default: true) - Fixes a bug where lighting template Directional Ambient Specular &amp; Fresnel Power are broken\n<br />[*]BSLightingShaderForceAlphaTest (default: true) - Forces alpha testing in the lighting shader. Fixes object LOD reflections on water.\n<br />[*]BSLightingShaderParallaxBug (default: true) - Fixes a bug with parallax lighting shaders\n<br />[*]CalendarSkipping (default: true) - Fixes the bug listed under Notes on [url=https://www.creationkit.com/index.php?title=GetCurrentGameTime_-_Utility]this page[/url]\n<br />[*]DoublePerkApply (default: true) - Fixes a bug where NPCs in the player's cell will have their perk effects applied twice on game load\n<br />[*]EquipShoutEventSpam (default: true) - Fixes a bug where the 'Equip Shout' script would fire a shout equipped event even if the equip failed.\n<br />[*]GetKeywordItemCount (default: false) - Fixes the condition function \"GetKeywordItemCount\" returning incorrect values in some situations.\n<br />[*]GHeapLeakDetectionCrash (default: true) - Fixes a crash where scaleform attempts to report a memory leak but the code doesnt exist in Skyrim\n<br />[*]LipSync (default: true) - Fixes the lip sync bug, same as LE bug fixes.\n<br />[*]MemoryAccessErrors (default: true) - Fixes a handful of\u00a0out-of-bounds or use-after-free bugs. Required for experimental memory patches.\n<br />[*]MO5STypo (default: true) - Fixes a typo in the ARMA (Armor Addon) form loader preventing 1st person female alternate texture sets from being loaded.\n<br />[*]PerkFragmentIsRunning (default: true) -\u00a0See\u00a0[url=https://github.com/SniffleMan/MiscFixesSSE/blob/master/README.md]Misc Fixes SSE's readme[/url]\ufeff for details.\n<br />[*]RemovedSpellBook (default: true) - See\u00a0[url=https://github.com/SniffleMan/MiscFixesSSE/blob/master/README.md]Misc Fixes SSE's readme[/url]\ufeff for details.\n<br />[*]SaveScreenshots (default: true) - Fixes save game screenshots being blank when TAA is disabled.\n<br />[*]SlowTimeCameraMovement (default: true) - Fixes camera movement being slow during slow time effects.\n<br />[*]TreeReflections (default: true) - Fixes tree LOD reflections. No conflict with ENB.\n<br />[*]UnequipAllCrash (default: true) - Fixes a crash when invoking \"Actor.UnequipAll\" on an actor without an AI process.\n<br />[*]VerticalLookSensitivity (default: true) - Makes vertical look sensitivity not tied to framerate.\n<br />[*]WeaponBlockScaling (default: true) - Fixes weapon blocking so it [url=https://en.uesp.net/wiki/Skyrim:Block#Skill_Usage]correctly scales off of the blocking actor's weapon[/url].\n<br />[/list][b]\n<br />[b][size=3]Warnings[/size][/b]\n<br />[/b][list]\n<br />[*]DupeAddonNodes (default: true)\n<br />[/list]\n<br />   ADDN (Addon Node) forms have a node index that must be unique across your entire load order. A warning box will pop up if you have a conflict in your load order, and the conflicting mods will be logged to your Engine Fixes log file. To resolve this, you need to contact the mod author(s) whose mods have conflicts, and one of them will have to change which node index they are using. Please be courteous :)\n<br />\n<br />[list]\n<br />[*]RefHandleLimit (default: true)\n<br />[*]RefrMainMenuLimit (default: 800000)\n<br />[*]RefrLoadGameLimit (default: 1000000)\n<br />[/list]\n<br />\n<br />   For detailed information on this engine limitation, see\u00a0[url=https://www.reddit.com/r/skyrimmods/comments/ag4wm7/psa_the_reference_handle_cap_or_diagnosing_one_of/]my reddit post[/url]\ufeff.\n<br />\n<br />   This will pop up a warning box if your reference handle limit is above the configured warning levels at your main menu and whenever you load a save game.\n<br />\n<br />   Over the course of a 100+ hour game session, it is easily possible to build a large reference count in your save game, so the Main Menu limit is by default configured to 800k, which is 250k~ below the actual limit. If you don't intend to play long saves you can probably safely raise this warning limit.\n<br />\n<br />   The load game limit is set to 1 million (48k below the limit). If your save game is getting dangerously close to the limit it is possible to reduce the references stored in it using\u00a0[url=https://www.nexusmods.com/skyrimspecialedition/mods/5031/]ReSaver[/url]\ufeff, but keep in mind this can cause things in your game world to disappear/respawn depending on your choices.\n<br />\n<br />   Currently, the only solution to this issue is to either remove non-master plugins with large reference counts from your load order, or turn them into master plugins.[b]\n<br />\n<br />[b][size=3]Experimental[/size][/b]\n<br />[/b][list]\n<br />[*]CellInit (default: true) - Fixes a rare crash where a form does not get converted from an id to a pointer.\n<br />[*]MemoryManager (default: false) - Disables built-in memory manager for the game's largest heaps. This is the famous \"Use OS Allocators\" patch \n<br />from LE.[*]UseTBBMalloc (default: true) - If you enable the memory manager patch, this will also replace standard malloc with tbbmalloc. This does nothing if the memory manager patch is disabled.\n<br />[*]SaveGameMaxSize (default: false) - Expands maximum save game size from 64 MB (uncompressed) to 128 MB. If you have a long playthrough and your game starts crashing when you try to save, this might fix it. Marked experimental because I can't test it myself, but is most likely safe.\n<br />[/list][b]\n<br />\n<br />[b][size=4][center]Credits[/center][/size][/b]\n<br />[/b]Nukem -\u00a0\u00a0more stuff than I can mention\n<br />Sniffleman/Ryan - Misc Fixes + CommonLibSSE\u00a0\n<br />meh321 - research into tree LOD function (SSE fixes), bugfixes LE &amp; port permissions\n<br />sheson - skse plugin preloader for LE alongside meh\n<br />himika - scatter table implementation from libskyrim (LE), plus tons of research function/variable names\n<br />kassent - useful information from the source code of various skse plugins\u00a0\n<br />Kole6738 - cosave cleaner idea+code\n<br />LStewieAL - Things ported from\u00a0[url=https://www.nexusmods.com/skyrim/users/2232669?tab=user+files&amp;BH=0]here[/url][b]\n<br />\n<br />[/b][center][b][size=4]Source &amp; Contributing[/size][/b][/center]\n<br />Source is available on\u00a0[url=https://github.com/aers/EngineFixesSkyrim64]Github[/url]\ufeff. While I intend to look into some other known bugs, no promises. If you feel like tracking down a bug and theorizing a fix or even implementing one yourself, feel free to contribute; I'm willing to maintain it for future game updates.\n<br />\n<br />Preloader can be found\u00a0[url=https://github.com/aers/skse64_plugin_preloader]here[/url]\ufeff.\n<br /> tbb.dll and tbbmalloc.dll are Intel's\u00a0[url=https://www.threadingbuildingblocks.org/]Threaded Building Blocks[/url]\ufeff library.",
+                        "downloadGame": "skyrimse",
+                        "endorsed": "Undecided",
+                        "fileId": 321816,
+                        "fileMD5": "963b4d7fd7af994d57fae8a39ad17220",
+                        "fileName": "(Part 1) SSE Engine Fixes for 1.5.39 - 1.5.97-17230-5-9-1-1664974289.7z",
+                        "fileSize": 272225,
+                        "fileType": "MAIN",
+                        "homepage": "https://www.nexusmods.com/skyrimspecialedition/mods/17230/",
+                        "installTime": "2024-11-22T18:21:20.973Z",
+                        "installerChoices": {
+                            "type": "fomod"
+                        },
+                        "isPrimary": false,
+                        "logicalFileName": "(Part 1) SSE Engine Fixes for 1.5.39 - 1.5.97",
+                        "modId": 17230,
+                        "modName": "SSE Engine Fixes (skse64 plugin)",
+                        "modSize": 855680,
+                        "modVersion": "6.1.1",
+                        "name": "(Part 1) SSE Engine Fixes for 1.5.39 - 1.5.97-17230-5-9-1-1664974289",
+                        "newestFileId": 321816,
+                        "pictureUrl": "https://staticdelivery.nexusmods.com/mods/1704/images/17230/17230-1526195370-298143229.png",
+                        "referenceTag": "dBr1x0sU1se2",
+                        "shortDescription": "skse64 plugin to fix various issues with the Skyrim Special Edition engine.",
+                        "source": "nexus",
+                        "updatedTimestamp": 0,
+                        "uploadedTimestamp": 1664974289,
+                        "uploader": "aers",
+                        "uploaderId": 2025634,
+                        "uploaderUrl": "https://www.nexusmods.com/users/2025634",
+                        "version": "5.9.1"
+                    },
+                    "fileOverrides": [],
+                    "id": "(Part 1) SSE Engine Fixes for 1.5.39 - 1.5.97-17230-5-9-1-1664974289",
+                    "installationPath": "(Part 1) SSE Engine Fixes for 1.5.39 - 1.5.97-17230-5-9-1-1664974289",
+                    "state": "installed",
+                    "type": ""
+                },
+                "(Part 2) Engine Fixes - skse64 Preloader and TBB Lib-17230-2020-3-1611367474": {
+                    "archiveId": "Bk9JhSuCA",
+                    "attributes": {
+                        "allowRating": true,
+                        "author": "aers - Nukem - Ryan",
+                        "bugMessage": "",
+                        "category": 95,
+                        "description": "[center][b][size=6]Engine Fixes for Skyrim Special Edition[/size][/b][/center]\n<br />A WIP skse64 plugin for Skyrim Special Edition to fix bugs and patch issues.\n<br />\n<br />The majority of current work on this plugin (5.0+) is being done by Ryan, who deserves more credit than you can imagine :^)\n<br />\n<br />[size=4][b][center]Installation[/center][/b][/size]\n<br />[list]\n<br />[*]Install the Part 1 zip as you would any SKSE plugin, be that through your mod manager or directly to your data folder.\n<br />[/list]   \ufeffThe \"_preload.txt\" file is required to be in the directory if you want to use the memory manager patch, so if your Mod Manager warns you about it, make sure it gets added.[list]\n<br />[*]Install the Part 2 zip by extracting it to your Skyrim SE folder (the three dlls should be alongside SkyrimSE.exe, etc)\n<br />[/list]\n<br />\n<br />For configuration see the INI Settings below. The defaults should be stable for all users.\n<br />\n<br />[color=#ff7700][b]If you prefer SSE Fixes' version of the same fixes to this one, you can install them together and Engine Fixes will automatically disable its conflicting patches :)\n<br />[/b][/color]\n<br />\n<br />[b][size=4][center]INI Settings/Configuration[/center][/size][/b]\n<br />[b][size=3]EngineFixes[/size][/b]\n<br />[list]\n<br />[*]VerboseLogging (default: false) - Enables more verbose logging in the log file.\n<br />[*]CleanSKSECosaves (default: true) - Deletes SKSE cosaves with no matching save on launch.\n<br />[/list]\n<br />[b][size=3]Patches[/size][/b]\n<br />[list]\n<br />[*]DisableChargenPrecache (default: false) - \"Precache Killer\" function, duplicated from RaceMenu.\n<br />[*]EnableAchievementsWIthMods (default: true) - Enables achievements when you have mods installed.\n<br />[*]FormCaching (default: true) - Caches recently accessed forms. Similar to SSE Fixes.\n<br />[*]MaxStdio (default: true) - Raises max file handle limit from 512 to 2048, which should fix \"False Save Corruption\" bug in most cases.\n<br />[*]RegularQuicksaves (default: false) - Makes quick saves use the regular save handler.\n<br />[*]SaveAddedSoundCategories (default: true) - Saves volume settings for mod-added sound categories to a separate ini file. This functionality is the same as Audio Overhaul for Skyrim SE's dll, but they will not conflict.\n<br />[*]ScrollingDoesntSwitchPOV (default: false) - Makes it so using your scroll wheel won't swap between 1st/3rd person. See LE mod\u00a0[url=https://www.nexusmods.com/skyrim/mods/95800]here[/url]\ufeff\n<br />[*]SleepWaitTime (default: false) - Lets you change the time it takes to sleep or wait. See LE mod\u00a0[url=https://www.nexusmods.com/skyrim/mods/95796]here[/url]\ufeff\n<br />[*]SleepWaitTimeModifier (default: 0.3) - The in-game default time is 1.0; smaller values speed up the sleep/wait time, higher values slow it down\n<br />[*]TreeLODReferenceCaching (default: true) - Requires FormCaching. Fixes the very slow Tree LOD function that causes framerate drops most noticeable in Riften. Similar to SSE Fixes.\n<br />[*]WaterflowAnimation (default: true) - Decouples water flow animation from\u00a0in-game timescale, so that decreasing/increasing your timescale doesnt mess with the water animation speed.\n<br />[*]WaterflowSpeed (default: 20.0) - Sets the waterflow speed for the animation patch. The default of 20 is equal to the default timescale, and is probably OK unless you want the water to appear slower/faster for some reason.\n<br />[/list]\n<br />[b][size=3]Fixes[/size][/b]\n<br />[list]\n<br />[*]ArcheryDownwardAiming (default: true) - Fix a bug where projectiles sometimes don't fire properly if you're aiming downward. Ported from Cobb's LE fix (see [url=https://www.nexusmods.com/skyrim/articles/52111]here[/url])\n<br />[*]AnimationLoadSignedCrash (default: true) - Fix an improper unsigned/signed conversion. Should allow loading more animations before a CTD. [b]If you use [url=https://www.nexusmods.com/skyrimspecialedition/mods/31146]Animation Limit Crash Fix SSE[/url] I suggest disabling this to use that mod's fix instead.[/b]\n<br />[*]BethesdaNetCrash (default: true) - Fixes a crash on startup caused by improper handling of non-ASCII characters in Bethesda.net HTTP response headers. \n<br />[*]BSLightingAmbientSpecular (default: true) - Fixes a bug where lighting template Directional Ambient Specular &amp; Fresnel Power are broken\n<br />[*]BSLightingShaderForceAlphaTest (default: true) - Forces alpha testing in the lighting shader. Fixes object LOD reflections on water.\n<br />[*]BSLightingShaderParallaxBug (default: true) - Fixes a bug with parallax lighting shaders\n<br />[*]CalendarSkipping (default: true) - Fixes the bug listed under Notes on [url=https://www.creationkit.com/index.php?title=GetCurrentGameTime_-_Utility]this page[/url]\n<br />[*]DoublePerkApply (default: true) - Fixes a bug where NPCs in the player's cell will have their perk effects applied twice on game load\n<br />[*]EquipShoutEventSpam (default: true) - Fixes a bug where the 'Equip Shout' script would fire a shout equipped event even if the equip failed.\n<br />[*]GetKeywordItemCount (default: false) - Fixes the condition function \"GetKeywordItemCount\" returning incorrect values in some situations.\n<br />[*]GHeapLeakDetectionCrash (default: true) - Fixes a crash where scaleform attempts to report a memory leak but the code doesnt exist in Skyrim\n<br />[*]LipSync (default: true) - Fixes the lip sync bug, same as LE bug fixes.\n<br />[*]MemoryAccessErrors (default: true) - Fixes a handful of\u00a0out-of-bounds or use-after-free bugs. Required for experimental memory patches.\n<br />[*]MO5STypo (default: true) - Fixes a typo in the ARMA (Armor Addon) form loader preventing 1st person female alternate texture sets from being loaded.\n<br />[*]PerkFragmentIsRunning (default: true) -\u00a0See\u00a0[url=https://github.com/SniffleMan/MiscFixesSSE/blob/master/README.md]Misc Fixes SSE's readme[/url]\ufeff for details.\n<br />[*]RemovedSpellBook (default: true) - See\u00a0[url=https://github.com/SniffleMan/MiscFixesSSE/blob/master/README.md]Misc Fixes SSE's readme[/url]\ufeff for details.\n<br />[*]SaveScreenshots (default: true) - Fixes save game screenshots being blank when TAA is disabled.\n<br />[*]SlowTimeCameraMovement (default: true) - Fixes camera movement being slow during slow time effects.\n<br />[*]TreeReflections (default: true) - Fixes tree LOD reflections. No conflict with ENB.\n<br />[*]UnequipAllCrash (default: true) - Fixes a crash when invoking \"Actor.UnequipAll\" on an actor without an AI process.\n<br />[*]VerticalLookSensitivity (default: true) - Makes vertical look sensitivity not tied to framerate.\n<br />[*]WeaponBlockScaling (default: true) - Fixes weapon blocking so it [url=https://en.uesp.net/wiki/Skyrim:Block#Skill_Usage]correctly scales off of the blocking actor's weapon[/url].\n<br />[/list][b]\n<br />[b][size=3]Warnings[/size][/b]\n<br />[/b][list]\n<br />[*]DupeAddonNodes (default: true)\n<br />[/list]\n<br />   ADDN (Addon Node) forms have a node index that must be unique across your entire load order. A warning box will pop up if you have a conflict in your load order, and the conflicting mods will be logged to your Engine Fixes log file. To resolve this, you need to contact the mod author(s) whose mods have conflicts, and one of them will have to change which node index they are using. Please be courteous :)\n<br />\n<br />[list]\n<br />[*]RefHandleLimit (default: true)\n<br />[*]RefrMainMenuLimit (default: 800000)\n<br />[*]RefrLoadGameLimit (default: 1000000)\n<br />[/list]\n<br />\n<br />   For detailed information on this engine limitation, see\u00a0[url=https://www.reddit.com/r/skyrimmods/comments/ag4wm7/psa_the_reference_handle_cap_or_diagnosing_one_of/]my reddit post[/url]\ufeff.\n<br />\n<br />   This will pop up a warning box if your reference handle limit is above the configured warning levels at your main menu and whenever you load a save game.\n<br />\n<br />   Over the course of a 100+ hour game session, it is easily possible to build a large reference count in your save game, so the Main Menu limit is by default configured to 800k, which is 250k~ below the actual limit. If you don't intend to play long saves you can probably safely raise this warning limit.\n<br />\n<br />   The load game limit is set to 1 million (48k below the limit). If your save game is getting dangerously close to the limit it is possible to reduce the references stored in it using\u00a0[url=https://www.nexusmods.com/skyrimspecialedition/mods/5031/]ReSaver[/url]\ufeff, but keep in mind this can cause things in your game world to disappear/respawn depending on your choices.\n<br />\n<br />   Currently, the only solution to this issue is to either remove non-master plugins with large reference counts from your load order, or turn them into master plugins.[b]\n<br />\n<br />[b][size=3]Experimental[/size][/b]\n<br />[/b][list]\n<br />[*]CellInit (default: true) - Fixes a rare crash where a form does not get converted from an id to a pointer.\n<br />[*]MemoryManager (default: false) - Disables built-in memory manager for the game's largest heaps. This is the famous \"Use OS Allocators\" patch \n<br />from LE.[*]UseTBBMalloc (default: true) - If you enable the memory manager patch, this will also replace standard malloc with tbbmalloc. This does nothing if the memory manager patch is disabled.\n<br />[*]SaveGameMaxSize (default: false) - Expands maximum save game size from 64 MB (uncompressed) to 128 MB. If you have a long playthrough and your game starts crashing when you try to save, this might fix it. Marked experimental because I can't test it myself, but is most likely safe.\n<br />[/list][b]\n<br />\n<br />[b][size=4][center]Credits[/center][/size][/b]\n<br />[/b]Nukem -\u00a0\u00a0more stuff than I can mention\n<br />Sniffleman/Ryan - Misc Fixes + CommonLibSSE\u00a0\n<br />meh321 - research into tree LOD function (SSE fixes), bugfixes LE &amp; port permissions\n<br />sheson - skse plugin preloader for LE alongside meh\n<br />himika - scatter table implementation from libskyrim (LE), plus tons of research function/variable names\n<br />kassent - useful information from the source code of various skse plugins\u00a0\n<br />Kole6738 - cosave cleaner idea+code\n<br />LStewieAL - Things ported from\u00a0[url=https://www.nexusmods.com/skyrim/users/2232669?tab=user+files&amp;BH=0]here[/url][b]\n<br />\n<br />[/b][center][b][size=4]Source &amp; Contributing[/size][/b][/center]\n<br />Source is available on\u00a0[url=https://github.com/aers/EngineFixesSkyrim64]Github[/url]\ufeff. While I intend to look into some other known bugs, no promises. If you feel like tracking down a bug and theorizing a fix or even implementing one yourself, feel free to contribute; I'm willing to maintain it for future game updates.\n<br />\n<br />Preloader can be found\u00a0[url=https://github.com/aers/skse64_plugin_preloader]here[/url]\ufeff.\n<br /> tbb.dll and tbbmalloc.dll are Intel's\u00a0[url=https://www.threadingbuildingblocks.org/]Threaded Building Blocks[/url]\ufeff library.",
+                        "downloadGame": "skyrimse",
+                        "endorsed": "Undecided",
+                        "fileId": 181171,
+                        "fileMD5": "4a74151b4653510f6904c85369a2c7e9",
+                        "fileName": "(Part 2) Engine Fixes - skse64 Preloader and TBB Lib-17230-2020-3-1611367474.7z",
+                        "fileSize": 206648,
+                        "fileType": "MAIN",
+                        "homepage": "https://www.nexusmods.com/skyrimspecialedition/mods/17230/",
+                        "installTime": "2024-11-22T18:21:19.458Z",
+                        "installerChoices": {
+                            "type": "fomod"
+                        },
+                        "isPrimary": false,
+                        "logicalFileName": "(Part 2) Engine Fixes - skse64 Preloader and TBB Lib",
+                        "modId": 17230,
+                        "modName": "SSE Engine Fixes (skse64 plugin)",
+                        "modSize": 736512,
+                        "modVersion": "6.1.1",
+                        "name": "(Part 2) Engine Fixes - skse64 Preloader and TBB Lib-17230-2020-3-1611367474",
+                        "newestFileId": 181171,
+                        "pictureUrl": "https://staticdelivery.nexusmods.com/mods/1704/images/17230/17230-1526195370-298143229.png",
+                        "referenceTag": "VXbSEhqDYrfO",
+                        "shortDescription": "skse64 plugin to fix various issues with the Skyrim Special Edition engine.",
+                        "source": "nexus",
+                        "updatedTimestamp": 0,
+                        "uploadedTimestamp": 1611367474,
+                        "uploader": "aers",
+                        "uploaderId": 2025634,
+                        "uploaderUrl": "https://www.nexusmods.com/users/2025634",
+                        "version": "2020.3"
+                    },
+                    "fileOverrides": [],
+                    "id": "(Part 2) Engine Fixes - skse64 Preloader and TBB Lib-17230-2020-3-1611367474",
+                    "installationPath": "(Part 2) Engine Fixes - skse64 Preloader and TBB Lib-17230-2020-3-1611367474",
+                    "state": "installed",
+                    "type": ""
+                },
+                "Collection-Test-Profile-256847-1-1722101400": {
+                    "archiveId": "Sk-cMJ3MFA",
+                    "attributes": {
+                        "author": "Wuerfelhusten",
+                        "bugMessage": "",
+                        "collectionId": 161607,
+                        "collectionSlug": "lzegie",
+                        "customFileName": "Collection Test Profile",
+                        "description": "# Description\n\n*This describes the main purpose of this collection.*\n\n***\n\n# Main features\n\n*These are the core mods and main features of this collection.*\n\n***\n\n# Before you startgtg\n\n*Vital information regarding this collection.*\n\n**Requirements**\n\n- *Example*\n\n**Best practices**\n\n- *Example*\n\n***\n\n# Recommended specs\n\n*Hardware setup suitable for this collection.*\n\n- GPU\n- RAM\n- CPU\n\n***\n\n# Compatible collections\n\n*Other collections that can be installed alongside this collection.*",
+                        "downloadGame": "skyrimse",
+                        "fileMD5": "2a3fc98776d4363510414c35e5f37591",
+                        "fileName": "Collection-Test-Profile-256847-1-1722101400.7z",
+                        "fileSize": 1335,
+                        "installCompleted": 1722101551433,
+                        "installInstructions": "",
+                        "installTime": "2024-07-27T17:32:03.943Z",
+                        "logicalFileName": "Collection Test Profile",
+                        "modSize": 4093,
+                        "modVersion": "1",
+                        "name": "Collection-Test-Profile-256847-1-1722101400",
+                        "newestVersion": "1",
+                        "pictureUrl": "https://media.nexusmods.com/5/7/57300cd1-4119-44fc-ae5a-0827d8142b30.webp",
+                        "rating": {
+                            "average": 0,
+                            "total": 0
+                        },
+                        "recommendNewProfile": false,
+                        "revisionId": 256847,
+                        "revisionNumber": 1,
+                        "shortDescription": "Test don't download",
+                        "source": "nexus",
+                        "updatedTimestamp": 1722101510000,
+                        "uploadedTimestamp": 1712597421000,
+                        "uploader": "Wuerfelhusten",
+                        "uploaderAvatar": "https://avatars.nexusmods.com/122160268/100",
+                        "uploaderId": 122160268,
+                        "version": "1"
+                    },
+                    "fileOverrides": [],
+                    "id": "Collection-Test-Profile-256847-1-1722101400",
+                    "installationPath": "Collection-Test-Profile-256847-1-1722101400",
+                    "rules": [
+                        {
+                            "type": "requires",
+                            "reference": {
+                                "description": "Skyrim Script Extender (SKSE64)",
+                                "fileMD5": "b6f3d79a14b1b184ba71dc94abca861a",
+                                "gameId": "skyrimse",
+                                "fileSize": 751136,
+                                "versionMatch": ">=2.2.6+prefer",
+                                "logicalFileName": "Skyrim Script Extender (SKSE64)",
+                                "tag": "ZK7TprBcd",
+                                "md5Hint": "b6f3d79a14b1b184ba71dc94abca861a",
+                                "repo": {
+                                    "repository": "nexus",
+                                    "gameId": "skyrimspecialedition",
+                                    "modId": "30379",
+                                    "fileId": "462377",
+                                    "campaign": "collection"
+                                },
+                                "idHint": "Skyrim Script Extender (SKSE64)-30379-2-2-6-1705522967",
+                                "patches": {}
+                            },
+                            "extra": {
+                                "author": "SKSE Team",
+                                "type": "dinput",
+                                "category": "Utilities",
+                                "version": "2.2.6",
+                                "name": "Skyrim Script Extender (SKSE64)",
+                                "phase": 0,
+                                "fileName": "Skyrim Script Extender (SKSE64)-30379-2-2-6-1705522967.7z"
+                            }
+                        },
+                        {
+                            "type": "requires",
+                            "reference": {
+                                "description": "RaceMenu - RaceMenu Anniversary Edition v0-4-19-16",
+                                "fileMD5": "e40626ff52f2108424b57fbe991c0d17",
+                                "gameId": "skyrimse",
+                                "fileSize": 8631730,
+                                "versionMatch": ">=0.4.19+prefer",
+                                "logicalFileName": "RaceMenu Anniversary Edition v0-4-19-16",
+                                "tag": "icQJWR32eB",
+                                "md5Hint": "e40626ff52f2108424b57fbe991c0d17",
+                                "repo": {
+                                    "repository": "nexus",
+                                    "gameId": "skyrimspecialedition",
+                                    "modId": "19080",
+                                    "fileId": "465102",
+                                    "campaign": "collection"
+                                },
+                                "idHint": "RaceMenu Anniversary Edition v0-4-19-16-19080-0-4-19-16-1706297897",
+                                "patches": {}
+                            },
+                            "extra": {
+                                "author": "Expired",
+                                "type": "",
+                                "category": "User Interface",
+                                "version": "0.4.19.16",
+                                "name": "RaceMenu - RaceMenu Anniversary Edition v0-4-19-16",
+                                "phase": 0,
+                                "patches": {},
+                                "fileName": "RaceMenu Anniversary Edition v0-4-19-16-19080-0-4-19-16-1706297897.7z"
+                            }
+                        },
+                        {
+                            "type": "requires",
+                            "reference": {
+                                "description": "Untarnished UI - RaceMenu Patch",
+                                "fileMD5": "43807eb5d1f5f9fd18c4059a6c4d20c1",
+                                "gameId": "skyrimse",
+                                "fileSize": 457340,
+                                "versionMatch": ">=1.3.0+prefer",
+                                "logicalFileName": "Untarnished UI - RaceMenu Patch",
+                                "tag": "-Qaj6TgwYH",
+                                "md5Hint": "43807eb5d1f5f9fd18c4059a6c4d20c1",
+                                "repo": {
+                                    "repository": "nexus",
+                                    "gameId": "skyrimspecialedition",
+                                    "modId": "97347",
+                                    "fileId": "492664",
+                                    "campaign": "collection"
+                                },
+                                "idHint": "Untarnished UI - RaceMenu Patch-97347-v1-3-1713561432",
+                                "installerChoices": {
+                                    "type": "fomod",
+                                    "options": [
+                                        {
+                                            "name": "Installation",
+                                            "groups": [
+                                                {
+                                                    "name": "Install",
+                                                    "choices": [
+                                                        {
+                                                            "name": "Xbox Buttons",
+                                                            "idx": 0
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "patches": {}
+                            },
+                            "installerChoices": {
+                                "type": "fomod",
+                                "options": [
+                                    {
+                                        "name": "Installation",
+                                        "groups": [
+                                            {
+                                                "name": "Install",
+                                                "choices": [
+                                                    {
+                                                        "name": "Xbox Buttons",
+                                                        "idx": 0
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            "extra": {
+                                "author": "Wuerfelhusten",
+                                "type": "",
+                                "category": "User Interface",
+                                "version": "v1.3",
+                                "name": "Untarnished UI - RaceMenu Patch",
+                                "phase": 0,
+                                "fileName": "Untarnished UI - RaceMenu Patch-97347-v1-3-1713561432.7z"
+                            }
+                        }
+                    ],
+                    "state": "installed",
+                    "type": "collection"
+                },
+                "Constructible Object Custom Keyword System NG-81731-1-1-1-1713893656": {
+                    "archiveId": "ByeIaHL_0C",
+                    "attributes": {
+                        "allowRating": true,
+                        "author": "Parapets-Meridiano",
+                        "bugMessage": "",
+                        "category": 84,
+                        "description": "NG patch for [url=https://www.nexusmods.com/skyrimspecialedition/mods/81409]Constructible Object Custom Keyword System[/url] mod by Parapets.\n<br />\n<br />Original DLLs work for specific versions only:\n<br />-- SE/AE\u00a01.6.1130+ (Steam)\n<br />-- VR\u00a01.4.15 (Steam)\n<br />\n<br />[url=https://www.nexusmods.com/skyrimspecialedition/mods/81723]1.5-Patched DLL[/url] works for specific version only:\n<br />-- SE 1.5.97 (Steam).\n<br />\n<br />This version brings the power of [url=https://github.com/CharmedBaryon/CommonLibSSE-NG]CommonLibSSE-NG[/url] by\u00a0CharmedBaryon making the DLL working for many SE and AE and VR versions including:\n<br />--\u00a0SE 1.5.97 (Steam).\n<br />-- SE/AE 1.6.317-1.6.1170 (Steam).\n<br />-- SE/AE 1.6.659 and 1.6.1179 (GOG).\n<br />-- VR 1.4.15 (Steam).",
+                        "downloadGame": "skyrimse",
+                        "endorsed": "Undecided",
+                        "fileId": 494049,
+                        "fileMD5": "3b0be9004925c749177f94720ccc8d6b",
+                        "fileName": "Constructible Object Custom Keyword System NG-81731-1-1-1-1713893656.zip",
+                        "fileSize": 5916532,
+                        "fileType": "MAIN",
+                        "homepage": "https://www.nexusmods.com/skyrimspecialedition/mods/81731/",
+                        "installTime": "2024-11-22T18:21:17.806Z",
+                        "installerChoices": {
+                            "type": "fomod"
+                        },
+                        "isPrimary": false,
+                        "logicalFileName": "Constructible Object Custom Keyword System NG",
+                        "modId": 81731,
+                        "modName": "Constructible Object Custom Keyword System NG",
+                        "modSize": 22696027,
+                        "modVersion": "1.1.1",
+                        "name": "Constructible Object Custom Keyword System NG-81731-1-1-1-1713893656",
+                        "newestFileId": 494049,
+                        "pictureUrl": "https://staticdelivery.nexusmods.com/mods/1704/images/81731/81731-1672493614-325269019.png",
+                        "shortDescription": "NG patch for \"Constructible Object Custom Keyword System\" mod by Parapets.",
+                        "source": "nexus",
+                        "updatedTimestamp": 0,
+                        "uploadedTimestamp": 1713893656,
+                        "uploader": "MeridianoRus",
+                        "uploaderId": 9609463,
+                        "uploaderUrl": "https://www.nexusmods.com/users/9609463",
+                        "version": "1.1.1"
+                    },
+                    "fileOverrides": [],
+                    "id": "Constructible Object Custom Keyword System NG-81731-1-1-1-1713893656",
+                    "installationPath": "Constructible Object Custom Keyword System NG-81731-1-1-1-1713893656",
+                    "state": "installed",
+                    "type": ""
+                },
+                "Crafting Categories for SkyUI-81409-1-1-1-1713865527": {
+                    "archiveId": "BJa3HIuAC",
+                    "attributes": {
+                        "allowRating": true,
+                        "author": "Parapets",
+                        "bugMessage": "",
+                        "category": 42,
+                        "customFileName": "Constructible Object Custom Keyword System - Crafting Categories for SkyUI",
+                        "description": "[font=Times New Roman][size=5]OVERVIEW[/size][/font]\n<br />While SkyUI made many improvements from the vanilla interface, the Constructible Object Menu left much to be desired. The vanilla menu had 31 hardcoded categories, and SkyUI replaced these with its own 7 hardcoded categories, which would become very cluttered from having too many craftable items. This mod takes some inspiration from the vanilla categories, integrating a similar keyword-based system into the SkyUI menu design, and makes this system fully customizable and extensible. This means it can better support additional crafting types introduced by Creation Club and mods, as well as provide the same UI improvements to modded crafting stations.\n<br />\n<br />The menu is used by the following crafting stations:\n<br />[list]\n<br />[*]Blacksmith Forge\n<br />[*]Tanning Rack\n<br />[*]Smelter\n<br />[*]Cooking Pot\n<br />[*]Aetherium Forge\n<br />[*]Grain Mill\n<br />[*]Oven\n<br />[*]Drafting Table\n<br />[*]Carpenter's Workbench\n<br />[*]Staff Enchanter\n<br />[*]Mod-added crafting stations\n<br />[/list]\n<br />Configurations are included for the Blacksmith Forge and Carpenter's Workbench for the vanilla game, Creation Club, and Unofficial Skyrim Special Edition Patch.\n<br />\n<br />[font=Times New Roman][size=5]CONFIG CREATION[/size][/font]\n<br />Configs are located in 'Data&#92;SKSE&#92;Plugins&#92;CraftingCategories'. Refer to the [url=https://github.com/Exit-9B/CraftingCategories/blob/main/docs/CraftingCategories.schema.json]JSON Schema[/url] for a full description of the specification.\n<br />\n<br />Much like how the game finds BSA and INI files, files from the config directory will get loaded if their filename matches a plugin in your load order. They will also be loaded in the same order, and if there are any conflicts between them, the later-loading config will take priority (more details below).\n<br />\n<br />The specification consists of a\u00a0[b]sections[/b]\u00a0object and a\u00a0[b]categories[/b]\u00a0object. [b]sections[/b] are the top-level headers, while [b]categories[/b] can further divide sections into more specific groups.\n<br />\n<br />[b]icon[/b]\u00a0specifications consist of a\u00a0[b]source[/b]\u00a0(path to a SWF movie in the Interface directory containing one or more icons) and a\u00a0[b]label[/b]\u00a0(frame label in the timeline where the desired icon is visible). The source SWF file will be automatically resized to 20x20.\n<br />\n<br />If a later config redefines the same key for a section, or the same key and parent for a category, the new definition will be merged with the earlier one. Therefore, it is not necessary to repeat data, such as keywords or icons, when extending them. If a config reassigns a keyword that was previously assigned (to a different section or different category within the same section), then it will be removed from its previous assignment.\n<br />\n<br />[font=Times New Roman][size=5]COMPATIBILITY[/size][/font]\n<br />This mod adds a new menu, which is [b]not[/b] automatically compatible with reskins of SkyUI.\n<br />\n<br />The Crafting Menu is not replaced for the Alchemy, Enchanting, and Smithing Improvement workbenches. Other mods may still edit that menu without being affected.\n<br />\n<br />[font=Times New Roman][size=5]SPECIAL THANKS\n<br />[/size][/font]Jelidity for the new UI idea and creating the hammer &amp; anvil icon.\n<br />Osmosis-Wrench for ActionScript advice.\n<br />\n<br />[line]\n<br />[center][url=https://ko-fi.com/parapets][img]https://cdn.ko-fi.com/cdn/kofi2.png[/img][/url][/center]",
+                        "downloadGame": "skyrimse",
+                        "endorsed": "Undecided",
+                        "fileId": 493920,
+                        "fileMD5": "db0abc28f20a03056945dab99a8c89a3",
+                        "fileName": "Crafting Categories for SkyUI-81409-1-1-1-1713865527.7z",
+                        "fileSize": 2503691,
+                        "fileType": "MAIN",
+                        "homepage": "https://www.nexusmods.com/skyrimspecialedition/mods/81409/",
+                        "installTime": "2024-11-22T18:21:16.142Z",
+                        "installerChoices": {
+                            "type": "fomod"
+                        },
+                        "isPrimary": true,
+                        "logicalFileName": "Crafting Categories for SkyUI",
+                        "modId": 81409,
+                        "modName": "Constructible Object Custom Keyword System",
+                        "modSize": 13989593,
+                        "modVersion": "1.1.1",
+                        "name": "Crafting Categories for SkyUI-81409-1-1-1-1713865527",
+                        "newestFileId": 493920,
+                        "pictureUrl": "https://staticdelivery.nexusmods.com/mods/1704/images/81409/81409-1672143309-1522266016.png",
+                        "shortDescription": "Improves the usability of the Constructible Object Menu with SkyUI with an extensible keyword-based category system.",
+                        "source": "nexus",
+                        "updatedTimestamp": 0,
+                        "uploadedTimestamp": 1713865527,
+                        "uploader": "Parapets",
+                        "uploaderId": 39501725,
+                        "uploaderUrl": "https://www.nexusmods.com/users/39501725",
+                        "version": "1.1.1"
+                    },
+                    "fileOverrides": [],
+                    "id": "Crafting Categories for SkyUI-81409-1-1-1-1713865527",
+                    "installationPath": "Crafting Categories for SkyUI-81409-1-1-1-1713865527",
+                    "rules": [
+                        {
+                            "reference": {
+                                "id": "Constructible Object Custom Keyword System NG-81731-1-1-1-1713893656",
+                                "versionMatch": "*",
+                                "idHint": "Constructible Object Custom Keyword System NG-81731-1-1-1-1713893656"
+                            },
+                            "type": "before"
+                        }
+                    ],
+                    "state": "installed",
+                    "type": ""
+                },
+                "RaceMenu Anniversary Edition v0-4-19-16-19080-0-4-19-16-1706297897": {
+                    "archiveId": "ByBmBjfKR",
+                    "attributes": {
+                        "allowRating": true,
+                        "author": "Expired",
+                        "bugMessage": "",
+                        "category": 42,
+                        "customFileName": "RaceMenu - RaceMenu Anniversary Edition v0-4-19-16",
+                        "description": "[center][url=https://www.patreon.com/bePatron?u=5334755][img]https://c5.patreon.com/external/logo/become_a_patron_button.png[/img][/url][/center]\n<br />Due to popular request, this is a version of RaceMenu that is feature equivalent to the alpha. All non-functional features have been disabled via setting. Features that do not work are denoted by \"non-functional\". There is no ETA on a feature-complete version.\n<br />\n<br />[center][size=5][color=#ff0000][b]REQUIREMENTS[/b]\ufeff[/color][/size][/center]\n<br />The [url=http://skse64.silverlock.org/]Skyrim Script Extender (SKSE64)[/url], Version [color=orange]2.0.7[/color]\u00a0(or newer matching the RaceMenu version) is [b]REQUIRED[/b] to run RaceMenu SE.\n<br />\n<br />If you get mismatching version warnings, make sure to delete the following loose files from your data folder if they exist:\n<br />[list]\n<br />[*]CharGen.pex\n<br />[*]NiOverride.pex\n<br />[*]RaceMenu.pex\n<br />[*]RaceMenuBase.pex\n<br />[*]RaceMenuLoad.pex\n<br />[*]RaceMenuPlugin.pex\n<br />[/list]\n<br />Additionally, make sure that you installed SKSE and the SKSE base script files correctly.\n<br />\n<br />Non-functional in RaceMenu SSE\n<br />[s]For ECE to RaceMenu migration see:\n<br />[/s][list][*][url=http://www.nexusmods.com/skyrim/mods/61336/?][size=2][s]CharGen\u00a0Export[/s][/size][/url]\n<br />[s][/*][/s][/list][color=#5EA2E5][center][size=5][b]PURPOSE[/b][/size][/center][/color]\n<br />The RaceMenu was redesigned with the intention of using SKSE to allow for more in-depth customization of your character. This mod does not fix the problems with the internal class to this menu; it merely redesigns it and adds more features. Please ensure that you don't have problems opening the ORIGINAL RaceMenu before blaming this mod.\n<br />\n<br />[color=#5EA2E5][center][size=5][b]FEATURES[/b][/size][/center][/color]\n<br />[color=#5EA2E5]RaceMenu.esp[/color]\n<br />[list][*]Numeric display for all sliders[/*]\n<br />[*]Categorizes all the vanilla options to the SkyUI look[/*]\n<br />[*]Search filter by name [color=#7C7C7C](Same as SkyUI)[/color][/*]\n<br />[*]Color ANY tint, including hair with an AARRGGBB value[/*]\n<br />[*]Loads/Saves settings when re-opening the menu[/*]\n<br />[*]Light On/Off [color=#7C7C7C](Spawns a white light directly infront of your character)[/color][/*]\n<br />[*]Zoom distances adjusted to be closer to the face when In and slightly further when out[/*]\n<br />[*]Basic plugin interface[/*]\n<br />[*]Controller support[/*]\n<br />[*]Works with any race, including custom races[/*]\n<br />[*]Doesn't modify any vanilla assets [color=#7C7C7C](Unlike my Extended Slider Colors mod)[/color][/*]\n<br />[*]Multi-warpaint support[/*]\n<br />[*]Warpaint texture hotswapping [color=#7C7C7C](Custom warpaint)[/color][/*]\n<br />[*]Display racial skill bonuses[/*]\n<br />[*]Save/Load presets to and from windows clipboard[/*]\n<br />[*]Supports body/hand/feet[s]/face[/s] overlays[/*]\n<br />[*]Save/Load color[/*]\n<br />[*]Change overlay glow color[/*]\n<br />[*]Change overlay glow strength[/*]\n<br />[*]Export head mesh[/*]\n<br />[*]Save/Load preset to and from a slot file [color=#7C7C7C](Requires CharGen v2.0.0 or greater and replaces clipboard save/load)[/color][/*]\n<br />[*]Show HeadPart name and source mod [color=#7C7C7C](Requires CharGen v2.1.2 or greater)[/color][/*]\n<br />[*]Camera move up/down/left/right zoom in/out[/*]\n<br />[/list]\n<br />[color=#5EA2E5]RaceMenuPlugin.esp[/color] [color=#7C7C7C](Optional)[/color]\n<br />[list][*]Adjust player height[/*]\n<br />[*]Adjust player bicep size[/*]\n<br />[*]Adjust player glute size [color=#7C7C7C](Only works for meshes that support skeletal scaling e.g. TBBP body meshes)[/color][/*]\n<br />[*]Adjust player breast size [color=#7C7C7C](Only works for meshes that support skeletal scaling e.g. BBP body meshes)[/color][/*]\n<br />[*]Adjust player breast curve size [color=#7C7C7C](Only works for meshes that support skeletal scaling e.g. TBBP body meshes)[/color][/*]\n<br />[/list]\n<br />\n<br />[color=#5EA2E5][size=5][b]BodyGen randomize[/b][/size][/color]\n<br />There is now new syntax to the previous feature to allow randomization of all actors of a particular gender.\n<br />To setup an initial BodyGen file you need to create two ini files at:\n<br />meshes/actors/character/BodyGenData/%MOD_FILENAME_WITH_EXT%/\n<br />morphs.ini\n<br />templates.ini\n<br />The templates file outlines BodyMorphs by name\n<br />Here is a sample:\n<br />[color=#7C7C7C]Sevenbase=7B High@1.0 | 7B Bombshell High@1.0 | 7B Natural High@1.0 | 7B Cleavage High@1.0 | 7B Bcup High@1.0\n<br />Breasts=BreastSH@1.0 | BreastSSH@2.0, Breast@1.0, BreastCleavage@0.1:1.0, BreastGravity@0.1:1.0[/color]\n<br />\n<br />The morphs file defines what morphs should be available to what ActorBases, here is an example:\n<br />[color=#7C7C7C]Skyrim.esm|F62F0=Sevenbase,Breasts[/color]\n<br />\n<br />For the new All feature, this would say:\n<br />[color=#7C7C7C]All|Female=Sevenbase,Breasts[/color]\n<br />\n<br />Make sure you have empty new lines at the end of your ini files.\n<br />If you have explicit overrides in other mods they will overwrite by load order, so if you have all in an earlier mod, then have one explicit in a later mod, the ActorBase will use the later setting.\n<br />\n<br />[color=#5EA2E5][center][size=5][b]Equippable Transforms[/b][/size][/center][/color]\n<br />\n<br />What are Equippable Transforms? They are essentially additional data that can be attached onto Armor that will apply an NiTransform internally to the skeleton. What would you use this for? Replacing High Heels of course! The transform is also done natively so it's near instant application.\n<br />\u00a0\n<br />How do you use it? Simple, add an NiStringExtraData named \"SDTA\" without quotes (Skeleton Data) to your NiTriShape or NiTriStrips of the armor you want to apply it to (You may need to apply to both _0 and _1)\n<br />\u00a0\n<br />The \"String Data\" will be a JSON formatted string, here is a sample:\n<br />[color=#7C7C7C][\n<br />{\"name\":\"NPC L Breast\",\"scale\":2.0,\"pos\":[0,0,0],\"rot\":[0,0,0]},\n<br />{\"name\":\"NPC R Breast\",\"scale\":2.0,\"pos\":[0,0,0],\"rot\":[0,0,0]}\n<br />][/color]\n<br />The \"name\" field is the name of the node you are transforming\n<br />The \"pos\" field is a relative translation of the node you are transforming\n<br />The \"rot\" field is a rotation in degress in euler angles (heading, attitude, bank)\n<br />\u00a0\n<br />Here is a sample for replacing High Heels\n<br />[color=#7C7C7C][{\"name\":\"NPC\",\"pos\":[0, 0, 5.0]}][/color]\n<br />You may need to tweak the units as I just eyeballed it for the particular boots I was using.\n<br />\u00a0\n<br />This runs off the existing Transform framework that NiOverride provides, so any modifications to particular nodes will stack with these, you can only have one internal equipped node transform (i.e. two pieces of armor cant modify the same node, overwriting will happen and the behavior will most likely be last written or undefined).\n<br />\n<br />[color=#5EA2E5][size=5][b]Sculpt Mode[/b][/size][/color]\n<br />\n<br />[b]Head Import[/b]\n<br />This feature will import the geometry of a nif file that is formatted for NPCs (You either exported it, or you copied an NPC's into the directory)\n<br />\n<br />[b]Sculpt[/b]\n<br />This feature is complicated, the tools you have available are Inflate, Deflate, Smooth, Move, and Mask.\n<br />\n<br />[b]Rotating[/b]\n<br />Drag with right mouse click\n<br />\n<br />[b]Panning[/b]\n<br />Hold the Secondary button and drag with right mouse click to pan.\n<br />\n<br />[b]Inflate/Deflate[/b]\n<br />Moves the hit vertices out/in based on an average of adjacent face normals\n<br />\n<br />[b]Smooth[/b]\n<br />Moves the hit vertices to an average position of all adjacent vertices, [b]CAUTION[/b] do not use near openings such as the mouth\n<br />\n<br />[b]Move[/b]\n<br />Moves vertices in the direction you move the cursor, orthogonal to the view plane\n<br />\n<br />[b]Mask[/b]\n<br />Excludes vertices from being altered, including imported geometry, if you are importing a head with a different neck seam you should mask add around the neck area before importing\n<br />\n<br />[b]History[/b]\n<br />History will store all previous vertex actions including Clear Sculpt, Import Geometry, and all brush actions\n<br />\n<br />[b]Head Parts[/b]\n<br />This is the window for changing the wireframe preview including locking the mesh (so it can't be edited) making the mesh visible, or changing the wireframe color\n<br />\n<br />[b]Clear Sculpt[/b]\n<br />This will wipe all sculpting data from all ACTIVE parts (Editable must be checked)\n<br />\n<br />[b]File based Presets[/b]\n<br />Presets are now saved to explicit file names and have changed format to json, as such will be saved as .jslot files, if you are replacing an existing slot file, refrain from replacing a .slot file, clicking on a selected file when saving will overwrite the selected file, and the file extension will be for binary but will try to load the json and fail. Binary slot files can still be loaded for legacy purposes, however this format is no longer saved by CharGen.\n<br />\n<br />[color=red]There will not be, nor will ever be controller support for the Sculpt feature, sorry.[/color]\n<br />\n<br />\n<br />[color=#5EA2E5][center][size=5][b]CHANGE LOG[/b][/size][/center][/color]\n<br />See Changes section\n<br />\n<br />[color=#5EA2E5][center][size=5][b]High-Resolution Warpaint[/b][/size][/center][/color]\n<br />An INI setting has been added to SKSE to allow for higher resolution warpaint to be applied to your character. The default resolution is 256, this is a terrible resolution if you want to do some really fancy warpaints.\n<br />[list][*]Locate your Data directory[/*]\n<br />[*]Create SKSE folder if it is not already there[/*]\n<br />[*]Create SKSE.ini if it is not already there[/*]\n<br />[*]Add \"[Display]\" category[/*]\n<br />[*]Add \"iTintTextureResolution=2048\"[/*]\n<br />[/list]\n<br />\n<br />Your [color=#5EA2E5]Data/SKSE/SKSE.ini[/color] should look something like this:\n<br />[color=#5EA2E5][Display]\n<br />iTintTextureResolution=2048[/color]\n<br />Putting a higher resolution should be possible but I have only tested it at 2048.\n<br />[color=#7C7C7C]Note: This may cause low resolution textures to look worse due to upscaling, hopefully this will encourage high-resolution replacements.[/color]\n<br />\n<br />[color=#5EA2E5][center][size=5][b]Keymapping[/b][/size][/center][/color]\n<br />Keyboard:\n<br />[list][*]Choose Color/Accept - Activate (Default E)[/*]\n<br />[*]Done - Ready Weapon  (Default R)[/*]\n<br />[*]Light - Sneak (Default Ctrl)[/*]\n<br />[*]Zoom - Sprint (Default Shift)[/*]\n<br />[*]Search - Jump (Default Spacebar)[/*]\n<br />[*]Choose Texture - Wait (Default T)[/*]\n<br />[*]Load Preset - Quickload[/*]\n<br />[*]Save Preset - Quicksave[/*]\n<br />[*]Export Head - Shout (Default Z)[/*]\n<br />[/list]\n<br />Controller:\n<br />[list][*]Choose Color/Accept - Activate (Default A)[/*]\n<br />[*]Done - Ready Weapon  (Default X)[/*]\n<br />[*]Light - Wait (Default Back)[/*]\n<br />[*]Zoom - Sprint (Default RB)[/*]\n<br />[*]Search - None[/*]\n<br />[*]Choose Texture - Jump (Default Y)[/*]\n<br />[*]Load Preset - Left Stick[/*]\n<br />[*]Save Preset - Right Stick[/*]\n<br />[*]Export Head - Shout (Default LB)[/*]\n<br />[*]Change Sub Category - Left/Right Trigger[/*]\n<br />[/list]\n<br />\n<br />[color=#5EA2E5][center][size=5][b]FAQ[/b][/size][/center][/color]\n<br />[color=#ff0000]Q[/color]. How do I change the number of overlays available?\n<br />[color=#00ff00]A[/color]. Open Data/SKSE/Plugins/NiOverride.ini in any text editor and change the values here.\n<br />\n<br />[color=#ff0000]Q[/color]. Do I need to install CharGen Extension?\n<br />[color=#00ff00]A[/color]. Not for versions 2.7 and up, CharGen Extension is completely included, you should uninstall it if you had it prior to installing 2.7 and up.\n<br />\n<br />[color=#ff0000]Q[/color]. I see dollar signs everywhere and many features appear to be missing what do I do?\n<br />[color=#00ff00]A[/color]. Install SKSE, or if you have installed it, run your game using skse_loader.exe as you should be.\n<br />\n<br />[color=#ff0000]Q[/color]. Is this compatible with ECE?\n<br />[color=#00ff00]A[/color]. Partially, only a few features will work, generally I do not recommend using them together as presets will not work.\n<br />\n<br />[color=#ff0000]Q[/color]. How do I get more Face/Body/Hand/Feet Paint?\n<br />[color=#00ff00]A[/color]. Open Data/SKSE/Plugins/NiOverride.ini in a text editor, you will see a section for the amount of paints you can have per type, you can change this up to 128, but it is highly recommended you only set what you intend to use as too many can result in significant performance losses.\n<br />\n<br />\n<br />[color=#5EA2E5][center][b]Making a plugin[/b][/center][/color]\n<br />This short tutorial assumes you have SKSE 1.6.6 (or greater) correctly installed, already have basic knowledge in compiling scripts, using the Creation Kit, can solve compiling errors on your own, and assumes you have already downloaded the modders package.\n<br />[list][*]Extract the modders package to your Data folder[/*]\n<br />[*]Open Creation Kit (You do not need to load Skyrim.esm)[/*]\n<br />[*]Create new quest[/*]\n<br />[*]Give quest a unique ID[/*]\n<br />[*]Press [color=#5EA2E5][b]Quest Aliases[/b][/color] tab[/*]\n<br />[*]Right click the list, [color=#5EA2E5][b]New Reference Alias[/b][/color][/*]\n<br />[*]Name the alias [color=#5EA2E5][b]Player[/b][/color][/*]\n<br />[*]Tick [color=#5EA2E5][b]Specific Reference[/b][/color][/*]\n<br />[*]Press [color=#5EA2E5][b]Select Force Reference[/b][/color][/*]\n<br />[*]Select Cell [color=#5EA2E5](any)[/color], Ref [color=#5EA2E5]PlayerRef ('Player')[/color] click OK[/*]\n<br />[*]Press the [color=#5EA2E5][b]Add[/b][/color] button in the Scripts group[/*]\n<br />[*]Type [color=#5EA2E5][b]RaceMenuLoad[/b][/color] into the filter and click OK[/*]\n<br />[*]Press OK in the Reference Alias window[/*]\n<br />[*]Go to the scripts tab and [color=#5EA2E5][b]Add[/b][/color][/*]\n<br />[*]Click [color=#5EA2E5][b][New Script][/b][/color], give the script a name[/*]\n<br />[*]Open the script in your editor of choice and change [color=#5EA2E5][b]extends Quest[/b][/color] to [color=#5EA2E5][b]extends RaceMenuBase[/b][/color][/*]\n<br />[*]Copy contents of [color=#5EA2E5][b]PluginTemplate.psc[/b][/color] to your new script[/*]\n<br />[*]Read the comments inside of the template[/*]\n<br />[*]Click OK in the Quest window[/*]\n<br />[*]Save your plugin[/*]\n<br />[*]Add your warpaints/sliders to your script[/*]\n<br />[*]Compile your script[/*]\n<br />[/list]\n<br />To package and distribute your plugin you only need to include:\n<br />Data/Scripts/YourPlugin.pex\n<br />Data/YourPlugin.esp\n<br />\n<br />[color=#5EA2E5][center][size=5][b]COMPATIBILITY[/b][/size][/center][/color]\n<br />Enhanced Character Edit is not directly compatible. RaceMenu has compatibility code to accommodate some of the extra facial morphs, install ECE first, then install RaceMenu to take advantage of this. There will be a CharGen verison of ECE sliders soon.\n<br />Extended Slider Colors (My previous mod) is not incompatible, but it is highly recommended you uninstall it as it is no longer necessary.\n<br />\n<br />[color=#5EA2E5][center][size=5][b]LOAD ORDER[/b][/size][/center][/color]\n<br />Irrelevant, put it anywhere you want it won't make a difference.\n<br />\n<br />[color=#5EA2E5][center][size=5][b]INSTALLATION[/b][/size][/center][/color]\n<br />[b]Automatic Download with NMM[/b]\n<br />[list][*]Click the Download with manager button on top of the file.[/*]\n<br />[*]RaceMenu will appear in in NMM's Mods list once it's downloaded. Double-click the RaceMenu entry to Activate it.[/*]\n<br />[/list]\n<br />OR\n<br />\n<br />[b]Manual Download with NMM[/b]\n<br />[list][*]Start NMM and click on Mods.[/*]\n<br />[*]In the left icon bar, click on Add Mod From File and select the downloaded archive file.[/*]\n<br />[*]RaceMenu will now appear in the list. Double-click to Activate it.[/*]\n<br />[/list]\n<br />OR\n<br />\n<br />[b]Manual Installation[/b]\n<br />[list][*]Locate the Data/ folder in your Skyrim installation directory. Typically it's found at Program Files/Steam/steamapps/common/skyrim/Data/.[/*]\n<br />[*]Extract the contents of the downloaded archive file to your Data/ folder.[/*]\n<br />[*]In the Skyrim Launcher, select Data Files and enable RaceMenu.esp.[/*]\n<br />[/list]\n<br />[color=#5EA2E5][center][size=5][b]SPECIAL EDITION KNOWN ISSUES 0.2.0 to current[/b][/size][/center][/color]\n<br />Body morphs seem to lag behind a little bit when scrolling fast through the options, this probably won't be fixed and is a minor inconvenience.\n<br />\n<br />[color=#5EA2E5][center][size=5][b]KNOWN ISSUES 2.0.0 to current[/b][/size][/center][/color]\n<br />Body/Hand/Feet paint may appear to be rendered overtop of some effects, this is a known issue. The reason this happens is due to the AlphaProperty flags on the overlay template meshes, changing these to the other set of flags results in overlays occasionally partially rendering on the skin.\n<br />\n<br />The right bicep scale increases strangely. This is a problem with the skeleton and associated mesh, it cannot be fixed on my part and probably won't be fixed by anyone else either. The bug has propagated to pretty much every armor ever made from the base bodies so it's probably far too late to be ever fixed.\n<br />[color=#5EA2E5][center][/center][/color]\n<br />[color=#5EA2E5][center][size=5][b]TROUBLESHOOTING[/b][/size][/center][/color]\n<br />If the last 3 categories are there but you only have \"default\" to choose from when you change the body texture: You are missing the Overlays Plugin, this plugin contains a number of textures by various authors and are not included in the main mod (simply because they are large and I don't want to be uploading a few MB to update the mod every time; my upload is awful).\n<br />\n<br />If your problem is none of the above you probably have far bigger issues like not even running SKSE with the loader (or not as admin). Or your just simply pushing the game engine way too hard (too many mods, too many high-res textures, too much going on etc). The limitations of the game engine are independent of your PC. If your PC is great save yourself the trouble of typing it out as it's probably irrelevant.\n<br />\n<br />Please make sure your game does not crash opening the original RaceMenu before posting your issue. This mod does not fix the internal class to this menu, it merely redesigns it and adds more features.\n<br />\n<br />If your head appears to be so small you can't see it try cleansaving and installing the latest version.\n<br />\n<br />If your game crashes when you color too many warpaints, this is normal. Currently the game has some sort of hard limit on the number of tints you can have at one time and is currently being investigated.\n<br />\n<br />If your zoom or light toggle do not work this is because there is currently a glitch in SKSE that does not hook the key input system when you start a new game. You need to save your game and reload then showracemenu in the console to fix this. This is corrected for the next SKSE version.\n<br />\n<br />If neither hair color nor tint colors do anything this means that your SKSE scripts are not up to date. Note: This still requires you actually have and run SKSE.\n<br />\n<br />If you are experiencing freezing when opening the RaceMenu, this is due to your game loading many assets all at once and needs to queue drive requests, wait patiently for it to load. If it takes longer than 3 minutes than there is likely an internal issue usually caused by having too many hair mods. This same freezing would happen regardless of having my mod.\n<br />\n<br />If you are experiencing crashing on startup, you likely have a problem with another mod, please take those complaints elsewhere as this mod should not ever conflict.\n<br />\n<br />If there is anything off with the translation and you would like to help correct it, see the [url=https://docs.google.com/spreadsheet/ccc?key=0AhcCUXFKD04_dHIwUXhQV2c3Qkl4RDV6R2UyLUtqc3c]Google Spreadsheet[/url] for the RaceMenu.",
+                        "downloadGame": "skyrimse",
+                        "endorsed": "Undecided",
+                        "fileId": 465102,
+                        "fileMD5": "e40626ff52f2108424b57fbe991c0d17",
+                        "fileName": "RaceMenu Anniversary Edition v0-4-19-16-19080-0-4-19-16-1706297897.7z",
+                        "fileSize": 8631730,
+                        "fileType": "MAIN",
+                        "homepage": "https://www.nexusmods.com/skyrimspecialedition/mods/19080/",
+                        "installTime": "2024-07-27T16:49:36.231Z",
+                        "installerChoices": {
+                            "type": "fomod"
+                        },
+                        "isPrimary": true,
+                        "logicalFileName": "RaceMenu Anniversary Edition v0-4-19-16",
+                        "modId": 19080,
+                        "modName": "RaceMenu",
+                        "modSize": 19108267,
+                        "modVersion": "0.4.19.16",
+                        "name": "RaceMenu Anniversary Edition v0-4-19-16-19080-0-4-19-16-1706297897",
+                        "newestFileId": 465102,
+                        "pictureUrl": "https://staticdelivery.nexusmods.com/mods/1704/images/19080/29624-1533485825-2144769853.jpeg",
+                        "shortDescription": "Complete overhaul to the character creation menu including new customization features such as multiple RGBA warpaints, body paints, hand paint, and foot paints. (Requires SKSE)",
+                        "source": "nexus",
+                        "updatedTimestamp": 0,
+                        "uploadedTimestamp": 1706297897,
+                        "uploader": "expired6978",
+                        "uploaderId": 2950481,
+                        "uploaderUrl": "https://www.nexusmods.com/users/2950481",
+                        "version": "0.4.19.16"
+                    },
+                    "fileOverrides": [],
+                    "id": "RaceMenu Anniversary Edition v0-4-19-16-19080-0-4-19-16-1706297897",
+                    "installationPath": "RaceMenu Anniversary Edition v0-4-19-16-19080-0-4-19-16-1706297897",
+                    "rules": [],
+                    "state": "installed",
+                    "type": ""
+                },
+                "SSE-AT Output": {
+                    "archiveId": "SJQGBiqIkl",
+                    "attributes": {
+                        "bugMessage": "",
+                        "downloadGame": "skyrimse",
+                        "fileMD5": "471e5784039fc19e2dadd48cf563d143",
+                        "fileName": "SSE-AT Output.7z",
+                        "fileSize": 9281463,
+                        "installTime": "2025-01-07T12:58:53.465Z",
+                        "installerChoices": {
+                            "type": "fomod"
+                        },
+                        "modSize": 259803269,
+                        "name": "SSE-AT Output",
+                        "updatedTimestamp": 0,
+                        "uploadedTimestamp": 0
+                    },
+                    "fileOverrides": [],
+                    "id": "SSE-AT Output",
+                    "installationPath": "SSE-AT Output",
+                    "state": "installed",
+                    "type": ""
+                },
+                "Skyrim Script Extender (SKSE64)-30379-2-2-6-1705522967": {
+                    "archiveId": "rJgVJnzYC",
+                    "attributes": {
+                        "allowRating": true,
+                        "author": "SKSE Team",
+                        "bugMessage": "",
+                        "category": 39,
+                        "customFileName": "Skyrim Script Extender (SKSE64)",
+                        "description": "The Skyrim Script Extender (SKSE) is a tool used by many Skyrim mods that expands scripting capabilities and adds additional functionality to the game.\n<br />\n<br />Once installed, no additional steps are needed to launch Skyrim with SKSE's added functionality. You can start the game using SKSE from skse64_loader.exe.\n<br />\n<br />[b]Compatibility: SKSE64 supports the releases of Skyrim on Steam and GOG. Other stores (EGS, Windows Store, Game Pass) are not supported.[/b]\n<br />\n<br />[size=4]Installation (Manual)[/size]\n<br />[list]\n<br />[*]Download the SKSE Build for your game version from the Files tab.\n<br />[*]Extract all files inside the top-level folder in the ZIP to your game folder (where Skyrim.exe is located).\n<br />[*]Run the game using skse64_loader.exe.\n<br />[*]To confirm it is working, open the console with the tilde (`) key and type [i]getskseversion[/i]. This will display the version number of the current SKSE build.\u00a0\n<br />[/list]\n<br />\n<br />\n<br />[size=4]Install with Vortex[/size]\n<br />[list]\n<br />[*]Click the \"Vortex\" button in the top-right of this page.\n<br />[*]Once installed and enabled, ensure you have deployed it by clicking \"Deploy Mods\" on the Mods toolbar.\n<br />[*]Use the shortcut on the dashboard to start the game with SKSE64. \n<br />[/list]",
+                        "downloadGame": "skyrimse",
+                        "endorsed": "Undecided",
+                        "fileId": 462377,
+                        "fileMD5": "b6f3d79a14b1b184ba71dc94abca861a",
+                        "fileName": "Skyrim Script Extender (SKSE64)-30379-2-2-6-1705522967.7z",
+                        "fileSize": 751136,
+                        "fileType": "MAIN",
+                        "homepage": "https://www.nexusmods.com/skyrimspecialedition/mods/30379/",
+                        "installTime": "2024-07-27T17:32:31.018Z",
+                        "installedAsDependency": true,
+                        "isPrimary": true,
+                        "logicalFileName": "Skyrim Script Extender (SKSE64)",
+                        "modId": 30379,
+                        "modSize": 4267429,
+                        "modVersion": "2.2.6",
+                        "name": "Skyrim Script Extender (SKSE64)-30379-2-2-6-1705522967",
+                        "newestFileId": 462377,
+                        "pictureUrl": "https://staticdelivery.nexusmods.com/mods/1704/images/30379/30379-1573836905-2108386036.jpeg",
+                        "referenceTag": "ZK7TprBcd",
+                        "scriptExtender": true,
+                        "shortDescription": "The Skyrim Script Extender (SKSE) is a tool used by many Skyrim mods that expands scripting capabilities and adds additional functionality to the game.",
+                        "source": "nexus",
+                        "updatedTimestamp": 0,
+                        "uploadedTimestamp": 1705522967,
+                        "uploader": "ianpatt",
+                        "uploaderId": 2166624,
+                        "uploaderUrl": "https://www.nexusmods.com/users/2166624",
+                        "version": "2.2.6"
+                    },
+                    "fileOverrides": [],
+                    "id": "Skyrim Script Extender (SKSE64)-30379-2-2-6-1705522967",
+                    "installationPath": "Skyrim Script Extender (SKSE64)-30379-2-2-6-1705522967",
+                    "rules": [
+                        {
+                            "type": "conflicts",
+                            "reference": {
+                                "logicalFileName": "Skyrim Script Extender 64 (SKSE64)",
+                                "versionMatch": "<2.2.6 || >2.2.6"
+                            },
+                            "source": {
+                                "fileMD5": "b6f3d79a14b1b184ba71dc94abca861a",
+                                "versionMatch": "*",
+                                "logicalFileName": "Skyrim Script Extender (SKSE64)"
+                            }
+                        }
+                    ],
+                    "state": "installed",
+                    "type": "dinput"
+                },
+                "Unofficial Skyrim Special Edition Patch-266-4-3-2-1721451025": {
+                    "archiveId": "BJWr4OVROC",
+                    "attributes": {
+                        "allowRating": true,
+                        "author": "The Unofficial Patch Project Team",
+                        "bugMessage": "",
+                        "category": 95,
+                        "description": "[center][img]https://www.afkmods.com/modbanners/ussep-logo.jpg[/img][/center]\n<br />[center][color=red][size=6]Requires Skyrim Special Edition 1.6.1130 or greater.[/size][/color][/center]\n<br />[center][color=red](This includes the Steam, and Epic Games Store versions)[/color][/center]\n<br />[center][color=red][size=6]NOT SUPPORTED ON OLDER VERSIONS!!![/size][/color][/center]\n<br />A comprehensive bugfixing mod for The Elder Scrolls V: Skyrim - Special Edition. The goal of the Unofficial Skyrim Special Edition Patch (aka USSEP) is to eventually fix every bug with Skyrim Special Edition not officially resolved by the developers to the limits of the Creation Kit and community-developed tools, in one easy-to-install package.\n<br />\u00a0 \u00a0\n<br />\u00a0\u00a0 Features:\n<br />\u00a0\u00a0 - Hundreds of gameplay, quest, NPC, object, item, text and placement bugs fixed.\n<br />\u00a0\u00a0 - Created by the authors of the Unofficial Oblivion Patch series.\n<br />\u00a0\u00a0 - No unsafe changes (such as deletions of stock objects).\n<br />\u00a0\u00a0 - Designed to be compatible with as many other mods as possible.\n<br />\u00a0 \u00a0\n<br />\u00a0\u00a0 For more information (ie the recent changelog, mods that USSEP replaces) see [url=https://www.afkmods.com/index.php?/forum/351-unofficial-skyrim-special-edition-patches/] USSEP's threads on the AFK Mods forum here[/url].\n<br />\u00a0 \u00a0\n<br />\u00a0\u00a0 [url=https://www.afkmods.com/Unofficial%20Skyrim%20Special%20Edition%20Patch%20Version%20History.html]The complete changelog is posted here[/url].\n<br />\n<br />If you're experiencing a bug with Skyrim Special Edition, please report the bug to us in as much detail as possible on [url=https://afktrack.afkmods.com/index.php?a=issues&amp;project=6]the USSEP bugtracker[/url]. Please use search to ensure that you aren't submitting something that is already there.\n<br />\n<br />[url=https://www.afkmods.com/index.php?/topic/4680-frequently-asked-questions-bugs/]Frequently Asked Questions - BUGS[/url]\n<br />[url=https://www.afkmods.com/index.php?/topic/4679-frequently-asked-questions-about-the-project/]Frequently Asked Questions - About the Project[/url]\n<br />\n<br />[url=https://www.afkmods.com/index.php?/topic/4682-mods-made-obsolete-by-unofficial-skyrim-special-edition-patch/]Mods Made Obsolete by Unofficial Patches[/url]\n<br />[url=https://www.afkmods.com/index.php?/topic/5078-fixes-recommended-in-addition-to-the-ussep/]Bug Fixes Recommended in Addition to the Unofficial Patch[/url]\n<br />\n<br />Are you using Creation Club DLCs? If so, you need to get Garthand's [url=https://www.nexusmods.com/skyrimspecialedition/mods/18975]Unofficial Skyrim Creation Club Content Patches[/url] and install them alongside the USSEP. This will prevent errors induced by the CC DLCs making changes to the base game records that USSEP then overrides. Please refer all questions about these patches to Garthand on his threads. In addition to the unified patch linked to here he has several individual ones for them all which he has links to on his page.\n<br />\n<br />[center][url=https://www.patreon.com/arthmoor][img]https://c5.patreon.com/external/logo/become_a_patron_button.png[/img][/url][/center]\n<br />[color=#ff0000]DO NOT extract the contents of the BSA file into your Data folder as loose files, or let your mod manager perform an equivalent function on the contents of the file. Doing so will cause things to load in the wrong order and break the game. Skyrim is intended to load a BSA alongside it's ESM/ESP file. Circumventing this causes issues which I will not provide support for. If you insist on going against this advice, you will receive no support for the problems you generate as a result of this.[/color]\n<br />\n<br />[b][u][size=4]Installation Requirements[/size][/u][/b]\n<br />\n<br />Skyrim Special Edition 1.6.1130 or greater from Steam, GoG, or the Epic Games Store.\n<br />\n<br />After installing the mods, the following general load order needs to be followed:\n<br />\n<br />Skyrim.esm\n<br />Update.esm\n<br />Dawnguard.esm\n<br />Hearthfires.esm\n<br />Dragonborn.esm\n<br />ccBGSSSE001-Fish.esm\n<br />ccQDRSSE001-SurvivalMode.esl\n<br />ccBGSSSE037-Curios.esl\n<br />ccBGSSSE025-AdvDSGS.esm\n<br />[any Creation Club master-flagged ESLs you may have]\n<br />Unofficial Skyrim Special Edition Patch.esp\n<br />[The rest of your mods]\n<br />\n<br />For getting load order set with other mods loaded, please use [url=https://loot.github.io/]LOOT[/url]. It will provide you a solid starting point for everything that you can then tweak as needed.\n<br />\n<br />[b][u]Disclaimer[/u][/b]\n<br />\n<br />This mod is not made, guaranteed, or supported by Microsoft, Zenimax, Bethesda Game Studios, or any of their affiliates.",
+                        "downloadGame": "skyrimse",
+                        "endorsed": "Undecided",
+                        "fileId": 522942,
+                        "fileMD5": "d71010599b215ffdd83d105a1841be78",
+                        "fileName": "Unofficial Skyrim Special Edition Patch-266-4-3-2-1721451025.7z",
+                        "fileSize": 135583472,
+                        "fileType": "MAIN",
+                        "homepage": "https://www.nexusmods.com/skyrimspecialedition/mods/266/",
+                        "installTime": "2024-07-24T08:17:04.120Z",
+                        "installerChoices": {
+                            "type": "fomod"
+                        },
+                        "isPrimary": true,
+                        "logicalFileName": "Unofficial Skyrim Special Edition Patch",
+                        "modId": 266,
+                        "modName": "Unofficial Skyrim Special Edition Patch - USSEP",
+                        "modSize": 384154650,
+                        "modVersion": "4.3.2",
+                        "name": "Unofficial Skyrim Special Edition Patch-266-4-3-2-1721451025",
+                        "newestFileId": 522942,
+                        "pictureUrl": "https://staticdelivery.nexusmods.com/mods/1704/images/266-0-1477512662.png",
+                        "shortDescription": "A comprehensive bugfixing mod for The Elder Scrolls V: Skyrim - Special Edition. The goal of the Unofficial Skyrim Special Edition Patch (aka USSEP) is to eventually fix every bug with Skyrim Special Edition not officially resolved by the developers to the limits of the Creation Kit and community-developed tools, in one easy-to-install package.",
+                        "source": "nexus",
+                        "updatedTimestamp": 0,
+                        "uploadedTimestamp": 1721451025,
+                        "uploader": "Arthmoor",
+                        "uploaderId": 684492,
+                        "uploaderUrl": "https://www.nexusmods.com/users/684492",
+                        "version": "4.3.2"
+                    },
+                    "fileOverrides": [],
+                    "id": "Unofficial Skyrim Special Edition Patch-266-4-3-2-1721451025",
+                    "installationPath": "Unofficial Skyrim Special Edition Patch-266-4-3-2-1721451025",
+                    "rules": [],
+                    "state": "installed",
+                    "type": ""
+                },
+                "Untarnished UI - RaceMenu Patch-97347-v1-3-1713561432": {
+                    "archiveId": "BJbNrBiztR",
+                    "attributes": {
+                        "allowRating": true,
+                        "author": "Wuerfelhusten",
+                        "bugMessage": "",
+                        "category": 42,
+                        "customFileName": "Untarnished UI - RaceMenu Patch",
+                        "description": "[center][color=#3a8ee2][size=6]Description[/size][/color]\n<br />This is an Untarnished UI patch for RaceMenu to be used with the [url=https://www.nexusmods.com/skyrimspecialedition/mods/96891]Dynamic Interface Patcher (DIP)[/url] by [url=https://www.nexusmods.com/users/65733731]Cutleast[/url]. This file does not contain any assets of the [url=https://www.nexusmods.com/skyrimspecialedition/mods/19080]RaceMenu[/url] creator [url=https://www.nexusmods.com/skyrimspecialedition/users/2950481]expired6978[/url]! DIP performs the patching, a normal UI-modder would do, automatically based on steps written to a json file.\n<br />\n<br />[url=https://ko-fi.com/wuerfelhusten][/url][url=https://ko-fi.com/wuerfelhusten][img]https://i.imgur.com/ROFYznU.png[/img][/url]\u00a0[url=https://trello.com/b/dlRCTHzW/wuerfels-roadmap][img]https://i.imgur.com/sIjqMOg.png[/img][/url]\u00a0[url=https://discord.gg/pqEHdWDf8z][img]https://i.imgur.com/VMdA0q7.png[/img][/url]\n<br />\n<br />\n<br />[color=#3a8ee2][size=6]Usage[/size][/color]\n<br />To patch RaceMenu with this patch:\n<br />1. Install DIP from [url=https://www.nexusmods.com/skyrimspecialedition/mods/96891]here[/url] as a regular mod in Vortex or MO2\n<br />2. Add the DIP executable as a tool\n<br />3. Install this patch using MO2 or Vortex.\n<br />4. Start DIP.exe and choose paths (first one should be auto-detected and second one is only necessary if the mod is not at the same location).\n<br />5. Click on \"Patch!\".\n<br />6. After success, a message box appears and DIP can be deactivated.\n<br />\n<br />\n<br />[color=#3a8ee2][size=6]Features[/size][/color]\n<br />No redistribution of copyrighted assets!\n<br />\n<br />\n<br />[color=#3a8ee2][size=6]Other Official Patches[/size][/color]\n<br />[size=4][b]RaceMenu[/b][/size]\n<br />- [url=https://www.nexusmods.com/skyrimspecialedition/mods/97348]Nordic UI[/url]\n<br />- [url=https://www.nexusmods.com/skyrimspecialedition/mods/97354]Horizons UI (Transparent &amp; Opaque)[/url]\n<br />- [url=https://www.nexusmods.com/skyrimspecialedition/mods/97349]Dear Diary Dark Mode (White &amp; Warm Text)[/url]\n<br />- [url=https://www.nexusmods.com/skyrimspecialedition/mods/97355]Dear Diary (Light Mode)[/url]\n<br />\n<br />[size=4][b]MiniMap[/b][/size]\n<br />- [url=https://www.nexusmods.com/skyrimspecialedition/mods/97356]Nordic UI[/url]\n<br />- [url=https://www.nexusmods.com/skyrimspecialedition/mods/97357]Untarnished UI[/url]\n<br />\n<br />[size=4][b]Coming soon[/b][/size]\n<br />\n<br />[color=#3a8ee2][size=6]My other stuff[/size][/color]\n<br />[url=https://www.nexusmods.com/skyrimspecialedition/mods/65866][img]https://i.imgur.com/TqxI2ND.jpg[/img][/url]\u00a0 \u00a0 \u00a0 \u00a0[url=https://www.nexusmods.com/skyrimspecialedition/mods/64049][img]https://i.imgur.com/Bmfszyv.png[/img]\n<br />[/url]\n<br />[url=https://www.nexusmods.com/skyrimspecialedition/mods/83394][img]https://i.imgur.com/UV3JKwr.png[/img][/url]\u00a0 \u00a0 \u00a0 \u00a0[url=https://www.nexusmods.com/skyrimspecialedition/mods/92488][img]https://i.imgur.com/xrPUDHt.png[/img][/url]\n<br />\n<br />[color=#3a8ee2][size=6]Contributing[/size][/color][/center][center][b][size=4]Patch creation[/size][/b]\n<br />Check out the\u00a0[url=https://github.com/Cutleast/Dynamic-Interface-Patcher]GitHub repository[/url] for instructions. There is also a\u00a0[url=https://github.com/Cutleast/Dynamic-Interface-Patcher/blob/main/DOCUMENTATION.md]documentation[/url]\u00a0dedicated to explain the process of creating a patch using Dynamic Interface Patcher.\n<br />\n<br />\n<br />[color=#3a8ee2][size=6]Credits[/size][/color]\n<br />- Patcher used:\u00a0[url=https://www.nexusmods.com/skyrimspecialedition/mods/96891]Dynamic Interface Patcher[/url] by [url=https://www.nexusmods.com/skyrimspecialedition/users/65733731]Cutleast[/url]\n<br />- Patched mod:\u00a0[url=https://www.nexusmods.com/skyrimspecialedition/mods/19080]RaceMenu[/url] by [url=https://www.nexusmods.com/skyrimspecialedition/users/2950481]expired6978[/url][/center]",
+                        "downloadGame": "skyrimse",
+                        "enableallplugins": true,
+                        "endorsed": "Undecided",
+                        "fileId": 492664,
+                        "fileMD5": "43807eb5d1f5f9fd18c4059a6c4d20c1",
+                        "fileName": "Untarnished UI - RaceMenu Patch-97347-v1-3-1713561432.7z",
+                        "fileSize": 457340,
+                        "fileType": "MAIN",
+                        "homepage": "https://www.nexusmods.com/skyrimspecialedition/mods/97347/",
+                        "installTime": "2024-07-27T16:50:10.430Z",
+                        "installerChoices": {
+                            "options": [
+                                {
+                                    "name": "Installation",
+                                    "groups": [
+                                        {
+                                            "name": "Install",
+                                            "choices": [
+                                                {
+                                                    "name": "Xbox Buttons",
+                                                    "idx": 0
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ],
+                            "type": "fomod"
+                        },
+                        "isPrimary": true,
+                        "logicalFileName": "Untarnished UI - RaceMenu Patch",
+                        "modId": 97347,
+                        "modName": "RaceMenu - Untarnished UI - DIP Patch",
+                        "modSize": 97129,
+                        "modVersion": "v1.3",
+                        "name": "Untarnished UI - RaceMenu Patch-97347-v1-3-1713561432",
+                        "newestFileId": 492664,
+                        "pictureUrl": "https://staticdelivery.nexusmods.com/mods/1704/images/97347/97347-1690882634-2044074684.png",
+                        "shortDescription": "An Untarnished UI patch for the RaceMenu mod to be used with DIP.",
+                        "source": "nexus",
+                        "updatedTimestamp": 0,
+                        "uploadedTimestamp": 1713561432,
+                        "uploader": "Wuerfelhusten",
+                        "uploaderId": 122160268,
+                        "uploaderUrl": "https://www.nexusmods.com/users/122160268",
+                        "version": "v1.3"
+                    },
+                    "fileOverrides": [],
+                    "id": "Untarnished UI - RaceMenu Patch-97347-v1-3-1713561432",
+                    "installationPath": "Untarnished UI - RaceMenu Patch-97347-v1-3-1713561432",
+                    "rules": [],
+                    "state": "installed",
+                    "type": ""
+                }
+            }
+        },
+        "profiles": {
+            "Kn463e8fe": {
+                "features": {
+                    "local_game_settings": false,
+                    "local_saves": false
+                },
+                "gameId": "skyrimse",
+                "id": "Kn463e8fe",
+                "lastActivated": 1739560056.3822064,
+                "modState": {
+                    "": {
+                        "enabled": false,
+                        "enabledTime": 1739560085
+                    },
+                    "1_Dynamic Interface Patcher-96891-v2-1-3-1732138632.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560086
+                    },
+                    "2K textures-37929-2-1-0-1669308905.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560070
+                    },
+                    "AI Overhaul 1.8.5 AE 1.6.1130-21654-1-8-5-1702261165.zip": {
+                        "enabled": true,
+                        "enabledTime": 1739560056
+                    },
+                    "AI Overhaul 1.8.5 AE 1.6.x - German Translation-40005-1-8-5-1702297164.7z": {
+                        "enabled": true,
+                        "enabledTime": 1739560056
+                    },
+                    "Acoustic Space Improvement Fixes (1.2.1)-78992-1-2-1-1680351847.7z": {
+                        "enabled": true,
+                        "enabledTime": 1739560056
+                    },
+                    "Adamant - A Perk Overhaul-30191-5-9-2-1715101901.7z": {
+                        "enabled": true,
+                        "enabledTime": 1739560082
+                    },
+                    "All in one Address Library (Anniversary Edition)-32444-11-1707902394.zip": {
+                        "enabled": false,
+                        "enabledTime": 1739560063
+                    },
+                    "Alternate Start - Live Another Life - CHS-73294-4-2-1-1702737481.7z": {
+                        "enabled": true,
+                        "enabledTime": 1739560056
+                    },
+                    "Alternate Start - Live Another Life-272-4-2-1-1702620391.7z": {
+                        "enabled": true,
+                        "enabledTime": 1739560057
+                    },
+                    "Animation Queue Fix-82395-1-0-1-1673338766.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560077
+                    },
+                    "Auto Input Switch-54309-1-2-3-1702841492.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560071
+                    },
+                    "Better Dynamic Snow 2 patch-63588-1-2-1645278267.rar": {
+                        "enabled": false,
+                        "enabledTime": 1739560079
+                    },
+                    "Beyond Skyrim - Assets - German v1.6.0.7z": {
+                        "enabled": true,
+                        "enabledTime": 1739560057
+                    },
+                    "Beyond Skyrim - Assets 1.6.3-10917-1-6-3-1681654070.7z": {
+                        "enabled": true,
+                        "enabledTime": 1739560057
+                    },
+                    "Beyond Skyrim - Bruma 1.6.3-10917-1-6-3-1681654072.7z": {
+                        "enabled": true,
+                        "enabledTime": 1739560057
+                    },
+                    "Classic Classes and Birthsigns 1.53-11316-1-53-1594033101.zip": {
+                        "enabled": false,
+                        "enabledTime": 1739560071
+                    },
+                    "Complete Alchemy and Cooking Overhaul-19924-2-1-3-1705714446.7z": {
+                        "enabled": true,
+                        "enabledTime": 1739560057
+                    },
+                    "Complete Crafting Overhaul Remastered - Deutsch-30957-2-5-6-1709492620.zip": {
+                        "enabled": true,
+                        "enabledTime": 1739560057
+                    },
+                    "Complete Crafting Overhaul Remastered-28608-2-5-6-1709343133.7z": {
+                        "enabled": true,
+                        "enabledTime": 1739560057
+                    },
+                    "Constellations - Patches-72102-R80-1715436124.rar": {
+                        "enabled": false,
+                        "enabledTime": 1739560078
+                    },
+                    "DIP_v2.1.5-beta.7z": {
+                        "enabled": true,
+                        "enabledTime": 1739560085
+                    },
+                    "Dear Diary DM (white) Fixes-107216-0-8-1709762992.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560077
+                    },
+                    "Dear Diary Dark Mode (texts - white color)-60837-1-1-1-1667594519.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560071
+                    },
+                    "Dynamic Looting and Harvesting-114547-1-7-1715257460.zip": {
+                        "enabled": false,
+                        "enabledTime": 1739560078
+                    },
+                    "Dynamic String Distributor-107676-1-0-2-1710436268.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560063
+                    },
+                    "EVG Animated Traversal - Framework 2.0 beta-63232-2-0b-1704695318.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560071
+                    },
+                    "EVG Animated Traversal - Patch Collection-70635-1-3-4-1663772883.zip": {
+                        "enabled": false,
+                        "enabledTime": 1739560072
+                    },
+                    "EVG CLAMBER - Slope Animations 1.0-114753-1-0-1717167372.zip": {
+                        "enabled": false,
+                        "enabledTime": 1739560077
+                    },
+                    "EVGAT Skyrim Integration Patch-72519-1-2-3-1675657674.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560072
+                    },
+                    "Edge UI - RaceMenu - DIP Patch-131948-v1-0-1729707953.7z": {
+                        "enabled": true,
+                        "enabledTime": 1739560085
+                    },
+                    "Elite Wolf Armor-53501-1-5-1696164114.rar": {
+                        "enabled": false,
+                        "enabledTime": 1739560071
+                    },
+                    "Face Sculptor Expanded-110116-1-0-1706867938.rar": {
+                        "enabled": false,
+                        "enabledTime": 1739560066
+                    },
+                    "Follower Interact with Gestures-119202-1-0-0-1717214312.zip": {
+                        "enabled": false,
+                        "enabledTime": 1739560079
+                    },
+                    "Gourmet - A Cooking Overhaul-96876-1-1-10-1713538006.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560066
+                    },
+                    "Guards Armor Replacer-22671-5-5a-1551221031.7z": {
+                        "enabled": true,
+                        "enabledTime": 1739560059
+                    },
+                    "High Poly NPC Overhaul - Skyrim Special Edition 2.04-44155-2-04-1610760955.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560072
+                    },
+                    "Imperious 7.28.0-1315-7-28-0-1631877097.zip": {
+                        "enabled": true,
+                        "enabledTime": 1739560059
+                    },
+                    "Inns Can Be Closed-57407-1-4-1700405564.7z": {
+                        "enabled": true,
+                        "enabledTime": 1739560082
+                    },
+                    "Interesting NPCs 3DNPC-29194-4-5-1660791732.7z": {
+                        "enabled": true,
+                        "enabledTime": 1739560059
+                    },
+                    "Interesting NPCs SE (3DNPC) - RUSSIAN TRANSLATION-37214-4-4-1591979229.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560066
+                    },
+                    "Interesting NPCs SE - 4.5 GE-20560-4-5-1662151721.7z": {
+                        "enabled": true,
+                        "enabledTime": 1739560059
+                    },
+                    "Jaxonz MCM Kicker SE-36801-1-1SE-1591760943.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560077
+                    },
+                    "JaySuS Swords SE - All in one-29415-1-8-1585954085.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560072
+                    },
+                    "Keyword Item Distributor-55728-3-4-0-1710234193.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560082
+                    },
+                    "Legacy of the Dragonborn-11802-5-6-5-1673196977.7z": {
+                        "enabled": true,
+                        "enabledTime": 1739560059
+                    },
+                    "Luisa follower CBBE original version-77192-1-0-1665914077.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560065
+                    },
+                    "Lux (main)-43158-6-7-1-1715245625.rar": {
+                        "enabled": true,
+                        "enabledTime": 1739560075
+                    },
+                    "Lux - Dwemer Templates Fog Removal-43158-6-7-1-1715510764.rar": {
+                        "enabled": false,
+                        "enabledTime": 1739560079
+                    },
+                    "Lux - German (DSD)-62036-v6-7-2-1722339713.7z": {
+                        "enabled": true,
+                        "enabledTime": 1739560075
+                    },
+                    "Lux Orbis (main)-56095-4-2-2-1713095207.rar": {
+                        "enabled": true,
+                        "enabledTime": 1739560075
+                    },
+                    "Lux Orbis - Patch Hub-114169-4-2-1710587354.rar": {
+                        "enabled": false,
+                        "enabledTime": 1739560080
+                    },
+                    "Lux Via (main)-63588-2-2-1713094342.rar": {
+                        "enabled": true,
+                        "enabledTime": 1739560075
+                    },
+                    "M'rissi's Tails of Troubles SE 1.7-9666-1-7-1621857507.zip": {
+                        "enabled": true,
+                        "enabledTime": 1739560081
+                    },
+                    "MCM Helper-53000-1-5-0-1702843613.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560078
+                    },
+                    "More Lanterns option update - Whiterun version-63588-2-2-1713965399.rar": {
+                        "enabled": false,
+                        "enabledTime": 1739560079
+                    },
+                    "More Lanterns option update - Windhelm version-63588-2-2-1713965463.rar": {
+                        "enabled": false,
+                        "enabledTime": 1739560079
+                    },
+                    "Mysticism - A Magic Overhaul-27839-2-4-1-1708459729.7z": {
+                        "enabled": true,
+                        "enabledTime": 1739560060
+                    },
+                    "NORDIC UI - RaceMenu Patch-97348-v1-1-1697059411.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560083
+                    },
+                    "OBIS SE - Russian Localization-67368-2-61-1651402686.zip": {
+                        "enabled": false,
+                        "enabledTime": 1739560069
+                    },
+                    "Obis-4145-2-76-1656654419.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560069
+                    },
+                    "Obsidian Weathers - 1.07a-12125-1-07a-1620568126.zip": {
+                        "enabled": false,
+                        "enabledTime": 1739560069
+                    },
+                    "Open Animation Replacer-92109-2-3-4-1717116095.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560078
+                    },
+                    "Ordinator 9.31.0-1137-9-31-0-1635693140.zip": {
+                        "enabled": true,
+                        "enabledTime": 1739560060
+                    },
+                    "Paired Animation Improvements-99621-1-0-2-1706671876.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560078
+                    },
+                    "Patch Collection-44155-2-04-1619050471.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560072
+                    },
+                    "Pride of Skyrim - AIO FOMOD BSA-48904-1-0-1619159862.zip": {
+                        "enabled": false,
+                        "enabledTime": 1739560072
+                    },
+                    "Quest Journal Fixes - FOMOD-108618-1-0-1704596014.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560073
+                    },
+                    "QuickLootIE - A QuickLoot EE Fork-120075-1-2-0-1718571866.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560083
+                    },
+                    "RaceMenu Anniversary Edition v0-4-19-16-19080-0-4-19-16-1706297897.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560083
+                    },
+                    "Real Names - SSE Edition-17827-1-22.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560063
+                    },
+                    "Remiel - Dwemer Specialist-51874-1-7-1-1711535251.zip": {
+                        "enabled": false,
+                        "enabledTime": 1739560080
+                    },
+                    "Requiem 5.4.5 - Towers and Shadows Bugfix Pack 5-60888-5-4-5-1692539926.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560081
+                    },
+                    "Runed Nordic Weapons SSE-11559-1-0.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560073
+                    },
+                    "Sacrosanct 6.0.0-3928-6-0-0-1689846876.zip": {
+                        "enabled": true,
+                        "enabledTime": 1739560060
+                    },
+                    "SkyUI SE - Difficulty Persistence Fix-106418-1-0-1701983798.zip": {
+                        "enabled": false,
+                        "enabledTime": 1739560076
+                    },
+                    "SkyUI_5_2_SE-12604-5-2SE.7z": {
+                        "enabled": true,
+                        "enabledTime": 1739560061
+                    },
+                    "Skyblivion Lockpick Menu - PS3 Buttons-117184-1-00-1714909228.zip": {
+                        "enabled": false,
+                        "enabledTime": 1739560076
+                    },
+                    "Skyblivion Lockpick Menu-117184-1-02-1714909049.zip": {
+                        "enabled": false,
+                        "enabledTime": 1739560075
+                    },
+                    "Skyblivion_Lockpick_Menu_-_Untarnished_UI_Patch_Beta.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560076
+                    },
+                    "Skyrim Food Expansion - 1K-110935-2-0-0-1711975010.rar": {
+                        "enabled": true,
+                        "enabledTime": 1739560061
+                    },
+                    "Skyrim Food Expansion - RU-113717-1-0-1710155075.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560069
+                    },
+                    "Skyrim Script Extender (SKSE64)-30379-2-2-3-1665515370.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560069
+                    },
+                    "Skyshards v1.6.0-60748-1-6-0-1640462572.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560081
+                    },
+                    "Somewhere in Between-98945-2-0-1705036829.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560076
+                    },
+                    "Spell Perk Item Distributor-36869-7-1-3-1713397024.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560083
+                    },
+                    "TESL - Loading Screens - ESP and Meshes-37929-2-1-1-1686215335.7z": {
+                        "enabled": true,
+                        "enabledTime": 1739560062
+                    },
+                    "TESL LS - Tweaks and Addons -VIGOROUS--40919-1-7-1-1672556648.zip": {
+                        "enabled": true,
+                        "enabledTime": 1739560061
+                    },
+                    "TESL Loading Screens - German-73920-v2-1-1-1688886211.7z": {
+                        "enabled": true,
+                        "enabledTime": 1739560061
+                    },
+                    "TESL Loading Screens - Tweaks and Addons - German-114194-1-7-1-1711047336.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560069
+                    },
+                    "TESL Loading Screens - Tweaks and Addons RU-41139-1-7-1629202157.rar": {
+                        "enabled": false,
+                        "enabledTime": 1739560070
+                    },
+                    "The Dark Arts - German-103503-V1-7-2-1698504325.zip": {
+                        "enabled": true,
+                        "enabledTime": 1739560062
+                    },
+                    "The Dark Arts-29834-1-7-2-1698047896.zip": {
+                        "enabled": true,
+                        "enabledTime": 1739560061
+                    },
+                    "The Dragonborn's Bestiary - Untarnished UI Patch-123774-v1-1-1720557142.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560084
+                    },
+                    "The Dragonborn's Bestiary-123521-1-1-1720544558.zip": {
+                        "enabled": false,
+                        "enabledTime": 1739560084
+                    },
+                    "Thunderchild - Epic Shouts and Immersion - German Translation-16341-4-11SE.zip": {
+                        "enabled": false,
+                        "enabledTime": 1739560070
+                    },
+                    "Thunderchild v411-1460-4-11SSE.zip": {
+                        "enabled": true,
+                        "enabledTime": 1739560062
+                    },
+                    "USSEP - Dwemer (Englische Sprachausgabe)-100-4-3-2-1721462375.7z": {
+                        "enabled": true,
+                        "enabledTime": 1739560062
+                    },
+                    "Unofficial Skyrim Modders Patch - USMP 2.5.8b update-49616-2-5-8b-1680316403.7z": {
+                        "enabled": true,
+                        "enabledTime": 1739560062
+                    },
+                    "Unofficial Skyrim Special Edition Patch-266-4-3-2-1721451025.7z": {
+                        "enabled": true,
+                        "enabledTime": 1739560062
+                    },
+                    "Unread Books Glow SSE 2.2.1-1296-2-2-1.zip": {
+                        "enabled": true,
+                        "enabledTime": 1739560063
+                    },
+                    "Untarnished UI - RaceMenu Patch-97347-v1-3-1713561432.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560084
+                    },
+                    "Untarnished UI Patch - Unsquished - Difficulty Set-112659-1-0-1708989482.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560078
+                    },
+                    "Untarnished UI Patch - Unsquished - racesex_menu F-112659-1-0-1717120633.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560078
+                    },
+                    "Untarnished UI Patch - Unsquished-107604-1-1704069362.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560078
+                    },
+                    "Untarnished UI-75188-1-1-6-1688203436.zip": {
+                        "enabled": false,
+                        "enabledTime": 1739560077
+                    },
+                    "Vampire Armor Expansion-98671-1-3-1692726035.zip": {
+                        "enabled": false,
+                        "enabledTime": 1739560077
+                    },
+                    "Vampire Clothing Expansion-97185-1-4-1691684722.zip": {
+                        "enabled": false,
+                        "enabledTime": 1739560077
+                    },
+                    "Viridian Knight Armor - Main File - 1K 2K Textures-71568-5-1-1702431942.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560077
+                    },
+                    "WIC Cloaks SSE 2_4-4933-2-4.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560085
+                    },
+                    "Weapons Armor Clothing and Clutter Fixes-18994-2-9-5-1706480711.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560070
+                    },
+                    "WhiterunHoldForest-3212-2-0-0.rar": {
+                        "enabled": false,
+                        "enabledTime": 1739560076
+                    },
+                    "Wildcat 7.1.0-1368-7-1-0-1705146846.zip": {
+                        "enabled": true,
+                        "enabledTime": 1739560063
+                    },
+                    "Wind Path SSE 1.3.1-15192-1-3-1-1603663832.rar": {
+                        "enabled": false,
+                        "enabledTime": 1739560071
+                    },
+                    "Wind Path ver 1.2-74283-1-2.zip": {
+                        "enabled": false,
+                        "enabledTime": 1739560070
+                    },
+                    "Wyrmstooth Addon-63588-1-5-1659176640.rar": {
+                        "enabled": false,
+                        "enabledTime": 1739560079
+                    },
+                    "iEquip-27008-1-6-4-1641124709.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560079
+                    },
+                    "powerofthree's Tweaks-51073-1-9-2-1709669231.7z": {
+                        "enabled": false,
+                        "enabledTime": 1739560069
+                    }
+                },
+                "name": "SSE Lang Detect Test Instance"
+            }
+        }
+    },
+    "settings": {
+        "analytics": {
+            "enabled": false
+        },
+        "automation": {
+            "deploy": false,
+            "enable": true,
+            "install": true,
+            "minimized": false,
+            "start": false
+        },
+        "baldursgate3": {
+            "autoExportLoadOrder": true,
+            "extensionVersion": "0.0.0",
+            "migration": true,
+            "playerProfile": "global"
+        },
+        "collections": {
+            "sortAdded": "datedownloaded",
+            "sortWorkshop": "recentlyupdated"
+        },
+        "downloads": {
+            "copyOnIFF": false,
+            "maxBandwidth": 104857600,
+            "maxChunks": 4,
+            "maxParallelDownloads": 1,
+            "minChunkSize": 1048576,
+            "path": "F:\\Modding\\Vortex Downloads",
+            "showDropzone": true,
+            "showGraph": true
+        },
+        "firststeps": {
+            "dismissAll": false
+        },
+        "fnis": {
+            "autoRun": false
+        },
+        "gameMode": {
+            "discovered": {
+                "skyrimse": {
+                    "path": "E:\\SteamLibrary\\steamapps\\common\\Skyrim Special Edition",
+                    "store": "steam",
+                    "tools": {
+                        "skse64": {
+                            "custom": false,
+                            "defaultPrimary": true,
+                            "exclusive": true,
+                            "id": "skse64",
+                            "logo": "SKSE.png",
+                            "name": "Skyrim Script Extender 64",
+                            "path": "E:\\SteamLibrary\\steamapps\\common\\Skyrim Special Edition\\skse64_loader.exe",
+                            "relative": true,
+                            "requiredFiles": [
+                                "skse64_loader.exe"
+                            ],
+                            "shortName": "SKSE64",
+                            "timestamp": 1739025954379
+                        }
+                    }
+                }
+            },
+            "pickerLayout": "small",
+            "searchPaths": [],
+            "sortManaged": "alphabetical",
+            "sortUnmanaged": "alphabetical"
+        },
+        "interface": {
+            "advanced": false,
+            "currentTheme": "__default",
+            "dashboardLayout": [
+                "ToDo List",
+                "Onboarding",
+                "Mods of the Month",
+                "Extensions",
+                "Tools",
+                "Announcements",
+                "Changelog",
+                "Recently Managed",
+                "News",
+                "Latest Mods"
+            ],
+            "desktopNotifications": true,
+            "foregroundDL": true,
+            "hideTopLevelCategory": false,
+            "language": "en",
+            "primaryTool": {
+                "skyrimse": "skse64"
+            },
+            "profilesVisible": true,
+            "relativeTimes": false,
+            "tools": {
+                "order": {
+                    "skyrimse": [
+                        "SSEEdit",
+                        "WryeBash",
+                        "FNIS",
+                        "skse64",
+                        "bodyslide",
+                        "creation-kit-64"
+                    ]
+                }
+            },
+            "usage": {
+                "table-multiselect": false
+            }
+        },
+        "mods": {
+            "activator": {
+                "enderalspecialedition": "hardlink_activator",
+                "skyrimse": "hardlink_activator",
+                "witcher3": "symlink_activator",
+                "x4foundations": "symlink_activator"
+            },
+            "cleanupOnDeploy": false,
+            "confirmPurge": false,
+            "installPath": {
+                "skyrimse": "E:\\Modding\\Vortex\\{game}"
+            },
+            "installPathMode": "userData",
+            "installerSandbox": true,
+            "showDropzone": true,
+            "suggestInstallPathDirectory": "Vortex Mods"
+        },
+        "nexus": {
+            "associateNXM": true
+        },
+        "notifications": {
+            "suppress": {
+                "switched-to-beta-channel": true,
+                "test-archive-backdate": true,
+                "vortex-update-available-notification": true
+            }
+        },
+        "plugins": {
+            "autoEnable": false,
+            "autoSort": true
+        },
+        "profiles": {
+            "activeProfileId": "Kn463e8fe",
+            "lastActiveProfile": {
+                "skyrimse": "Kn463e8fe"
+            },
+            "nextProfileId": "Kn463e8fe"
+        },
+        "saves": {
+            "monitorEnabled": true
+        },
+        "tables": {
+            "collection-mods": {
+                "filter": {
+                    "required": false
+                }
+            },
+            "mods": {
+                "attributes": {
+                    "installTime": {
+                        "enabled": true,
+                        "sortDirection": "desc"
+                    },
+                    "name": {
+                        "sortDirection": "none"
+                    },
+                    "script-extender-error-check": {
+                        "enabled": false,
+                        "sortDirection": "none"
+                    }
+                }
+            }
+        },
+        "update": {
+            "channel": "stable"
+        },
+        "window": {
+            "customTitlebar": true,
+            "maximized": true,
+            "position": {
+                "x": 198,
+                "y": 143
+            },
+            "tabsMinimized": false,
+            "zoomFactor": 1
+        },
+        "workarounds": {
+            "modTypeConflictsEnabled": true,
+            "userSymlinks": false
+        }
+    }
+}

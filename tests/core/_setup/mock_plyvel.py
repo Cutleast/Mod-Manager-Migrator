@@ -11,24 +11,24 @@ class MockPlyvelDB:
     Mock implementation of plyvel.DB to use JSON for storage instead of LevelDB.
     """
 
-    __data: dict[str, str]
+    __data: dict[bytes, bytes]
 
-    def __init__(self, data: dict[str, str] = {}) -> None:
+    def __init__(self, data: dict[bytes, bytes] = {}) -> None:
         self.__data = data
 
     def iterator(
         self, prefix: Optional[bytes] = None
     ) -> Generator[tuple[bytes, bytes], None, None]:
         for key, value in self.__data.items():
-            if not prefix or key.startswith(prefix.decode()):
-                yield key.encode(), value.encode()
+            if not prefix or key.startswith(prefix):
+                yield key, value
 
     def put(self, key: bytes, value: bytes) -> None:
-        self.__data[key.decode()] = value.decode()
+        self.__data[key] = value
 
     def get(self, key: bytes) -> Optional[bytes]:
-        if key.decode() in self.__data:
-            return self.__data[key.decode()].encode()
+        if key in self.__data:
+            return self.__data[key]
 
         return None
 
