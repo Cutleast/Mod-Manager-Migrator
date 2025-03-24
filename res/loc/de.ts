@@ -658,6 +658,19 @@ Bitte Vortex öffnen und das Spielverzeichnis bereinigen.
 Dann auf &quot;Fortfahren&quot; klicken, um die Migration abzuschließen.</translation>
     </message>
     <message>
+        <location filename="src/core/mod_manager/vortex/exceptions.py" line="49"/>
+        <source>Vortex is not installed or fully setup.
+Follow these steps and try again:
+1. Install Vortex
+2. Start Vortex and enable the mod management for the game.
+3. Enable profile management in Vortex&apos; settings.</source>
+        <translation>Vortex ist nicht installiert oder vollständig eingerichtet.
+Bitte diesen Schritten folgen und erneut versuchen:
+1. Vortex installieren
+2. Vortex starten und das Mod-Management für das Spiel aktivieren.
+3. Profilverwaltung in den Vortex Einstellungen aktivieren.</translation>
+    </message>
+    <message>
         <location filename="src/core/mod_manager/modorganizer/exceptions.py" line="25"/>
         <source>Invalid global instance path! The path must not be outside of the %LOCALAPPDATA%\ModOrganizer folder when choosing the global instance type!</source>
         <translation>Ungültiger Pfad für eine global Instanz! Der Pfad darf nicht außerhalb von %LOCALAPPDATA%\ModOrganizer liegen, wenn &quot;Global&quot; als Instanztyp gewählt wird!</translation>

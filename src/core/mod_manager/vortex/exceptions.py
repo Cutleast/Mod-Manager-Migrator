@@ -42,7 +42,7 @@ class VortexNotInstalledError(PreMigrationCheckFailedError):
     def getLocalizedMessage(self) -> str:
         return QApplication.translate(
             "exceptions",
-            "Vortex is not installed or fully setup.\nFollow these steps and try again:",
+            "Vortex is not installed or fully setup.\nFollow these steps and try again:\n"
             "1. Install Vortex\n2. Start Vortex and enable the mod management for the "
             "game.\n3. Enable profile management in Vortex' settings.",
         )
