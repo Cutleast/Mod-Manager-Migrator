@@ -41,6 +41,9 @@
         <!-- Localisation Files -->
         <file>loc/de.qm</file>
 
+        <!-- Supported Games -->
+        <file>games.json</file>
+
         <!-- Other -->
         <file>blacklist</file>
 

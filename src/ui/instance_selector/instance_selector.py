@@ -21,13 +21,12 @@ from PySide6.QtWidgets import (
 )
 
 from app_context import AppContext
-from core.game import GAMES
+from core.game.exceptions import GameNotFoundError
 from core.game.game import Game
 from core.instance.instance import Instance
 from core.mod_manager import MOD_MANAGERS
 from core.mod_manager.instance_info import InstanceInfo
 from core.mod_manager.mod_manager import ModManager
-from core.utilities.exceptions import GameNotFoundError
 from ui.widgets.loading_dialog import LoadingDialog
 
 from . import INSTANCE_WIDGETS
@@ -44,7 +43,9 @@ class InstanceSelector(QWidget):
     This signal is emitted when an instance is selected.
     """
 
-    __games: dict[str, Game] = {game.name: game() for game in GAMES}
+    __games: dict[str, Game] = {
+        game.display_name: game for game in Game.get_supported_games()
+    }
     """
     Maps games to their names.
     """
@@ -117,7 +118,7 @@ class InstanceSelector(QWidget):
         self.__game_dropdown = QComboBox()
         self.__game_dropdown.setEditable(False)
         self.__game_dropdown.addItem(self.tr("Please select..."))
-        self.__game_dropdown.addItems([game.name for game in GAMES])
+        self.__game_dropdown.addItems(list(self.__games.keys()))
         self.__game_dropdown.currentTextChanged.connect(self.__on_game_select)
         glayout.addWidget(self.__game_dropdown, 0, 1)
 
@@ -178,7 +179,7 @@ class InstanceSelector(QWidget):
 
         if selected_game is not None:
             try:
-                selected_game.get_install_dir()
+                selected_game.installdir
             except GameNotFoundError:
                 QMessageBox.warning(
                     AppContext.get_app().main_window,

@@ -109,50 +109,50 @@
 <context>
     <name>InstanceSelector</name>
     <message>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="101"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="102"/>
         <source>Choose the source instance:</source>
         <translation>Quellinstanz auswählen:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="124"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="125"/>
         <source>Mod Manager:</source>
         <translation>Mod Manager:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="119"/>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="129"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="120"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="130"/>
         <source>Please select...</source>
         <translation>Bitte auswählen...</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="114"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="115"/>
         <source>Game:</source>
         <translation>Spiel:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="158"/>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="168"/>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="241"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="159"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="169"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="242"/>
         <source>Load selected instance...</source>
         <translation>Ausgewählte Instanz laden...</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="185"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="186"/>
         <source>Could not find game directory!</source>
         <translation>Spielverzeichnis konnte nicht gefunden werden!</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="188"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="189"/>
         <source>Unable to find game directory. Please select it manually.</source>
         <translation>Das Spielverzeichnis konnte nicht gefunden werden. Bitte manuell auswählen.</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="194"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="195"/>
         <source>Select game directory</source>
         <translation>Spielverzeichnis auswählen</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="265"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="266"/>
         <source>Instance loaded.</source>
         <translation>Instanz geladen.</translation>
     </message>
@@ -314,39 +314,39 @@
 <context>
     <name>ModOrganizer</name>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="105"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="154"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="183"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="104"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="153"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="182"/>
         <source>Loading mods from {0} &gt; {1}...</source>
         <translation>Mods von {0} &gt; {1} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="114"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="113"/>
         <source>Processing mod conflicts...</source>
         <translation>Modkonflikte werden verarbeitet...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="124"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="123"/>
         <source>Loading tools from {0} &gt; {1}...</source>
         <translation>Tools von {0} &gt; {1} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="402"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="401"/>
         <source>Downloading and installing ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen und installiert...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="422"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="421"/>
         <source>Downloading ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="444"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="443"/>
         <source>Extracting archive...</source>
         <translation>Archiv wird entpackt...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="682"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="681"/>
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of the new MO2 installation.</source>
         <translation>Die Nutzung von Root Builder wurde aktiviert.
@@ -604,18 +604,18 @@ Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von
 <context>
     <name>Vortex</name>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="106"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="105"/>
         <source>Loading profile {0}...</source>
         <translation>Profil {0} wird geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="137"/>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="184"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="136"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="183"/>
         <source>Loading mods from profile {0}...</source>
         <translation>Mods von Profil {0} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="592"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="591"/>
         <source>Vortex is currently deployed to the game folder. It is strongly recommended to purge the game directory before using the migrated instance.</source>
         <translation>Vortex ist zurzeit in das Spielverzeichnis deployed. Es wird empfohlen, das Spielverzeichnis vor der Nutzung der migrierten Instanz zu säubern.</translation>
     </message>
@@ -652,14 +652,14 @@ Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von
         <translation>Die Modinstanz {0} konnte nicht gefunden werden!</translation>
     </message>
     <message>
-        <location filename="src/core/utilities/exceptions.py" line="59"/>
+        <location filename="src/core/utilities/exceptions.py" line="57"/>
         <source>Not enough space ({2}) on the destination disk ({0})!
 Required space: {1}</source>
         <translation>Nicht genug Speicher ({2}) auf dem Zieldatenträger ({0}) vorhanden!
 Benötigter Speicherplatz: {1}</translation>
     </message>
     <message>
-        <location filename="src/core/utilities/exceptions.py" line="69"/>
+        <location filename="src/core/game/exceptions.py" line="20"/>
         <source>The installation folder for the selected game could not be found!</source>
         <translation>Das Installationsverzeichnis des ausgewählten Spiels konnte nicht gefunden werden!</translation>
     </message>

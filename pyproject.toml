@@ -10,6 +10,7 @@ dependencies = [
     "jstyleson>=0.0.2",
     "plyvel-ci>=1.5.1",
     "py7zr>=0.22.0",
+    "pydantic>=2.10.6",
     "pyside6>=6.8.2.1",
     "pyuac>=0.0.3",
     "pywin32>=308",

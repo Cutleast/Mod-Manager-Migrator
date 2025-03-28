@@ -8,7 +8,6 @@ from typing import Any, Optional
 
 from core.archive.archive import Archive
 from core.game.game import Game
-from core.game.skyrimse import SkyrimSE
 from core.instance.instance import Instance
 from core.instance.metadata import Metadata
 from core.instance.mod import Mod
@@ -46,7 +45,7 @@ class ModOrganizer(ModManager):
     DOWNLOAD_URL: str = "https://github.com/ModOrganizer2/modorganizer/releases/download/v2.5.2/Mod.Organizer-2.5.2.7z"
 
     GAMES: dict[str, type[Game]] = {
-        "SkyrimSE": SkyrimSE,
+        "SkyrimSE": Game.get_game_by_id("skyrimse"),
     }
     """
     Dict of game names in the meta.ini file to game classes.
@@ -71,7 +70,7 @@ class ModOrganizer(ModManager):
                     continue
 
                 instance_game: str = instance_data["General"].get("gameName", "")
-                if instance_game.lower() == game.name.lower():
+                if instance_game.lower() == game.display_name.lower():
                     instances.append(instance_ini.parent.name)
 
         self.log.info(f"Got {len(instances)} instances.")
@@ -98,7 +97,7 @@ class ModOrganizer(ModManager):
 
         self.log.info(
             f"Loading profile {profile_name!r} from instance "
-            f"{instance_name!r} at {instance_path!r}..."
+            f"{instance_name!r} at '{instance_path}'..."
         )
         if ldialog is not None:
             ldialog.updateProgress(
@@ -485,7 +484,7 @@ class ModOrganizer(ModManager):
             meta_ini_file = INIFile(meta_ini_path)
             meta_ini_file.data = {
                 "General": {
-                    "game": game.name,
+                    "game": game.display_name,
                     "modid": str(mod.metadata.mod_id),
                     "version": mod.metadata.version,
                     "installationFile": mod.metadata.file_name,

@@ -1,0 +1,145 @@
+[
+    {
+        "id": "enderal",
+        "display_name": "Enderal",
+        "nexus_id": "enderal",
+        "inidir": "%DOCUMENTS%\\My Games\\Enderal",
+        "inifiles": [
+            "Enderal.ini",
+            "EnderalPrefs.ini",
+            "EnderalCustom.ini"
+        ],
+        "reg_paths": [
+            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\SureAI\\Enderal\\installed path"
+        ]
+    },
+    {
+        "id": "enderalspecialedition",
+        "display_name": "Enderal Special Edition",
+        "nexus_id": "enderalspecialedition",
+        "inidir": "%DOCUMENTS%\\My Games\\Enderal Special Edition",
+        "inifiles": [
+            "Enderal.ini",
+            "EnderalPrefs.ini",
+            "EnderalCustom.ini"
+        ],
+        "reg_paths": [
+            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\SureAI\\Enderal SE\\installed path",
+            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\GOG.com\\Games\\1708684988\\path"
+        ]
+    },
+    {
+        "id": "enderalspecialedition_gog",
+        "display_name": "Enderal Special Edition (GOG)",
+        "nexus_id": "enderalspecialedition",
+        "inidir": "%DOCUMENTS%\\My Games\\Enderal Special Edition GOG",
+        "inifiles": [
+            "Enderal.ini",
+            "EnderalPrefs.ini",
+            "EnderalCustom.ini"
+        ],
+        "reg_paths": [
+            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\SureAI\\Enderal SE\\installed path",
+            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\GOG.com\\Games\\1708684988\\path"
+        ]
+    },
+    {
+        "id": "fallout3",
+        "display_name": "Fallout 3",
+        "nexus_id": "fallout3",
+        "inidir": "%DOCUMENTS%\\My Games\\Fallout 3",
+        "inifiles": [
+            "Fallout.ini",
+            "FalloutPrefs.ini"
+        ],
+        "reg_paths": [
+            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\Fallout3\\installed path",
+            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\GOG.com\\Games\\1248282609\\path"
+        ]
+    },
+    {
+        "id": "fallout4",
+        "display_name": "Fallout 4",
+        "nexus_id": "fallout4",
+        "inidir": "%DOCUMENTS%\\My Games\\Fallout4",
+        "inifiles": [
+            "Fallout4.ini",
+            "Fallout4Prefs.ini",
+            "Fallout4Custom.ini"
+        ],
+        "reg_paths": [
+            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\Fallout4\\installed path",
+            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\GOG.com\\Games\\1998527297\\path"
+        ]
+    },
+    {
+        "id": "falloutnv",
+        "display_name": "Fallout: New Vegas",
+        "nexus_id": "newvegas",
+        "inidir": "%DOCUMENTS%\\My Games\\FalloutNV",
+        "inifiles": [
+            "Fallout.ini",
+            "FalloutPrefs.ini"
+        ],
+        "reg_paths": [
+            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\falloutnv\\installed path",
+            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\GOG.com\\Games\\1998527297\\path"
+        ]
+    },
+    {
+        "id": "oblivion",
+        "display_name": "Oblivion",
+        "nexus_id": "oblivion",
+        "inidir": "%DOCUMENTS%\\My Games\\Oblivion",
+        "inifiles": [
+            "Oblivion.ini",
+            "OblivionPrefs.ini",
+            "BlendSettings.ini"
+        ],
+        "reg_paths": [
+            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\Oblivion\\installed path"
+        ]
+    },
+    {
+        "id": "skyrim",
+        "display_name": "Skyrim",
+        "nexus_id": "skyrim",
+        "inidir": "%DOCUMENTS%\\My Games\\Skyrim",
+        "inifiles": [
+            "Skyrim.ini",
+            "SkyrimPrefs.ini",
+            "SkyrimCustom.ini"
+        ],
+        "reg_paths": [
+            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\Skyrim\\installed path"
+        ]
+    },
+    {
+        "id": "skyrimse",
+        "display_name": "Skyrim Special Edition",
+        "nexus_id": "skyrimspecialedition",
+        "inidir": "%DOCUMENTS%\\My Games\\Skyrim Special Edition",
+        "inifiles": [
+            "Skyrim.ini",
+            "SkyrimPrefs.ini",
+            "SkyrimCustom.ini"
+        ],
+        "reg_paths": [
+            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\Skyrim Special Edition\\installed path"
+        ]
+    },
+    {
+        "id": "skyrimse_gog",
+        "display_name": "Skyrim Special Edition (GOG)",
+        "nexus_id": "skyrimspecialedition",
+        "inidir": "%DOCUMENTS%\\My Games\\Skyrim Special Edition GOG",
+        "inifiles": [
+            "Skyrim.ini",
+            "SkyrimPrefs.ini",
+            "SkyrimCustom.ini"
+        ],
+        "reg_paths": [
+            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\GOG.com\\Games\\1711230643\\path"
+        ]
+    }
+]

@@ -54,15 +54,3 @@ class NotEnoughSpaceError(ExceptionBase):
             "exceptions",
             "Not enough space ({2}) on the destination disk ({0})!\nRequired space: {1}",
         )
-
-
-class GameNotFoundError(ExceptionBase):
-    """
-    Exception when the installation folder for a game could not be found.
-    """
-
-    def getLocalizedMessage(self) -> str:
-        return QApplication.translate(
-            "exceptions",
-            "The installation folder for the selected game could not be found!",
-        )

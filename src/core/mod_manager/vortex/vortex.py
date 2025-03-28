@@ -10,7 +10,6 @@ from typing import Any, Optional
 import plyvel
 
 from core.game.game import Game
-from core.game.skyrimse import SkyrimSE
 from core.instance.instance import Instance
 from core.instance.metadata import Metadata
 from core.instance.mod import Mod
@@ -41,7 +40,7 @@ class Vortex(ModManager):
     icon_name = ":/icons/Vortex_Label.svg"
 
     GAMES: dict[str, type[Game]] = {
-        "skyrimse": SkyrimSE,
+        "skyrimse": Game.get_game_by_id("skyrimse"),
     }
     """
     Dict of game names in the meta.ini file to game classes.
