@@ -4,9 +4,10 @@ Copyright (c) Cutleast
 
 from pathlib import Path
 
-from core.game.skyrimse import SkyrimSE
+from core.game.game import Game
 from core.instance.metadata import Metadata
 from core.mod_manager.modorganizer.modorganizer import ModOrganizer
+from tests.utils import Utils
 
 from ..base_test import BaseTest
 
@@ -16,7 +17,15 @@ class TestModOrganizer(BaseTest):
     Tests `core.mod_manager.modorganizer.modorganizer.ModOrganizer`.
     """
 
-    def test_parse_meta_ini(self, data_folder: Path) -> None:
+    @staticmethod
+    def parse_meta_ini_stub(meta_ini_path: Path, default_game: Game) -> Metadata:
+        """
+        Stub for `core.mod_manager.modorganizer.modorganizer.ModOrganizer.__parse_meta_ini()`.
+        """
+
+        raise NotImplementedError
+
+    def test_parse_meta_ini(self, data_folder: Path, qt_resources: None) -> None:
         """
         Tests `core.mod_manager.modorganizer.modorganizer.ModOrganizer.__parse_meta_ini()`.
         """
@@ -28,8 +37,11 @@ class TestModOrganizer(BaseTest):
         )
 
         # when
-        metadata: Metadata = mo2._ModOrganizer__parse_meta_ini(
-            meta_ini_path=test_meta_ini_path, default_game=SkyrimSE()
+        metadata: Metadata = Utils.get_private_method(
+            mo2, "parse_meta_ini", TestModOrganizer.parse_meta_ini_stub
+        )(
+            meta_ini_path=test_meta_ini_path,
+            default_game=Game.get_game_by_id("skyrimse"),
         )
 
         # then

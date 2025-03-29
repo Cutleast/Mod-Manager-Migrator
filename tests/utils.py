@@ -2,6 +2,7 @@
 Copyright (c) Cutleast
 """
 
+from collections.abc import Callable
 from typing import Any, Optional
 
 
@@ -11,12 +12,48 @@ class Utils:
     """
 
     @staticmethod
+    def get_private_method[**P, R](
+        obj: object, method_name: str, method_type: Callable[P, R]
+    ) -> Callable[P, R]:
+        """
+        Gets a private method from an object.
+        **Note that the method's signature is not validated!**
+
+        Args:
+            obj (object): The object to get the method from.
+            method_name (str): The name of the method.
+            method_type (Callable[P, R]):
+                A method or function stub specifying the returned callable's signature.
+
+        Raises:
+            AttributeError: when the method is not found.
+            TypeError: when the method is not callable
+
+        Returns:
+            Callable[P, R]: The method.
+        """
+
+        method_name = f"_{obj.__class__.__name__}__{method_name}"
+
+        if not hasattr(obj, method_name):
+            raise AttributeError(f"Method {method_name!r} not found!")
+
+        field: Optional[Any] = getattr(obj, method_name, None)
+
+        if not callable(field):
+            raise TypeError(f"{method_name!r} ({type(field)}) is not callable!")
+
+        method: Callable[P, R] = field
+
+        return method
+
+    @staticmethod
     def get_private_field[T](obj: object, field_name: str, field_type: type[T]) -> T:
         """
         Gets a private field from an object.
 
         Args:
-            obj (Any): The object to get the field from.
+            obj (object): The object to get the field from.
             field_name (str): The name of the field.
             field_type (type[T]): The type of the field.
 
