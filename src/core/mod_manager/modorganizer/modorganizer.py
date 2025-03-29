@@ -467,25 +467,28 @@ class ModOrganizer(ModManager):
 
         regular: bool = True
         mod_folder: Path = instance_data.mods_folder / clean_fs_string(mod.display_name)
+        meta_ini_path: Path = mod_folder / "meta.ini"
         if mod.deploy_path is not None and mod.deploy_path == Path("."):
             if instance_data.use_root_builder:
                 mod_folder /= "Root"
             else:
-                mod_folder = game.get_install_dir()
+                mod_folder = game.installdir
                 regular = False
         elif mod.deploy_path is not None:
             mod_folder /= mod.deploy_path
 
+        self.log.debug(f"Deploy path: {mod.deploy_path}")
+        self.log.debug(f"Mod folder: {mod_folder}")
+
         if mod_folder.is_dir() and regular:
             self.log.warning(
-                f"Mod {mod.display_name!r} is already exists! Merging files..."
+                f"Mod {mod.display_name!r} already exists! Merging files..."
             )
         mod_folder.mkdir(parents=True, exist_ok=True)
 
         # Create and write metadata to meta.ini
         # if the mod doesn't already have one
         if regular and Path("meta.ini") not in mod.files:
-            meta_ini_path: Path = mod_folder / "meta.ini"
             meta_ini_file = INIFile(meta_ini_path)
             meta_ini_file.data = {
                 "General": {
