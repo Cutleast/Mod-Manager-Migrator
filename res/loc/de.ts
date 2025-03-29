@@ -255,22 +255,22 @@
         <translation>Migrationsbericht</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migration_report_dialog.py" line="112"/>
+        <location filename="src/ui/migrator/migration_report_dialog.py" line="115"/>
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migration_report_dialog.py" line="124"/>
+        <location filename="src/ui/migrator/migration_report_dialog.py" line="127"/>
         <source>Failed Mods</source>
         <translation>Fehlgeschlagene Mods</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migration_report_dialog.py" line="136"/>
+        <location filename="src/ui/migrator/migration_report_dialog.py" line="139"/>
         <source>Failed Tools</source>
         <translation>Fehlgeschlagene Tools</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migration_report_dialog.py" line="148"/>
+        <location filename="src/ui/migrator/migration_report_dialog.py" line="151"/>
         <source>Other Errors</source>
         <translation>Sonstige Fehler</translation>
     </message>
@@ -306,7 +306,7 @@
 <context>
     <name>ModManager</name>
     <message>
-        <location filename="src/core/mod_manager/mod_manager.py" line="464"/>
+        <location filename="src/core/mod_manager/mod_manager.py" line="462"/>
         <source>Migration completed successfully!</source>
         <translation>Migration erfolgreich abgeschlossen!</translation>
     </message>
@@ -314,39 +314,39 @@
 <context>
     <name>ModOrganizer</name>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="104"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="153"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="182"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="109"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="158"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="187"/>
         <source>Loading mods from {0} &gt; {1}...</source>
         <translation>Mods von {0} &gt; {1} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="113"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="118"/>
         <source>Processing mod conflicts...</source>
         <translation>Modkonflikte werden verarbeitet...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="123"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="128"/>
         <source>Loading tools from {0} &gt; {1}...</source>
         <translation>Tools von {0} &gt; {1} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="401"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="406"/>
         <source>Downloading and installing ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen und installiert...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="421"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="426"/>
         <source>Downloading ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="443"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="448"/>
         <source>Extracting archive...</source>
         <translation>Archiv wird entpackt...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="681"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="702"/>
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of the new MO2 installation.</source>
         <translation>Die Nutzung von Root Builder wurde aktiviert.
@@ -517,17 +517,17 @@ Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von
     <name>SettingsDialog</name>
     <message>
         <location filename="src/ui/settings/settings_dialog.py" line="44"/>
-        <location filename="src/ui/settings/settings_dialog.py" line="72"/>
+        <location filename="src/ui/settings/settings_dialog.py" line="74"/>
         <source>Settings</source>
         <translation>Einstellungen</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_dialog.py" line="59"/>
+        <location filename="src/ui/settings/settings_dialog.py" line="61"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_dialog.py" line="65"/>
+        <location filename="src/ui/settings/settings_dialog.py" line="67"/>
         <source>Save</source>
         <translation>Speichern</translation>
     </message>
@@ -536,36 +536,46 @@ Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von
     <name>SettingsWidget</name>
     <message>
         <location filename="src/ui/settings/settings_widget.py" line="67"/>
+        <source>App settings</source>
+        <translation>Appeinstellungen</translation>
+    </message>
+    <message>
+        <location filename="src/ui/settings/settings_widget.py" line="74"/>
         <source>Log level:</source>
         <translation>Log Level:</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="86"/>
+        <location filename="src/ui/settings/settings_widget.py" line="93"/>
         <source>Number of newest log files to keep:</source>
         <translation>Anzahl der zu behaltenden Logdateien:</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="96"/>
+        <location filename="src/ui/settings/settings_widget.py" line="103"/>
         <source>Language:</source>
         <translation>Sprache:</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="107"/>
+        <location filename="src/ui/settings/settings_widget.py" line="114"/>
         <source>UI mode:</source>
         <translation>UI Modus:</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="118"/>
+        <location filename="src/ui/settings/settings_widget.py" line="126"/>
+        <source>Migration settings</source>
+        <translation>Migrationseinstellungen</translation>
+    </message>
+    <message>
+        <location filename="src/ui/settings/settings_widget.py" line="133"/>
         <source>Use hardlinks if possible:</source>
         <translation>Hardlinks, wenn möglich, verwenden:</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="132"/>
+        <location filename="src/ui/settings/settings_widget.py" line="147"/>
         <source>What are hardlinks?</source>
         <translation>Was sind Hardlinks?</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="139"/>
+        <location filename="src/ui/settings/settings_widget.py" line="154"/>
         <source>Replace existing files when merging instances:</source>
         <translation>Bestehende Dateien beim Zusammenführen von Instanzen ersetzen:</translation>
     </message>
@@ -604,13 +614,13 @@ Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von
 <context>
     <name>Vortex</name>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="105"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="107"/>
         <source>Loading profile {0}...</source>
         <translation>Profil {0} wird geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="136"/>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="183"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="131"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="178"/>
         <source>Loading mods from profile {0}...</source>
         <translation>Mods von Profil {0} werden geladen...</translation>
     </message>
