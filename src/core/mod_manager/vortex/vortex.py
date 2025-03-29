@@ -39,9 +39,7 @@ class Vortex(ModManager):
     id = "vortex"
     icon_name = ":/icons/Vortex_Label.svg"
 
-    GAMES: dict[str, type[Game]] = {
-        "skyrimse": Game.get_game_by_id("skyrimse"),
-    }
+    GAMES: dict[str, Game]
     """
     Dict of game names in the meta.ini file to game classes.
     """
@@ -57,6 +55,10 @@ class Vortex(ModManager):
         self.__level_db = LevelDB(
             self.db_path, use_symlink=not LevelDB.is_db_readable(self.db_path)
         )
+
+        self.GAMES = {
+            "skyrimse": Game.get_game_by_id("skyrimse"),
+        }
 
     def __repr__(self) -> str:
         return "Vortex"
@@ -230,9 +232,9 @@ class Vortex(ModManager):
             dl_game_id: str = instance_data.game.nexus_id
             if (
                 "downloadGame" in mod_meta_data
-                and mod_meta_data["downloadGame"] in Vortex.GAMES
+                and mod_meta_data["downloadGame"] in self.GAMES
             ):
-                dl_game_id = Vortex.GAMES[mod_meta_data["downloadGame"]].nexus_id
+                dl_game_id = self.GAMES[mod_meta_data["downloadGame"]].nexus_id
             elif "downloadGame" in mod_meta_data:
                 self.log.warning(
                     f"Unknown game for mod {display_name!r}: {mod_meta_data['downloadGame']}"

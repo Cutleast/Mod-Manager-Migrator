@@ -44,14 +44,19 @@ class ModOrganizer(ModManager):
     # TODO: Make this dynamic instead of a fixed url
     DOWNLOAD_URL: str = "https://github.com/ModOrganizer2/modorganizer/releases/download/v2.5.2/Mod.Organizer-2.5.2.7z"
 
-    GAMES: dict[str, type[Game]] = {
-        "SkyrimSE": Game.get_game_by_id("skyrimse"),
-    }
+    GAMES: dict[str, Game]
     """
     Dict of game names in the meta.ini file to game classes.
     """
 
     appdata_path = resolve(Path("%LOCALAPPDATA%") / "ModOrganizer")
+
+    def __init__(self) -> None:
+        super().__init__()
+
+        self.GAMES = {
+            "SkyrimSE": Game.get_game_by_id("skyrimse"),
+        }
 
     def __repr__(self) -> str:
         return "ModOrganizer"
@@ -247,8 +252,8 @@ class ModOrganizer(ModManager):
             while version.endswith(".0") and version.count(".") > 1:
                 version = version.removesuffix(".0")
 
-            if "gameName" in general and general["gameName"] in ModOrganizer.GAMES:
-                game_id = ModOrganizer.GAMES[general["gameName"]].nexus_id
+            if "gameName" in general and general["gameName"] in self.GAMES:
+                game_id = self.GAMES[general["gameName"]].nexus_id
             elif "gameName" in general:
                 self.log.warning(
                     f"Unknown game for mod {meta_ini_path.parent.name!r}: {general['gameName']}"
