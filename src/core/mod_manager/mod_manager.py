@@ -435,7 +435,10 @@ class ModManager(QObject):
         """
 
     def finalize_migration(
-        self, migrated_instance: Instance, migrated_instance_data: InstanceInfo
+        self,
+        migrated_instance: Instance,
+        migrated_instance_data: InstanceInfo,
+        order_matters: bool,
     ) -> None:
         """
         Finalizes the migration process.

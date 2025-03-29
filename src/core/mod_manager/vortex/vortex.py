@@ -108,15 +108,8 @@ class Vortex(ModManager):
             )
 
         mods: list[Mod] = self._load_mods(instance_data, ldialog)
-        self.__process_conflict_rules(
-            mods,
-            self.__conflict_rules,  # type: ignore[arg-type]
-        )
-
-        # Clean up to avoid clash when loading another profile
-        self.__conflict_rules = None
-
-        instance = Instance(display_name=instance_name, mods=mods, tools=[])
+        tools: list[Tool] = self._load_tools(instance_data, ldialog)
+        instance = Instance(display_name=instance_name, mods=mods, tools=tools)
 
         self.log.info(
             f"Loaded profile {instance_name!r} with {len(mods)} mod(s) "
@@ -204,10 +197,11 @@ class Vortex(ModManager):
             file_name: str = mod_meta_data.get("fileName", mod_path.name)
 
             deploy_path: Optional[Path] = None
-            modtype: Optional[str] = mod_meta_data.get("type")
+            modtype: Optional[str] = moddata.get("type") or None
 
             # Set deploy path to game's root folder
             if modtype is not None and modtype != "collection":
+                self.log.debug(f"Mod '{display_name}' has type '{modtype}'.")
                 deploy_path = Path(".")
 
             # Ignore collection bundles
@@ -259,7 +253,7 @@ class Vortex(ModManager):
             if rules:
                 conflict_rules[mod] = rules
 
-        self.__conflict_rules = conflict_rules
+        self.__process_conflict_rules(mods, conflict_rules)
 
         self.log.debug(f"Loaded {len(mods)} mod(s) from instance {instance_name!r}.")
 
@@ -468,7 +462,8 @@ class Vortex(ModManager):
         }
         self.__level_db.dump(profiles_data)
 
-        instance.mods.append(mod)
+        if not instance.is_mod_installed(mod):
+            instance.mods.append(mod)
 
     def __get_staging_folder(self, game: Game) -> Path:
         data: dict[str, Any] = self.__level_db.load("settings###mods###installPath")
@@ -538,7 +533,10 @@ class Vortex(ModManager):
         # TODO: Check database for enabled game and profile management
 
     def finalize_migration(
-        self, migrated_instance: Instance, migrated_instance_data: ProfileInfo
+        self,
+        migrated_instance: Instance,
+        migrated_instance_data: ProfileInfo,
+        order_matters: bool,
     ) -> None:
         profile_data: dict[str, Any] = self.__level_db.load(
             f"persistent###profiles###{migrated_instance_data.id}"

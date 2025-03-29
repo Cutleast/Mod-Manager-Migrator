@@ -508,7 +508,15 @@ class ModOrganizer(ModManager):
             mod, mod_folder, use_hardlinks, replace, blacklist, ldialog
         )
 
-        if regular:
+        # Merge conflicts with already installed mods
+        if instance.is_mod_installed(mod):
+            existing_mod: Mod = instance.get_installed_mod(mod)
+            existing_mod.mod_conflicts = unique(
+                existing_mod.mod_conflicts + mod.mod_conflicts
+            )
+            existing_mod.file_conflicts.update(mod.file_conflicts)
+
+        elif regular:
             instance.mods.append(mod)
 
     def add_tool(
@@ -543,14 +551,19 @@ class ModOrganizer(ModManager):
                 raise CannotInstallGlobalMo2Error
 
     def finalize_migration(
-        self, migrated_instance: Instance, migrated_instance_data: MO2InstanceInfo
+        self,
+        migrated_instance: Instance,
+        migrated_instance_data: MO2InstanceInfo,
+        order_matters: bool,
     ) -> None:
         modlist_txt_path: Path = (
             migrated_instance_data.profiles_folder
             / migrated_instance_data.profile
             / "modlist.txt"
         )
-        self.__dump_modlist_txt(modlist_txt_path, migrated_instance.loadorder)
+        self.__dump_modlist_txt(
+            modlist_txt_path, migrated_instance.get_loadorder(order_matters)
+        )
         self.log.debug(f"Dumped modlist to {str(modlist_txt_path)!r}.")
 
         settings_ini_path: Path = (

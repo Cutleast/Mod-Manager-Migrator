@@ -207,7 +207,9 @@ class Migrator(QObject):
             )
             report.other_errors[self.tr("Failed to migrate additional files.")] = ex
 
-        dst_mod_manager.finalize_migration(dst_instance, dst_info)
+        dst_mod_manager.finalize_migration(
+            dst_instance, dst_info, src_instance.order_matters
+        )
         self.log.info("Migration completed.")
         return report
 

@@ -30,6 +30,22 @@ class TestInstance(BaseTest):
         # then
         assert loadorder.index(overwritten_mod) < loadorder.index(overwriting_mod)
 
+    def test_get_loadorder_without_order_matters(self, instance: Instance) -> None:
+        """
+        Tests `core.instance.instance.Instance.get_loadorder` with `order_matters=False`.
+        """
+
+        # given
+        overwritten_mod: Mod = instance.mods[-1]
+        overwriting_mod: Mod = instance.mods[0]
+        overwritten_mod.mod_conflicts = [overwriting_mod]
+
+        # when
+        loadorder: list[Mod] = instance.get_loadorder(False)
+
+        # then
+        assert loadorder.index(overwritten_mod) < loadorder.index(overwriting_mod)
+
     def test_loadorder_unchanged(self, instance: Instance) -> None:
         """
         Tests `core.instance.instance.Instance.loadorder` with `order_matters=True`.

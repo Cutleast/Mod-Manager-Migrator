@@ -73,6 +73,37 @@ class Instance:
             or mod in self.mods
         )
 
+    def get_installed_mod(self, mod: Mod) -> Mod:
+        """
+        Returns a mod from the instance matching the specified mod.
+
+        Args:
+            mod (Mod): The mod to get.
+
+        Raises:
+            ValueError: If the mod is not installed
+
+        Returns:
+            Mod: The matching mod
+        """
+
+        if mod in self.mods:
+            return self.mods[self.mods.index(mod)]
+
+        if mod.metadata.mod_id is None or mod.metadata.file_id is None:
+            raise ValueError("Mod id and file id required for identifying mod!")
+
+        installed_mods: dict[tuple[int, int], Mod] = {
+            (m.metadata.mod_id, m.metadata.file_id): m
+            for m in self.mods
+            if m.metadata.mod_id is not None and m.metadata.file_id is not None
+        }
+
+        if (mod.metadata.mod_id, mod.metadata.file_id) in installed_mods:
+            return installed_mods[(mod.metadata.mod_id, mod.metadata.file_id)]
+
+        raise ValueError("Mod not installed!")
+
     @property
     def loadorder(self) -> list[Mod]:
         """
@@ -80,7 +111,24 @@ class Instance:
         (overwritten mods before overwriting mods).
         """
 
-        if self.order_matters:
+        return self.get_loadorder()
+
+    def get_loadorder(self, order_matters: Optional[bool] = None) -> list[Mod]:
+        """
+        Sorts the mods in this instance if `order_matters` is not `True`.
+
+        Args:
+            order_matters (Optional[bool], optional):
+                Whether the mods have a fixed order. Defaults to the instance's default.
+
+        Returns:
+            list[Mod]: The sorted list of mods
+        """
+
+        if order_matters is None:
+            order_matters = self.order_matters
+
+        if order_matters:
             return self.mods.copy()
 
         new_loadorder: list[Mod] = self.mods.copy()
