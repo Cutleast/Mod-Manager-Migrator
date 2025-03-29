@@ -247,10 +247,7 @@ class ModManager(QObject):
             list[Path]: The list of ini files.
         """
 
-        ini_files: list[Path] = instance_data.game.inifiles
-        ini_filenames: list[Path] = [
-            file.relative_to(instance_data.game.inidir) for file in ini_files
-        ]
+        ini_filenames: list[Path] = instance_data.game.inifiles
         ini_dir: Path = self.get_ini_dir(instance_data, instance.separate_ini_files)
 
         return [(ini_dir / file) for file in ini_filenames]
