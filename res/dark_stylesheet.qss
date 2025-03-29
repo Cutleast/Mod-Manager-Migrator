@@ -253,3 +253,14 @@ QToolTip
     background: #292929;
     border-color: #303030;
 }
+
+/* GroupBox */
+QGroupBox
+{
+    border-color: #1cffffff;
+}
+
+QGroupBox::title
+{
+    background-color: #202020;
+}

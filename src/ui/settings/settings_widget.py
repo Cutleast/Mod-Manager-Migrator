@@ -9,9 +9,11 @@ from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
     QGridLayout,
+    QGroupBox,
     QHBoxLayout,
     QLabel,
     QSpinBox,
+    QVBoxLayout,
     QWidget,
 )
 
@@ -33,7 +35,7 @@ class SettingsWidget(SmoothScrollArea):
 
     __app_config: AppConfig
 
-    __glayout: QGridLayout
+    __vlayout: QVBoxLayout
 
     __log_level_box: QComboBox
     __log_num_of_files_box: QSpinBox
@@ -54,18 +56,23 @@ class SettingsWidget(SmoothScrollArea):
         scroll_widget.setObjectName("transparent")
         self.setWidget(scroll_widget)
 
-        self.__glayout = QGridLayout()
-        self.__glayout.setContentsMargins(0, 0, 0, 0)
-        self.__glayout.setColumnStretch(0, 1)
-        self.__glayout.setColumnStretch(1, 3)
-        self.__glayout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        scroll_widget.setLayout(self.__glayout)
+        self.__vlayout = QVBoxLayout()
+        self.__vlayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        scroll_widget.setLayout(self.__vlayout)
 
-        self.__init_settings()
+        self.__init_app_settings()
+        self.__init_migration_settings()
 
-    def __init_settings(self) -> None:
+    def __init_app_settings(self) -> None:
+        app_settings_group = QGroupBox(self.tr("App settings"))
+        self.__vlayout.addWidget(app_settings_group)
+
+        app_settings_glayout = QGridLayout()
+        app_settings_glayout.setContentsMargins(0, 0, 0, 0)
+        app_settings_group.setLayout(app_settings_glayout)
+
         log_level_label = QLabel(self.tr("Log level:"))
-        self.__glayout.addWidget(log_level_label, 0, 0)
+        app_settings_glayout.addWidget(log_level_label, 0, 0)
 
         self.__log_level_box = QComboBox()
         self.__log_level_box.setEditable(False)
@@ -81,20 +88,20 @@ class SettingsWidget(SmoothScrollArea):
         self.__log_level_box.setCurrentText(self.__app_config.log_level.capitalize())
         self.__log_level_box.installEventFilter(self)
         self.__log_level_box.currentTextChanged.connect(lambda _: self.changed.emit())
-        self.__glayout.addWidget(self.__log_level_box, 0, 1)
+        app_settings_glayout.addWidget(self.__log_level_box, 0, 1)
 
         log_num_of_files_label = QLabel(self.tr("Number of newest log files to keep:"))
-        self.__glayout.addWidget(log_num_of_files_label, 1, 0)
+        app_settings_glayout.addWidget(log_num_of_files_label, 1, 0)
 
         self.__log_num_of_files_box = QSpinBox()
         self.__log_num_of_files_box.setRange(-1, 100)
         self.__log_num_of_files_box.setValue(self.__app_config.log_num_of_files)
         self.__log_num_of_files_box.installEventFilter(self)
         self.__log_num_of_files_box.valueChanged.connect(lambda _: self.changed.emit())
-        self.__glayout.addWidget(self.__log_num_of_files_box, 1, 1)
+        app_settings_glayout.addWidget(self.__log_num_of_files_box, 1, 1)
 
         language_label = QLabel(self.tr("Language:"))
-        self.__glayout.addWidget(language_label, 2, 0)
+        app_settings_glayout.addWidget(language_label, 2, 0)
 
         self.__language_box = QComboBox()
         self.__language_box.setEditable(False)
@@ -102,10 +109,10 @@ class SettingsWidget(SmoothScrollArea):
         self.__language_box.setCurrentText(self.__app_config.language)
         self.__language_box.installEventFilter(self)
         self.__language_box.currentTextChanged.connect(lambda _: self.changed.emit())
-        self.__glayout.addWidget(self.__language_box, 2, 1)
+        app_settings_glayout.addWidget(self.__language_box, 2, 1)
 
         ui_mode_label = QLabel(self.tr("UI mode:"))
-        self.__glayout.addWidget(ui_mode_label, 3, 0)
+        app_settings_glayout.addWidget(ui_mode_label, 3, 0)
 
         self.__ui_mode_box = QComboBox()
         self.__ui_mode_box.setEditable(False)
@@ -113,13 +120,21 @@ class SettingsWidget(SmoothScrollArea):
         self.__ui_mode_box.setCurrentText(self.__app_config.ui_mode.capitalize())
         self.__ui_mode_box.installEventFilter(self)
         self.__ui_mode_box.currentTextChanged.connect(lambda _: self.changed.emit())
-        self.__glayout.addWidget(self.__ui_mode_box, 3, 1)
+        app_settings_glayout.addWidget(self.__ui_mode_box, 3, 1)
+
+    def __init_migration_settings(self) -> None:
+        migration_settings_group = QGroupBox(self.tr("Migration settings"))
+        self.__vlayout.addWidget(migration_settings_group)
+
+        migration_settings_glayout = QGridLayout()
+        migration_settings_glayout.setContentsMargins(0, 0, 0, 0)
+        migration_settings_group.setLayout(migration_settings_glayout)
 
         use_hardlinks_label = QLabel(self.tr("Use hardlinks if possible:"))
-        self.__glayout.addWidget(use_hardlinks_label, 4, 0)
+        migration_settings_glayout.addWidget(use_hardlinks_label, 0, 0)
 
         hlayout = QHBoxLayout()
-        self.__glayout.addLayout(hlayout, 4, 1)
+        migration_settings_glayout.addLayout(hlayout, 0, 1)
         self.__use_hardlinks_box = QCheckBox()
         self.__use_hardlinks_box.setChecked(self.__app_config.use_hardlinks)
         self.__use_hardlinks_box.checkStateChanged.connect(
@@ -137,14 +152,14 @@ class SettingsWidget(SmoothScrollArea):
         replace_when_merge_label = QLabel(
             self.tr("Replace existing files when merging instances:")
         )
-        self.__glayout.addWidget(replace_when_merge_label, 5, 0)
+        migration_settings_glayout.addWidget(replace_when_merge_label, 1, 0)
 
         self.__replace_when_merge_box = QCheckBox()
         self.__replace_when_merge_box.setChecked(self.__app_config.replace_when_merge)
         self.__replace_when_merge_box.checkStateChanged.connect(
             lambda _: self.changed.emit()
         )
-        self.__glayout.addWidget(self.__replace_when_merge_box, 5, 1)
+        migration_settings_glayout.addWidget(self.__replace_when_merge_box, 1, 1)
 
     def eventFilter(self, source: QObject, event: QEvent) -> bool:
         if (

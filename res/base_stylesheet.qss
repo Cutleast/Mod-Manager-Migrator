@@ -455,3 +455,25 @@ QToolTip
     border-radius: 8px;
     padding: 4px;
 }
+
+/* GroupBox */
+QGroupBox
+{
+    background: transparent;
+    border-radius: 8px;
+    border: 1px solid;
+    margin-top: 30px;
+    padding: 5px;
+    padding-top: 10px;
+    font-size: 22px;
+    font-family: 'Bebas Neue Book';
+}
+
+QGroupBox::title
+{
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding-top: 10px;
+    padding-left: 15px;
+    margin-right: 5px;
+}

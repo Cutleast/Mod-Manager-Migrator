@@ -28,8 +28,8 @@ class SettingsDialog(QDialog):
         self.__app_config = app_config
 
         self.__init_ui()
-        self.setMinimumSize(620, 400)
-        self.resize(620, 400)
+        self.setMinimumSize(700, 500)
+        self.resize(700, 500)
 
     def __init_ui(self) -> None:
         self.__vlayout = QVBoxLayout()
@@ -45,12 +45,14 @@ class SettingsDialog(QDialog):
         title_label.setObjectName("h2")
         self.__vlayout.addWidget(title_label)
 
-        self.__vlayout.addSpacing(25)
+        self.__vlayout.addSpacing(15)
 
     def __init_settings_widget(self) -> None:
         self.__settings_widget = SettingsWidget(self.__app_config)
         self.__settings_widget.changed.connect(self.__on_change)
         self.__vlayout.addWidget(self.__settings_widget)
+
+        self.__vlayout.addSpacing(15)
 
     def __init_footer(self) -> None:
         hlayout = QHBoxLayout()
