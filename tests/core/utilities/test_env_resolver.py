@@ -39,7 +39,11 @@ class TestEnvResolver:
         vars: dict[str, str] = {"game": "C:\\Modding\\game"}
 
         # when
-        real_output: Path = resolve(input_value, **vars)
+        real_output: Path = resolve(
+            input_value,
+            sep=("%", "%"),  # explicitely required for the static type checker for now
+            **vars,
+        )
 
         # then
         assert expected_output == real_output
@@ -72,7 +76,11 @@ class TestEnvResolver:
         vars: dict[str, str] = {"game": "C:\\Modding\\DbGd-Installer-Test\\game"}
 
         # when
-        real_output: str = resolve(input_value, **vars)
+        real_output: str = resolve(
+            input_value,
+            sep=("%", "%"),  # explicitely required for the static type checker for now
+            **vars,
+        )
 
         # then
         assert expected_output == real_output
