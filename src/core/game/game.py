@@ -11,9 +11,9 @@ from typing import Annotated, Any, Optional
 
 from pydantic import AfterValidator, BaseModel, Field
 
-from app import get_documents_folder
 from core.utilities.cache import cache
 from core.utilities.env_resolver import resolve
+from core.utilities.filesystem import get_documents_folder
 from core.utilities.qt_res_provider import load_json_resource
 
 from .exceptions import GameNotFoundError
