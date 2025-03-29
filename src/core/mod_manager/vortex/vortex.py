@@ -30,7 +30,7 @@ from .exceptions import (
 from .profile_info import ProfileInfo
 
 
-class Vortex(ModManager):
+class Vortex(ModManager[ProfileInfo]):
     """
     Mod manager class for Vortex.
     """

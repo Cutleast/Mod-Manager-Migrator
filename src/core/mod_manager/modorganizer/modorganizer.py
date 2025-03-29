@@ -32,7 +32,7 @@ from ..mod_manager import ModManager
 from .mo2_instance_info import MO2InstanceInfo
 
 
-class ModOrganizer(ModManager):
+class ModOrganizer(ModManager[MO2InstanceInfo]):
     """
     Mod manager class for Mod Organizer 2.
     """

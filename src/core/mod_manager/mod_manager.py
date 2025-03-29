@@ -21,7 +21,7 @@ from ui.widgets.loading_dialog import LoadingDialog
 from .instance_info import InstanceInfo
 
 
-class ModManager(QObject):
+class ModManager[I: InstanceInfo](QObject):
     """
     Abstract class for mod managers.
     """
@@ -66,13 +66,13 @@ class ModManager(QObject):
 
     @abstractmethod
     def load_instance(
-        self, instance_data: InstanceInfo, ldialog: Optional[LoadingDialog] = None
+        self, instance_data: I, ldialog: Optional[LoadingDialog] = None
     ) -> Instance:
         """
         Loads and returns the mod instance with the given name.
 
         Args:
-            instance_data (InstanceData): The data of the mod instance.
+            instance_data (I): The data of the mod instance.
             ldialog (Optional[LoadingDialog], optional):
                 Optional loading dialog. Defaults to None.
 
@@ -82,13 +82,13 @@ class ModManager(QObject):
 
     @abstractmethod
     def _load_mods(
-        self, instance_data: InstanceInfo, ldialog: Optional[LoadingDialog] = None
+        self, instance_data: I, ldialog: Optional[LoadingDialog] = None
     ) -> list[Mod]:
         """
         Loads and returns a list of mods for the given instance name.
 
         Args:
-            instance_data (InstanceData): The data of the mod instance.
+            instance_data (I): The data of the mod instance.
             ldialog (Optional[LoadingDialog], optional):
                 Optional loading dialog. Defaults to None.
 
@@ -98,13 +98,13 @@ class ModManager(QObject):
 
     @abstractmethod
     def _load_tools(
-        self, instance_data: InstanceInfo, ldialog: Optional[LoadingDialog] = None
+        self, instance_data: I, ldialog: Optional[LoadingDialog] = None
     ) -> list[Tool]:
         """
         Loads and returns a list of tools for the given instance.
 
         Args:
-            instance_data (InstanceData): The data of the mod instance.
+            instance_data (I): The data of the mod instance.
             ldialog (Optional[LoadingDialog], optional):
                 Optional loading dialog. Defaults to None.
 
@@ -114,7 +114,7 @@ class ModManager(QObject):
 
     @abstractmethod
     def create_instance(
-        self, instance_data: InstanceInfo, ldialog: Optional[LoadingDialog] = None
+        self, instance_data: I, ldialog: Optional[LoadingDialog] = None
     ) -> Instance:
         """
         Creates an instance in this mod manager.
@@ -133,7 +133,7 @@ class ModManager(QObject):
         self,
         mod: Mod,
         instance: Instance,
-        instance_data: InstanceInfo,
+        instance_data: I,
         use_hardlinks: bool,
         replace: bool,
         blacklist: list[str] = [],
@@ -145,7 +145,7 @@ class ModManager(QObject):
         Args:
             mod (Mod): The mod to install.
             instance (Instance): The instance to install the mod to.
-            instance_data (InstanceData): The data of the instance above.
+            instance_data (I): The data of the instance above.
             use_hardlinks (bool): Whether to use hardlinks if possible.
             replace (bool): Whether to replace existing files.
             blacklist (list[str], optional): A list of files to not migrate.
@@ -158,7 +158,7 @@ class ModManager(QObject):
         self,
         tool: Tool,
         instance: Instance,
-        instance_data: InstanceInfo,
+        instance_data: I,
         use_hardlinks: bool,
         replace: bool,
         blacklist: list[str] = [],
@@ -170,7 +170,7 @@ class ModManager(QObject):
         Args:
             tool (Tool): The tool to add.
             instance (Instance): The instance to add the tool to.
-            instance_data (InstanceData): The data of the instance above.
+            instance_data (I): The data of the instance above.
             use_hardlinks (bool): Whether to use hardlinks if possible.
             replace (bool): Whether to replace existing files.
             blacklist (list[str], optional): A list of files to not migrate.
@@ -233,15 +233,13 @@ class ModManager(QObject):
             else:
                 shutil.copyfile(src_path, dst_path)
 
-    def get_ini_files(
-        self, instance: Instance, instance_data: InstanceInfo
-    ) -> list[Path]:
+    def get_ini_files(self, instance: Instance, instance_data: I) -> list[Path]:
         """
         Returns a list of ini files to migrate.
 
         Args:
             instance (Instance): The instance.
-            instance_data (InstanceInfo): The data of the instance.
+            instance_data (I): The data of the instance.
 
         Returns:
             list[Path]: The list of ini files.
@@ -252,15 +250,13 @@ class ModManager(QObject):
 
         return [(ini_dir / file) for file in ini_filenames]
 
-    def get_ini_dir(
-        self, instance_data: InstanceInfo, separate_ini_files: bool
-    ) -> Path:
+    def get_ini_dir(self, instance_data: I, separate_ini_files: bool) -> Path:
         """
         Returns path to folder for INI files, either game's INI folder or
         instance's INI folder.
 
         Args:
-            instance_data (InstanceInfo): The data of the instance.
+            instance_data (I): The data of the instance.
             separate_ini_files (bool): Whether to use separate INI folders.
 
         Returns:
@@ -273,12 +269,12 @@ class ModManager(QObject):
         return instance_data.game.inidir
 
     @abstractmethod
-    def get_instance_ini_dir(self, instance_data: InstanceInfo) -> Path:
+    def get_instance_ini_dir(self, instance_data: I) -> Path:
         """
         Returns the path to the instance's INI folder.
 
         Args:
-            instance_data (InstanceInfo): The data of the instance.
+            instance_data (I): The data of the instance.
 
         Returns:
             Path: The path to the instance's INI folder.
@@ -287,7 +283,7 @@ class ModManager(QObject):
     def migrate_ini_files(
         self,
         files: list[Path],
-        instance_data: InstanceInfo,
+        instance_data: I,
         separate_ini_files: bool,
         use_hardlinks: bool,
         replace: bool,
@@ -298,7 +294,7 @@ class ModManager(QObject):
 
         Args:
             files (list[Path]): The INI files to migrate.
-            instance_data (InstanceInfo): The data of the instance.
+            instance_data (I): The data of the instance.
             separate_ini_files (bool): Whether to use separate INI folders.
             use_hardlinks (bool): Whether to use hardlinks if possible.
             replace (bool): Whether to replace existing files.
@@ -338,12 +334,12 @@ class ModManager(QObject):
             else:
                 shutil.copyfile(file, dst_path)
 
-    def get_additional_files(self, instance_data: InstanceInfo) -> list[Path]:
+    def get_additional_files(self, instance_data: I) -> list[Path]:
         """
         Returns a list of additional files to migrate.
 
         Args:
-            instance_data (InstanceInfo): The data of the instance.
+            instance_data (I): The data of the instance.
 
         Returns:
             list[Path]: The list of additional files.
@@ -361,7 +357,7 @@ class ModManager(QObject):
     def migrate_additional_files(
         self,
         files: list[Path],
-        instance_data: InstanceInfo,
+        instance_data: I,
         use_hardlinks: bool,
         replace: bool,
         ldialog: Optional[LoadingDialog] = None,
@@ -371,7 +367,7 @@ class ModManager(QObject):
 
         Args:
             files (list[Path]): The list of additional files.
-            instance_data (InstanceInfo): The data of the instance.
+            instance_data (I): The data of the instance.
             use_hardlinks (bool): Whether to use hardlinks if possible.
             replace (bool): Whether to replace existing files.
             ldialog (Optional[LoadingDialog], optional):
@@ -411,24 +407,24 @@ class ModManager(QObject):
                 shutil.copyfile(file, dst_path)
 
     @abstractmethod
-    def get_additional_files_folder(self, instance_data: InstanceInfo) -> Path:
+    def get_additional_files_folder(self, instance_data: I) -> Path:
         """
         Gets the path for the additional files of the specified instance.
 
         Args:
-            instance_data (InstanceInfo): The data of the instance.
+            instance_data (I): The data of the instance.
 
         Returns:
             Path: The path for the additional files.
         """
 
-    def prepare_migration(self, instance_data: InstanceInfo) -> None:
+    def prepare_migration(self, instance_data: I) -> None:
         """
         Prepares the migration process. Runs pre-migration checks, if necessary
         and raises an Exception if there are issues or potential error sources.
 
         Args:
-            instance_data (InstanceInfo): The data of the instance.
+            instance_data (I): The data of the instance.
 
         Raises:
             PreMigrationCheckFailedError: when the pre-migration check fails.
@@ -437,7 +433,7 @@ class ModManager(QObject):
     def finalize_migration(
         self,
         migrated_instance: Instance,
-        migrated_instance_data: InstanceInfo,
+        migrated_instance_data: I,
         order_matters: bool,
     ) -> None:
         """
@@ -445,15 +441,17 @@ class ModManager(QObject):
 
         Args:
             migrated_instance (Instance): The migrated instance.
-            migrated_instance_data (InstanceInfo): The data of the migrated instance.
+            migrated_instance_data (I): The data of the migrated instance.
+            order_matters (bool):
+                Whether the mods of the source instance have a fixed order.
         """
 
-    def get_completed_message(self, migrated_instance_data: InstanceInfo) -> str:
+    def get_completed_message(self, migrated_instance_data: I) -> str:
         """
         Get text to display to the user after the migration is completed.
 
         Args:
-            migrated_instance_data (InstanceData): The data of the migrated instance.
+            migrated_instance_data (I): The data of the migrated instance.
 
         Returns:
             str: Text to display to the user.
@@ -462,9 +460,7 @@ class ModManager(QObject):
         return self.tr("Migration completed successfully!")
 
     @abstractmethod
-    def check_destination_disk_space(
-        self, dst_info: InstanceInfo, src_size: int
-    ) -> None:
+    def check_destination_disk_space(self, dst_info: I, src_size: int) -> None:
         """
         Checks if the disk for the destination instance has enough space.
 
@@ -472,6 +468,6 @@ class ModManager(QObject):
             NotEnoughSpaceError: when the disk has not enough space.
 
         Args:
-            dst_info (InstanceInfo): The data of the destination instance.
+            dst_info (I): The data of the destination instance.
             src_size (int): Size of the source instance in bytes.
         """
