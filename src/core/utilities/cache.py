@@ -15,4 +15,6 @@ def cache[**P, R](func: Callable[P, R]) -> Callable[P, R]:
         Callable[P, R]: wrapped function
     """
 
-    return functools.cache(func)
+    wrapped: Callable[P, R] = functools.cache(func)  # type: ignore[attr-defined]
+
+    return wrapped
