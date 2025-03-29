@@ -360,7 +360,7 @@ class ModOrganizer(ModManager):
             "General": {
                 "gameName": "Skyrim Special Edition",
                 "selected_profile": "@ByteArray(Default)",
-                "gamePath": str(game.get_install_dir()).replace("\\", "/"),
+                "gamePath": str(game.installdir).replace("\\", "/"),
                 "first_start": "true",
             },
             "Settings": {

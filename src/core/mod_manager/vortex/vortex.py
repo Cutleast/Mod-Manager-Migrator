@@ -569,7 +569,7 @@ class Vortex(ModManager):
         )
 
         if "path" not in game_data:
-            game_data["path"] = str(migrated_instance_data.game.get_install_dir())
+            game_data["path"] = str(migrated_instance_data.game.installdir)
             game_data["pathSetManually"] = True
             # TODO: Add real "store" value to game data, eg. "steam"
             game_data["store"] = "other"
