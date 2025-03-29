@@ -88,6 +88,7 @@ class MigrationReportDialog(QDialog):
         self.__report = report
 
         self.setWindowTitle(self.tr("Migration Report"))
+        self.resize(800, 400)
 
         self.__init_ui()
 
@@ -103,6 +104,8 @@ class MigrationReportDialog(QDialog):
         self.setLayout(self.__vlayout)
 
         self.__tab_widget = QTabWidget()
+        self.__tab_widget.tabBar().setExpanding(True)
+        self.__tab_widget.setObjectName("centered_tab")
         self.__vlayout.addWidget(self.__tab_widget)
 
         self.__init_mods_tab()
