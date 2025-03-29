@@ -141,6 +141,7 @@ class Game(BaseModel):
         return [Game.model_validate(game) for game in data]
 
     @staticmethod
+    @cache
     def get_game_by_id(game_id: str) -> Game:
         """
         Gets a game by its id.
