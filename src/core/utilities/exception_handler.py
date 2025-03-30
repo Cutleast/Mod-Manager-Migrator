@@ -12,6 +12,7 @@ from winsound import MessageBeep as alert
 from PySide6.QtCore import QObject
 from PySide6.QtWidgets import QApplication
 
+from core.utilities.exceptions import ExceptionBase
 from ui.widgets.error_dialog import ErrorDialog
 
 
@@ -71,7 +72,11 @@ class ExceptionHandler(QObject):
         traceback = "".join(format_exception(exc_type, exc_value, exc_traceback))
         self.log.critical("An uncaught exception occured:\n" + traceback)
 
-        error_message = self.tr("An unexpected error occured: ") + str(exc_value)
+        error_message: str
+        if isinstance(exc_value, ExceptionBase):
+            error_message = exc_value.getLocalizedMessage()
+        else:
+            error_message = self.tr("An unexpected error occured: ") + str(exc_value)
         detailed_msg = traceback
 
         error_dialog = ErrorDialog(
