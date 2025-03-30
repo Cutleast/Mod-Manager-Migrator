@@ -12,8 +12,9 @@ from unittest.mock import MagicMock, patch
 import pytest
 from pytest_mock import MockerFixture
 
-from core.game.skyrimse import SkyrimSE
-from core.mod_manager.vortex.exceptions import VortexNotInstalledError
+from core.game.game import Game
+from core.instance.instance import Instance
+from core.mod_manager.vortex.exceptions import VortexNotFullySetupError
 from core.mod_manager.vortex.profile_info import ProfileInfo
 from core.mod_manager.vortex.vortex import Vortex
 from core.utilities.leveldb import LevelDB
@@ -33,7 +34,9 @@ class TestVortex(BaseTest):
     RAW_DATA: tuple[str, type[dict[bytes, bytes]]] = ("data", dict)
 
     @patch("pathlib.WindowsPath", new=MockPath)
-    def test_create_instance(self, ready_vortex_db: MockPlyvelDB) -> None:
+    def test_create_instance(
+        self, ready_vortex_db: MockPlyvelDB, qt_resources: None
+    ) -> None:
         """
         Tests `core.mod_manager.vortex.Vortex.create_instance()`
         """
@@ -44,7 +47,7 @@ class TestVortex(BaseTest):
         database.use_symlink = False
         profile_info = ProfileInfo(
             display_name="Test profile",
-            game=SkyrimSE(),
+            game=Game.get_game_by_id("skyrimse"),
             id=ProfileInfo.generate_id(),
         )
         prefix: str = f"persistent###profiles###{profile_info.id}###"
@@ -90,7 +93,9 @@ class TestVortex(BaseTest):
             == json.dumps(profile_info.display_name).encode()
         )
 
-    def test_vortex_not_installed(self, empty_vortex_db: MockPlyvelDB) -> None:
+    def test_vortex_not_installed(
+        self, empty_vortex_db: MockPlyvelDB, qt_resources: None
+    ) -> None:
         """
         Tests if `core.mod_manager.vortex.Vortex` raises a `VortexNotInstalledError`
         when running a pre-migration check on an empty Vortex database.
@@ -98,14 +103,15 @@ class TestVortex(BaseTest):
 
         # given
         vortex = Vortex()
+        Utils.get_private_field(vortex, *TestVortex.DATABASE).use_symlink = False
         profile_info = ProfileInfo(
             display_name="Test profile",
-            game=SkyrimSE(),
+            game=Game.get_game_by_id("skyrimse"),
             id=ProfileInfo.generate_id(),
         )
 
         # then
-        with pytest.raises(VortexNotInstalledError):
+        with pytest.raises(VortexNotFullySetupError):
             vortex.prepare_migration(profile_info)
 
     logical_file_name_data: list[tuple[str, int, str]] = [
