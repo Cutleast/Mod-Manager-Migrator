@@ -25,7 +25,7 @@ from ..exceptions import InstanceNotFoundError
 from ..mod_manager import ModManager
 from .exceptions import (
     VortexIsRunningError,
-    VortexNotInstalledError,
+    VortexNotFullySetupError,
 )
 from .profile_info import ProfileInfo
 
@@ -537,9 +537,21 @@ class Vortex(ModManager[ProfileInfo]):
         game_folder: Path = appdata_path / instance_data.game.id.lower()
 
         if not game_folder.is_dir():
-            raise VortexNotInstalledError
+            raise VortexNotFullySetupError
 
-        # TODO: Check database for enabled game and profile management
+        game_path_key: str = (
+            f"settings###gameMode###discovered###{instance_data.game.id.lower()}###path"
+        )
+        game_path: Optional[str] = self.__level_db.get_key(game_path_key)
+        if game_path is None:
+            raise VortexNotFullySetupError
+
+        profile_management_key: str = "settings###interface###profilesVisible"
+        profile_management_enabled: bool = (
+            self.__level_db.get_key(profile_management_key) or False
+        )
+        if not profile_management_enabled:
+            raise VortexNotFullySetupError
 
     def finalize_migration(
         self,

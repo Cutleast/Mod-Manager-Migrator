@@ -34,7 +34,7 @@ class VortexIsDeployedError(ModManagerError):
         )
 
 
-class VortexNotInstalledError(PreMigrationCheckFailedError):
+class VortexNotFullySetupError(PreMigrationCheckFailedError):
     """
     Exception that occurs when Vortex is not installed or ready for a migration.
     """
