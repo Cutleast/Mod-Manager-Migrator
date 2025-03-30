@@ -22,7 +22,7 @@ def run(args: argparse.Namespace) -> None:
 
     print(f"Dumping prefixed data '{prefix}' from '{db_path}' to '{out_file}'...")
 
-    level_db = LevelDB(db_path)
+    level_db = LevelDB(db_path, use_symlink=False)
     data = level_db.load(prefix=prefix)
 
     with out_file.open("w", encoding="utf-8") as file:
