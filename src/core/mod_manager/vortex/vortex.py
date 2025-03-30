@@ -151,6 +151,10 @@ class Vortex(ModManager[ProfileInfo]):
         modnames: list[str] = [m for m in mod_state_data]
 
         mods_data: dict = self.__level_db.load(f"persistent###mods###{game_id}###")
+
+        if not mods_data:
+            return []
+
         installed_mods: dict[str, dict] = mods_data["persistent"]["mods"][game_id]
         staging_folder: Path = self.__get_staging_folder(game)
 
