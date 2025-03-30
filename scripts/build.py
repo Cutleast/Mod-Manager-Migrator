@@ -65,11 +65,7 @@ executables = [
 
 print("Building with cx_freeze...")
 setup(
-    name=APPNAME,
     version=FILE_VERSION,
-    description=APPNAME,
-    author=AUTHOR,
-    license=LICENSE,
     options={"build_exe": build_options},
     executables=executables,
 ).run_command("build_exe")

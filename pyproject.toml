@@ -4,6 +4,8 @@ version = "3.0.0-alpha-1"
 description = "A tool for migrating modding instances between mod managers, mainly for Bethesda games."
 readme = "README.md"
 requires-python = ">=3.12"
+authors = [{ name = "Cutleast", email = "cutleast@gmail.com" }]
+license = { file = "LICENSE" }
 dependencies = [
     "comtypes>=1.4.10",
     "darkdetect>=0.8.0",
