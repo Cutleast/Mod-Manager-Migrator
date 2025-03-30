@@ -328,7 +328,7 @@ class Vortex(ModManager[ProfileInfo]):
             "gameId": game_id,
             "modState": {},
             "id": profile_id,
-            "lastActivated": int(time.time()),
+            "lastActivated": Vortex.format_unix_timestamp(time.time()),
             "name": profile_name,
         }
 
@@ -373,9 +373,6 @@ class Vortex(ModManager[ProfileInfo]):
 
         file_name: str = self.__get_unique_file_name(mod).rsplit(".", 1)[0]
         if file_name not in mods_data:
-            install_time: str = datetime.datetime.fromtimestamp(
-                time.time(), datetime.timezone.utc
-            ).isoformat()
             logical_file_name: str = Vortex.get_logical_file_name(
                 self.__get_unique_file_name(mod), mod.metadata.mod_id or 0
             )
@@ -385,7 +382,7 @@ class Vortex(ModManager[ProfileInfo]):
                 "attributes": {
                     "customFileName": mod.display_name,
                     "downloadGame": game_id,
-                    "installTime": install_time + "Z",
+                    "installTime": Vortex.format_utc_timestamp(time.time()),
                     "fileName": self.__get_unique_file_name(mod),
                     "fileId": mod.metadata.file_id,
                     "modId": mod.metadata.mod_id,
@@ -455,7 +452,7 @@ class Vortex(ModManager[ProfileInfo]):
         ).setdefault("modState", {})
         profile_mods[file_name] = {
             "enabled": mod.enabled,
-            "enabledTime": int(time.time()),
+            "enabledTime": Vortex.format_unix_timestamp(time.time()),
         }
         self.__level_db.dump(profiles_data)
 
@@ -674,3 +671,37 @@ class Vortex(ModManager[ProfileInfo]):
             full_file_name += f"-{version}"
 
         return clean_fs_string(full_file_name)
+
+    @staticmethod
+    def format_utc_timestamp(timestamp: float) -> str:
+        """
+        Formats a timestamp to a UTC string suffixed by a "Z" for insertion
+        into the Vortex database.
+
+        Args:
+            timestamp (float): Unix timestamp (seconds since epoch)
+
+        Returns:
+            str: UTC string in ISO format
+        """
+
+        return (
+            datetime.datetime.fromtimestamp(
+                timestamp, datetime.timezone.utc
+            ).isoformat()[:-6]  # remove timezone, Vortex doesn't want it
+            + "Z"
+        )
+
+    @staticmethod
+    def format_unix_timestamp(timestamp: float) -> int:
+        """
+        Formats a Unix timestamp for the Vortex database.
+
+        Args:
+            timestamp (float): Unix timestamp
+
+        Returns:
+            int: Formatted timestamp with 3 decimal places without decimal point
+        """
+
+        return int(str(round(timestamp, 3)).replace(".", ""))
