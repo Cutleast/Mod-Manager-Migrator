@@ -10,6 +10,7 @@ from typing import Any, Generator
 from unittest.mock import MagicMock, patch
 
 import pytest
+from pyfakefs.fake_filesystem import FakeFilesystem
 from pytest_mock import MockerFixture
 
 from core.game.game import Game
@@ -48,7 +49,7 @@ class TestVortex(BaseTest):
         profile_info = ProfileInfo(
             display_name="Test profile",
             game=Game.get_game_by_id("skyrimse"),
-            id=ProfileInfo.generate_id(),
+            id="1a2b3c4d",
         )
         prefix: str = f"persistent###profiles###{profile_info.id}###"
         expected_profile_data: dict[str, Any] = {
@@ -153,6 +154,73 @@ class TestVortex(BaseTest):
 
         # then
         assert logical_file_name == expected_logical_name
+
+    def test_install_mod(
+        self,
+        ready_vortex_db: MockPlyvelDB,
+        instance: Instance,
+        data_folder: Path,
+        fs: FakeFilesystem,
+        qt_resources: None,
+    ) -> None:
+        """
+        Tests `core.mod_manager.vortex.Vortex.install_mod()`.
+        """
+
+        self.test_create_instance(ready_vortex_db, qt_resources)
+        fs.add_real_directory(data_folder)
+
+        # given
+        vortex = Vortex()
+        database: LevelDB = Utils.get_private_field(vortex, *TestVortex.DATABASE)
+        database.use_symlink = False
+        database.path.mkdir(parents=True)
+        profile_info = ProfileInfo(
+            display_name="Test profile (1a2b3c4d)",
+            game=Game.get_game_by_id("skyrimse"),
+            id="1a2b3c4d",
+        )
+        dst_profile: Instance = vortex.load_instance(profile_info)
+        mod = instance.mods[1]
+
+        # when
+        vortex.install_mod(
+            mod, dst_profile, profile_info, use_hardlinks=True, replace=True
+        )
+
+        # then
+        dst_profile = vortex.load_instance(profile_info)
+        assert dst_profile.mods[-1].metadata == mod.metadata
+
+    def test_format_utc_timestamp(self) -> None:
+        """
+        Tests `core.mod_manager.vortex.Vortex.format_utc_timestamp()`.
+        """
+
+        # given
+        timestamp: float = 1743321182.5131004
+        expected_result: str = "2025-03-30T07:53:02.513100Z"
+
+        # when
+        actual_result: str = Vortex.format_utc_timestamp(timestamp)
+
+        # then
+        assert actual_result == expected_result
+
+    def test_format_unix_timestamp(self) -> None:
+        """
+        Tests `core.mod_manager.vortex.Vortex.format_unix_timestamp()`.
+        """
+
+        # given
+        timestamp: float = 1743321182.5131004
+        expected_result: int = 1743321182513
+
+        # when
+        actual_result: int = Vortex.format_unix_timestamp(timestamp)
+
+        # then
+        assert actual_result == expected_result
 
     @pytest.fixture
     def ready_vortex_db(

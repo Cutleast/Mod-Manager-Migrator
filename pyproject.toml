@@ -27,6 +27,7 @@ dependencies = [
 dev = [
     "cx-freeze>=7.2.10",
     "mypy>=1.15.0",
+    "pyfakefs>=5.8.0",
     "pytest>=8.3.5",
     "pytest-cov>=6.0.0",
     "pytest-mock>=3.14.0",
