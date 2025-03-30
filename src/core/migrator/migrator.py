@@ -88,7 +88,7 @@ class Migrator(QObject):
         # Try to load existing instance
         dst_instance: Instance
         try:
-            dst_instance = dst_mod_manager.load_instance(dst_info, ldialog)
+            dst_instance = dst_mod_manager.load_instance(dst_info, blacklist, ldialog)
             self.log.warning("Migrating into existing instance...")
         except InstanceNotFoundError:
             dst_instance = dst_mod_manager.create_instance(dst_info, ldialog)

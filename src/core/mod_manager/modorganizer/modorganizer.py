@@ -83,7 +83,10 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         return instances
 
     def load_instance(
-        self, instance_data: MO2InstanceInfo, ldialog: Optional[LoadingDialog] = None
+        self,
+        instance_data: MO2InstanceInfo,
+        file_blacklist: list[str] = [],
+        ldialog: Optional[LoadingDialog] = None,
     ) -> Instance:
         instance_name: str = instance_data.display_name
         profile_name: str = instance_data.profile
@@ -111,17 +114,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
                 ),
             )
 
-        mods: list[Mod] = self._load_mods(instance_data, ldialog)
-
-        if ldialog is not None:
-            ldialog.updateProgress(
-                text1=self.tr("Processing mod conflicts..."),
-                value1=0,
-                max1=0,
-                show2=False,
-            )
-
-        self.__process_conflicts(mods)
+        mods: list[Mod] = self._load_mods(instance_data, file_blacklist, ldialog)
 
         if ldialog is not None:
             ldialog.updateProgress(
@@ -130,7 +123,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
                 ),
             )
 
-        tools: list[Tool] = self._load_tools(instance_data, ldialog)
+        tools: list[Tool] = self._load_tools(instance_data, file_blacklist, ldialog)
 
         instance = Instance(
             display_name=f"{instance_name} > {profile_name}",
@@ -147,7 +140,10 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         return instance
 
     def _load_mods(
-        self, instance_data: MO2InstanceInfo, ldialog: Optional[LoadingDialog] = None
+        self,
+        instance_data: MO2InstanceInfo,
+        file_blacklist: list[str] = [],
+        ldialog: Optional[LoadingDialog] = None,
     ) -> list[Mod]:
         instance_name: str = instance_data.display_name
         profile_name: str = instance_data.profile
@@ -227,6 +223,16 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
             )
             mods.append(mod)
 
+        if ldialog is not None:
+            ldialog.updateProgress(
+                text1=self.tr("Processing mod conflicts..."),
+                value1=0,
+                max1=0,
+                show2=False,
+            )
+
+        self.__process_conflicts(mods, file_blacklist)
+
         self.log.info(
             f"Loaded {len(mods)} mod(s) from {instance_name} > {profile_name}."
         )
@@ -294,8 +300,10 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
             modlist_file.writelines(lines)
 
     @staticmethod
-    def __process_conflicts(mods: list[Mod]) -> None:
-        file_index: dict[str, list[Mod]] = ModOrganizer._index_modlist(mods)
+    def __process_conflicts(mods: list[Mod], file_blacklist: list[str]) -> None:
+        file_index: dict[str, list[Mod]] = ModOrganizer._index_modlist(
+            mods, file_blacklist
+        )
 
         for mod_list in file_index.values():
             while len(mod_list) > 1:
@@ -307,12 +315,15 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
             mod.mod_conflicts = unique(mod.mod_conflicts)
 
     @staticmethod
-    def _index_modlist(mods: list[Mod]) -> dict[str, list[Mod]]:
+    def _index_modlist(
+        mods: list[Mod], file_blacklist: list[str]
+    ) -> dict[str, list[Mod]]:
         """
         Indexes all mod files and maps each file to a list of mods that contain it.
 
         Args:
             mods (list[Mod]): The list of mods.
+            file_blacklist (list[str], optional): A list of file paths to ignore.
 
         Returns:
             dict[str, list[Mod]]: The indexed list of mods.
@@ -320,13 +331,18 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
 
         indexed_mods: dict[str, list[Mod]] = {}
         for mod in mods:
-            for file in mod.files:
+            for file in filter(
+                lambda f: f.name.lower() not in file_blacklist, mod.files
+            ):
                 indexed_mods.setdefault(str(file).lower(), []).append(mod)
 
         return indexed_mods
 
     def _load_tools(
-        self, instance_data: MO2InstanceInfo, ldialog: Optional[LoadingDialog] = None
+        self,
+        instance_data: MO2InstanceInfo,
+        file_blacklist: list[str] = [],
+        ldialog: Optional[LoadingDialog] = None,
     ) -> list[Tool]:
         return []  # TODO: Implement this
 

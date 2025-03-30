@@ -24,6 +24,7 @@ from app_context import AppContext
 from core.game.exceptions import GameNotFoundError
 from core.game.game import Game
 from core.instance.instance import Instance
+from core.migrator.file_blacklist import FileBlacklist
 from core.mod_manager import MOD_MANAGERS
 from core.mod_manager.instance_info import InstanceInfo
 from core.mod_manager.mod_manager import ModManager
@@ -259,7 +260,9 @@ class InstanceSelector(QWidget):
 
         instance_data = self.__mod_managers[mod_manager].get_instance(game)
         self.__cur_mod_instance = LoadingDialog.run_callable(
-            lambda ldialog: mod_manager.load_instance(instance_data, ldialog)
+            lambda ldialog: mod_manager.load_instance(
+                instance_data, FileBlacklist.get_files(), ldialog
+            )
         )
         self.instance_selected.emit(self.__cur_mod_instance)
 

@@ -66,13 +66,17 @@ class ModManager[I: InstanceInfo](QObject):
 
     @abstractmethod
     def load_instance(
-        self, instance_data: I, ldialog: Optional[LoadingDialog] = None
+        self,
+        instance_data: I,
+        file_blacklist: list[str] = [],
+        ldialog: Optional[LoadingDialog] = None,
     ) -> Instance:
         """
         Loads and returns the mod instance with the given name.
 
         Args:
             instance_data (I): The data of the mod instance.
+            file_blacklist (list[str], optional): A list of files to ignore.
             ldialog (Optional[LoadingDialog], optional):
                 Optional loading dialog. Defaults to None.
 
@@ -82,13 +86,17 @@ class ModManager[I: InstanceInfo](QObject):
 
     @abstractmethod
     def _load_mods(
-        self, instance_data: I, ldialog: Optional[LoadingDialog] = None
+        self,
+        instance_data: I,
+        file_blacklist: list[str] = [],
+        ldialog: Optional[LoadingDialog] = None,
     ) -> list[Mod]:
         """
         Loads and returns a list of mods for the given instance name.
 
         Args:
             instance_data (I): The data of the mod instance.
+            file_blacklist (list[str], optional): A list of files to ignore.
             ldialog (Optional[LoadingDialog], optional):
                 Optional loading dialog. Defaults to None.
 
@@ -98,13 +106,17 @@ class ModManager[I: InstanceInfo](QObject):
 
     @abstractmethod
     def _load_tools(
-        self, instance_data: I, ldialog: Optional[LoadingDialog] = None
+        self,
+        instance_data: I,
+        file_blacklist: list[str] = [],
+        ldialog: Optional[LoadingDialog] = None,
     ) -> list[Tool]:
         """
         Loads and returns a list of tools for the given instance.
 
         Args:
             instance_data (I): The data of the mod instance.
+            file_blacklist (list[str], optional): A list of files to ignore.
             ldialog (Optional[LoadingDialog], optional):
                 Optional loading dialog. Defaults to None.
 

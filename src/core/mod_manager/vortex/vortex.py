@@ -93,7 +93,10 @@ class Vortex(ModManager[ProfileInfo]):
         return profiles
 
     def load_instance(
-        self, instance_data: ProfileInfo, ldialog: Optional[LoadingDialog] = None
+        self,
+        instance_data: ProfileInfo,
+        file_blacklist: list[str] = [],
+        ldialog: Optional[LoadingDialog] = None,
     ) -> Instance:
         instance_name: str = instance_data.display_name
         game: Game = instance_data.game
@@ -107,8 +110,8 @@ class Vortex(ModManager[ProfileInfo]):
                 text1=self.tr("Loading profile {0}...").format(instance_name),
             )
 
-        mods: list[Mod] = self._load_mods(instance_data, ldialog)
-        tools: list[Tool] = self._load_tools(instance_data, ldialog)
+        mods: list[Mod] = self._load_mods(instance_data, file_blacklist, ldialog)
+        tools: list[Tool] = self._load_tools(instance_data, file_blacklist, ldialog)
         instance = Instance(display_name=instance_name, mods=mods, tools=tools)
 
         self.log.info(
@@ -119,7 +122,10 @@ class Vortex(ModManager[ProfileInfo]):
         return instance
 
     def _load_mods(
-        self, instance_data: ProfileInfo, ldialog: Optional[LoadingDialog] = None
+        self,
+        instance_data: ProfileInfo,
+        file_blacklist: list[str] = [],
+        ldialog: Optional[LoadingDialog] = None,
     ) -> list[Mod]:
         instance_name: str = instance_data.display_name
         profile_id: str = instance_data.id
@@ -307,7 +313,10 @@ class Vortex(ModManager[ProfileInfo]):
             mod.mod_conflicts = overwriting_mods
 
     def _load_tools(
-        self, instance_data: ProfileInfo, ldialog: Optional[LoadingDialog] = None
+        self,
+        instance_data: ProfileInfo,
+        file_blacklist: list[str],
+        ldialog: Optional[LoadingDialog] = None,
     ) -> list[Tool]:
         return []  # TODO: Implement this
 
