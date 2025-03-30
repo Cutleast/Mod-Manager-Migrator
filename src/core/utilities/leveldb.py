@@ -129,24 +129,29 @@ class LevelDB:
 
         return parsed
 
-    def dump(self, data: dict) -> None:
+    def dump(self, data: dict, prefix: Optional[str | bytes] = None) -> None:
         """
         Dumps the given data to the database.
 
         Args:
             data (dict): The data to dump.
+            prefix (str | bytes, optional):
+                The prefix for the flattened keys. Defaults to the database's root.
         """
 
         db_path = self.get_symlink_path()
 
         flat_dict: dict[str, str] = LevelDB.flatten_nested_dict(data)
 
+        if isinstance(prefix, str):
+            prefix = prefix.encode()
+
         self.log.info(f"Saving keys to {str(db_path)!r}...")
 
         with ldb.DB(str(db_path)) as database:
             with database.write_batch() as batch:
                 for key, value in flat_dict.items():
-                    batch.put(key.encode(), value.encode())
+                    batch.put(((prefix or b"") + key.encode()), value.encode())
 
         self.log.info("Saved keys to database.")
 

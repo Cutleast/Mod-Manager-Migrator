@@ -443,6 +443,8 @@ class Vortex(ModManager[ProfileInfo]):
         if rules:
             mods_data[file_name]["rules"] = rules
 
+        self.__level_db.dump(mods_data, prefix=f"persistent###mods###{game_id}###")
+
         # Add mod to profile
         profiles_data: dict[str, Any] = (
             self.__level_db.load("persistent###profiles###")
@@ -456,7 +458,7 @@ class Vortex(ModManager[ProfileInfo]):
             "enabled": mod.enabled,
             "enabledTime": Vortex.format_unix_timestamp(time.time()),
         }
-        self.__level_db.dump(profiles_data)
+        self.__level_db.dump(profiles_data, prefix="persistent###profiles###")
 
         if not instance.is_mod_installed(mod):
             instance.mods.append(mod)
