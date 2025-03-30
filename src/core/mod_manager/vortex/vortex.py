@@ -555,41 +555,21 @@ class Vortex(ModManager[ProfileInfo]):
         profile_data: dict[str, Any] = self.__level_db.load(
             f"persistent###profiles###{migrated_instance_data.id}"
         )
-        profile_data["settings"]["local_game_settings"] = (
+        profile_data.setdefault("features", {})["local_game_settings"] = (
             migrated_instance.separate_ini_files
         )
-        profile_data["settings"]["local_saves"] = migrated_instance.separate_save_games
+        profile_data["features"]["local_saves"] = migrated_instance.separate_save_games
         self.__level_db.dump(profile_data)
 
-        settings_data: dict[str, Any] = self.__level_db.load("settings###").setdefault(
-            "settings", {}
-        )
-
-        # Enable profile management
-        settings_data.setdefault("interface", {})["profilesVisible"] = True
+        # Activate new profile
+        key: str = "settings###profiles###activeProfileId"
+        self.__level_db.set_key(key, migrated_instance_data.id)
 
         # Set last active profile
-        settings_data["interface"].setdefault("profiles", {}).setdefault(
-            "lastActiveProfile", {}
-        )[migrated_instance_data.game.id.lower()] = migrated_instance_data.id
+        key = "settings###profiles###lastActiveProfile###"
+        key += migrated_instance_data.game.id.lower()
+        self.__level_db.set_key(key, migrated_instance_data.id)
 
-        # Add game to managed games
-        game_data: dict[str, Any] = (
-            settings_data.setdefault("gameMode", {})
-            .setdefault("discovered", {})
-            .setdefault(migrated_instance_data.game.id.lower(), {})
-        )
-
-        if "path" not in game_data:
-            game_data["path"] = str(migrated_instance_data.game.installdir)
-            game_data["pathSetManually"] = True
-            # TODO: Add real "store" value to game data, eg. "steam"
-            game_data["store"] = "other"
-            self.log.debug(
-                f"Set game directory in Vortex database to {game_data['path']!r}."
-            )
-
-        self.__level_db.dump(settings_data)
         self.__level_db.del_symlink_path()
 
     def get_completed_message(self, migrated_instance_data: ProfileInfo) -> str:
