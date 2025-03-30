@@ -137,8 +137,6 @@ class Vortex(ModManager[ProfileInfo]):
                 text1=self.tr("Loading mods from profile {0}...").format(instance_name),
             )
 
-        appdata_path: Path = resolve(Path("%APPDATA%") / "Vortex")
-
         game_id: str = game.id.lower()
 
         profiles_data: dict = self.__level_db.load("persistent###profiles###")
@@ -154,21 +152,7 @@ class Vortex(ModManager[ProfileInfo]):
 
         mods_data: dict = self.__level_db.load(f"persistent###mods###{game_id}###")
         installed_mods: dict[str, dict] = mods_data["persistent"]["mods"][game_id]
-
-        staging_folder_value: Optional[str] = self.__level_db.get_key(
-            f"settings###mods###installPath###{game_id}"
-        )
-
-        staging_folder: Path
-        if staging_folder_value is None:
-            staging_folder = appdata_path / game_id / "mods"
-        else:
-            staging_folder = resolve(
-                Path(staging_folder_value),
-                sep=("{", "}"),
-                game=game_id,
-                userdata=str(appdata_path),
-            )
+        staging_folder: Path = self.__get_staging_folder(game)
 
         mods: list[Mod] = []
         conflict_rules: dict[Mod, list[dict]] = {}
@@ -475,19 +459,23 @@ class Vortex(ModManager[ProfileInfo]):
             instance.mods.append(mod)
 
     def __get_staging_folder(self, game: Game) -> Path:
-        data: dict[str, Any] = self.__level_db.load("settings###mods###installPath")
+        appdata_path: Path = resolve(Path("%APPDATA%") / "Vortex")
+        game_id: str = game.id.lower()
 
-        staging_folder_raw: Optional[str] = data.get(game.id.lower())
+        staging_folder_value: Optional[str] = self.__level_db.get_key(
+            f"settings###mods###installPath###{game_id}"
+        )
 
-        if staging_folder_raw is None:
-            return resolve(Path("%APPDATA%") / "Vortex" / game.id.lower() / "mods")
-
-        vars: dict[str, str] = {
-            "userdata": resolve("%APPDATA%/Vortex"),
-            "game": game.id.lower(),
-        }
-
-        staging_folder = resolve(Path(staging_folder_raw), ("{", "}"), **vars)
+        staging_folder: Path
+        if staging_folder_value is None:
+            staging_folder = appdata_path / game_id / "mods"
+        else:
+            staging_folder = resolve(
+                Path(staging_folder_value),
+                sep=("{", "}"),
+                game=game_id,
+                userdata=str(appdata_path),
+            )
 
         return staging_folder
 
