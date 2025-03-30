@@ -12,9 +12,9 @@ from core.instance.instance import Instance
 from core.mod_manager.exceptions import InstanceNotFoundError
 from core.mod_manager.instance_info import InstanceInfo
 from core.mod_manager.mod_manager import ModManager
-from core.utilities.qt_res_provider import read_resource
 from ui.widgets.loading_dialog import LoadingDialog
 
+from .file_blacklist import FileBlacklist
 from .migration_report import MigrationReport
 
 
@@ -24,28 +24,6 @@ class Migrator(QObject):
     """
 
     log: logging.Logger = logging.getLogger("Migrator")
-
-    class FileBlacklist:
-        """
-        Class that holds a list of files that should not be migrated.
-        """
-
-        _files: Optional[list[str]] = None
-
-        @classmethod
-        def get_files(cls) -> list[str]:
-            """
-            Gets the list of files that should not be migrated. Reads the blacklist
-            resource if not already done.
-
-            Returns:
-                list[str]: The list of files that should not be migrated.
-            """
-
-            if cls._files is None:
-                cls._files = read_resource(":/blacklist").splitlines()
-
-            return cls._files
 
     def migrate(
         self,
@@ -94,7 +72,7 @@ class Migrator(QObject):
         self.log.info(f"Separate ini files: {src_instance.separate_ini_files}")
         self.log.info(f"Separate save games: {src_instance.separate_save_games}")
 
-        blacklist: list[str] = Migrator.FileBlacklist.get_files()
+        blacklist: list[str] = FileBlacklist.get_files()
         self.log.info(f"File blacklist: {', '.join(blacklist)}")
 
         dst_mod_manager.check_destination_disk_space(dst_info, src_instance.size)
