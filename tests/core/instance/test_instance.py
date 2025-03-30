@@ -20,9 +20,15 @@ class TestInstance(BaseTest):
         """
 
         # given
-        overwritten_mod: Mod = instance.mods[-1]
-        overwriting_mod: Mod = instance.mods[0]
-        overwritten_mod.mod_conflicts = [overwriting_mod]
+        overwritten_mod: Mod = self.get_mod_by_name(
+            "Obsidian Weathers and Seasons", instance
+        )
+        overwriting_mod: Mod = self.get_mod_by_name(
+            "Obsidian Weathers and Seasons - German", instance
+        )
+
+        # then
+        assert overwritten_mod.mod_conflicts == [overwriting_mod]
 
         # when
         loadorder: list[Mod] = instance.loadorder
@@ -36,9 +42,15 @@ class TestInstance(BaseTest):
         """
 
         # given
-        overwritten_mod: Mod = instance.mods[-1]
-        overwriting_mod: Mod = instance.mods[0]
-        overwritten_mod.mod_conflicts = [overwriting_mod]
+        overwritten_mod: Mod = self.get_mod_by_name(
+            "Obsidian Weathers and Seasons", instance
+        )
+        overwriting_mod: Mod = self.get_mod_by_name(
+            "Obsidian Weathers and Seasons - German", instance
+        )
+
+        # then
+        assert overwritten_mod.mod_conflicts == [overwriting_mod]
 
         # when
         loadorder: list[Mod] = instance.get_loadorder(False)
@@ -52,10 +64,16 @@ class TestInstance(BaseTest):
         """
 
         # given
-        overwritten_mod: Mod = instance.mods[-1]
-        overwriting_mod: Mod = instance.mods[0]
-        overwritten_mod.mod_conflicts = [overwriting_mod]
         instance.order_matters = True
+        overwritten_mod: Mod = self.get_mod_by_name(
+            "Obsidian Weathers and Seasons", instance
+        )
+        overwriting_mod: Mod = self.get_mod_by_name(
+            "Obsidian Weathers and Seasons - German", instance
+        )
+
+        # then
+        assert overwritten_mod.mod_conflicts == [overwriting_mod]
 
         # when
         loadorder: list[Mod] = instance.loadorder
