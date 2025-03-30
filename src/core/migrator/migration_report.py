@@ -26,4 +26,6 @@ class MigrationReport:
 
     @property
     def has_errors(self) -> bool:
+        """Whether the report contains errors in any category."""
+
         return bool(self.failed_mods or self.failed_tools or self.other_errors)
