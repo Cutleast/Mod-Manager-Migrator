@@ -155,6 +155,16 @@ class InstanceOverviewWidget(QSplitter):
         )
 
         if report.has_errors:
+            QMessageBox.warning(
+                AppContext.get_app().main_window,
+                self.tr("Migration completed with errors!"),
+                self.tr(
+                    "Migration completed with errors! Click 'Ok' to open the report.\n\n"
+                )
+                + dst_mod_manager.get_completed_message(dst_info),
+                QMessageBox.StandardButton.Ok,
+            )
+
             MigrationReportDialog(report).exec()
         else:
             QMessageBox.information(
