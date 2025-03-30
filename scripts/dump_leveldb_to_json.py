@@ -36,7 +36,7 @@ def main() -> None:
     parser.add_argument(
         "--db-path",
         type=str,
-        help="Path to the Vortex database. Defaults to %APPDATA%/Vortex/state.v2.",
+        help="Path to the Vortex database. Defaults to %%APPDATA%%/Vortex/state.v2.",
     )
     parser.add_argument(
         "--out-file",
