@@ -413,7 +413,9 @@ class Vortex(ModManager[ProfileInfo]):
         rules: list[dict[str, Any]] = mods_data[file_name].get("rules", [])
         # Check for rules
         for overwriting_mod in mod.mod_conflicts:
-            overwriting_mod_filename: str = self.__get_unique_file_name(overwriting_mod)
+            overwriting_mod_filename: str = self.__get_unique_file_name(
+                overwriting_mod
+            ).rsplit(".", 1)[0]
 
             # Skip mod if both mods already exist in database
             # since rule is very likely to exist, too
