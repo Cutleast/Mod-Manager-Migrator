@@ -209,9 +209,13 @@ class Vortex(ModManager[ProfileInfo]):
                 )
                 continue
 
-            mod_id: int = int(mod_meta_data.get("modId", 0))
-            file_id: int = int(mod_meta_data.get("fileId", 0))
-            version: str = mod_meta_data.get("version", "")
+            mod_id: Optional[int] = None
+            if mod_meta_data.get("modId"):
+                mod_id = int(mod_meta_data["modId"])
+            file_id: Optional[int] = None
+            if mod_meta_data.get("fileId"):
+                file_id = int(mod_meta_data["fileId"])
+            version: str = mod_meta_data.get("version") or ""
 
             # Remove trailing .0 if any
             while version.endswith(".0") and version.count(".") > 1:
