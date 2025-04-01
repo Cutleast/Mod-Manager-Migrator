@@ -533,8 +533,9 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
                 },
             }
             meta_ini_file.save_file()
-        elif Path("meta.ini") in mod.files:
-            self.log.warning(f"Mod {mod.display_name!r} already has a meta.ini file.")
+        elif regular and Path("meta.ini") in mod.files:
+            meta_ini_path.write_bytes((mod.path / "meta.ini").read_bytes())
+            self.log.info("Copied original meta.ini from mod.")
 
         self._migrate_mod_files(
             mod, mod_folder, use_hardlinks, replace, blacklist, ldialog

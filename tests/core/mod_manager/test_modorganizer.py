@@ -199,6 +199,8 @@ class TestModOrganizer(BaseTest):
         )
 
         # then
+        assert migrated_overwritten_mod.metadata == overwritten_mod.metadata
+        assert migrated_overwriting_mod.metadata == overwriting_mod.metadata
         assert migrated_overwritten_mod.mod_conflicts == [migrated_overwriting_mod]
         assert dst_instance.loadorder.index(
             migrated_overwritten_mod
