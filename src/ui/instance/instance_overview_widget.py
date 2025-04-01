@@ -170,7 +170,8 @@ class InstanceOverviewWidget(QSplitter):
             QMessageBox.information(
                 AppContext.get_app().main_window,
                 self.tr("Migration Complete"),
-                dst_mod_manager.get_completed_message(dst_info),
+                self.tr("Migration completed successfully!\n\n")
+                + dst_mod_manager.get_completed_message(dst_info),
                 QMessageBox.StandardButton.Ok,
             )
 

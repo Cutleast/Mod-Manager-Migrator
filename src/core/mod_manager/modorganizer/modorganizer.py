@@ -712,10 +712,10 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         return instances_found
 
     def get_completed_message(self, migrated_instance_data: MO2InstanceInfo) -> str:
-        text: str = super().get_completed_message(migrated_instance_data)
+        text: str = ""
 
         if migrated_instance_data.use_root_builder:
-            text += "\n\n" + self.tr(
+            text = self.tr(
                 "The usage of root builder was enabled.\n"
                 "In order to correctly deploy the root files, you have to download and "
                 'extract the root builder plugin from Nexus Mods to the "plugins" '

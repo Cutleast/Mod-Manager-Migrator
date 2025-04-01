@@ -573,10 +573,10 @@ class Vortex(ModManager[ProfileInfo]):
         self.__level_db.del_symlink_path()
 
     def get_completed_message(self, migrated_instance_data: ProfileInfo) -> str:
-        text: str = super().get_completed_message(migrated_instance_data)
+        text: str = ""
 
         if self.is_deployed(migrated_instance_data.game):
-            text += "\n\n" + self.tr(
+            text = self.tr(
                 "Vortex is currently deployed to the game folder. "
                 "It is strongly recommended to purge the game directory "
                 "before using the migrated instance."

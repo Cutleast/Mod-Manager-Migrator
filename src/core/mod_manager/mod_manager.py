@@ -469,7 +469,7 @@ class ModManager[I: InstanceInfo](QObject):
             str: Text to display to the user.
         """
 
-        return self.tr("Migration completed successfully!")
+        return ""
 
     @abstractmethod
     def check_destination_disk_space(self, dst_info: I, src_size: int) -> None:
