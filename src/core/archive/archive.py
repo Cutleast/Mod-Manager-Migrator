@@ -21,6 +21,8 @@ class Archive(ABC):
 
     log = logging.getLogger("Archiver")
 
+    _bin_path = Path("res") / "7-zip" / "7z.exe"
+
     __files: list[str] | None = None
 
     def __init__(self, path: Path):
@@ -60,7 +62,7 @@ class Archive(ABC):
         """
 
         cmd: list[str] = [
-            "7z.exe",
+            str(Archive._bin_path),
             "x" if full_paths else "e",
             str(self.path),
             f"-o{dest}",
@@ -85,7 +87,7 @@ class Archive(ABC):
         """
 
         cmd: list[str] = [
-            "7z.exe",
+            str(Archive._bin_path),
             "x" if full_paths else "e",
             f"-o{dest}",
             "-aoa",
@@ -117,7 +119,7 @@ class Archive(ABC):
             return
 
         cmd: list[str] = [
-            "7z.exe",
+            str(Archive._bin_path),
             "x" if full_paths else "e",
             f"-o{dest}",
             "-aoa",
