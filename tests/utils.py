@@ -3,6 +3,7 @@ Copyright (c) Cutleast
 """
 
 from collections.abc import Callable
+from pathlib import Path
 from typing import Any, Optional
 
 
@@ -76,3 +77,26 @@ class Utils:
             raise TypeError(f"{field_name!r} ({type(field)}) is not a {field_type}!")
 
         return field
+
+    @staticmethod
+    def compare_path_list(list1: list[Path], list2: list[Path]) -> bool:
+        """
+        Compares to lists of paths. Normalizes and lowercases the paths before comparing.
+
+        Args:
+            list1 (list[Path]): First list.
+            list2 (list[Path]): Second list.
+
+        Returns:
+            bool: True if the lists are equal, False otherwise.
+        """
+
+        normalized1: list[str] = [
+            str(path).lower().replace("\\", "/") for path in list1
+        ]
+
+        normalized2: list[str] = [
+            str(path).lower().replace("\\", "/") for path in list2
+        ]
+
+        return normalized1 == normalized2
