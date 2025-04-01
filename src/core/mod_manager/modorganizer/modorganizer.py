@@ -44,19 +44,10 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
     # TODO: Make this dynamic instead of a fixed url
     DOWNLOAD_URL: str = "https://github.com/ModOrganizer2/modorganizer/releases/download/v2.5.2/Mod.Organizer-2.5.2.7z"
 
-    GAMES: dict[str, Game]
-    """
-    Dict of game names in the meta.ini file to game classes.
-    """
-
     appdata_path = resolve(Path("%LOCALAPPDATA%") / "ModOrganizer")
 
     def __init__(self) -> None:
         super().__init__()
-
-        self.GAMES = {
-            "SkyrimSE": Game.get_game_by_id("skyrimse"),
-        }
 
     def __repr__(self) -> str:
         return "ModOrganizer"
@@ -259,11 +250,15 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
                 while version.endswith(".0") and version.count(".") > 1:
                     version = version.removesuffix(".0")
 
-                if "gameName" in general and general["gameName"] in self.GAMES:
-                    game_id = self.GAMES[general["gameName"]].nexus_id
-                elif "gameName" in general:
+                try:
+                    game_id = Game.get_game_by_short_name(general["gameName"]).nexus_id
+                except KeyError:
                     self.log.warning(
-                        f"Unknown game for mod {meta_ini_path.parent.name!r}: {general['gameName']}"
+                        f"No game specified for {meta_ini_path.parent.name!r}!"
+                    )
+                except ValueError:
+                    self.log.warning(
+                        f"Unknown game for mod {meta_ini_path.parent.name!r}: {general.get('gameName')}"
                     )
 
                 if "installedFiles" in meta_ini_data:
@@ -521,7 +516,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
             meta_ini_file = INIFile(meta_ini_path)
             meta_ini_file.data = {
                 "General": {
-                    "game": game.display_name,
+                    "game": game.short_name,
                     "modid": mod.metadata.mod_id,
                     "version": mod.metadata.version,
                     "installationFile": mod.metadata.file_name,

@@ -26,12 +26,17 @@ class Game(BaseModel):
 
     id: str
     """
-    Game identifier, should match the one used by Vortex.
+    Game identifier, should match the one used by Vortex (eg. "skyrimse").
     """
 
     display_name: str
     """
-    Display name of the game.
+    Display name of the game (eg. "Skyrim Special Edition").
+    """
+
+    short_name: str
+    """
+    Short name of the game (eg. "SkyrimSE").
     """
 
     nexus_id: str
@@ -162,3 +167,28 @@ class Game(BaseModel):
             return games[game_id]
 
         raise ValueError(f"Game '{game_id}' not found!")
+
+    @staticmethod
+    @cache
+    def get_game_by_short_name(short_name: str) -> Game:
+        """
+        Gets a game by its short name.
+
+        Args:
+            short_name (str): Game short name
+
+        Raises:
+            ValueError: when the game could not be found
+
+        Returns:
+            Game: Game with specified short name
+        """
+
+        games: dict[str, Game] = {
+            game.short_name: game for game in Game.get_supported_games()
+        }
+
+        if short_name in games:
+            return games[short_name]
+
+        raise ValueError(f"Game '{short_name}' not found!")

@@ -2,6 +2,7 @@
     {
         "id": "enderal",
         "display_name": "Enderal",
+        "short_name": "Enderal",
         "nexus_id": "enderal",
         "inidir": "%DOCUMENTS%\\My Games\\Enderal",
         "inifiles": [
@@ -16,6 +17,7 @@
     {
         "id": "enderalspecialedition",
         "display_name": "Enderal Special Edition",
+        "short_name": "EnderalSpecialEdition",
         "nexus_id": "enderalspecialedition",
         "inidir": "%DOCUMENTS%\\My Games\\Enderal Special Edition",
         "inifiles": [
@@ -31,6 +33,7 @@
     {
         "id": "enderalspecialedition_gog",
         "display_name": "Enderal Special Edition (GOG)",
+        "short_name": "EnderalSpecialEdition",
         "nexus_id": "enderalspecialedition",
         "inidir": "%DOCUMENTS%\\My Games\\Enderal Special Edition GOG",
         "inifiles": [
@@ -46,6 +49,7 @@
     {
         "id": "fallout3",
         "display_name": "Fallout 3",
+        "short_name": "Fallout3",
         "nexus_id": "fallout3",
         "inidir": "%DOCUMENTS%\\My Games\\Fallout 3",
         "inifiles": [
@@ -60,6 +64,7 @@
     {
         "id": "fallout4",
         "display_name": "Fallout 4",
+        "short_name": "Fallout4",
         "nexus_id": "fallout4",
         "inidir": "%DOCUMENTS%\\My Games\\Fallout4",
         "inifiles": [
@@ -75,6 +80,7 @@
     {
         "id": "falloutnv",
         "display_name": "Fallout: New Vegas",
+        "short_name": "FalloutNV",
         "nexus_id": "newvegas",
         "inidir": "%DOCUMENTS%\\My Games\\FalloutNV",
         "inifiles": [
@@ -89,6 +95,7 @@
     {
         "id": "oblivion",
         "display_name": "Oblivion",
+        "short_name": "Oblivion",
         "nexus_id": "oblivion",
         "inidir": "%DOCUMENTS%\\My Games\\Oblivion",
         "inifiles": [
@@ -103,6 +110,7 @@
     {
         "id": "skyrim",
         "display_name": "Skyrim",
+        "short_name": "Skyrim",
         "nexus_id": "skyrim",
         "inidir": "%DOCUMENTS%\\My Games\\Skyrim",
         "inifiles": [
@@ -117,6 +125,7 @@
     {
         "id": "skyrimse",
         "display_name": "Skyrim Special Edition",
+        "short_name": "SkyrimSE",
         "nexus_id": "skyrimspecialedition",
         "inidir": "%DOCUMENTS%\\My Games\\Skyrim Special Edition",
         "inifiles": [
@@ -131,6 +140,7 @@
     {
         "id": "skyrimse_gog",
         "display_name": "Skyrim Special Edition (GOG)",
+        "short_name": "SkyrimSE",
         "nexus_id": "skyrimspecialedition",
         "inidir": "%DOCUMENTS%\\My Games\\Skyrim Special Edition GOG",
         "inifiles": [
