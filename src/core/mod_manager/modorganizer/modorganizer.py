@@ -250,24 +250,30 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         game_id: str = default_game.nexus_id
         install_file: Optional[str] = None
         if general is not None:
-            mod_id = int(general.get("modid") or 0) or None
-            version = general.get("version") or ""
-            if general.get("installationFile"):
-                install_file = Path(general["installationFile"] or "").name
+            try:
+                mod_id = int(general.get("modid") or 0) or None
+                version = general.get("version") or ""
+                if general.get("installationFile"):
+                    install_file = Path(general["installationFile"] or "").name
 
-            while version.endswith(".0") and version.count(".") > 1:
-                version = version.removesuffix(".0")
+                while version.endswith(".0") and version.count(".") > 1:
+                    version = version.removesuffix(".0")
 
-            if "gameName" in general and general["gameName"] in self.GAMES:
-                game_id = self.GAMES[general["gameName"]].nexus_id
-            elif "gameName" in general:
-                self.log.warning(
-                    f"Unknown game for mod {meta_ini_path.parent.name!r}: {general['gameName']}"
-                )
+                if "gameName" in general and general["gameName"] in self.GAMES:
+                    game_id = self.GAMES[general["gameName"]].nexus_id
+                elif "gameName" in general:
+                    self.log.warning(
+                        f"Unknown game for mod {meta_ini_path.parent.name!r}: {general['gameName']}"
+                    )
 
-            if "installedFiles" in meta_ini_data:
-                file_id = (
-                    int(meta_ini_data["installedFiles"].get("1\\fileid", 0)) or None
+                if "installedFiles" in meta_ini_data:
+                    file_id = (
+                        int(meta_ini_data["installedFiles"].get("1\\fileid") or 0)
+                        or None
+                    )
+            except Exception as ex:
+                self.log.error(
+                    f"Failed to parse meta.ini in {str(meta_ini_path.parent)!r}: {ex}"
                 )
         else:
             self.log.warning(f"Incomplete meta.ini in {str(meta_ini_path.parent)!r}!")
