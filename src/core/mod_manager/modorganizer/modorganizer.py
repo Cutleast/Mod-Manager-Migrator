@@ -295,7 +295,13 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
 
     @staticmethod
     def __dump_modlist_txt(modlist_txt_path: Path, mods: list[Mod]) -> None:
-        lines: list[str] = [f"+{mod.display_name}\n" for mod in reversed(mods)]
+        lines: list[str] = [
+            (
+                ("+" if mod.enabled and not mod.mod_type == Mod.Type.Separator else "-")
+                + f"{mod.display_name}\n"
+            )
+            for mod in reversed(mods)
+        ]
         with open(modlist_txt_path, "w", encoding="utf8") as modlist_file:
             modlist_file.writelines(lines)
 
