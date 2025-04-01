@@ -154,7 +154,15 @@ class ModlistWidget(QWidget):
         """
 
         self.__instance_name_label.setText(instance.display_name)
-        self.__mods_num_label.display(len([m for m in instance.mods if m.enabled]))
+        self.__mods_num_label.display(
+            len(
+                [
+                    m
+                    for m in instance.mods
+                    if m.enabled and not m.mod_type == Mod.Type.Separator
+                ]
+            )
+        )
 
         self.__tree_widget.clear()
         self.__modlist_tree_items = {}
