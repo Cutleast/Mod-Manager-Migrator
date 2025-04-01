@@ -49,16 +49,15 @@ class BaseTest:
         return Path("tests") / "data"
 
     @pytest.fixture
-    def instance(self, data_folder: Path, qt_resources: None) -> Instance:
+    def instance_info(self, data_folder: Path, qt_resources: None) -> MO2InstanceInfo:
         """
-        Loads the test mod instance.
+        Returns the instance info of the test mod instance.
 
         Returns:
-            Instance: The test mod instance.
+            MO2InstanceInfo: The instance info of the test mod instance.
         """
 
-        mo2 = ModOrganizer()
-        instance_info = MO2InstanceInfo(
+        return MO2InstanceInfo(
             display_name="Test Instance",
             game=Game.get_game_by_id("skyrimse"),
             profile="Default",
@@ -67,7 +66,17 @@ class BaseTest:
             mods_folder=data_folder / "mod_instance" / "mods",
             profiles_folder=data_folder / "mod_instance" / "profiles",
         )
-        return mo2.load_instance(instance_info, FileBlacklist.get_files())
+
+    @pytest.fixture
+    def instance(self, instance_info: MO2InstanceInfo, qt_resources: None) -> Instance:
+        """
+        Loads the test mod instance.
+
+        Returns:
+            Instance: The test mod instance.
+        """
+
+        return ModOrganizer().load_instance(instance_info, FileBlacklist.get_files())
 
     @pytest.fixture
     def test_instance(self) -> Instance:
