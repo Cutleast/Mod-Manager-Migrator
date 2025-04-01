@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Generator
 
 import pytest
+from pyfakefs.fake_filesystem import FakeFilesystem
 
 from core.game.game import Game
 from core.instance.instance import Instance
@@ -47,6 +48,18 @@ class BaseTest:
         """
 
         return Path("tests") / "data"
+
+    @pytest.fixture
+    def test_fs(self, data_folder: Path, fs: FakeFilesystem) -> FakeFilesystem:
+        """
+        Creates a fake filesystem for testing.
+
+        Returns:
+            FakeFilesystem: The fake filesystem.
+        """
+
+        fs.add_real_directory(data_folder)
+        return fs
 
     @pytest.fixture
     def instance_info(self, data_folder: Path, qt_resources: None) -> MO2InstanceInfo:

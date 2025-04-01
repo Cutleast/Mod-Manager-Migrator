@@ -99,5 +99,6 @@ class TestMigrator(BaseTest):
         for mod1, mod2 in zip(modlist1, modlist2):
             assert mod1.metadata == mod2.metadata
             assert mod1.enabled == mod2.enabled
+            assert mod1.mod_type == mod2.mod_type
             if check_files:
                 assert Utils.compare_path_list(mod1.files, mod2.files)

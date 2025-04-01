@@ -299,7 +299,9 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         lines: list[str] = [
             (
                 ("+" if mod.enabled and not mod.mod_type == Mod.Type.Separator else "-")
-                + f"{mod.display_name}\n"
+                + clean_fs_string(mod.display_name)
+                + ("_separator" if mod.mod_type == Mod.Type.Separator else "")
+                + "\n"
             )
             for mod in reversed(mods)
         ]
@@ -490,7 +492,10 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         game: Game = instance_data.game
 
         regular: bool = True
-        mod_folder: Path = instance_data.mods_folder / clean_fs_string(mod.display_name)
+        mod_name: str = mod.display_name
+        if mod.mod_type == Mod.Type.Separator:
+            mod_name += "_separator"
+        mod_folder: Path = instance_data.mods_folder / clean_fs_string(mod_name)
         meta_ini_path: Path = mod_folder / "meta.ini"
         if mod.deploy_path is not None and mod.deploy_path == Path("."):
             if instance_data.use_root_builder:

@@ -209,3 +209,48 @@ class TestModOrganizer(BaseTest):
         assert Utils.compare_path_list(
             migrated_overwriting_mod.files, overwriting_mod.files
         )
+
+    def test_install_mod_with_separator(
+        self, test_fs: FakeFilesystem, instance: Instance, qt_resources: None
+    ) -> None:
+        """
+        Tests `core.mod_manager.modorganizer.modorganizer.ModOrganizer.install_mod()`
+        with a separator mod.
+        """
+
+        self.test_create_instance(test_fs, qt_resources)
+
+        # given
+        mo2 = ModOrganizer()
+        test_instance_path = Path("E:\\Modding\\Test Instance")
+        instance_data = MO2InstanceInfo(
+            display_name="Test Instance",
+            game=Game.get_game_by_id("skyrimse"),
+            profile="Default",
+            is_global=False,
+            base_folder=test_instance_path,
+            mods_folder=test_instance_path / "mods",
+            profiles_folder=test_instance_path / "profiles",
+            install_mo2=False,  # This is important for now as the download is not mocked, yet
+        )
+        dst_instance: Instance = mo2.load_instance(
+            instance_data, FileBlacklist.get_files()
+        )
+        separator_mod: Mod = self.get_mod_by_name("Test Mods", instance)
+
+        # when
+        mo2.install_mod(
+            separator_mod,
+            dst_instance,
+            instance_data,
+            use_hardlinks=True,
+            replace=True,
+            blacklist=FileBlacklist.get_files(),
+        )
+        mo2.finalize_migration(dst_instance, instance_data, order_matters=True)
+
+        dst_instance = mo2.load_instance(instance_data, FileBlacklist.get_files())
+        migrated_separator_mod: Mod = self.get_mod_by_name("Test Mods", dst_instance)
+
+        # then
+        assert migrated_separator_mod.mod_type == Mod.Type.Separator
