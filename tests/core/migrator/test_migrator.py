@@ -24,16 +24,13 @@ class TestMigrator(BaseTest):
 
     def test_migration_mo2_to_mo2(
         self,
-        data_folder: Path,
+        test_fs: FakeFilesystem,
         instance_info: MO2InstanceInfo,
         instance: Instance,
-        fs: FakeFilesystem,
     ) -> None:
         """
         Tests `core.migrator.migrator.Migrator.migrate()` from MO2 to MO2.
         """
-
-        fs.add_real_directory(data_folder)
 
         # given
         mo2 = ModOrganizer()

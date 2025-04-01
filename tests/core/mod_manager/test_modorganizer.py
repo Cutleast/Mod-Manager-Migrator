@@ -94,7 +94,7 @@ class TestModOrganizer(BaseTest):
         assert obsidian_weathers.mod_conflicts == [obsidian_weathers_german]
         assert obsidian_weathers_german.mod_conflicts == []
 
-    def test_create_instance(self, fs: FakeFilesystem, qt_resources: None) -> None:
+    def test_create_instance(self, test_fs: FakeFilesystem, qt_resources: None) -> None:
         """
         Tests `core.mod_manager.modorganizer.modorganizer.ModOrganizer.create_instance()`.
         """
@@ -142,18 +142,13 @@ class TestModOrganizer(BaseTest):
         )
 
     def test_install_mod(
-        self,
-        data_folder: Path,
-        instance: Instance,
-        fs: FakeFilesystem,
-        qt_resources: None,
+        self, test_fs: FakeFilesystem, instance: Instance, qt_resources: None
     ) -> None:
         """
         Tests `core.mod_manager.modorganizer.modorganizer.ModOrganizer.install_mod()`.
         """
 
-        self.test_create_instance(fs, qt_resources)
-        fs.add_real_directory(data_folder)
+        self.test_create_instance(test_fs, qt_resources)
 
         # given
         mo2 = ModOrganizer()
