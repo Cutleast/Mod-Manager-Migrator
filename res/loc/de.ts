@@ -329,39 +329,39 @@
 <context>
     <name>ModOrganizer</name>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="112"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="154"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="183"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="103"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="145"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="174"/>
         <source>Loading mods from {0} &gt; {1}...</source>
         <translation>Mods von {0} &gt; {1} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="228"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="219"/>
         <source>Processing mod conflicts...</source>
         <translation>Modkonflikte werden verarbeitet...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="121"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="112"/>
         <source>Loading tools from {0} &gt; {1}...</source>
         <translation>Tools von {0} &gt; {1} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="435"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="432"/>
         <source>Downloading and installing ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen und installiert...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="455"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="452"/>
         <source>Downloading ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="477"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="474"/>
         <source>Extracting archive...</source>
         <translation>Archiv wird entpackt...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="731"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="732"/>
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of the new MO2 installation.</source>
         <translation>Die Nutzung von Root Builder wurde aktiviert.
