@@ -516,14 +516,14 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
             meta_ini_file.data = {
                 "General": {
                     "game": game.display_name,
-                    "modid": str(mod.metadata.mod_id),
+                    "modid": mod.metadata.mod_id,
                     "version": mod.metadata.version,
                     "installationFile": mod.metadata.file_name,
                 },
                 "installedFiles": {
-                    "1\\modid": str(mod.metadata.mod_id),
+                    "1\\modid": mod.metadata.mod_id,
                     "size": "1",
-                    "1\\fileid": str(mod.metadata.file_id),
+                    "1\\fileid": mod.metadata.file_id,
                 },
             }
             meta_ini_file.save_file()
