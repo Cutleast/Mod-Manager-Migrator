@@ -119,7 +119,7 @@ def get_common_files(
 
 def clean_fs_string(text: str) -> str:
     """
-    Cleans a string from illegal path characters like '%', ':' or '/'.
+    Cleans a string from illegal path characters like ':', '?' or '/'.
     Also removes leading and trailing whitespace and trailing '.'.
 
     Args:
@@ -129,7 +129,7 @@ def clean_fs_string(text: str) -> str:
         str: A cleaned-up string.
     """
 
-    illegal_chars: str = """;<>\\/{}[]+=|*?&,:'"`"""
+    illegal_chars: str = r"""<>\/|*?":"""
     output: str = "".join([c for c in text if c not in illegal_chars])
     output = output.strip().rstrip(".")
 
