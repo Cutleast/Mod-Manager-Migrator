@@ -404,6 +404,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         )
         os.makedirs(instance_data.base_folder / "downloads", exist_ok=True)
         os.makedirs(instance_data.base_folder / "overwrite", exist_ok=True)
+        (instance_data.profiles_folder / instance_data.profile / "modlist.txt").touch()
 
         if instance_data.install_mo2:
             self.__download_and_install_mo2(instance_data.base_folder, ldialog)
