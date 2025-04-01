@@ -119,6 +119,15 @@
         <source>Migration Complete</source>
         <translation>Migration abgeschlossen</translation>
     </message>
+    <message>
+        <location filename="src/ui/instance/instance_overview_widget.py" line="174"/>
+        <source>Migration completed successfully!
+
+</source>
+        <translation>Die Migration wurde erfolgreich abgeschlossen!
+
+</translation>
+    </message>
 </context>
 <context>
     <name>InstanceSelector</name>
@@ -318,14 +327,6 @@
     </message>
 </context>
 <context>
-    <name>ModManager</name>
-    <message>
-        <location filename="src/core/mod_manager/mod_manager.py" line="474"/>
-        <source>Migration completed successfully!</source>
-        <translation>Migration erfolgreich abgeschlossen!</translation>
-    </message>
-</context>
-<context>
     <name>ModOrganizer</name>
     <message>
         <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="112"/>
@@ -345,22 +346,22 @@
         <translation>Tools von {0} &gt; {1} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="422"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="435"/>
         <source>Downloading and installing ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen und installiert...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="442"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="455"/>
         <source>Downloading ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="464"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="477"/>
         <source>Extracting archive...</source>
         <translation>Archiv wird entpackt...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="718"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="731"/>
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of the new MO2 installation.</source>
         <translation>Die Nutzung von Root Builder wurde aktiviert.
@@ -639,7 +640,7 @@ Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von
         <translation>Mods von Profil {0} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="585"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="589"/>
         <source>Vortex is currently deployed to the game folder. It is strongly recommended to purge the game directory before using the migrated instance.</source>
         <translation>Vortex ist zurzeit in das Spielverzeichnis deployed. Es wird empfohlen, das Spielverzeichnis vor der Nutzung der migrierten Instanz zu säubern.</translation>
     </message>
