@@ -1,7 +1,7 @@
 [project]
 name = "mod-manager-migrator"
 version = "3.0.0-alpha-1"
-description = "A tool for migrating modding instances between mod managers, mainly for Bethesda games."
+description = "Mod Manager Migrator"
 readme = "README.md"
 requires-python = ">=3.12"
 authors = [{ name = "Cutleast", email = "cutleast@gmail.com" }]
