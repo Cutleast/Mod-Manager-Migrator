@@ -34,6 +34,21 @@ dev = [
     "pytest-qt>=4.4.0",
 ]
 
+[tool.cxfreeze]
+executables = [
+    { script = "src/main.py", base = "gui", target_name = "MMM.exe", icon = "res/icons/mmm.ico", copyright = "Attribution-NonCommercial-NoDerivatives 4.0 International" },
+    { script = "src/main.py", base = "console", target_name = "MMM_cli.exe", icon = "res/icons/mmm.ico", copyright = "Attribution-NonCommercial-NoDerivatives 4.0 International" },
+]
+
+[tool.cxfreeze.build_exe]
+replace_paths = [["*", ""]]
+packages = ["ctypes"]
+includes = ["ctypes.wintypes"]
+excludes = ["tkinter", "unittest"]
+zip_include_packages = ["encodings", "PySide6", "shiboken6"]
+include_path = "src"
+build_exe = "dist/MMM"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]

@@ -10,65 +10,30 @@ import zipfile
 from pathlib import Path
 
 import jstyleson as json
-from cx_Freeze import Executable, setup
 
-APPNAME = "Mod Manager Migrator"
-DISPLAY_VERSION = "3.0.0-alpha-1"
-FILE_VERSION = "3.0.0.0"
-AUTHOR = "Cutleast"
-LICENSE = "Attribution-NonCommercial-NoDerivatives 4.0 International"
-BUILD_FOLDER = Path("main.dist")
+APP_VERSION: str = "3.0.0-alpha-1"
 DIST_FOLDER = Path("dist")
 OUTPUT_FOLDER = DIST_FOLDER / "MMM"
-OUTPUT_ARCHIVE = DIST_FOLDER / f"MMM v{DISPLAY_VERSION}.zip"
+OUTPUT_ARCHIVE = DIST_FOLDER / f"MMM v{APP_VERSION}.zip"
 RES_FOLDER: Path = Path("res")
-UNUSED_FILES = [
-    BUILD_FOLDER / "qt6datavisualization.dll",
-    BUILD_FOLDER / "qt6network.dll",
-    BUILD_FOLDER / "qt6pdf.dll",
-    BUILD_FOLDER / "PySide6" / "QtNetwork.pyd",
-    BUILD_FOLDER / "PySide6" / "QtDataVisualization.pyd",
-]
-ADDITIONAL_ITEMS: dict[Path, Path] = {}
+ADDITIONAL_ITEMS: dict[Path, Path] = {
+    Path(".venv") / "Lib" / "site-packages" / "plyvel_ci.libs": OUTPUT_FOLDER
+    / "lib"
+    / "plyvel"
+}
 
 # Add external resources from res/ext_resources.json
 with open("res/ext_resources.json", encoding="utf8") as f:
     for item in json.load(f):
         for i in RES_FOLDER.glob(item):
-            ADDITIONAL_ITEMS[i] = BUILD_FOLDER / "res" / i.relative_to(RES_FOLDER)
+            ADDITIONAL_ITEMS[i] = OUTPUT_FOLDER / "res" / i.relative_to(RES_FOLDER)
 
-build_options = {
-    "replace_paths": [("*", "")],
-    "include_files": [("./.venv/Lib/site-packages/plyvel_ci.libs", "./lib/plyvel")],
-    "include_path": "./src",
-    "packages": ["ctypes"],
-    "includes": ["ctypes.wintypes"],
-    "build_exe": BUILD_FOLDER.name,
-}
-
-executables = [
-    Executable(
-        "./src/main.py",
-        base="gui",
-        target_name="MMM.exe",
-        icon="./res/icons/mmm.ico",
-        copyright=LICENSE,
-    ),
-    Executable(
-        "./src/main.py",
-        base="console",
-        target_name="MMM_cli.exe",
-        icon="./res/icons/mmm.ico",
-        copyright=LICENSE,
-    ),
-]
+if OUTPUT_FOLDER.is_dir():
+    shutil.rmtree(OUTPUT_FOLDER)
+    print(f"Deleted already existing '{OUTPUT_FOLDER}' folder.")
 
 print("Building with cx_freeze...")
-setup(
-    version=FILE_VERSION,
-    options={"build_exe": build_options},
-    executables=executables,
-).run_command("build_exe")
+os.system("cxfreeze build")
 
 print(f"Copying {len(ADDITIONAL_ITEMS)} additional item(s)...")
 for item, dest in ADDITIONAL_ITEMS.items():
@@ -81,21 +46,7 @@ for item, dest in ADDITIONAL_ITEMS.items():
         print(f"{str(item)!r} does not exist!")
         continue
 
-    print(f"Copied {str(item)!r} to {str(dest.relative_to(BUILD_FOLDER))!r}.")
-
-print("Deleting unused files...")
-for file in UNUSED_FILES:
-    if not file.is_file():
-        continue
-    os.remove(file)
-    print(f"Removed '{file.name}'.")
-
-print("Renaming Output folder...")
-if OUTPUT_FOLDER.is_dir():
-    shutil.rmtree(OUTPUT_FOLDER)
-    print(f"Deleted already existing {OUTPUT_FOLDER.name!r} folder.")
-DIST_FOLDER.mkdir(exist_ok=True)
-os.rename(BUILD_FOLDER, OUTPUT_FOLDER)
+    print(f"Copied {str(item)!r} to {str(dest.relative_to(OUTPUT_FOLDER))!r}.")
 
 print("Packing into zip archive...")
 if OUTPUT_ARCHIVE.is_file():
