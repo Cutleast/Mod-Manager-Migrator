@@ -2,12 +2,16 @@
 Copyright (c) Cutleast
 """
 
+import json
+import shutil
 import tempfile
 from pathlib import Path
 from typing import Generator
+from unittest.mock import MagicMock
 
 import pytest
 from pyfakefs.fake_filesystem import FakeFilesystem
+from pytest_mock import MockerFixture
 
 from core.game.game import Game
 from core.instance.instance import Instance
@@ -16,6 +20,9 @@ from core.instance.mod import Mod
 from core.migrator.file_blacklist import FileBlacklist
 from core.mod_manager.modorganizer.mo2_instance_info import MO2InstanceInfo
 from core.mod_manager.modorganizer.modorganizer import ModOrganizer
+from core.utilities.leveldb import LevelDB
+
+from ._setup.mock_plyvel import MockPlyvelDB
 
 
 class BaseTest:
@@ -154,3 +161,69 @@ class BaseTest:
             raise ValueError(f"No mod with name {mod_name} found in mod instance.")
 
         return mod
+
+    @pytest.fixture
+    def ready_vortex_db(
+        self, mocker: MockerFixture, state_v2_json: Path
+    ) -> Generator[MockPlyvelDB, None, None]:
+        """
+        Pytest fixture to mock the plyvel.DB classand redirect it to use a sample
+        JSON file.
+
+        Yields:
+            Generator[MockPlyvelDB]: The mocked plyvel.DB instance
+        """
+
+        flat_data: dict[str, str] = LevelDB.flatten_nested_dict(
+            json.loads(state_v2_json.read_text())
+        )
+        mock_instance = MockPlyvelDB(
+            {k.encode(): v.encode() for k, v in flat_data.items()}
+        )
+
+        magic: MagicMock = mocker.patch("plyvel.DB", return_value=mock_instance)
+
+        # Does not work because plyvel.DB is immutable
+        # with mocker.patch.context_manager(
+        #     plyvel.DB, "__new__", return_value=mock_instance
+        # ):
+        #     yield mock_instance
+
+        yield mock_instance
+
+        mocker.stop(magic)
+
+    @pytest.fixture
+    def empty_vortex_db(
+        self, mocker: MockerFixture
+    ) -> Generator[MockPlyvelDB, None, None]:
+        """
+        Pytest fixture to mock the plyvel.DB class and redirect it to use an empty
+        database.
+
+        Yields:
+            Generator[MockPlyvelDB]: The mocked plyvel.DB instance
+        """
+
+        mock_instance = MockPlyvelDB()
+        magic: MagicMock = mocker.patch("plyvel.DB", return_value=mock_instance)
+
+        yield mock_instance
+
+        mocker.stop(magic)
+
+    @pytest.fixture
+    def state_v2_json(self) -> Generator[Path, None, None]:
+        """
+        Fixture to return a path to a sample JSON file within a temp folder resembling
+        a Vortex database.
+
+        Yields:
+            Generator[Path]: Path to sample JSON file
+        """
+
+        with tempfile.TemporaryDirectory(prefix="MMM_test_") as tmp_dir:
+            src = Path("tests") / "data" / "state.v2.json"
+            dst = Path(tmp_dir) / "state.v2.json"
+            shutil.copyfile(src, dst)
+            yield dst

@@ -2,15 +2,10 @@
 Copyright (c) Cutleast
 """
 
-import json
-import shutil
-import tempfile
 from pathlib import Path
-from typing import Any, Generator
-from unittest.mock import MagicMock
+from typing import Any
 
 import pytest
-from pytest_mock import MockerFixture
 
 from core.utilities.leveldb import LevelDB
 
@@ -46,7 +41,10 @@ class TestLevelDB(BaseTest):
 
     @pytest.mark.parametrize("prefix, expected_output", test_load_cases)
     def test_load(
-        self, prefix: str, expected_output: dict[str, Any], mock_plyvel: MockPlyvelDB
+        self,
+        prefix: str,
+        expected_output: dict[str, Any],
+        ready_vortex_db: MockPlyvelDB,
     ) -> None:
         """
         Tests `core.utilities.leveldb.LevelDB.load()`.
@@ -59,7 +57,7 @@ class TestLevelDB(BaseTest):
         real_output: dict[str, Any] = leveldb.load(prefix=prefix)
         assert real_output == expected_output
 
-    def test_dump(self, mock_plyvel: MockPlyvelDB) -> None:
+    def test_dump(self, ready_vortex_db: MockPlyvelDB) -> None:
         """
         Tests `core.utilities.leveldb.LevelDB.dump()`.
         """
@@ -119,50 +117,3 @@ class TestLevelDB(BaseTest):
 
         # then
         assert result == expected
-
-    @pytest.fixture
-    def mock_plyvel(
-        self, mocker: MockerFixture, state_v2_json: Path
-    ) -> Generator[MockPlyvelDB, None, None]:
-        """
-        Pytest fixture to mock the plyvel.DB classand redirect it to use a sample
-        JSON file.
-
-        Yields:
-            Generator[MockPlyvelDB]: The mocked plyvel.DB instance
-        """
-
-        flat_data: dict[str, str] = LevelDB.flatten_nested_dict(
-            json.loads(state_v2_json.read_text())
-        )
-        mock_instance = MockPlyvelDB(
-            {k.encode(): v.encode() for k, v in flat_data.items()}
-        )
-
-        magic: MagicMock = mocker.patch("plyvel.DB", return_value=mock_instance)
-
-        # Does not work because plyvel.DB is immutable
-        # with mocker.patch.context_manager(
-        #     plyvel.DB, "__new__", return_value=mock_instance
-        # ):
-        #     yield mock_instance
-
-        yield mock_instance
-
-        mocker.stop(magic)
-
-    @pytest.fixture
-    def state_v2_json(self) -> Generator[Path, None, None]:
-        """
-        Fixture to return a path to a sample JSON file within a temp folder resembling
-        a Vortex database.
-
-        Yields:
-            Generator[Path]: Path to sample JSON file
-        """
-
-        with tempfile.TemporaryDirectory(prefix="MMM_test_") as tmp_dir:
-            src = Path("tests") / "data" / "state.v2.json"
-            dst = Path(tmp_dir) / "state.v2.json"
-            shutil.copyfile(src, dst)
-            yield dst
