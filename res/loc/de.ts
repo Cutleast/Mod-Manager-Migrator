@@ -78,22 +78,22 @@
 <context>
     <name>InstanceCreator</name>
     <message>
-        <location filename="src/ui/instance_creator/instance_creator.py" line="72"/>
+        <location filename="src/ui/instance_creator/instance_creator.py" line="73"/>
         <source>Configure the destination instance:</source>
         <translation>Zielinstanz konfigurieren:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_creator/instance_creator.py" line="85"/>
+        <location filename="src/ui/instance_creator/instance_creator.py" line="86"/>
         <source>Mod Manager:</source>
         <translation>Mod Manager:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_creator/instance_creator.py" line="90"/>
+        <location filename="src/ui/instance_creator/instance_creator.py" line="91"/>
         <source>Please select...</source>
         <translation>Bitte auswählen...</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_creator/instance_creator.py" line="124"/>
+        <location filename="src/ui/instance_creator/instance_creator.py" line="127"/>
         <source>Migrate...</source>
         <translation>Migration starten...</translation>
     </message>
@@ -629,18 +629,18 @@ Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von
 <context>
     <name>Vortex</name>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="110"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="109"/>
         <source>Loading profile {0}...</source>
         <translation>Profil {0} wird geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="137"/>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="172"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="136"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="171"/>
         <source>Loading mods from profile {0}...</source>
         <translation>Mods von Profil {0} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="589"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="591"/>
         <source>Vortex is currently deployed to the game folder. It is strongly recommended to purge the game directory before using the migrated instance.</source>
         <translation>Vortex ist zurzeit in das Spielverzeichnis deployed. Es wird empfohlen, das Spielverzeichnis vor der Nutzung der migrierten Instanz zu säubern.</translation>
     </message>
