@@ -77,7 +77,7 @@ class App(QApplication):
         self.logger.setLevel(self.app_config.log_level)
 
         self.setApplicationName(App.APP_NAME)
-        self.setApplicationDisplayName(App.APP_NAME)
+        self.setApplicationDisplayName(f"{App.APP_NAME} v{App.APP_VERSION}")
         self.setApplicationVersion(App.APP_VERSION)
         self.setWindowIcon(QIcon(":/icons/mmm.ico"))
         self.load_translation()
