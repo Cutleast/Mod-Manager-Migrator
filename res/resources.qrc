@@ -24,13 +24,12 @@
         <file>icons/grip_light.png</file>
         <file>icons/mmm.ico</file>
         <file>icons/mmm.svg</file>
-        <file>icons/MO2_Label.svg</file>
+        <file>icons/mo2.png</file>
         <file>icons/nexus_mods.png</file>
-        <file>icons/NMM_Label.svg</file>
         <file>icons/Oblivion.ico</file>
         <file>icons/Skyrim.ico</file>
         <file>icons/SkyrimSE.ico</file>
-        <file>icons/Vortex_Label.svg</file>
+        <file>icons/vortex.png</file>
 
         <!-- Fonts -->
         <file>fonts/BebasNeue Book.otf</file>

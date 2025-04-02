@@ -37,7 +37,7 @@ class Vortex(ModManager[ProfileInfo]):
 
     display_name = "Vortex"
     id = "vortex"
-    icon_name = ":/icons/Vortex_Label.svg"
+    icon_name = ":/icons/vortex.png"
 
     GAMES: dict[str, Game]
     """
@@ -260,7 +260,7 @@ class Vortex(ModManager[ProfileInfo]):
         self, mods: list[Mod], conflict_rules: dict[Mod, list[dict]]
     ) -> None:
         mods_by_file_name: dict[str, Mod] = {
-            self.__get_unique_file_name(mod): mod for mod in mods
+            self.__get_unique_file_name(mod).rsplit(".", 1)[0]: mod for mod in mods
         }
         mod_overwrites: dict[Mod, list[Mod]] = {}
 

@@ -5,6 +5,7 @@ Copyright (c) Cutleast
 from typing import Optional
 
 from PySide6.QtCore import Qt, Signal
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QComboBox,
     QGridLayout,
@@ -91,6 +92,8 @@ class InstanceCreator(QWidget):
         self.__mod_manager_dropdown.addItems(
             [mod_manager.display_name for mod_manager in MOD_MANAGERS]
         )
+        for m, mod_manager in enumerate(MOD_MANAGERS, start=1):
+            self.__mod_manager_dropdown.setItemIcon(m, QIcon(mod_manager.icon_name))
 
         self.__mod_manager_dropdown.currentTextChanged.connect(
             self.__on_mod_manager_select

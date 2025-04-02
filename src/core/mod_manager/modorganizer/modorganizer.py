@@ -39,7 +39,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
 
     display_name = "Mod Organizer 2"
     id = "modorganizer"
-    icon_name = ":/icons/MO2_Label.svg"
+    icon_name = ":/icons/mo2.png"
 
     # TODO: Make this dynamic instead of a fixed url
     DOWNLOAD_URL: str = "https://github.com/ModOrganizer2/modorganizer/releases/download/v2.5.2/Mod.Organizer-2.5.2.7z"
