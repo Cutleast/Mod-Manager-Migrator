@@ -7,31 +7,31 @@ requires-python = ">=3.12"
 authors = [{ name = "Cutleast", email = "cutleast@gmail.com" }]
 license = { file = "LICENSE" }
 dependencies = [
-    "comtypes>=1.4.10",
-    "darkdetect>=0.8.0",
-    "jstyleson>=0.0.2",
-    "plyvel-ci>=1.5.1",
-    "py7zr>=0.22.0",
-    "pydantic>=2.10.6",
-    "pyside6>=6.8.2.1",
-    "pyuac>=0.0.3",
-    "pywin32>=308",
+    "comtypes",
+    "darkdetect",
+    "jstyleson",
+    "plyvel-ci",
+    "py7zr",
+    "pydantic",
+    "pyside6",
+    "pyuac",
+    "pywin32",
     "qtawesome<1.4.0",
-    "rarfile>=4.2",
-    "requests>=2.32.3",
-    "semantic-version>=2.10.0",
-    "virtual-glob>=0.2.0",
+    "rarfile",
+    "requests",
+    "semantic-version",
+    "virtual-glob",
 ]
 
 [dependency-groups]
 dev = [
-    "cx-freeze>=7.2.10",
-    "mypy>=1.15.0",
-    "pyfakefs>=5.8.0",
-    "pytest>=8.3.5",
-    "pytest-cov>=6.0.0",
-    "pytest-mock>=3.14.0",
-    "pytest-qt>=4.4.0",
+    "cx-freeze",
+    "mypy",
+    "pyfakefs",
+    "pytest",
+    "pytest-cov",
+    "pytest-mock",
+    "pytest-qt",
 ]
 
 [tool.cxfreeze]
