@@ -42,3 +42,10 @@ class Tool:
     The working directory, the tool should be executed in.
     (Usually the game folder itself)
     """
+
+    is_in_game_dir: bool
+    """
+    Whether the tool is in the game folder or not.
+    This controls whether the tool gets copied with the game folder, if selected by
+    the user (WIP).
+    """
