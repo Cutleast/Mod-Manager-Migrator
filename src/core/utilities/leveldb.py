@@ -287,6 +287,11 @@ class LevelDB:
                     k.decode()
                     v.decode()
                     return True
+
+        # This means the database is readable, but blocked by Vortex
+        except ldb.IOError:
+            return True
+
         except Exception:
             pass
 

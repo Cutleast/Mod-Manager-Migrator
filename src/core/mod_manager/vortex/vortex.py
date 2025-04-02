@@ -73,8 +73,7 @@ class Vortex(ModManager[ProfileInfo]):
         try:
             data = self.__level_db.load("persistent###profiles###")
         except plyvel.IOError as ex:
-            self.log.debug(ex, exc_info=ex)
-            raise VortexIsRunningError
+            raise VortexIsRunningError from ex
 
         profile_data_items: dict[str, dict] = data.get("persistent", {}).get(
             "profiles", {}
@@ -471,9 +470,12 @@ class Vortex(ModManager[ProfileInfo]):
         appdata_path: Path = resolve(Path("%APPDATA%") / "Vortex")
         game_id: str = game.id.lower()
 
-        staging_folder_value: Optional[str] = self.__level_db.get_key(
-            f"settings###mods###installPath###{game_id}"
-        )
+        try:
+            staging_folder_value: Optional[str] = self.__level_db.get_key(
+                f"settings###mods###installPath###{game_id}"
+            )
+        except plyvel.IOError as ex:
+            raise VortexIsRunningError from ex
 
         staging_folder: Path
         if staging_folder_value is None:
