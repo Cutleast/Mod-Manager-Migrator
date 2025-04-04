@@ -137,13 +137,13 @@
         <translation>Quellinstanz auswählen:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="126"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="128"/>
         <source>Mod Manager:</source>
         <translation>Mod Manager:</translation>
     </message>
     <message>
         <location filename="src/ui/instance_selector/instance_selector.py" line="121"/>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="131"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="133"/>
         <source>Please select...</source>
         <translation>Bitte auswählen...</translation>
     </message>
@@ -153,29 +153,29 @@
         <translation>Spiel:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="160"/>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="170"/>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="243"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="162"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="172"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="245"/>
         <source>Load selected instance...</source>
         <translation>Ausgewählte Instanz laden...</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="187"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="189"/>
         <source>Could not find game directory!</source>
         <translation>Spielverzeichnis konnte nicht gefunden werden!</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="190"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="192"/>
         <source>Unable to find game directory. Please select it manually.</source>
         <translation>Das Spielverzeichnis konnte nicht gefunden werden. Bitte manuell auswählen.</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="196"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="198"/>
         <source>Select game directory</source>
         <translation>Spielverzeichnis auswählen</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="269"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="271"/>
         <source>Instance loaded.</source>
         <translation>Instanz geladen.</translation>
     </message>
