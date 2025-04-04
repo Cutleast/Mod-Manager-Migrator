@@ -6,6 +6,7 @@ Script to build the MMM executables and pack all their dependencies in one folde
 
 import os
 import shutil
+import sys
 import zipfile
 from pathlib import Path
 
@@ -33,7 +34,8 @@ if OUTPUT_FOLDER.is_dir():
     print(f"Deleted already existing '{OUTPUT_FOLDER}' folder.")
 
 print("Building with cx_freeze...")
-os.system("cxfreeze build")
+if os.system("cxfreeze build"):
+    sys.exit(1)
 
 print(f"Copying {len(ADDITIONAL_ITEMS)} additional item(s)...")
 for item, dest in ADDITIONAL_ITEMS.items():
