@@ -120,6 +120,8 @@ class InstanceSelector(QWidget):
         self.__game_dropdown.setEditable(False)
         self.__game_dropdown.addItem(self.tr("Please select..."))
         self.__game_dropdown.addItems(list(self.__games.keys()))
+        for g, game in enumerate(self.__games.values(), start=1):
+            self.__game_dropdown.setItemIcon(g, QIcon(f":/icons/{game.short_name}.ico"))
         self.__game_dropdown.currentTextChanged.connect(self.__on_game_select)
         glayout.addWidget(self.__game_dropdown, 0, 1)
 
