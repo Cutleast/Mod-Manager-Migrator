@@ -29,7 +29,7 @@ class TestMigrator(BaseTest):
     def test_migration_mo2_to_mo2(
         self,
         test_fs: FakeFilesystem,
-        instance_info: MO2InstanceInfo,
+        mo2_instance_info: MO2InstanceInfo,
         instance: Instance,
     ) -> None:
         """
@@ -39,11 +39,11 @@ class TestMigrator(BaseTest):
         # given
         mo2 = ModOrganizer()
         migrator = Migrator()
-        instance_info.game.installdir = Path("E:\\Games\\Skyrim Special Edition")
+        mo2_instance_info.game.installdir = Path("E:\\Games\\Skyrim Special Edition")
         dst_path = Path("E:\\Modding\\Test Instance")
         dst_info = MO2InstanceInfo(
             display_name="Test Instance",
-            game=instance_info.game,
+            game=mo2_instance_info.game,
             profile="Default",
             is_global=False,
             base_folder=dst_path,
@@ -55,7 +55,7 @@ class TestMigrator(BaseTest):
         # when
         report: MigrationReport = migrator.migrate(
             src_instance=instance,
-            src_info=instance_info,
+            src_info=mo2_instance_info,
             dst_info=dst_info,
             src_mod_manager=mo2,
             dst_mod_manager=mo2,
@@ -79,7 +79,7 @@ class TestMigrator(BaseTest):
         self,
         ready_vortex_db: MockPlyvelDB,
         test_fs: FakeFilesystem,
-        instance_info: MO2InstanceInfo,
+        mo2_instance_info: MO2InstanceInfo,
         instance: Instance,
     ) -> None:
         """
@@ -95,18 +95,18 @@ class TestMigrator(BaseTest):
         vortex = Vortex()
         vortex.db_path.mkdir(parents=True, exist_ok=True)
         migrator = Migrator()
-        instance_info.game.installdir = Path("E:\\Games\\Skyrim Special Edition")
-        instance_info.game.installdir.mkdir(parents=True, exist_ok=True)
+        mo2_instance_info.game.installdir = Path("E:\\Games\\Skyrim Special Edition")
+        mo2_instance_info.game.installdir.mkdir(parents=True, exist_ok=True)
         dst_info = ProfileInfo(
             display_name="Test Instance",
-            game=instance_info.game,
-            id="1a2b3c4d",
+            game=mo2_instance_info.game,
+            id="5e6f7g8h9j",
         )
 
         # when
         report: MigrationReport = migrator.migrate(
             src_instance=instance,
-            src_info=instance_info,
+            src_info=mo2_instance_info,
             dst_info=dst_info,
             src_mod_manager=mo2,
             dst_mod_manager=vortex,
@@ -119,9 +119,9 @@ class TestMigrator(BaseTest):
 
         # when
         migrated_profile_info = ProfileInfo(
-            display_name="Test Instance (1a2b3c4d)",
-            game=instance_info.game,
-            id="1a2b3c4d",
+            display_name="Test Instance (5e6f7g8h9j)",
+            game=mo2_instance_info.game,
+            id="5e6f7g8h9j",
         )
         migrated_instance: Instance = vortex.load_instance(
             migrated_profile_info, FileBlacklist.get_files()
@@ -134,6 +134,127 @@ class TestMigrator(BaseTest):
             exclude_separators=True,  # Vortex doesn't support separators and ignores them when migrating
         )
         assert len(migrated_instance.tools) == len(instance.tools)
+
+    def test_migration_vortex_to_mo2(
+        self,
+        data_folder: Path,
+        full_vortex_db: MockPlyvelDB,
+        test_fs: FakeFilesystem,
+        vortex_profile_info: ProfileInfo,
+    ) -> None:
+        """
+        Tests `core.migrator.migrator.Migrator.migrate()` from Vortex to MO2.
+        """
+
+        test_fs.add_real_directory(
+            data_folder / "skyrimse",
+            target_path=resolve(Path("%APPDATA%")) / "Vortex" / "skyrimse",
+        )
+
+        # given
+        vortex = Vortex()
+        vortex.db_path.mkdir(parents=True, exist_ok=True)
+        mo2 = ModOrganizer()
+        migrator = Migrator()
+        vortex_profile_info.game.installdir = Path("E:\\Games\\Skyrim Special Edition")
+        vortex_profile_info.game.installdir.mkdir(parents=True, exist_ok=True)
+        dst_path = Path("E:\\Modding\\Test Instance")
+        dst_info = MO2InstanceInfo(
+            display_name="Test Instance",
+            game=vortex_profile_info.game,
+            profile="Default",
+            is_global=False,
+            base_folder=dst_path,
+            mods_folder=dst_path / "mods",
+            profiles_folder=dst_path / "profiles",
+            install_mo2=False,  # This is important for now as the download is not mocked, yet
+        )
+        src_instance = vortex.load_instance(
+            vortex_profile_info, FileBlacklist.get_files()
+        )
+
+        # when
+        report: MigrationReport = migrator.migrate(
+            src_instance=src_instance,
+            src_info=vortex_profile_info,
+            dst_info=dst_info,
+            src_mod_manager=vortex,
+            dst_mod_manager=mo2,
+            use_hardlinks=True,
+            replace=True,
+        )
+
+        # then
+        assert not report.has_errors
+
+        # when
+        migrated_instance: Instance = mo2.load_instance(
+            dst_info, FileBlacklist.get_files()
+        )
+
+        # then
+        self.assert_modlists_equal(migrated_instance.mods, src_instance.loadorder)
+        assert len(migrated_instance.tools) == len(src_instance.tools)
+
+    def test_migration_vortex_to_vortex(
+        self,
+        data_folder: Path,
+        full_vortex_db: MockPlyvelDB,
+        test_fs: FakeFilesystem,
+        vortex_profile_info: ProfileInfo,
+    ) -> None:
+        """
+        Tests `core.migrator.migrator.Migrator.migrate()` from Vortex to Vortex.
+        """
+
+        test_fs.add_real_directory(
+            data_folder / "skyrimse",
+            read_only=False,
+            target_path=resolve(Path("%APPDATA%")) / "Vortex" / "skyrimse",
+        )
+
+        # given
+        vortex = Vortex()
+        vortex.db_path.mkdir(parents=True, exist_ok=True)
+        migrator = Migrator()
+        vortex_profile_info.game.installdir = Path("E:\\Games\\Skyrim Special Edition")
+        vortex_profile_info.game.installdir.mkdir(parents=True, exist_ok=True)
+        dst_info = ProfileInfo(
+            display_name="Test Instance",
+            game=vortex_profile_info.game,
+            id="5e6f7g8h9j",
+        )
+        src_instance = vortex.load_instance(
+            vortex_profile_info, FileBlacklist.get_files()
+        )
+
+        # when
+        report: MigrationReport = migrator.migrate(
+            src_instance=src_instance,
+            src_info=vortex_profile_info,
+            dst_info=dst_info,
+            src_mod_manager=vortex,
+            dst_mod_manager=vortex,
+            use_hardlinks=True,
+            replace=True,
+        )
+
+        # then
+        assert not report.has_errors
+
+        # when
+        migrated_profile_info = ProfileInfo(
+            display_name="Test Instance (5e6f7g8h9j)",
+            game=dst_info.game,
+            id="5e6f7g8h9j",
+        )
+        migrated_instance: Instance = vortex.load_instance(
+            migrated_profile_info, FileBlacklist.get_files()
+        )
+
+        # then
+        self.assert_modlists_equal(migrated_instance.loadorder, src_instance.loadorder)
+        assert len(migrated_instance.tools) == len(src_instance.tools)
 
     def assert_modlists_equal(
         self,

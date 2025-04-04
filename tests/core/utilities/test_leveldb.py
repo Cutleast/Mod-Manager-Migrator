@@ -20,19 +20,23 @@ class TestLevelDB(BaseTest):
 
     test_load_cases: list[tuple[str, dict[str, Any]]] = [
         (
-            "settings###gameMode###discovered###skyrimse###store",
+            "settings###gameMode###discovered###skyrimse###environment###SteamAPPId",
             {
                 "settings": {
-                    "gameMode": {"discovered": {"skyrimse": {"store": "steam"}}}
+                    "gameMode": {
+                        "discovered": {
+                            "skyrimse": {"environment": {"SteamAPPId": "489830"}}
+                        }
+                    }
                 }
             },
         ),
         (
-            "persistent###profiles###Kn463e8fe###features###local_game_settings",
+            "persistent###profiles###1a2b3c4d###features###local_game_settings",
             {
                 "persistent": {
                     "profiles": {
-                        "Kn463e8fe": {"features": {"local_game_settings": False}}
+                        "1a2b3c4d": {"features": {"local_game_settings": False}}
                     }
                 }
             },
@@ -44,7 +48,7 @@ class TestLevelDB(BaseTest):
         self,
         prefix: str,
         expected_output: dict[str, Any],
-        ready_vortex_db: MockPlyvelDB,
+        full_vortex_db: MockPlyvelDB,
     ) -> None:
         """
         Tests `core.utilities.leveldb.LevelDB.load()`.
@@ -57,7 +61,7 @@ class TestLevelDB(BaseTest):
         real_output: dict[str, Any] = leveldb.load(prefix=prefix)
         assert real_output == expected_output
 
-    def test_dump(self, ready_vortex_db: MockPlyvelDB) -> None:
+    def test_dump(self, full_vortex_db: MockPlyvelDB) -> None:
         """
         Tests `core.utilities.leveldb.LevelDB.dump()`.
         """

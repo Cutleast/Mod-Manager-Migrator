@@ -5,6 +5,7 @@ Copyright (c) Cutleast
 from pathlib import Path
 from typing import Any
 
+import pytest
 from pyfakefs.fake_filesystem import FakeFilesystem
 
 from core.game.game import Game
@@ -33,16 +34,44 @@ class TestModOrganizer(BaseTest):
 
         raise NotImplementedError
 
-    def test_parse_meta_ini(self, data_folder: Path, qt_resources: None) -> None:
+    PARSE_META_INI_DATA: list[tuple[Path, Metadata]] = [
+        (
+            Path("Test Mods_separator") / "meta.ini",
+            Metadata(
+                mod_id=None,
+                file_id=None,
+                version="",
+                file_name=None,
+                game_id="skyrimspecialedition",
+            ),
+        ),
+        (
+            Path("RS Children Overhaul") / "meta.ini",
+            Metadata(
+                mod_id=2650,
+                file_id=128013,
+                version="1.1.3",
+                file_name="RSSE Children Overhaul 1.1.3 with hotfix 1-2650-1-1-3HF1-1583835543.7z",
+                game_id="skyrimspecialedition",
+            ),
+        ),
+    ]
+
+    @pytest.mark.parametrize("meta_ini_path, expected_metadata", PARSE_META_INI_DATA)
+    def test_parse_meta_ini(
+        self,
+        meta_ini_path: Path,
+        expected_metadata: Metadata,
+        data_folder: Path,
+        qt_resources: None,
+    ) -> None:
         """
         Tests `core.mod_manager.modorganizer.modorganizer.ModOrganizer.__parse_meta_ini()`.
         """
 
         # given
         mo2 = ModOrganizer()
-        test_meta_ini_path: Path = (
-            data_folder / "mods" / "Metadata Test Mod" / "meta.ini"
-        )
+        test_meta_ini_path: Path = data_folder / "mod_instance" / "mods" / meta_ini_path
 
         # when
         metadata: Metadata = Utils.get_private_method(
@@ -53,31 +82,22 @@ class TestModOrganizer(BaseTest):
         )
 
         # then
-        assert metadata.mod_id == -1
-        assert metadata.file_id is None
-        assert metadata.version == ""
-        assert metadata.file_name is None
+        assert metadata == expected_metadata
 
-    def test_load_instance(self, data_folder: Path, qt_resources: None) -> None:
+    def test_load_instance(
+        self, mo2_instance_info: MO2InstanceInfo, qt_resources: None
+    ) -> None:
         """
         Tests `core.mod_manager.modorganizer.modorganizer.ModOrganizer.load_instance()`.
         """
 
         # given
         mo2 = ModOrganizer()
-        test_instance_path: Path = data_folder / "mod_instance"
-        instance_data = MO2InstanceInfo(
-            display_name="Test Instance",
-            game=Game.get_game_by_id("skyrimse"),
-            profile="Default",
-            is_global=False,
-            base_folder=test_instance_path,
-            mods_folder=test_instance_path / "mods",
-            profiles_folder=test_instance_path / "profiles",
-        )
 
         # when
-        instance: Instance = mo2.load_instance(instance_data, FileBlacklist.get_files())
+        instance: Instance = mo2.load_instance(
+            mo2_instance_info, FileBlacklist.get_files()
+        )
 
         # then
         assert len(instance.mods) == 7

@@ -20,6 +20,7 @@ from core.instance.mod import Mod
 from core.migrator.file_blacklist import FileBlacklist
 from core.mod_manager.modorganizer.mo2_instance_info import MO2InstanceInfo
 from core.mod_manager.modorganizer.modorganizer import ModOrganizer
+from core.mod_manager.vortex.profile_info import ProfileInfo
 from core.utilities.leveldb import LevelDB
 
 from ._setup.mock_plyvel import MockPlyvelDB
@@ -69,9 +70,11 @@ class BaseTest:
         return fs
 
     @pytest.fixture
-    def instance_info(self, data_folder: Path, qt_resources: None) -> MO2InstanceInfo:
+    def mo2_instance_info(
+        self, data_folder: Path, qt_resources: None
+    ) -> MO2InstanceInfo:
         """
-        Returns the instance info of the test mod instance.
+        Returns the MO2 instance info of the test mod instance.
 
         Returns:
             MO2InstanceInfo: The instance info of the test mod instance.
@@ -88,7 +91,24 @@ class BaseTest:
         )
 
     @pytest.fixture
-    def instance(self, instance_info: MO2InstanceInfo, qt_resources: None) -> Instance:
+    def vortex_profile_info(self, qt_resources: None) -> ProfileInfo:
+        """
+        Returns the Vortex profile info of the test mod instance.
+
+        Returns:
+            ProfileInfo: The profile info of the test mod instance.
+        """
+
+        return ProfileInfo(
+            display_name="Test Instance (1a2b3c4d)",
+            game=Game.get_game_by_id("skyrimse"),
+            id="1a2b3c4d",
+        )
+
+    @pytest.fixture
+    def instance(
+        self, mo2_instance_info: MO2InstanceInfo, qt_resources: None
+    ) -> Instance:
         """
         Loads the test mod instance.
 
@@ -96,12 +116,16 @@ class BaseTest:
             Instance: The test mod instance.
         """
 
-        return ModOrganizer().load_instance(instance_info, FileBlacklist.get_files())
+        return ModOrganizer().load_instance(
+            mo2_instance_info, FileBlacklist.get_files()
+        )
 
     @pytest.fixture
     def test_instance(self) -> Instance:
         """
         Creates a mocked mod instance with 10 mods.
+
+        TODO: Check if this is still needed
 
         Returns:
             Instance: The mocked mod instance.
@@ -164,7 +188,7 @@ class BaseTest:
 
     @pytest.fixture
     def ready_vortex_db(
-        self, mocker: MockerFixture, state_v2_json: Path
+        self, mocker: MockerFixture, ready_state_v2_json: Path
     ) -> Generator[MockPlyvelDB, None, None]:
         """
         Pytest fixture to mock the plyvel.DB classand redirect it to use a sample
@@ -175,7 +199,7 @@ class BaseTest:
         """
 
         flat_data: dict[str, str] = LevelDB.flatten_nested_dict(
-            json.loads(state_v2_json.read_text())
+            json.loads(ready_state_v2_json.read_text())
         )
         mock_instance = MockPlyvelDB(
             {k.encode(): v.encode() for k, v in flat_data.items()}
@@ -183,19 +207,13 @@ class BaseTest:
 
         magic: MagicMock = mocker.patch("plyvel.DB", return_value=mock_instance)
 
-        # Does not work because plyvel.DB is immutable
-        # with mocker.patch.context_manager(
-        #     plyvel.DB, "__new__", return_value=mock_instance
-        # ):
-        #     yield mock_instance
-
         yield mock_instance
 
         mocker.stop(magic)
 
     @pytest.fixture
     def empty_vortex_db(
-        self, mocker: MockerFixture
+        self, mocker: MockerFixture, empty_state_v2_json: Path
     ) -> Generator[MockPlyvelDB, None, None]:
         """
         Pytest fixture to mock the plyvel.DB class and redirect it to use an empty
@@ -205,7 +223,13 @@ class BaseTest:
             Generator[MockPlyvelDB]: The mocked plyvel.DB instance
         """
 
-        mock_instance = MockPlyvelDB()
+        flat_data: dict[str, str] = LevelDB.flatten_nested_dict(
+            json.loads(empty_state_v2_json.read_text())
+        )
+        mock_instance = MockPlyvelDB(
+            {k.encode(): v.encode() for k, v in flat_data.items()}
+        )
+
         magic: MagicMock = mocker.patch("plyvel.DB", return_value=mock_instance)
 
         yield mock_instance
@@ -213,17 +237,75 @@ class BaseTest:
         mocker.stop(magic)
 
     @pytest.fixture
-    def state_v2_json(self) -> Generator[Path, None, None]:
+    def full_vortex_db(
+        self, mocker: MockerFixture, full_state_v2_json: Path
+    ) -> Generator[MockPlyvelDB, None, None]:
+        """
+        Pytest fixture to mock the plyvel.DB class and redirect it to use the
+        database with the test instance.
+
+        Yields:
+            Generator[MockPlyvelDB]: The mocked plyvel.DB instance
+        """
+
+        flat_data: dict[str, str] = LevelDB.flatten_nested_dict(
+            json.loads(full_state_v2_json.read_text())
+        )
+        mock_instance = MockPlyvelDB(
+            {k.encode(): v.encode() for k, v in flat_data.items()}
+        )
+
+        magic: MagicMock = mocker.patch("plyvel.DB", return_value=mock_instance)
+
+        yield mock_instance
+
+        mocker.stop(magic)
+
+    @pytest.fixture
+    def ready_state_v2_json(self) -> Generator[Path, None, None]:
         """
         Fixture to return a path to a sample JSON file within a temp folder resembling
-        a Vortex database.
+        a Vortex database ready for a migration.
+
+        Yields:
+            Generator[Path]: Path to sample JSON file
+        """
+
+        # TODO: Check if this is still needed
+        with tempfile.TemporaryDirectory(prefix="MMM_test_") as tmp_dir:
+            src = Path("tests") / "data" / "ready_state.v2.json"
+            dst = Path(tmp_dir) / "ready_state.v2.json"
+            shutil.copyfile(src, dst)
+            yield dst
+
+    @pytest.fixture
+    def empty_state_v2_json(self) -> Generator[Path, None, None]:
+        """
+        Fixture to return a path to a sample JSON file within a temp folder resembling
+        an empty Vortex database, right after its installation and first start up.
 
         Yields:
             Generator[Path]: Path to sample JSON file
         """
 
         with tempfile.TemporaryDirectory(prefix="MMM_test_") as tmp_dir:
-            src = Path("tests") / "data" / "state.v2.json"
-            dst = Path(tmp_dir) / "state.v2.json"
+            src = Path("tests") / "data" / "empty_state.v2.json"
+            dst = Path(tmp_dir) / "empty_state.v2.json"
+            shutil.copyfile(src, dst)
+            yield dst
+
+    @pytest.fixture
+    def full_state_v2_json(self) -> Generator[Path, None, None]:
+        """
+        Fixture to return a path to a sample JSON file within a temp folder resembling
+        the full Vortex database after migrating the test instance.
+
+        Yields:
+            Generator[Path]: Path to sample JSON file
+        """
+
+        with tempfile.TemporaryDirectory(prefix="MMM_test_") as tmp_dir:
+            src = Path("tests") / "data" / "full_state.v2.json"
+            dst = Path(tmp_dir) / "full_state.v2.json"
             shutil.copyfile(src, dst)
             yield dst
