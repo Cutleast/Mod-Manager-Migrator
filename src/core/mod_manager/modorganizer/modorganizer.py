@@ -4,7 +4,7 @@ Copyright (c) Cutleast
 
 import os
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Optional, override
 
 from core.archive.archive import Archive
 from core.game.game import Game
@@ -49,9 +49,11 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
     def __init__(self) -> None:
         super().__init__()
 
+    @override
     def __repr__(self) -> str:
         return "ModOrganizer"
 
+    @override
     def get_instance_names(self, game: Game) -> list[str]:
         self.log.info(f"Getting global MO2 instances for {game.id}...")
 
@@ -73,6 +75,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
 
         return instances
 
+    @override
     def load_instance(
         self,
         instance_data: MO2InstanceInfo,
@@ -130,6 +133,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
 
         return instance
 
+    @override
     def _load_mods(
         self,
         instance_data: MO2InstanceInfo,
@@ -347,6 +351,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
 
         return indexed_mods
 
+    @override
     def _load_tools(
         self,
         instance_data: MO2InstanceInfo,
@@ -355,6 +360,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
     ) -> list[Tool]:
         return []  # TODO: Implement this
 
+    @override
     def create_instance(
         self, instance_data: MO2InstanceInfo, ldialog: Optional[LoadingDialog] = None
     ) -> Instance:
@@ -477,6 +483,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         archive: Archive = Archive.load_archive(downloaded_archive)
         archive.extract_all(dest, full_paths=True)
 
+    @override
     def install_mod(
         self,
         mod: Mod,
@@ -552,6 +559,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         elif regular:
             instance.mods.append(mod)
 
+    @override
     def add_tool(
         self,
         tool: Tool,
@@ -565,12 +573,15 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         # TODO: Implement this
         ...
 
+    @override
     def get_instance_ini_dir(self, instance_data: MO2InstanceInfo) -> Path:
         return instance_data.profiles_folder / instance_data.profile
 
+    @override
     def get_additional_files_folder(self, instance_data: MO2InstanceInfo) -> Path:
         return instance_data.profiles_folder / instance_data.profile
 
+    @override
     def prepare_migration(self, instance_data: MO2InstanceInfo) -> None:
         if not instance_data.is_global and self.detect_global_instances():
             raise GlobalInstanceDetectedError
@@ -583,6 +594,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
             if instance_data.install_mo2:
                 raise CannotInstallGlobalMo2Error
 
+    @override
     def finalize_migration(
         self,
         migrated_instance: Instance,
@@ -718,6 +730,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
 
         return instances_found
 
+    @override
     def get_completed_message(self, migrated_instance_data: MO2InstanceInfo) -> str:
         text: str = ""
 
@@ -731,6 +744,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
 
         return text
 
+    @override
     def check_destination_disk_space(
         self, dst_info: MO2InstanceInfo, src_size: int
     ) -> None:

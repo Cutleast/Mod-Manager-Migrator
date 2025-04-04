@@ -160,7 +160,7 @@ class BaseTest:
         Provides the compiled Qt resources by importing them.
         """
 
-        import src.resources_rc  # noqa: F401
+        import src.resources_rc  # type: ignore # noqa: F401
 
     def get_mod_by_name(self, mod_name: str, mod_instance: Instance) -> Mod:
         """

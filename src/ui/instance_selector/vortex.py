@@ -3,7 +3,7 @@ Copyright (c) Cutleast
 """
 
 import re
-from typing import Optional
+from typing import Optional, override
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QComboBox, QGridLayout, QLabel
@@ -24,6 +24,7 @@ class VortexWidget(InstanceWidget):
     __profile_dropdown: QComboBox
     __glayout: QGridLayout
 
+    @override
     def _init_ui(self) -> None:
         self.__glayout = QGridLayout()
         self.__glayout.setContentsMargins(0, 0, 0, 0)
@@ -43,15 +44,18 @@ class VortexWidget(InstanceWidget):
         )
         self.__glayout.addWidget(self.__profile_dropdown, 0, 1)
 
+    @override
     def _update(self) -> None:
         self.__profile_dropdown.clear()
         self.__profile_dropdown.addItem(self.tr("Please select..."))
         self.__profile_dropdown.addItems(self._instance_names)
         self.changed.emit()
 
+    @override
     def validate(self) -> bool:
         return self.__profile_dropdown.currentIndex() != 0
 
+    @override
     def get_instance(self, game: Game) -> ProfileInfo:
         instance_name: str = self.__profile_dropdown.currentText()
         match: Optional[re.Match] = re.match(r"^(.*) \((.*)\)$", instance_name)

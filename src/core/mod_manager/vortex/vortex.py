@@ -6,7 +6,7 @@ import datetime
 import shutil
 import time
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Optional, override
 
 import plyvel
 
@@ -40,7 +40,7 @@ class Vortex(ModManager[ProfileInfo]):
     id = "vortex"
     icon_name = ":/icons/vortex.png"
 
-    GAMES: dict[str, Game]
+    __games: dict[str, Game]
     """
     Dict of game names in the meta.ini file to game classes.
     """
@@ -57,13 +57,15 @@ class Vortex(ModManager[ProfileInfo]):
             self.db_path, use_symlink=not LevelDB.is_db_readable(self.db_path)
         )
 
-        self.GAMES = {
+        self.__games = {
             "skyrimse": Game.get_game_by_id("skyrimse"),
         }
 
+    @override
     def __repr__(self) -> str:
         return "Vortex"
 
+    @override
     def get_instance_names(self, game: Game) -> list[str]:
         self.log.info(f"Getting profiles for {game.id} from database...")
 
@@ -92,6 +94,7 @@ class Vortex(ModManager[ProfileInfo]):
 
         return profiles
 
+    @override
     def load_instance(
         self,
         instance_data: ProfileInfo,
@@ -121,6 +124,7 @@ class Vortex(ModManager[ProfileInfo]):
 
         return instance
 
+    @override
     def _load_mods(
         self,
         instance_data: ProfileInfo,
@@ -224,9 +228,9 @@ class Vortex(ModManager[ProfileInfo]):
             dl_game_id: str = instance_data.game.nexus_id
             if (
                 "downloadGame" in mod_meta_data
-                and mod_meta_data["downloadGame"] in self.GAMES
+                and mod_meta_data["downloadGame"] in self.__games
             ):
-                dl_game_id = self.GAMES[mod_meta_data["downloadGame"]].nexus_id
+                dl_game_id = self.__games[mod_meta_data["downloadGame"]].nexus_id
             elif "downloadGame" in mod_meta_data:
                 self.log.warning(
                     f"Unknown game for mod {display_name!r}: {mod_meta_data['downloadGame']}"
@@ -304,6 +308,7 @@ class Vortex(ModManager[ProfileInfo]):
         for mod, overwriting_mods in mod_overwrites.items():
             mod.mod_conflicts = overwriting_mods
 
+    @override
     def _load_tools(
         self,
         instance_data: ProfileInfo,
@@ -312,6 +317,7 @@ class Vortex(ModManager[ProfileInfo]):
     ) -> list[Tool]:
         return []  # TODO: Implement this
 
+    @override
     def create_instance(
         self, instance_data: ProfileInfo, ldialog: Optional[LoadingDialog] = None
     ) -> Instance:
@@ -351,6 +357,7 @@ class Vortex(ModManager[ProfileInfo]):
 
         return Instance(display_name=instance_data.display_name, mods=[], tools=[])
 
+    @override
     def install_mod(
         self,
         mod: Mod,
@@ -491,6 +498,7 @@ class Vortex(ModManager[ProfileInfo]):
 
         return staging_folder
 
+    @override
     def add_tool(
         self,
         tool: Tool,
@@ -503,6 +511,7 @@ class Vortex(ModManager[ProfileInfo]):
     ) -> None:
         self.log.info(f"Adding tool {tool.display_name!r}...")
 
+    @override
     def get_instance_ini_dir(self, instance_data: ProfileInfo) -> Path:
         appdata_path: Path = resolve(Path("%APPDATA%") / "Vortex")
         prof_path: Path = (
@@ -511,6 +520,7 @@ class Vortex(ModManager[ProfileInfo]):
 
         return prof_path
 
+    @override
     def get_additional_files_folder(self, instance_data: ProfileInfo) -> Path:
         appdata_path: Path = resolve(Path("%APPDATA%") / "Vortex")
         prof_path: Path = (
@@ -532,6 +542,7 @@ class Vortex(ModManager[ProfileInfo]):
 
         return (self.__get_staging_folder(game) / "vortex.deployment.msgpack").is_file()
 
+    @override
     def prepare_migration(self, instance_data: ProfileInfo) -> None:
         appdata_path: Path = resolve(Path("%APPDATA%") / "Vortex")
         game_folder: Path = appdata_path / instance_data.game.id.lower()
@@ -560,6 +571,7 @@ class Vortex(ModManager[ProfileInfo]):
         shutil.copytree(appdata_path / "state.v2", backup_path)
         self.log.info(f"Created backup of Vortex database at '{backup_path}'.")
 
+    @override
     def finalize_migration(
         self,
         migrated_instance: Instance,
@@ -586,6 +598,7 @@ class Vortex(ModManager[ProfileInfo]):
 
         self.__level_db.del_symlink_path()
 
+    @override
     def get_completed_message(self, migrated_instance_data: ProfileInfo) -> str:
         text: str = ""
 
@@ -598,6 +611,7 @@ class Vortex(ModManager[ProfileInfo]):
 
         return text
 
+    @override
     def check_destination_disk_space(
         self, dst_info: ProfileInfo, src_size: int
     ) -> None:

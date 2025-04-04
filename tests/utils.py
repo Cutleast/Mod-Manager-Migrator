@@ -44,7 +44,7 @@ class Utils:
         if not callable(field):
             raise TypeError(f"{method_name!r} ({type(field)}) is not callable!")
 
-        method: Callable[P, R] = field
+        method: Callable[P, R] = field  # type: ignore
 
         return method
 

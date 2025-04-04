@@ -2,6 +2,8 @@
 Copyright (c) Cutleast
 """
 
+from typing import override
+
 from PySide6.QtWidgets import QApplication
 
 from ..exceptions import ModManagerError, PreMigrationCheckFailedError
@@ -12,6 +14,7 @@ class VortexIsRunningError(ModManagerError):
     Exception that occurs when Vortex is running and locking its database.
     """
 
+    @override
     def getLocalizedMessage(self) -> str:
         return QApplication.translate(
             "exceptions",
@@ -25,6 +28,7 @@ class VortexIsDeployedError(ModManagerError):
     to the game folder.
     """
 
+    @override
     def getLocalizedMessage(self) -> str:
         return QApplication.translate(
             "exceptions",
@@ -39,6 +43,7 @@ class VortexNotFullySetupError(PreMigrationCheckFailedError):
     Exception that occurs when Vortex is not installed or ready for a migration.
     """
 
+    @override
     def getLocalizedMessage(self) -> str:
         return QApplication.translate(
             "exceptions",

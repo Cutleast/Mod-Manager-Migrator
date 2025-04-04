@@ -45,7 +45,8 @@ class Game(BaseModel):
     """
 
     inidir: Annotated[
-        Path, AfterValidator(lambda p: resolve(p, documents=get_documents_folder()))
+        Path,
+        AfterValidator(lambda p: resolve(p, documents=str(get_documents_folder()))),
     ]
     """
     Path to the game's ini directory.
@@ -55,7 +56,7 @@ class Game(BaseModel):
     inifiles: Annotated[
         list[Path],
         AfterValidator(
-            lambda f: [resolve(f, documents=get_documents_folder()) for f in f]
+            lambda f: [resolve(f, documents=str(get_documents_folder())) for f in f]
         ),
     ]
     """
@@ -74,8 +75,8 @@ class Game(BaseModel):
     These filenames are relative to the respective mod manager's profiles folder.
     """
 
-    __log: logging.Logger = logging.getLogger("Game")
-    __installdir: Optional[Path] = None
+    __log: logging.Logger = logging.getLogger("Game")  # type: ignore
+    __installdir: Optional[Path] = None  # type: ignore
 
     @property
     def installdir(self) -> Path:

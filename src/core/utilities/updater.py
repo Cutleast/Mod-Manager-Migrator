@@ -49,7 +49,7 @@ class Updater(QObject):
 
             UpdaterDialog(
                 self.installed_version,
-                self.latest_version,
+                self.latest_version,  # type: ignore
                 self.get_changelog(),
                 self.download_url,
             )

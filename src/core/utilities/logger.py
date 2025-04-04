@@ -9,7 +9,7 @@ import sys
 from datetime import datetime
 from io import TextIOWrapper
 from pathlib import Path
-from typing import Callable, TextIO
+from typing import Callable, Optional, TextIO, override
 
 from .datetime import datetime_format_to_regex
 
@@ -24,8 +24,8 @@ class Logger(logging.Logger):
     __root_logger: logging.Logger
     __log_handler: logging.StreamHandler
 
-    __stdout: TextIO
-    __stderr: TextIO
+    __stdout: Optional[TextIO] = None
+    __stderr: Optional[TextIO] = None
 
     __log_file_path: Path
     __log_file: TextIOWrapper
@@ -60,6 +60,7 @@ class Logger(logging.Logger):
         sys.stdout = self
         sys.stderr = self
 
+    @override
     def setLevel(self, level: int | str) -> None:
         """
         Sets logging level.

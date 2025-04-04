@@ -2,6 +2,8 @@
 Copyright (c) Cutleast
 """
 
+from typing import override
+
 import rarfile
 
 from .archive import Archive
@@ -15,6 +17,7 @@ class RARArchive(Archive):
     __files: list[str] | None = None
 
     @property
+    @override
     def files(self) -> list[str]:
         if self.__files is None:
             self.__files = [

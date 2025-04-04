@@ -4,7 +4,7 @@ Copyright (c) Cutleast
 
 import traceback
 from abc import abstractmethod
-from typing import Any
+from typing import Any, override
 
 from PySide6.QtWidgets import QApplication
 
@@ -49,6 +49,7 @@ class NotEnoughSpaceError(ExceptionBase):
     def __init__(self, disk: str, required_space: str, available_space: str) -> None:
         super().__init__(disk, required_space, available_space)
 
+    @override
     def getLocalizedMessage(self) -> str:
         return QApplication.translate(
             "exceptions",

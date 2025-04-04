@@ -34,7 +34,8 @@ def iter_toplevel_items(widget: QTreeWidget) -> Generator[QTreeWidgetItem]:
     """
 
     for i in range(widget.topLevelItemCount()):
-        yield widget.topLevelItem(i)
+        if (item := widget.topLevelItem(i)) is not None:
+            yield item
 
 
 def are_children_visible(item: QTreeWidgetItem) -> bool:

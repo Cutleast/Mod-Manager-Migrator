@@ -6,7 +6,7 @@ Original code from here:
 and adapted for usage in MMM.
 """
 
-from typing import Optional
+from typing import Optional, override
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QWheelEvent
@@ -31,6 +31,7 @@ class SmoothScrollArea(QScrollArea):
 
         self.setWidgetResizable(True)
 
+    @override
     def wheelEvent(self, arg__1: QWheelEvent) -> None:
         self.__verticalScrollBar.setScrollValue(-arg__1.angleDelta().y())
 

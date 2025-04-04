@@ -3,6 +3,7 @@ Copyright (c) Cutleast
 """
 
 from pathlib import Path
+from typing import override
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QComboBox, QFileDialog, QGridLayout, QLabel
@@ -28,6 +29,7 @@ class ModOrganizerWidget(InstanceWidget):
     __profile_dropdown: QComboBox
     __glayout: QGridLayout
 
+    @override
     def _init_ui(self) -> None:
         self.__glayout = QGridLayout()
         self.__glayout.setContentsMargins(0, 0, 0, 0)
@@ -74,6 +76,7 @@ class ModOrganizerWidget(InstanceWidget):
         self.__profile_dropdown.setDisabled(True)
         self.__glayout.addWidget(self.__profile_dropdown, 2, 1)
 
+    @override
     def _update(self) -> None:
         self.__instance_dropdown.clear()
         self.__instance_dropdown.addItem(self.tr("Please select..."))
@@ -106,6 +109,7 @@ class ModOrganizerWidget(InstanceWidget):
         self.__profile_dropdown.setEnabled(self.__profile_dropdown.count() > 1)
         self.changed.emit()
 
+    @override
     def validate(self) -> bool:
         valid: bool = (
             0
@@ -122,6 +126,7 @@ class ModOrganizerWidget(InstanceWidget):
 
         return valid
 
+    @override
     def get_instance(self, game: Game) -> MO2InstanceInfo:
         instance_name: str = self.__instance_dropdown.currentText()
         is_global: bool = instance_name != "Portable"

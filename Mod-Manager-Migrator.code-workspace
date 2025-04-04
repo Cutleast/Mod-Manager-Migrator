@@ -212,18 +212,14 @@
 		"python.testing.pytestEnabled": true,
 		"python.testing.unittestEnabled": false,
 		"xml.format.maxLineWidth": 0,
-		"mypy-type-checker.args": [
-			"--no-namespace-packages"
-		],
-		"mypy-type-checker.interpreter": [
-			"${workspaceFolder}\\.venv\\Scripts\\python.exe"
-		],
-		"mypy-type-checker.reportingScope": "workspace",
-		"mypy-type-checker.ignorePatterns": [
-			"dist/**/*.py",
-			"dist/**/*.pyi"
-		],
-		"python.analysis.stubPath": "stubs"
+		"python.analysis.autoFormatStrings": true,
+		"python.analysis.autoImportCompletions": true,
+		"python.analysis.diagnosticMode": "workspace",
+		"python.analysis.generateWithTypeAnnotation": true,
+		"python.analysis.languageServerMode": "full",
+		"python.analysis.typeCheckingMode": "strict",
+		"python.analysis.stubPath": "stubs",
+		"git.diagnosticsCommitHook.Enabled": true,
 	},
 	"launch": {
 		"version": "0.2.0",

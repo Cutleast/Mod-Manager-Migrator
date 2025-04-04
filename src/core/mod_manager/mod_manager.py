@@ -7,7 +7,7 @@ import os
 import shutil
 from abc import abstractmethod
 from pathlib import Path
-from typing import Optional
+from typing import Optional, override
 
 from PySide6.QtCore import QObject
 
@@ -48,6 +48,7 @@ class ModManager[I: InstanceInfo](QObject):
 
         self.log = logging.getLogger(self.__repr__())
 
+    @override
     def __hash__(self) -> int:
         return hash(self.id)
 

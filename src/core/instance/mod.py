@@ -5,7 +5,7 @@ Copyright (c) Cutleast
 from dataclasses import dataclass, field
 from enum import Enum, auto
 from pathlib import Path
-from typing import Optional
+from typing import Optional, override
 
 from .metadata import Metadata
 
@@ -79,8 +79,8 @@ class Mod:
     Each file is handled separately and have no impact on the loadorder.
     """
 
-    __files: Optional[list[Path]] = None
-    __size: Optional[int] = None
+    __files: Optional[list[Path]] = None  # type: ignore
+    __size: Optional[int] = None  # type: ignore
 
     @property
     def files(self) -> list[Path]:
@@ -131,5 +131,6 @@ class Mod:
 
         return url
 
+    @override
     def __hash__(self) -> int:
         return hash((self.path, self.metadata))

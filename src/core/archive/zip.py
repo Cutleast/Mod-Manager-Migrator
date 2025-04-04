@@ -3,6 +3,7 @@ Copyright (c) Cutleast
 """
 
 import zipfile
+from typing import override
 
 from .archive import Archive
 
@@ -15,6 +16,7 @@ class ZIPARchive(Archive):
     __files: list[str] | None = None
 
     @property
+    @override
     def files(self) -> list[str]:
         if self.__files is None:
             self.__files = [

@@ -2,6 +2,8 @@
 Copyright (c) Cutleast
 """
 
+from typing import override
+
 from PySide6.QtGui import QCloseEvent
 from PySide6.QtWidgets import QMainWindow
 
@@ -27,6 +29,7 @@ class MainWindow(QMainWindow):
         self.resize(1000, 700)
         self.setStyleSheet(AppContext.get_app().styleSheet())
 
+    @override
     def closeEvent(self, event: QCloseEvent) -> None:
         statusbar: StatusBar = self.statusBar()  # type: ignore[assignment]
         statusbar.close_log_window()

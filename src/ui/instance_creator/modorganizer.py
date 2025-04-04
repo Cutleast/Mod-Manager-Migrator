@@ -4,6 +4,7 @@ Copyright (c) Cutleast
 
 import logging
 from pathlib import Path
+from typing import override
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
@@ -42,6 +43,7 @@ class ModOrganizerWidget(InstanceWidget):
     __install_mo2: QCheckBox
     __use_root_builder: QCheckBox
 
+    @override
     def _init_ui(self) -> None:
         self.__glayout = QGridLayout()
         self.__glayout.setContentsMargins(0, 0, 0, 0)
@@ -190,6 +192,7 @@ class ModOrganizerWidget(InstanceWidget):
         self.__install_mo2.setDisabled(checked)
         self.__instance_path_entry.setDisabled(checked)
 
+    @override
     def validate(self) -> bool:
         valid: bool = True
 
@@ -215,6 +218,7 @@ class ModOrganizerWidget(InstanceWidget):
 
         return valid
 
+    @override
     def get_instance(self, game: Game) -> InstanceInfo:
         mo2_instance = MO2InstanceInfo(
             display_name=self.__instance_name_entry.text(),

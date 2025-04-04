@@ -2,6 +2,8 @@
 Copyright (c) Cutleast
 """
 
+from typing import override
+
 import qtawesome as qta
 from PySide6.QtCore import QEvent, QObject, Qt, Signal
 from PySide6.QtGui import QWheelEvent
@@ -161,6 +163,7 @@ class SettingsWidget(SmoothScrollArea):
         )
         migration_settings_glayout.addWidget(self.__replace_when_merge_box, 1, 1)
 
+    @override
     def eventFilter(self, source: QObject, event: QEvent) -> bool:
         if (
             event.type() == QEvent.Type.Wheel

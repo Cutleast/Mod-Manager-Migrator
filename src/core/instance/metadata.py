@@ -3,7 +3,7 @@ Copyright (c) Cutleast
 """
 
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, override
 
 
 @dataclass(frozen=True)
@@ -38,5 +38,6 @@ class Metadata:
     Nexus Mods Game ID (eg. "skyrimspecialedition").
     """
 
+    @override
     def __hash__(self) -> int:
         return hash((self.mod_id, self.file_id, self.version, self.file_name))

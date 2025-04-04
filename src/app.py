@@ -7,12 +7,13 @@ import shutil
 import time
 from argparse import Namespace
 from pathlib import Path
+from typing import override
 
 from PySide6.QtCore import QTranslator, Signal
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QMessageBox
 
-import resources_rc  # noqa: F401
+import resources_rc  # type: ignore # noqa: F401
 from core.config.app_config import AppConfig
 from core.utilities.env_resolver import resolve
 from core.utilities.exception_handler import ExceptionHandler
@@ -110,6 +111,7 @@ class App(QApplication):
 
             self.log.info(f"Loaded localisation for {language}.")
 
+    @override
     def exec(self) -> int:
         """
         Executes application and shows main window.

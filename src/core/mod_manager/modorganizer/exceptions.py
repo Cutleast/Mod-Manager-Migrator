@@ -2,6 +2,8 @@
 Copyright (c) Cutleast
 """
 
+from typing import override
+
 from PySide6.QtWidgets import QApplication
 
 from ..exceptions import PreMigrationCheckFailedError
@@ -10,9 +12,10 @@ from ..exceptions import PreMigrationCheckFailedError
 class InvalidGlobalInstancePathError(PreMigrationCheckFailedError):
     """
     Exception when the path for a global instance is outside of the
-    `%LOCALAPPDATA%\ModOrganizer` folder.
+    `%LOCALAPPDATA%\\ModOrganizer` folder.
     """
 
+    @override
     def getLocalizedMessage(self) -> str:
         return QApplication.translate(
             "exceptions",
@@ -28,6 +31,7 @@ class CannotInstallGlobalMo2Error(PreMigrationCheckFailedError):
     the install MO2 checkbox is checked.
     """
 
+    @override
     def getLocalizedMessage(self) -> str:
         return QApplication.translate(
             "exceptions",
@@ -43,6 +47,7 @@ class GlobalInstanceDetectedError(PreMigrationCheckFailedError):
     Global instances cause issues with portable instances.
     """
 
+    @override
     def getLocalizedMessage(self) -> str:
         return QApplication.translate(
             "exceptions",

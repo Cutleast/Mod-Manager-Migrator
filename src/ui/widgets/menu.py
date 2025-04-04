@@ -2,7 +2,7 @@
 Copyright (c) Cutleast
 """
 
-from typing import Optional
+from typing import Optional, override
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon, QPixmap
@@ -33,6 +33,7 @@ class Menu(QMenu):
         self.setWindowFlag(Qt.WindowType.NoDropShadowWindowHint, True)
         self.aboutToShow.connect(self.show)
 
+    @override
     def show(self) -> None:
         super().show()
 

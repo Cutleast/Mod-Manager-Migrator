@@ -252,14 +252,14 @@ class LevelDB:
 
         for keys, value in data.items():
             try:
-                keys = keys.strip().split("###")  # type: ignore[assignment]
+                keys = keys.strip().split("###")
 
                 # Add keys and value to result
                 current = result
                 for key in keys[:-1]:
                     if key not in current:
                         current[key] = {}
-                    current: dict[str, dict] = current[key]  # type: ignore[no-redef]
+                    current: dict[str, dict] = current[key]
                 value = json.loads(value)
                 current[keys[-1]] = value
             except ValueError:

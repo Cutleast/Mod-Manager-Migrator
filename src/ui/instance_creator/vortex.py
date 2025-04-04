@@ -2,6 +2,8 @@
 Copyright (c) Cutleast
 """
 
+from typing import override
+
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QGridLayout, QLabel, QLineEdit
 
@@ -22,6 +24,7 @@ class VortexWidget(InstanceWidget):
     __glayout: QGridLayout
     __profile_name_entry: QLineEdit
 
+    @override
     def _init_ui(self) -> None:
         self.__glayout = QGridLayout()
         self.__glayout.setContentsMargins(0, 0, 0, 0)
@@ -39,9 +42,11 @@ class VortexWidget(InstanceWidget):
         )
         self.__glayout.addWidget(self.__profile_name_entry, 0, 1)
 
+    @override
     def validate(self) -> bool:
         return bool(self.__profile_name_entry.text().strip())
 
+    @override
     def get_instance(self, game: Game) -> InstanceInfo:
         profile = ProfileInfo(
             display_name=self.__profile_name_entry.text(),

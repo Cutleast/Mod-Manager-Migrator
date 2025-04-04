@@ -2,7 +2,7 @@
 Copyright (c) Cutleast
 """
 
-from typing import Callable, Generic, TypeVar
+from typing import Callable, Generic, TypeVar, override
 
 from PySide6.QtCore import QThread
 from PySide6.QtWidgets import QWidget
@@ -31,6 +31,7 @@ class Thread(QThread, Generic[T]):
         if name is not None:
             self.setObjectName(name)
 
+    @override
     def run(self) -> None:
         """
         Runs the target function, storing its return value or an exception.
