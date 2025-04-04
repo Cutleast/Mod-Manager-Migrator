@@ -3,9 +3,7 @@ Copyright (c) Cutleast
 """
 
 import json
-from pathlib import Path
 from typing import Any
-from unittest.mock import patch
 
 import pytest
 from pyfakefs.fake_filesystem import FakeFilesystem
@@ -18,7 +16,6 @@ from core.mod_manager.vortex.vortex import Vortex
 from core.utilities.leveldb import LevelDB
 from tests.utils import Utils
 
-from .._setup.mock_path import MockPath
 from .._setup.mock_plyvel import MockPlyvelDB
 from ..base_test import BaseTest
 
@@ -31,9 +28,8 @@ class TestVortex(BaseTest):
     DATABASE: tuple[str, type[LevelDB]] = ("level_db", LevelDB)
     RAW_DATA: tuple[str, type[dict[bytes, bytes]]] = ("data", dict)
 
-    @patch("pathlib.WindowsPath", new=MockPath)
     def test_create_instance(
-        self, ready_vortex_db: MockPlyvelDB, qt_resources: None
+        self, test_fs: FakeFilesystem, ready_vortex_db: MockPlyvelDB, qt_resources: None
     ) -> None:
         """
         Tests `core.mod_manager.vortex.Vortex.create_instance()`
@@ -41,8 +37,8 @@ class TestVortex(BaseTest):
 
         # given
         vortex = Vortex()
+        vortex.db_path.mkdir(parents=True, exist_ok=True)
         database: LevelDB = Utils.get_private_field(vortex, *TestVortex.DATABASE)
-        database.use_symlink = False
         profile_info = ProfileInfo(
             display_name="Test profile",
             game=Game.get_game_by_id("skyrimse"),
@@ -154,24 +150,21 @@ class TestVortex(BaseTest):
 
     def test_install_mod(
         self,
+        test_fs: FakeFilesystem,
         ready_vortex_db: MockPlyvelDB,
         instance: Instance,
-        data_folder: Path,
-        fs: FakeFilesystem,
         qt_resources: None,
     ) -> None:
         """
         Tests `core.mod_manager.vortex.Vortex.install_mod()`.
         """
 
-        self.test_create_instance(ready_vortex_db, qt_resources)
-        fs.add_real_directory(data_folder)
+        self.test_create_instance(test_fs, ready_vortex_db, qt_resources)
 
         # given
         vortex = Vortex()
         database: LevelDB = Utils.get_private_field(vortex, *TestVortex.DATABASE)
-        database.use_symlink = False
-        database.path.mkdir(parents=True)
+        database.path.mkdir(parents=True, exist_ok=True)
         profile_info = ProfileInfo(
             display_name="Test profile (1a2b3c4d)",
             game=Game.get_game_by_id("skyrimse"),
