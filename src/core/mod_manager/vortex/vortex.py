@@ -3,6 +3,7 @@ Copyright (c) Cutleast
 """
 
 import datetime
+import shutil
 import time
 from pathlib import Path
 from typing import Any, Optional
@@ -551,6 +552,13 @@ class Vortex(ModManager[ProfileInfo]):
         )
         if not profile_management_enabled:
             raise VortexNotFullySetupError
+
+        # Make a backup of the original Vortex database
+        backup_path: Path = appdata_path / (
+            "state.v2-mmm_" + time.strftime("%Y-%m-%d_%H-%M-%S")
+        )
+        shutil.copytree(appdata_path / "state.v2", backup_path)
+        self.log.info(f"Created backup of Vortex database at '{backup_path}'.")
 
     def finalize_migration(
         self,
