@@ -231,6 +231,10 @@ class ModManager[I: InstanceInfo](QObject):
                     text3=f"{file.name} ({scale_value(src_path.stat().st_size)})",
                 )
 
+            if src_path == dst_path:
+                self.log.warning(f"Skipped file due to same path: {str(src_path)!r}")
+                continue
+
             dst_path.parent.mkdir(parents=True, exist_ok=True)
 
             if dst_path.is_file() and replace:
