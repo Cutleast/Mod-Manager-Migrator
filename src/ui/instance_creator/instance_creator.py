@@ -2,15 +2,16 @@
 Copyright (c) Cutleast
 """
 
-from typing import Optional
+from typing import Optional, override
 
-from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QIcon
+from PySide6.QtCore import QEvent, QObject, Qt, Signal
+from PySide6.QtGui import QIcon, QWheelEvent
 from PySide6.QtWidgets import (
     QComboBox,
     QGridLayout,
     QLabel,
     QPushButton,
+    QSpinBox,
     QStackedLayout,
     QVBoxLayout,
     QWidget,
@@ -87,6 +88,7 @@ class InstanceCreator(QWidget):
         glayout.addWidget(mod_manager_label, 0, 0)
 
         self.__mod_manager_dropdown = QComboBox()
+        self.__mod_manager_dropdown.installEventFilter(self)
         self.__mod_manager_dropdown.setEditable(False)
         self.__mod_manager_dropdown.addItem(self.tr("Please select..."))
         self.__mod_manager_dropdown.addItems(
@@ -189,3 +191,15 @@ class InstanceCreator(QWidget):
             raise ValueError("Customized instance data is invalid!")
 
         return instance_widget.get_instance(game)
+
+    @override
+    def eventFilter(self, source: QObject, event: QEvent) -> bool:
+        if (
+            event.type() == QEvent.Type.Wheel
+            and (isinstance(source, QComboBox) or isinstance(source, QSpinBox))
+            and isinstance(event, QWheelEvent)
+        ):
+            self.wheelEvent(event)
+            return True
+
+        return super().eventFilter(source, event)

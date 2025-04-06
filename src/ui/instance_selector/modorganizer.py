@@ -42,6 +42,7 @@ class ModOrganizerWidget(InstanceWidget):
         self.__glayout.addWidget(instance_label, 0, 0)
 
         self.__instance_dropdown = QComboBox()
+        self.__instance_dropdown.installEventFilter(self)
         self.__instance_dropdown.addItem(self.tr("Please select..."))
         self.__instance_dropdown.addItems(self._instance_names)
         self.__instance_dropdown.addItem("Portable")
@@ -69,6 +70,7 @@ class ModOrganizerWidget(InstanceWidget):
         self.__glayout.addWidget(profile_label, 2, 0)
 
         self.__profile_dropdown = QComboBox()
+        self.__profile_dropdown.installEventFilter(self)
         self.__profile_dropdown.addItem(self.tr("Please select..."))
         self.__profile_dropdown.currentTextChanged.connect(
             lambda _: self.changed.emit()

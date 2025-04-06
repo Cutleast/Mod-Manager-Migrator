@@ -3,10 +3,10 @@ Copyright (c) Cutleast
 """
 
 from pathlib import Path
-from typing import Optional
+from typing import Optional, override
 
-from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QIcon
+from PySide6.QtCore import QEvent, QObject, Qt, Signal
+from PySide6.QtGui import QIcon, QWheelEvent
 from PySide6.QtWidgets import (
     QComboBox,
     QDialog,
@@ -15,6 +15,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QMessageBox,
     QPushButton,
+    QSpinBox,
     QStackedLayout,
     QVBoxLayout,
     QWidget,
@@ -117,6 +118,7 @@ class InstanceSelector(QWidget):
         glayout.addWidget(game_label, 0, 0)
 
         self.__game_dropdown = QComboBox()
+        self.__game_dropdown.installEventFilter(self)
         self.__game_dropdown.setEditable(False)
         self.__game_dropdown.addItem(self.tr("Please select..."))
         self.__game_dropdown.addItems(list(self.__games.keys()))
@@ -129,6 +131,7 @@ class InstanceSelector(QWidget):
         glayout.addWidget(mod_manager_label, 1, 0)
 
         self.__mod_manager_dropdown = QComboBox()
+        self.__mod_manager_dropdown.installEventFilter(self)
         self.__mod_manager_dropdown.setEditable(False)
         self.__mod_manager_dropdown.addItem(self.tr("Please select..."))
         self.__mod_manager_dropdown.addItems(
@@ -320,3 +323,15 @@ class InstanceSelector(QWidget):
         """
 
         return self.__cur_game
+
+    @override
+    def eventFilter(self, source: QObject, event: QEvent) -> bool:
+        if (
+            event.type() == QEvent.Type.Wheel
+            and (isinstance(source, QComboBox) or isinstance(source, QSpinBox))
+            and isinstance(event, QWheelEvent)
+        ):
+            self.wheelEvent(event)
+            return True
+
+        return super().eventFilter(source, event)

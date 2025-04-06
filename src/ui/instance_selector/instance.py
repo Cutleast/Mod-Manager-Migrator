@@ -3,9 +3,11 @@ Copyright (c) Cutleast
 """
 
 from abc import abstractmethod
+from typing import override
 
-from PySide6.QtCore import Signal
-from PySide6.QtWidgets import QWidget
+from PySide6.QtCore import QEvent, QObject, Signal
+from PySide6.QtGui import QWheelEvent
+from PySide6.QtWidgets import QComboBox, QSpinBox, QWidget
 
 from core.game.game import Game
 from core.mod_manager.instance_info import InstanceInfo
@@ -83,3 +85,15 @@ class InstanceWidget(QWidget):
         Returns:
             InstanceInfo: The data for the selected instance
         """
+
+    @override
+    def eventFilter(self, source: QObject, event: QEvent) -> bool:
+        if (
+            event.type() == QEvent.Type.Wheel
+            and (isinstance(source, QComboBox) or isinstance(source, QSpinBox))
+            and isinstance(event, QWheelEvent)
+        ):
+            self.wheelEvent(event)
+            return True
+
+        return super().eventFilter(source, event)
