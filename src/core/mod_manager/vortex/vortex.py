@@ -388,6 +388,7 @@ class Vortex(ModManager[ProfileInfo]):
                 self.__get_unique_file_name(mod), mod.metadata.mod_id or 0
             )
             source: str = "nexus" if mod.metadata.mod_id else "other"
+            modtype: Optional[str] = "dinput" if mod.deploy_path else None
 
             moddata: dict[str, Any] = {
                 "attributes": {
@@ -404,7 +405,7 @@ class Vortex(ModManager[ProfileInfo]):
                 "id": file_name,
                 "installationPath": file_name,
                 "state": "installed",
-                "type": None,
+                "type": modtype,
             }
             mods_data[file_name] = moddata
 
