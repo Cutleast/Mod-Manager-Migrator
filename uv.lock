@@ -433,7 +433,7 @@ requires-dist = [
 dev = [
     { name = "cx-freeze", specifier = "<8.1.0" },
     { name = "pyfakefs" },
-    { name = "pyright", specifier = ">=1.1.398" },
+    { name = "pyright" },
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "pytest-mock" },
