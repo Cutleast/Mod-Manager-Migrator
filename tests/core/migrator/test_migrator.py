@@ -10,6 +10,7 @@ from core.instance.instance import Instance
 from core.instance.mod import Mod
 from core.migrator.migration_report import MigrationReport
 from core.migrator.migrator import FileBlacklist, Migrator
+from core.mod_manager.mod_manager import ModManager
 from core.mod_manager.modorganizer.mo2_instance_info import MO2InstanceInfo
 from core.mod_manager.modorganizer.modorganizer import ModOrganizer
 from core.mod_manager.vortex.profile_info import ProfileInfo
@@ -39,7 +40,9 @@ class TestMigrator(BaseTest):
         # given
         mo2 = ModOrganizer()
         migrator = Migrator()
-        mo2_instance_info.game.installdir = Path("E:\\Games\\Skyrim Special Edition")
+        mo2_instance_info.game.installdir = Path(
+            "E:\\SteamLibrary\\Skyrim Special Edition"
+        )
         dst_path = Path("E:\\Modding\\Test Instance")
         dst_info = MO2InstanceInfo(
             display_name="Test Instance",
@@ -95,7 +98,9 @@ class TestMigrator(BaseTest):
         vortex = Vortex()
         vortex.db_path.mkdir(parents=True, exist_ok=True)
         migrator = Migrator()
-        mo2_instance_info.game.installdir = Path("E:\\Games\\Skyrim Special Edition")
+        mo2_instance_info.game.installdir = Path(
+            "E:\\SteamLibrary\\Skyrim Special Edition"
+        )
         mo2_instance_info.game.installdir.mkdir(parents=True, exist_ok=True)
         dst_info = ProfileInfo(
             display_name="Test Instance",
@@ -131,6 +136,8 @@ class TestMigrator(BaseTest):
         self.assert_modlists_equal(
             migrated_instance.mods,
             instance.mods,
+            self.__get_file_redirects(migrated_instance.mods, vortex),
+            self.__get_file_redirects(instance.mods, mo2),
             exclude_separators=True,  # Vortex doesn't support separators and ignores them when migrating
         )
         assert len(migrated_instance.tools) == len(instance.tools)
@@ -156,7 +163,9 @@ class TestMigrator(BaseTest):
         vortex.db_path.mkdir(parents=True, exist_ok=True)
         mo2 = ModOrganizer()
         migrator = Migrator()
-        vortex_profile_info.game.installdir = Path("E:\\Games\\Skyrim Special Edition")
+        vortex_profile_info.game.installdir = Path(
+            "E:\\SteamLibrary\\Skyrim Special Edition"
+        )
         vortex_profile_info.game.installdir.mkdir(parents=True, exist_ok=True)
         dst_path = Path("E:\\Modding\\Test Instance")
         dst_info = MO2InstanceInfo(
@@ -193,7 +202,12 @@ class TestMigrator(BaseTest):
         )
 
         # then
-        self.assert_modlists_equal(migrated_instance.mods, src_instance.loadorder)
+        self.assert_modlists_equal(
+            migrated_instance.mods,
+            src_instance.loadorder,
+            self.__get_file_redirects(migrated_instance.mods, mo2),
+            self.__get_file_redirects(src_instance.mods, vortex),
+        )
         assert len(migrated_instance.tools) == len(src_instance.tools)
 
     def test_migration_vortex_to_vortex(
@@ -217,7 +231,9 @@ class TestMigrator(BaseTest):
         vortex = Vortex()
         vortex.db_path.mkdir(parents=True, exist_ok=True)
         migrator = Migrator()
-        vortex_profile_info.game.installdir = Path("E:\\Games\\Skyrim Special Edition")
+        vortex_profile_info.game.installdir = Path(
+            "E:\\SteamLibrary\\Skyrim Special Edition"
+        )
         vortex_profile_info.game.installdir.mkdir(parents=True, exist_ok=True)
         dst_info = ProfileInfo(
             display_name="Test Instance",
@@ -260,6 +276,8 @@ class TestMigrator(BaseTest):
         self,
         modlist1: list[Mod],
         modlist2: list[Mod],
+        file_redirects1: dict[Mod, dict[Path, Path]] = {},
+        file_redirects2: dict[Mod, dict[Path, Path]] = {},
         check_files: bool = True,
         exclude_separators: bool = False,
     ) -> None:
@@ -270,6 +288,10 @@ class TestMigrator(BaseTest):
         Args:
             modlist1 (list[Mod]): First mod list.
             modlist2 (list[Mod]): Second mod list.
+            file_redirects1 (dict[Mod, dict[Path, Path]], optional):
+                File redirects for the first mod list. Defaults to {}.
+            file_redirects2 (dict[Mod, dict[Path, Path]], optional):
+                File redirects for the second mod list. Defaults to {}.
             check_files (bool, optional):
                 Whether to check the files of the mods. Defaults to True.
             exclude_separators (bool, optional):
@@ -293,6 +315,8 @@ class TestMigrator(BaseTest):
         assert modnames1 == modnames2
 
         for mod1, mod2 in zip(modlist1, modlist2):
+            redirects1: dict[Path, Path] = file_redirects1.get(mod1, {})
+            redirects2: dict[Path, Path] = file_redirects2.get(mod2, {})
             assert mod1.metadata == mod2.metadata
             assert mod1.enabled == mod2.enabled
             assert mod1.mod_type == mod2.mod_type
@@ -300,18 +324,39 @@ class TestMigrator(BaseTest):
             assert list(map(lambda m: m.metadata, mod1.mod_conflicts)) == list(
                 map(lambda m: m.metadata, mod2.mod_conflicts)
             )
+            assert {f: m.metadata for f, m in mod1.file_conflicts.items()} == {
+                f: m.metadata for f, m in mod2.file_conflicts.items()
+            }
             if check_files:
                 assert Utils.compare_path_list(
                     list(
-                        filter(  # Do not compare files on the blacklist
-                            lambda f: str(f).lower() not in FileBlacklist.get_files(),
+                        filter(  # Do not check special files
+                            lambda f: str(f).lower() not in FileBlacklist.get_files()
+                            and str(f) not in mod1.file_conflicts
+                            and f not in redirects1
+                            and f not in redirects2,
                             mod1.files,
                         )
                     ),
                     list(
-                        filter(  # Do not compare files on the blacklist
-                            lambda f: str(f).lower() not in FileBlacklist.get_files(),
+                        filter(  # Do not check special files
+                            lambda f: str(f).lower() not in FileBlacklist.get_files()
+                            and str(f) not in mod2.file_conflicts
+                            and f not in redirects2
+                            and f not in redirects1,
                             mod2.files,
                         )
                     ),
                 )
+
+    def __get_file_redirects(
+        self, mods: list[Mod], src_mod_manager: ModManager
+    ) -> dict[Mod, dict[Path, Path]]:
+        file_redirects: dict[Mod, dict[Path, Path]] = {}
+        for mod in mods:
+            redirects: dict[Path, Path] = src_mod_manager.get_actual_files(mod)
+
+            if redirects:
+                file_redirects[mod] = redirects
+
+        return file_redirects

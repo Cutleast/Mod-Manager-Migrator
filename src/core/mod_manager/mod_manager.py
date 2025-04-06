@@ -125,6 +125,69 @@ class ModManager[I: InstanceInfo](QObject):
             list[Tool]: The list of tools.
         """
 
+    @staticmethod
+    def _index_modlist(
+        mods: list[Mod], file_blacklist: list[str]
+    ) -> dict[str, list[Mod]]:
+        """
+        Indexes all mod files and maps each file to a list of mods that contain it.
+
+        Args:
+            mods (list[Mod]): The list of mods.
+            file_blacklist (list[str], optional): A list of file paths to ignore.
+
+        Returns:
+            dict[str, list[Mod]]: The indexed list of mods.
+        """
+
+        indexed_mods: dict[str, list[Mod]] = {}
+        for mod in mods:
+            for file in filter(
+                lambda f: f.name.lower() not in file_blacklist, mod.files
+            ):
+                indexed_mods.setdefault(str(file).lower(), []).append(mod)
+
+        return indexed_mods
+
+    @staticmethod
+    def _get_reversed_mod_conflicts(mods: list[Mod]) -> dict[Mod, list[Mod]]:
+        """
+        Returns a dict of mods that overwrite other mods.
+
+        Args:
+            mods (list[Mod]): The list of mods.
+
+        Returns:
+            dict[Mod, list[Mod]]: The dict of mods that overwrite other mods.
+        """
+
+        mod_overrides: dict[Mod, list[Mod]] = {}
+
+        for mod in mods:
+            if mod.mod_conflicts:
+                for overwriting_mod in mod.mod_conflicts:
+                    mod_overrides.setdefault(overwriting_mod, []).append(mod)
+
+        return mod_overrides
+
+    @staticmethod
+    def get_actual_files(mod: Mod) -> dict[Path, Path]:
+        """
+        Returns a dict of real file paths to actual file paths.
+        Only contains files where the real path differs from the actual path.
+
+        For example:
+            `scripts\\_wetskyuiconfig.pex.mohidden` -> `scripts\\_wetskyuiconfig.pex`
+
+        Args:
+            mod (Mod): The mod.
+
+        Returns:
+            dict[Path, Path]: The dict of real file paths to actual file paths.
+        """
+
+        return {}
+
     @abstractmethod
     def create_instance(
         self, instance_data: I, ldialog: Optional[LoadingDialog] = None
@@ -147,6 +210,7 @@ class ModManager[I: InstanceInfo](QObject):
         mod: Mod,
         instance: Instance,
         instance_data: I,
+        file_redirects: dict[Path, Path],
         use_hardlinks: bool,
         replace: bool,
         blacklist: list[str] = [],
@@ -159,6 +223,7 @@ class ModManager[I: InstanceInfo](QObject):
             mod (Mod): The mod to install.
             instance (Instance): The instance to install the mod to.
             instance_data (I): The data of the instance above.
+            file_redirects (dict[Path, Path]): A dict of file redirects.
             use_hardlinks (bool): Whether to use hardlinks if possible.
             replace (bool): Whether to replace existing files.
             blacklist (list[str], optional): A list of files to not migrate.
@@ -195,6 +260,7 @@ class ModManager[I: InstanceInfo](QObject):
         self,
         mod: Mod,
         mod_folder: Path,
+        file_redirects: dict[Path, Path],
         use_hardlinks: bool,
         replace: bool,
         blacklist: list[str] = [],
@@ -207,6 +273,7 @@ class ModManager[I: InstanceInfo](QObject):
             mod (Mod): The mod to migrate.
             mod_folder (Path): The destination path.
             use_hardlinks (bool): Whether to use hardlinks if possible.
+            file_redirects (dict[Path, Path]): A dict of file redirects.
             replace (bool): Whether to replace existing files.
             blacklist (list[str], optional): A list of files to not migrate.
             ldialog (Optional[LoadingDialog], optional):
@@ -221,7 +288,7 @@ class ModManager[I: InstanceInfo](QObject):
                 continue
 
             src_path: Path = mod.path / file
-            dst_path: Path = mod_folder / file
+            dst_path: Path = mod_folder / file_redirects.get(file, file)
 
             if ldialog:
                 ldialog.updateProgress(

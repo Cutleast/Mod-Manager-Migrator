@@ -319,6 +319,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         )
 
         for mod_list in file_index.values():
+            mod_list = mod_list.copy()
             while len(mod_list) > 1:
                 mod: Mod = mod_list.pop(0)
                 mod.mod_conflicts.extend(mod_list)
@@ -327,29 +328,21 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         for mod in mods:
             mod.mod_conflicts = unique(mod.mod_conflicts)
 
-    @staticmethod
-    def _index_modlist(
-        mods: list[Mod], file_blacklist: list[str]
-    ) -> dict[str, list[Mod]]:
-        """
-        Indexes all mod files and maps each file to a list of mods that contain it.
+        # Process single file conflicts (.mohidden files)
+        hidden_files: dict[str, list[Mod]] = {
+            f: m for f, m in file_index.items() if f.endswith(".mohidden")
+        }
 
-        Args:
-            mods (list[Mod]): The list of mods.
-            file_blacklist (list[str], optional): A list of file paths to ignore.
-
-        Returns:
-            dict[str, list[Mod]]: The indexed list of mods.
-        """
-
-        indexed_mods: dict[str, list[Mod]] = {}
-        for mod in mods:
-            for file in filter(
-                lambda f: f.name.lower() not in file_blacklist, mod.files
-            ):
-                indexed_mods.setdefault(str(file).lower(), []).append(mod)
-
-        return indexed_mods
+        for hidden_file, mod_list in hidden_files.items():
+            real_file: str = hidden_file.removesuffix(".mohidden")
+            if real_file in file_index:
+                overwriting_mod: Mod = file_index[real_file][-1]
+                for mod in mod_list:
+                    mod.file_conflicts[real_file] = overwriting_mod
+            else:
+                ModOrganizer.log.warning(
+                    f"Found hidden file without conflict: '{hidden_file}' in {mod_list}!"
+                )
 
     @override
     def _load_tools(
@@ -359,6 +352,15 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         ldialog: Optional[LoadingDialog] = None,
     ) -> list[Tool]:
         return []  # TODO: Implement this
+
+    @override
+    @staticmethod
+    def get_actual_files(mod: Mod) -> dict[Path, Path]:
+        return {
+            Path(file): Path(file).with_suffix(file.suffix.removesuffix(".mohidden"))
+            for file in mod.files
+            if file.suffix.endswith(".mohidden")
+        }
 
     @override
     def create_instance(
@@ -489,6 +491,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         mod: Mod,
         instance: Instance,
         instance_data: MO2InstanceInfo,
+        file_redirects: dict[Path, Path],
         use_hardlinks: bool,
         replace: bool,
         blacklist: list[str] = [],
@@ -545,8 +548,17 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
             self.log.info("Copied original meta.ini from mod.")
 
         self._migrate_mod_files(
-            mod, mod_folder, use_hardlinks, replace, blacklist, ldialog
+            mod, mod_folder, file_redirects, use_hardlinks, replace, blacklist, ldialog
         )
+
+        # Append .mohidden suffix to files in mod.file_conflicts
+        for file in mod.file_conflicts.keys():
+            src: Path = mod_folder / file
+            dst: Path = src.with_suffix(src.suffix + ".mohidden")
+            os.rename(src, dst)
+            self.log.debug(
+                f"Renamed '{file}' to '{dst}' due to configured file conflict."
+            )
 
         # Merge conflicts with already installed mods
         if instance.is_mod_installed(mod):

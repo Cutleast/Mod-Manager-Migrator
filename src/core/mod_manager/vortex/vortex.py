@@ -164,6 +164,7 @@ class Vortex(ModManager[ProfileInfo]):
 
         mods: list[Mod] = []
         conflict_rules: dict[Mod, list[dict]] = {}
+        file_overrides: dict[Mod, list[str]] = {}
         for m, modname in enumerate(modnames):
             if modname not in installed_mods:
                 self.log.warning(
@@ -254,8 +255,16 @@ class Vortex(ModManager[ProfileInfo]):
             rules: list[dict] = moddata.get("rules", [])
             if rules:
                 conflict_rules[mod] = rules
+            overrides: list[str] = moddata.get("fileOverrides", [])
+            if overrides:
+                file_overrides[mod] = overrides
 
         self.__process_conflict_rules(mods, conflict_rules)
+
+        mod_overrides: dict[Mod, list[Mod]] = self._get_reversed_mod_conflicts(mods)
+        self.__process_file_overrides(
+            file_overrides, file_blacklist, mod_overrides, game
+        )
 
         self.log.debug(f"Loaded {len(mods)} mod(s) from instance {instance_name!r}.")
 
@@ -264,6 +273,7 @@ class Vortex(ModManager[ProfileInfo]):
     def __process_conflict_rules(
         self, mods: list[Mod], conflict_rules: dict[Mod, list[dict]]
     ) -> None:
+        self.log.info(f"Processing conflict rules for {len(conflict_rules)} mod(s)...")
         mods_by_file_name: dict[str, Mod] = {
             self.__get_unique_file_name(mod).rsplit(".", 1)[0]: mod for mod in mods
         }
@@ -307,6 +317,49 @@ class Vortex(ModManager[ProfileInfo]):
 
         for mod, overwriting_mods in mod_overwrites.items():
             mod.mod_conflicts = overwriting_mods
+
+        self.log.info("Processing conflict rules successful.")
+
+    def __process_file_overrides(
+        self,
+        file_overrides: dict[Mod, list[str]],
+        file_blacklist: list[str],
+        mod_overrides: dict[Mod, list[Mod]],
+        game: Game,
+    ) -> None:
+        self.log.info(f"Processing file overrides for {len(file_overrides)} mod(s)...")
+
+        mods_folder: Path = game.installdir / game.mods_folder
+
+        for mod, files in file_overrides.items():
+            if mod not in mod_overrides:
+                continue
+
+            overwriting_files: dict[str, list[Mod]] = self._index_modlist(
+                mod_overrides[mod], file_blacklist
+            )
+            if not overwriting_files:
+                self.log.debug(
+                    f"Mod {mod.display_name!r} has irrelevant file overrides: {files}."
+                )
+                continue
+
+            for file in files:
+                if Path(file).is_relative_to(mods_folder):
+                    file = str(Path(file).relative_to(mods_folder))
+                overwriting_mods: list[Mod] = overwriting_files.get(file.lower(), [])
+
+                if len(overwriting_mods) > 1:
+                    self.log.warning(
+                        "Detected file override for multiple mods: "
+                        f"{', '.join(m.display_name for m in overwriting_mods)} "
+                        f"override {mod.display_name!r} for file {file!r}."
+                    )
+
+                if len(overwriting_mods) >= 1:
+                    mod.file_conflicts[file] = overwriting_mods[0]
+
+        self.log.info("Processing file overrides successful.")
 
     @override
     def _load_tools(
@@ -363,6 +416,7 @@ class Vortex(ModManager[ProfileInfo]):
         mod: Mod,
         instance: Instance,
         instance_data: ProfileInfo,
+        file_redirects: dict[Path, Path],
         use_hardlinks: bool,
         replace: bool,
         blacklist: list[str] = [],
@@ -414,6 +468,7 @@ class Vortex(ModManager[ProfileInfo]):
             self._migrate_mod_files(
                 mod,
                 staging_folder / file_name,
+                file_redirects,
                 use_hardlinks,
                 replace,
                 blacklist,
@@ -572,6 +627,23 @@ class Vortex(ModManager[ProfileInfo]):
         shutil.copytree(appdata_path / "state.v2", backup_path)
         self.log.info(f"Created backup of Vortex database at '{backup_path}'.")
 
+    def __set_file_overrides(self, mods: list[Mod], game: Game) -> None:
+        for mod in mods:
+            if not mod.file_conflicts:
+                continue
+
+            self.log.info(f"Setting file overrides for {mod.display_name!r}...")
+            full_mod_name: str = self.__get_unique_file_name(mod).rsplit(".", 1)[0]
+            prefix: str = f"persistent###mods###{game.id.lower()}###{full_mod_name}"
+            mod_data: dict[str, Any] = self.__level_db.load(prefix)["persistent"][
+                "mods"
+            ][game.id.lower()][full_mod_name]
+            mod_data["fileOverrides"] = [
+                str(game.installdir / game.mods_folder / file)
+                for file in mod.file_conflicts
+            ]
+            self.__level_db.dump(mod_data, prefix + "###")
+
     @override
     def finalize_migration(
         self,
@@ -587,6 +659,9 @@ class Vortex(ModManager[ProfileInfo]):
         )
         profile_data["features"]["local_saves"] = migrated_instance.separate_save_games
         self.__level_db.dump(profile_data)
+
+        # Set file overrides
+        self.__set_file_overrides(migrated_instance.mods, migrated_instance_data.game)
 
         # Activate new profile
         key: str = "settings###profiles###activeProfileId"

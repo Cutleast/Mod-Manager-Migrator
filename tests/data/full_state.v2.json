@@ -153,6 +153,9 @@
                         "source": "nexus",
                         "version": "2.4"
                     },
+                    "fileOverrides": [
+                        "E:\\SteamLibrary\\Skyrim Special Edition\\Data\\scripts\\_wetskyuiconfig.pex"
+                    ],
                     "id": "Wet and Cold SE - Deutsch-89391-2-4-0-1716634410",
                     "installationPath": "Wet and Cold SE - Deutsch-89391-2-4-0-1716634410",
                     "state": "installed",

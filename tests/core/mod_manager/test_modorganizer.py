@@ -113,6 +113,20 @@ class TestModOrganizer(BaseTest):
         # then
         assert obsidian_weathers.mod_conflicts == [obsidian_weathers_german]
         assert obsidian_weathers_german.mod_conflicts == []
+        assert obsidian_weathers.file_conflicts == {}
+        assert obsidian_weathers_german.file_conflicts == {}
+
+        # when
+        wet_and_cold: Mod = self.get_mod_by_name("Wet and Cold SE", instance)
+        wet_and_cold_german: Mod = self.get_mod_by_name(
+            "Wet and Cold SE - German", instance
+        )
+
+        # then
+        assert (
+            wet_and_cold_german.file_conflicts["scripts\\_wetskyuiconfig.pex"]
+            == wet_and_cold
+        )
 
     def test_create_instance(self, test_fs: FakeFilesystem, qt_resources: None) -> None:
         """
@@ -199,6 +213,7 @@ class TestModOrganizer(BaseTest):
                 mod,
                 dst_instance,
                 instance_data,
+                file_redirects=mo2.get_actual_files(mod),
                 use_hardlinks=True,
                 replace=True,
                 blacklist=FileBlacklist.get_files(),
@@ -260,6 +275,7 @@ class TestModOrganizer(BaseTest):
             separator_mod,
             dst_instance,
             instance_data,
+            file_redirects=mo2.get_actual_files(separator_mod),
             use_hardlinks=True,
             replace=True,
             blacklist=FileBlacklist.get_files(),

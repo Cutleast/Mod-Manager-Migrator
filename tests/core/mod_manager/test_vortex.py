@@ -3,6 +3,7 @@ Copyright (c) Cutleast
 """
 
 import json
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -10,9 +11,12 @@ from pyfakefs.fake_filesystem import FakeFilesystem
 
 from core.game.game import Game
 from core.instance.instance import Instance
+from core.instance.mod import Mod
+from core.migrator.file_blacklist import FileBlacklist
 from core.mod_manager.vortex.exceptions import VortexNotFullySetupError
 from core.mod_manager.vortex.profile_info import ProfileInfo
 from core.mod_manager.vortex.vortex import Vortex
+from core.utilities.env_resolver import resolve
 from core.utilities.leveldb import LevelDB
 from tests.utils import Utils
 
@@ -27,6 +31,64 @@ class TestVortex(BaseTest):
 
     DATABASE: tuple[str, type[LevelDB]] = ("level_db", LevelDB)
     RAW_DATA: tuple[str, type[dict[bytes, bytes]]] = ("data", dict)
+
+    def test_load_instance(
+        self,
+        data_folder: Path,
+        vortex_profile_info: ProfileInfo,
+        full_vortex_db: MockPlyvelDB,
+        test_fs: FakeFilesystem,
+    ) -> None:
+        """
+        Tests `core.mod_manager.modorganizer.modorganizer.ModOrganizer.load_instance()`.
+        """
+
+        test_fs.add_real_directory(
+            data_folder / "skyrimse",
+            target_path=resolve(Path("%APPDATA%")) / "Vortex" / "skyrimse",
+        )
+
+        # given
+        vortex = Vortex()
+        vortex.db_path.mkdir(parents=True, exist_ok=True)
+        vortex_profile_info.game.installdir = Path(
+            "E:\\SteamLibrary\\Skyrim Special Edition"
+        )
+        vortex_profile_info.game.installdir.mkdir(parents=True, exist_ok=True)
+
+        # when
+        instance: Instance = vortex.load_instance(
+            vortex_profile_info, FileBlacklist.get_files()
+        )
+
+        # then
+        assert len(instance.mods) == 7
+
+        # when
+        obsidian_weathers: Mod = self.get_mod_by_name(
+            "Obsidian Weathers and Seasons", instance
+        )
+        obsidian_weathers_german: Mod = self.get_mod_by_name(
+            "Obsidian Weathers and Seasons - German", instance
+        )
+
+        # then
+        assert obsidian_weathers.mod_conflicts == [obsidian_weathers_german]
+        assert obsidian_weathers_german.mod_conflicts == []
+        assert obsidian_weathers.file_conflicts == {}
+        assert obsidian_weathers_german.file_conflicts == {}
+
+        # when
+        wet_and_cold: Mod = self.get_mod_by_name("Wet and Cold SE", instance)
+        wet_and_cold_german: Mod = self.get_mod_by_name(
+            "Wet and Cold SE - German", instance
+        )
+
+        # then
+        assert (
+            wet_and_cold_german.file_conflicts["scripts\\_wetskyuiconfig.pex"]
+            == wet_and_cold
+        )
 
     def test_create_instance(
         self, test_fs: FakeFilesystem, ready_vortex_db: MockPlyvelDB, qt_resources: None
@@ -175,7 +237,12 @@ class TestVortex(BaseTest):
 
         # when
         vortex.install_mod(
-            mod, dst_profile, profile_info, use_hardlinks=True, replace=True
+            mod,
+            dst_profile,
+            profile_info,
+            file_redirects={},
+            use_hardlinks=True,
+            replace=True,
         )
 
         # then

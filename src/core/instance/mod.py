@@ -76,7 +76,7 @@ class Mod:
     file_conflicts: dict[str, "Mod"] = field(default_factory=dict)
     """
     Mapping of file names that are explicitly overwritten by other mods.
-    Each file is handled separately and have no impact on the loadorder.
+    Each file is handled separately and has no impact on the loadorder.
     """
 
     __files: Optional[list[Path]] = None  # type: ignore

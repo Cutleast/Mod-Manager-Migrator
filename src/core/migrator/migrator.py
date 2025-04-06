@@ -110,6 +110,7 @@ class Migrator(QObject):
                         mod,
                         dst_instance,
                         dst_info,
+                        src_mod_manager.get_actual_files(mod),
                         use_hardlinks,
                         replace,
                         blacklist,

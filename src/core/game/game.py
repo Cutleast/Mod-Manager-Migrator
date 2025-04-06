@@ -64,6 +64,11 @@ class Game(BaseModel):
     Variables like `%%DOCUMENTS%%` are automatically resolved.
     """
 
+    mods_folder: Path
+    """
+    The game's default folder for mods, relative to its install directory.
+    """
+
     reg_paths: list[str]
     """
     Registry keys to lookup the game's install directory.
