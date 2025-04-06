@@ -311,17 +311,17 @@
         <translation>Mods werden migriert...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="132"/>
+        <location filename="src/core/migrator/migrator.py" line="133"/>
         <source>Migrating tools...</source>
         <translation>Tools werden migriert...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="172"/>
+        <location filename="src/core/migrator/migrator.py" line="173"/>
         <source>Failed to migrate INI files.</source>
         <translation>Migration der INI-Dateien fehlgeschlagen.</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="186"/>
+        <location filename="src/core/migrator/migrator.py" line="187"/>
         <source>Failed to migrate additional files.</source>
         <translation>Migration der zusätzlichen Dateien fehlgeschlagen.</translation>
     </message>
@@ -346,22 +346,22 @@
         <translation>Tools von {0} &gt; {1} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="438"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="440"/>
         <source>Downloading and installing ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen und installiert...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="458"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="460"/>
         <source>Downloading ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="480"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="482"/>
         <source>Extracting archive...</source>
         <translation>Archiv wird entpackt...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="745"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="757"/>
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of the new MO2 installation.</source>
         <translation>Die Nutzung von Root Builder wurde aktiviert.
@@ -635,12 +635,12 @@ Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von
     </message>
     <message>
         <location filename="src/core/mod_manager/vortex/vortex.py" line="141"/>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="176"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="177"/>
         <source>Loading mods from profile {0}...</source>
         <translation>Mods von Profil {0} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="612"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="688"/>
         <source>Vortex is currently deployed to the game folder. It is strongly recommended to purge the game directory before using the migrated instance.</source>
         <translation>Vortex ist zurzeit in das Spielverzeichnis deployed. Es wird empfohlen, das Spielverzeichnis vor der Nutzung der migrierten Instanz zu säubern.</translation>
     </message>
