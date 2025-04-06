@@ -46,6 +46,23 @@
         },
         "mods": {
             "skyrimse": {
+                "(Part 2) Engine Fixes - skse64 Preloader and TBB Lib-17230-2020-3-1611367474": {
+                    "attributes": {
+                        "customFileName": "(Part 2) Engine Fixes - skse64 Preloader and TBB Lib",
+                        "downloadGame": "skyrimse",
+                        "fileId": 181171,
+                        "fileName": "(Part 2) Engine Fixes - skse64 Preloader and TBB Lib-17230-2020-3-1611367474.7z",
+                        "installTime": "2025-04-04T20:02:35.294227Z",
+                        "logicalFileName": "(Part 2) Engine Fixes - skse64 Preloader and TBB Lib",
+                        "modId": 17230,
+                        "source": "nexus",
+                        "version": "2020.3"
+                    },
+                    "id": "(Part 2) Engine Fixes - skse64 Preloader and TBB Lib-17230-2020-3-1611367474",
+                    "installationPath": "(Part 2) Engine Fixes - skse64 Preloader and TBB Lib-17230-2020-3-1611367474",
+                    "state": "installed",
+                    "type": "dinput"
+                },
                 "Obsidian Weathers - 1.07a-12125-1-07a-1620568126": {
                     "attributes": {
                         "customFileName": "Obsidian Weathers and Seasons",
@@ -186,6 +203,10 @@
                 "id": "1a2b3c4d",
                 "lastActivated": 1743698543609,
                 "modState": {
+                    "(Part 2) Engine Fixes - skse64 Preloader and TBB Lib-17230-2020-3-1611367474": {
+                        "enabled": true,
+                        "enabledTime": 1743796955403
+                    },
                     "Obsidian Weathers - 1.07a-12125-1-07a-1620568126": {
                         "enabled": true,
                         "enabledTime": 1743698544319

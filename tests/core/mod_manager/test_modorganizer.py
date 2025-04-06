@@ -100,7 +100,7 @@ class TestModOrganizer(BaseTest):
         )
 
         # then
-        assert len(instance.mods) == 7
+        assert len(instance.mods) == 8
 
         # when
         obsidian_weathers: Mod = self.get_mod_by_name(
