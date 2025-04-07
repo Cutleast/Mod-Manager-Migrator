@@ -158,10 +158,12 @@ class InstanceOverviewWidget(QSplitter):
             QMessageBox.warning(
                 AppContext.get_app().main_window,
                 self.tr("Migration completed with errors!"),
-                self.tr(
-                    "Migration completed with errors! Click 'Ok' to open the report.\n\n"
-                )
-                + dst_mod_manager.get_completed_message(dst_info),
+                (
+                    self.tr(
+                        "Migration completed with errors! Click 'Ok' to open the report.\n\n"
+                    )
+                    + dst_mod_manager.get_completed_message(dst_info)
+                ).strip(),
                 QMessageBox.StandardButton.Ok,
             )
 
@@ -170,8 +172,10 @@ class InstanceOverviewWidget(QSplitter):
             QMessageBox.information(
                 AppContext.get_app().main_window,
                 self.tr("Migration Complete"),
-                self.tr("Migration completed successfully!\n\n")
-                + dst_mod_manager.get_completed_message(dst_info),
+                (
+                    self.tr("Migration completed successfully!\n\n")
+                    + dst_mod_manager.get_completed_message(dst_info)
+                ).strip(),
                 QMessageBox.StandardButton.Ok,
             )
 
