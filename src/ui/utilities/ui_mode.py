@@ -12,6 +12,6 @@ class UIMode(StrEnum, BaseEnum):
     Enum for UI modes (Dark, Light, System)
     """
 
-    Dark = "dark"
-    Light = "light"
-    System = "system"
+    Dark = "Dark"
+    Light = "Light"
+    System = "System"

@@ -34,9 +34,6 @@
         <!-- Fonts -->
         <file>fonts/BebasNeue Book.otf</file>
 
-        <!-- Default Config Files -->
-        <file>default_configs/app.json</file>
-
         <!-- Localisation Files -->
         <file>loc/de.qm</file>
 

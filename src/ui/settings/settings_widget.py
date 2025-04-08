@@ -20,6 +20,8 @@ from PySide6.QtWidgets import (
 )
 
 from core.config.app_config import AppConfig
+from core.utilities.localisation import Language
+from core.utilities.logger import Logger
 from ui.utilities.ui_mode import UIMode
 from ui.widgets.link_button import LinkButton
 from ui.widgets.smooth_scroll_area import SmoothScrollArea
@@ -45,6 +47,8 @@ class SettingsWidget(SmoothScrollArea):
     __ui_mode_box: QComboBox
     __use_hardlinks_box: QCheckBox
     __replace_when_merge_box: QCheckBox
+    __activate_dst_instance_box: QCheckBox
+    __modname_limit_box: QSpinBox
 
     def __init__(self, app_config: AppConfig) -> None:
         super().__init__()
@@ -79,15 +83,11 @@ class SettingsWidget(SmoothScrollArea):
         self.__log_level_box = QComboBox()
         self.__log_level_box.setEditable(False)
         self.__log_level_box.addItems(
-            [
-                "Debug",
-                "Info",
-                "Warning",
-                "Error",
-                "Critical",
-            ]
+            [level.name.capitalize() for level in Logger.Level]
         )
-        self.__log_level_box.setCurrentText(self.__app_config.log_level.capitalize())
+        self.__log_level_box.setCurrentText(
+            self.__app_config.log_level.name.capitalize()
+        )
         self.__log_level_box.installEventFilter(self)
         self.__log_level_box.currentTextChanged.connect(lambda _: self.changed.emit())
         app_settings_glayout.addWidget(self.__log_level_box, 0, 1)
@@ -96,7 +96,7 @@ class SettingsWidget(SmoothScrollArea):
         app_settings_glayout.addWidget(log_num_of_files_label, 1, 0)
 
         self.__log_num_of_files_box = QSpinBox()
-        self.__log_num_of_files_box.setRange(-1, 100)
+        self.__log_num_of_files_box.setRange(-1, 255)
         self.__log_num_of_files_box.setValue(self.__app_config.log_num_of_files)
         self.__log_num_of_files_box.installEventFilter(self)
         self.__log_num_of_files_box.valueChanged.connect(lambda _: self.changed.emit())
@@ -107,8 +107,8 @@ class SettingsWidget(SmoothScrollArea):
 
         self.__language_box = QComboBox()
         self.__language_box.setEditable(False)
-        self.__language_box.addItems(["System", "en_US", "de_DE"])
-        self.__language_box.setCurrentText(self.__app_config.language)
+        self.__language_box.addItems([lang.name for lang in Language])
+        self.__language_box.setCurrentText(self.__app_config.language.name)
         self.__language_box.installEventFilter(self)
         self.__language_box.currentTextChanged.connect(lambda _: self.changed.emit())
         app_settings_glayout.addWidget(self.__language_box, 2, 1)
@@ -163,6 +163,39 @@ class SettingsWidget(SmoothScrollArea):
         )
         migration_settings_glayout.addWidget(self.__replace_when_merge_box, 1, 1)
 
+        activate_dst_instance_label = QLabel(
+            self.tr(
+                "Activate destination instance after migration "
+                "if supported by the destination mod manager:"
+            )
+        )
+        activate_dst_instance_label.setWordWrap(True)
+        migration_settings_glayout.addWidget(activate_dst_instance_label, 2, 0)
+
+        self.__activate_dst_instance_box = QCheckBox()
+        self.__activate_dst_instance_box.setChecked(
+            self.__app_config.activate_new_instance
+        )
+        self.__activate_dst_instance_box.checkStateChanged.connect(
+            lambda _: self.changed.emit()
+        )
+        migration_settings_glayout.addWidget(self.__activate_dst_instance_box, 2, 1)
+
+        modname_limit_label = QLabel(
+            self.tr(
+                "Character limit for mod names (strongly recommended when migrating to MO2):"
+            )
+        )
+        modname_limit_label.setWordWrap(True)
+        migration_settings_glayout.addWidget(modname_limit_label, 3, 0)
+
+        self.__modname_limit_box = QSpinBox()
+        self.__modname_limit_box.installEventFilter(self)
+        self.__modname_limit_box.setRange(-1, 255)
+        self.__modname_limit_box.setValue(self.__app_config.modname_limit)
+        self.__modname_limit_box.valueChanged.connect(lambda _: self.changed.emit())
+        migration_settings_glayout.addWidget(self.__modname_limit_box, 3, 1)
+
     @override
     def eventFilter(self, source: QObject, event: QEvent) -> bool:
         if (
@@ -180,9 +213,15 @@ class SettingsWidget(SmoothScrollArea):
         Applies the current settings to the AppConfig.
         """
 
-        self.__app_config.log_level = self.__log_level_box.currentText().lower()
+        self.__app_config.log_level = Logger.Level[
+            self.__log_level_box.currentText().upper()
+        ]
         self.__app_config.log_num_of_files = self.__log_num_of_files_box.value()
-        self.__app_config.language = self.__language_box.currentText()
-        self.__app_config.ui_mode = self.__ui_mode_box.currentText().lower()
+        self.__app_config.language = Language[self.__language_box.currentText()]
+        self.__app_config.ui_mode = UIMode[self.__ui_mode_box.currentText()]
         self.__app_config.use_hardlinks = self.__use_hardlinks_box.isChecked()
         self.__app_config.replace_when_merge = self.__replace_when_merge_box.isChecked()
+        self.__app_config.activate_new_instance = (
+            self.__activate_dst_instance_box.isChecked()
+        )
+        self.__app_config.modname_limit = self.__modname_limit_box.value()

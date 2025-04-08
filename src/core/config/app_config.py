@@ -2,9 +2,15 @@
 Copyright (c) Cutleast
 """
 
-from pathlib import Path
+from typing import Annotated, override
 
-from ._base_config import BaseConfig
+from pydantic import Field
+
+from core.utilities.localisation import Language
+from core.utilities.logger import Logger
+from ui.utilities.ui_mode import UIMode
+
+from .base_config import BaseConfig
 
 
 class AppConfig(BaseConfig):
@@ -12,118 +18,49 @@ class AppConfig(BaseConfig):
     Class for managing application settings.
     """
 
-    def __init__(self, config_folder: Path):
-        super().__init__(config_folder / "app.json")
+    log_level: Annotated[Logger.Level, Field(alias="log.level")] = Logger.Level.DEBUG
+    """Log level"""
 
-    @property
-    def log_level(self) -> str:
-        return self._settings["log.level"]
+    log_num_of_files: Annotated[int, Field(alias="log.num_of_files", ge=-1)] = 5
+    """Number of newest log files to keep"""
 
-    @log_level.setter
-    def log_level(self, log_level: str) -> None:
-        AppConfig.validate_type(log_level, str)
+    log_format: Annotated[str, Field(alias="log.format")] = (
+        "[%(asctime)s.%(msecs)03d][%(levelname)s][%(name)s.%(funcName)s]: %(message)s"
+    )
+    """Log format"""
 
-        log_level = log_level.upper()  # Normalize value
-        valid_values: set[str] = {
-            "DEBUG",
-            "INFO",
-            "WARNING",
-            "ERROR",
-            "CRITICAL",
-        }
+    log_date_format: Annotated[str, Field(alias="log.date_format")] = (
+        "%d.%m.%Y %H:%M:%S"
+    )
+    """Log date format"""
 
-        AppConfig.validate_value(log_level, valid_values)
+    log_file_name: Annotated[str, Field(alias="log.file_name")] = (
+        "%d-%m-%Y-%H-%M-%S.log"
+    )
+    """Log file name"""
 
-        self._settings["log.level"] = log_level
+    language: Language = Language.System
+    """App language"""
 
-    @property
-    def log_num_of_files(self) -> int:
-        return self._settings["log.num_of_files"]
+    ui_mode: Annotated[UIMode, Field(alias="ui.mode")] = UIMode.System
+    """UI mode"""
 
-    @log_num_of_files.setter
-    def log_num_of_files(self, value: int) -> None:
-        AppConfig.validate_type(value, int)
+    use_hardlinks: bool = True
+    """Use hardlinks instead of copying files when merging mods"""
 
-        self._settings["log.num_of_files"] = value
+    replace_when_merge: bool = True
+    """Replace existing files when merging mods"""
 
-    @property
-    def log_format(self) -> str:
-        return self._settings["log.format"]
+    activate_new_instance: bool = True
+    """Activate the migrated instance (if supported by the mod manager)"""
 
-    @log_format.setter
-    def log_format(self, format: str) -> None:
-        AppConfig.validate_type(format, str)
+    modname_limit: Annotated[int, Field(ge=-1, le=255)] = 100
+    """
+    Character limit for mod names
+    (especially relevant for MO2 where mod name = folder name)
+    """
 
-        self._settings["log.format"] = format
-
-    @property
-    def log_date_format(self) -> str:
-        return self._settings["log.date_format"]
-
-    @log_date_format.setter
-    def log_date_format(self, date_format: str) -> None:
-        AppConfig.validate_type(date_format, str)
-
-        self._settings["log.date_format"] = date_format
-
-    @property
-    def log_file_name(self) -> str:
-        return self._settings["log.file_name"]
-
-    @log_file_name.setter
-    def log_file_name(self, file_name: str) -> None:
-        AppConfig.validate_type(file_name, str)
-
-        if not file_name.endswith(".log"):
-            raise ValueError('Log file name must end with ".log"!')
-
-        self._settings["log.file_name"] = file_name
-
-    @property
-    def language(self) -> str:
-        """
-        App language.
-        """
-
-        return self._settings["language"]
-
-    @language.setter
-    def language(self, language: str) -> None:
-        AppConfig.validate_type(language, str)
-
-        self._settings["language"] = language
-
-    @property
-    def ui_mode(self) -> str:
-        return self._settings["ui.mode"]
-
-    @ui_mode.setter
-    def ui_mode(self, value: str) -> None:
-        AppConfig.validate_type(value, str)
-
-        value = value.capitalize()  # Normalize value
-        valid_values: set[str] = {"Dark", "Light", "System"}
-
-        AppConfig.validate_value(value, valid_values)
-
-        self._settings["ui.mode"] = value
-
-    @property
-    def use_hardlinks(self) -> bool:
-        return self._settings["use_hardlinks"]
-
-    @use_hardlinks.setter
-    def use_hardlinks(self, value: bool) -> None:
-        AppConfig.validate_type(value, bool)
-
-        self._settings["use_hardlinks"] = value
-
-    @property
-    def replace_when_merge(self) -> bool:
-        return self._settings["replace_when_merge"]
-
-    @replace_when_merge.setter
-    def replace_when_merge(self, value: bool) -> None:
-        AppConfig.validate_type(value, bool)
-
-        self._settings["replace_when_merge"] = value
+    @override
+    @staticmethod
+    def get_config_name() -> str:
+        return "app.json"

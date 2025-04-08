@@ -18,7 +18,7 @@ from core.config.app_config import AppConfig
 from core.utilities.env_resolver import resolve
 from core.utilities.exception_handler import ExceptionHandler
 from core.utilities.filesystem import get_documents_folder
-from core.utilities.localisation import detect_system_locale
+from core.utilities.localisation import Language, detect_system_locale
 from core.utilities.logger import Logger
 from core.utilities.path_limit_fixer import PathLimitFixer
 from core.utilities.updater import Updater
@@ -68,7 +68,7 @@ class App(QApplication):
         Initializes application.
         """
 
-        self.app_config = AppConfig(self.config_path)
+        self.app_config = AppConfig.load(self.config_path)
         self.doc_path = get_documents_folder()
 
         log_file: Path = self.log_path / time.strftime(self.app_config.log_file_name)
@@ -100,10 +100,10 @@ class App(QApplication):
         translator = QTranslator(self)
 
         language: str
-        if self.app_config.language == "System":
+        if self.app_config.language == Language.System:
             language = detect_system_locale() or "en_US"
         else:
-            language = self.app_config.language
+            language = self.app_config.language.value
 
         if language != "en_US":
             translator.load(f":/loc/{language}.qm")

@@ -11,6 +11,7 @@ from io import TextIOWrapper
 from pathlib import Path
 from typing import Callable, Optional, TextIO, override
 
+from .base_enum import BaseEnum
 from .datetime import datetime_format_to_regex
 
 
@@ -31,6 +32,24 @@ class Logger(logging.Logger):
     __log_file: TextIOWrapper
 
     __callback: Callable[[str], None] | None = None
+
+    class Level(BaseEnum):
+        """Enum for logging levels."""
+
+        DEBUG = "DEBUG"
+        """Debugging log level"""
+
+        INFO = "INFO"
+        """Information log level"""
+
+        WARNING = "WARNING"
+        """Warning log level"""
+
+        ERROR = "ERROR"
+        """Error log level"""
+
+        CRITICAL = "CRITICAL"
+        """Critical log level"""
 
     def __init__(
         self, log_file: Path, fmt: str | None = None, date_fmt: str | None = None
@@ -61,18 +80,18 @@ class Logger(logging.Logger):
         sys.stderr = self
 
     @override
-    def setLevel(self, level: int | str) -> None:
+    def setLevel(self, level: Level) -> None:
         """
         Sets logging level.
 
         Args:
-            level (int | str): New logging level.
+            level (Level): New logging level.
         """
 
-        self.__root_logger.setLevel(level)
-        self.__log_handler.setLevel(level)
+        self.__root_logger.setLevel(level.value)
+        self.__log_handler.setLevel(level.value)
 
-        super().setLevel(level)
+        super().setLevel(level.value)
 
     def set_callback(self, callback: Callable[[str], None] | None) -> None:
         """

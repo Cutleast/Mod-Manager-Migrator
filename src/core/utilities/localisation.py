@@ -8,10 +8,19 @@ from typing import Optional
 
 import win32api
 
+from .base_enum import BaseEnum
+
 log: logging.Logger = logging.getLogger("Utilities.Localisation")
 
 
-SUPPORTED_LOCALES: list[str] = ["de_DE", "en_US"]
+class Language(BaseEnum):
+    """
+    Enum for supported application languages.
+    """
+
+    System = "System"
+    German = "de_DE"
+    English = "en_US"
 
 
 def detect_system_locale() -> Optional[str]:
@@ -31,12 +40,7 @@ def detect_system_locale() -> Optional[str]:
         system_language = locale.windows_locale[language_id]
         log.debug(f"Detected system language: {system_language}")
 
-        if system_language in SUPPORTED_LOCALES:
-            system_locale = system_language
-        else:
-            log.warning(
-                "Detected system language is not supported! Falling back to en_US..."
-            )
+        system_locale = Language.get_by_value(system_language, Language.English).value
 
     except Exception as ex:
         log.error(f"Failed to get system language: {ex}", exc_info=ex)
