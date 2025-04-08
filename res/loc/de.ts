@@ -101,12 +101,12 @@
 <context>
     <name>InstanceOverviewWidget</name>
     <message>
-        <location filename="src/ui/instance/instance_overview_widget.py" line="160"/>
+        <location filename="src/ui/instance/instance_overview_widget.py" line="162"/>
         <source>Migration completed with errors!</source>
         <translation>Migration mit Fehlern abgeschlossen!</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/instance_overview_widget.py" line="164"/>
+        <location filename="src/ui/instance/instance_overview_widget.py" line="167"/>
         <source>Migration completed with errors! Click &apos;Ok&apos; to open the report.
 
 </source>
@@ -115,12 +115,12 @@
 </translation>
     </message>
     <message>
-        <location filename="src/ui/instance/instance_overview_widget.py" line="172"/>
+        <location filename="src/ui/instance/instance_overview_widget.py" line="176"/>
         <source>Migration Complete</source>
         <translation>Migration abgeschlossen</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/instance_overview_widget.py" line="174"/>
+        <location filename="src/ui/instance/instance_overview_widget.py" line="179"/>
         <source>Migration completed successfully!
 
 </source>
@@ -132,50 +132,50 @@
 <context>
     <name>InstanceSelector</name>
     <message>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="104"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="105"/>
         <source>Choose the source instance:</source>
         <translation>Quellinstanz auswählen:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="130"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="131"/>
         <source>Mod Manager:</source>
         <translation>Mod Manager:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="123"/>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="136"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="124"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="137"/>
         <source>Please select...</source>
         <translation>Bitte auswählen...</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="117"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="118"/>
         <source>Game:</source>
         <translation>Spiel:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="165"/>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="175"/>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="248"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="166"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="176"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="249"/>
         <source>Load selected instance...</source>
         <translation>Ausgewählte Instanz laden...</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="192"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="193"/>
         <source>Could not find game directory!</source>
         <translation>Spielverzeichnis konnte nicht gefunden werden!</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="195"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="196"/>
         <source>Unable to find game directory. Please select it manually.</source>
         <translation>Das Spielverzeichnis konnte nicht gefunden werden. Bitte manuell auswählen.</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="201"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="202"/>
         <source>Select game directory</source>
         <translation>Spielverzeichnis auswählen</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_selector/instance_selector.py" line="274"/>
+        <location filename="src/ui/instance_selector/instance_selector.py" line="280"/>
         <source>Instance loaded.</source>
         <translation>Instanz geladen.</translation>
     </message>
@@ -301,27 +301,27 @@
 <context>
     <name>Migrator</name>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="83"/>
+        <location filename="src/core/migrator/migrator.py" line="88"/>
         <source>Migrating instance {0}...</source>
         <translation>Instanz {0} wird migriert...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="100"/>
+        <location filename="src/core/migrator/migrator.py" line="107"/>
         <source>Migrating mods...</source>
         <translation>Mods werden migriert...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="133"/>
+        <location filename="src/core/migrator/migrator.py" line="140"/>
         <source>Migrating tools...</source>
         <translation>Tools werden migriert...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="173"/>
+        <location filename="src/core/migrator/migrator.py" line="180"/>
         <source>Failed to migrate INI files.</source>
         <translation>Migration der INI-Dateien fehlgeschlagen.</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="187"/>
+        <location filename="src/core/migrator/migrator.py" line="194"/>
         <source>Failed to migrate additional files.</source>
         <translation>Migration der zusätzlichen Dateien fehlgeschlagen.</translation>
     </message>
@@ -329,39 +329,39 @@
 <context>
     <name>ModOrganizer</name>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="106"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="149"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="178"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="107"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="153"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="182"/>
         <source>Loading mods from {0} &gt; {1}...</source>
         <translation>Mods von {0} &gt; {1} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="223"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="227"/>
         <source>Processing mod conflicts...</source>
         <translation>Modkonflikte werden verarbeitet...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="115"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="118"/>
         <source>Loading tools from {0} &gt; {1}...</source>
         <translation>Tools von {0} &gt; {1} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="440"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="444"/>
         <source>Downloading and installing ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen und installiert...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="460"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="464"/>
         <source>Downloading ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="482"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="486"/>
         <source>Extracting archive...</source>
         <translation>Archiv wird entpackt...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="757"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="762"/>
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of the new MO2 installation.</source>
         <translation>Die Nutzung von Root Builder wurde aktiviert.
@@ -550,12 +550,12 @@ Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von
 <context>
     <name>SettingsWidget</name>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="69"/>
+        <location filename="src/ui/settings/settings_widget.py" line="73"/>
         <source>App settings</source>
         <translation>Appeinstellungen</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="76"/>
+        <location filename="src/ui/settings/settings_widget.py" line="80"/>
         <source>Log level:</source>
         <translation>Log Level:</translation>
     </message>
@@ -594,6 +594,16 @@ Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von
         <source>Replace existing files when merging instances:</source>
         <translation>Bestehende Dateien beim Zusammenführen von Instanzen ersetzen:</translation>
     </message>
+    <message>
+        <location filename="src/ui/settings/settings_widget.py" line="171"/>
+        <source>Activate destination instance after migration if supported by the destination mod manager:</source>
+        <translation>Zielinstanz nach der Migration, wenn vom Ziel-Mod Manager unterstützt, aktivieren:</translation>
+    </message>
+    <message>
+        <location filename="src/ui/settings/settings_widget.py" line="188"/>
+        <source>Character limit for mod names (strongly recommended when migrating to MO2):</source>
+        <translation>Zeichenbegrenzung für Modnamen (dringend empfohlen, wenn zu MO2 migriert wird):</translation>
+    </message>
 </context>
 <context>
     <name>StatusBar</name>
@@ -629,18 +639,18 @@ Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von
 <context>
     <name>Vortex</name>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="113"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="114"/>
         <source>Loading profile {0}...</source>
         <translation>Profil {0} wird geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="141"/>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="177"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="145"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="181"/>
         <source>Loading mods from profile {0}...</source>
         <translation>Mods von Profil {0} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="688"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="694"/>
         <source>Vortex is currently deployed to the game folder. It is strongly recommended to purge the game directory before using the migrated instance.</source>
         <translation>Vortex ist zurzeit in das Spielverzeichnis deployed. Es wird empfohlen, das Spielverzeichnis vor der Nutzung der migrierten Instanz zu säubern.</translation>
     </message>
