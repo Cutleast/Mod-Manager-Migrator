@@ -69,6 +69,7 @@ class ModManager[I: InstanceInfo](QObject):
     def load_instance(
         self,
         instance_data: I,
+        modname_limit: int,
         file_blacklist: list[str] = [],
         ldialog: Optional[LoadingDialog] = None,
     ) -> Instance:
@@ -77,6 +78,7 @@ class ModManager[I: InstanceInfo](QObject):
 
         Args:
             instance_data (I): The data of the mod instance.
+            modname_limit (int): A character limit for mod names.
             file_blacklist (list[str], optional): A list of files to ignore.
             ldialog (Optional[LoadingDialog], optional):
                 Optional loading dialog. Defaults to None.
@@ -89,6 +91,7 @@ class ModManager[I: InstanceInfo](QObject):
     def _load_mods(
         self,
         instance_data: I,
+        modname_limit: int,
         file_blacklist: list[str] = [],
         ldialog: Optional[LoadingDialog] = None,
     ) -> list[Mod]:
@@ -97,6 +100,7 @@ class ModManager[I: InstanceInfo](QObject):
 
         Args:
             instance_data (I): The data of the mod instance.
+            modname_limit (int): A character limit for mod names.
             file_blacklist (list[str], optional): A list of files to ignore.
             ldialog (Optional[LoadingDialog], optional):
                 Optional loading dialog. Defaults to None.
@@ -519,6 +523,7 @@ class ModManager[I: InstanceInfo](QObject):
         migrated_instance: Instance,
         migrated_instance_data: I,
         order_matters: bool,
+        activate_new_instance: bool,
     ) -> None:
         """
         Finalizes the migration process.
@@ -528,6 +533,8 @@ class ModManager[I: InstanceInfo](QObject):
             migrated_instance_data (I): The data of the migrated instance.
             order_matters (bool):
                 Whether the mods of the source instance have a fixed order.
+            activate_new_instance (bool):
+                Whether to activate the new instance (if supported by the mod manager).
         """
 
     def get_completed_message(self, migrated_instance_data: I) -> str:

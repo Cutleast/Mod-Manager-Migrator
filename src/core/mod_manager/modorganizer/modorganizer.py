@@ -79,6 +79,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
     def load_instance(
         self,
         instance_data: MO2InstanceInfo,
+        modname_limit: int,
         file_blacklist: list[str] = [],
         ldialog: Optional[LoadingDialog] = None,
     ) -> Instance:
@@ -108,7 +109,9 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
                 ),
             )
 
-        mods: list[Mod] = self._load_mods(instance_data, file_blacklist, ldialog)
+        mods: list[Mod] = self._load_mods(
+            instance_data, modname_limit, file_blacklist, ldialog
+        )
 
         if ldialog is not None:
             ldialog.updateProgress(
@@ -137,6 +140,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
     def _load_mods(
         self,
         instance_data: MO2InstanceInfo,
+        modname_limit: int,
         file_blacklist: list[str] = [],
         ldialog: Optional[LoadingDialog] = None,
     ) -> list[Mod]:
@@ -612,6 +616,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         migrated_instance: Instance,
         migrated_instance_data: MO2InstanceInfo,
         order_matters: bool,
+        activate_new_instance: bool,
     ) -> None:
         modlist_txt_path: Path = (
             migrated_instance_data.profiles_folder

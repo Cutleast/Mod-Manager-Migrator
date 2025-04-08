@@ -98,6 +98,7 @@ class Vortex(ModManager[ProfileInfo]):
     def load_instance(
         self,
         instance_data: ProfileInfo,
+        modname_limit: int,
         file_blacklist: list[str] = [],
         ldialog: Optional[LoadingDialog] = None,
     ) -> Instance:
@@ -113,7 +114,9 @@ class Vortex(ModManager[ProfileInfo]):
                 text1=self.tr("Loading profile {0}...").format(instance_name),
             )
 
-        mods: list[Mod] = self._load_mods(instance_data, file_blacklist, ldialog)
+        mods: list[Mod] = self._load_mods(
+            instance_data, modname_limit, file_blacklist, ldialog
+        )
         tools: list[Tool] = self._load_tools(instance_data, file_blacklist, ldialog)
         instance = Instance(display_name=instance_name, mods=mods, tools=tools)
 
@@ -128,6 +131,7 @@ class Vortex(ModManager[ProfileInfo]):
     def _load_mods(
         self,
         instance_data: ProfileInfo,
+        modname_limit: int,
         file_blacklist: list[str] = [],
         ldialog: Optional[LoadingDialog] = None,
     ) -> list[Mod]:
@@ -191,7 +195,7 @@ class Vortex(ModManager[ProfileInfo]):
                 or mod_meta_data.get("logicalFileName")
                 or mod_meta_data.get("modName")
                 or modname
-            )
+            )[:modname_limit].strip("-_. ")  # Limit mod name as it can get very long
             mod_path: Path = staging_folder / moddata.get("installationPath", modname)
             file_name: str = mod_meta_data.get("fileName", mod_path.name)
 
@@ -650,6 +654,7 @@ class Vortex(ModManager[ProfileInfo]):
         migrated_instance: Instance,
         migrated_instance_data: ProfileInfo,
         order_matters: bool,
+        activate_new_instance: bool,
     ) -> None:
         profile_data: dict[str, Any] = self.__level_db.load(
             f"persistent###profiles###{migrated_instance_data.id}"
@@ -663,14 +668,15 @@ class Vortex(ModManager[ProfileInfo]):
         # Set file overrides
         self.__set_file_overrides(migrated_instance.mods, migrated_instance_data.game)
 
-        # Activate new profile
-        key: str = "settings###profiles###activeProfileId"
-        self.__level_db.set_key(key, migrated_instance_data.id)
+        if activate_new_instance:
+            # Activate new profile
+            key: str = "settings###profiles###activeProfileId"
+            self.__level_db.set_key(key, migrated_instance_data.id)
 
-        # Set last active profile
-        key = "settings###profiles###lastActiveProfile###"
-        key += migrated_instance_data.game.id.lower()
-        self.__level_db.set_key(key, migrated_instance_data.id)
+            # Set last active profile
+            key = "settings###profiles###lastActiveProfile###"
+            key += migrated_instance_data.game.id.lower()
+            self.__level_db.set_key(key, migrated_instance_data.id)
 
         self.__level_db.del_symlink_path()
 

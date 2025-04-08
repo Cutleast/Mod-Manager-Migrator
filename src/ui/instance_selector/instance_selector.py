@@ -22,6 +22,7 @@ from PySide6.QtWidgets import (
 )
 
 from app_context import AppContext
+from core.config.app_config import AppConfig
 from core.game.exceptions import GameNotFoundError
 from core.game.game import Game
 from core.instance.instance import Instance
@@ -263,10 +264,15 @@ class InstanceSelector(QWidget):
         if game is None:
             raise ValueError("No game selected.")
 
+        app_config: AppConfig = AppContext.get_app().app_config
+
         instance_data = self.__mod_managers[mod_manager].get_instance(game)
         self.__cur_mod_instance = LoadingDialog.run_callable(
             lambda ldialog: mod_manager.load_instance(
-                instance_data, FileBlacklist.get_files(), ldialog
+                instance_data=instance_data,
+                modname_limit=app_config.modname_limit,
+                file_blacklist=FileBlacklist.get_files(),
+                ldialog=ldialog,
             )
         )
         self.instance_selected.emit(self.__cur_mod_instance)

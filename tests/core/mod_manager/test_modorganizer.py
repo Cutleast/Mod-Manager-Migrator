@@ -8,6 +8,7 @@ from typing import Any
 import pytest
 from pyfakefs.fake_filesystem import FakeFilesystem
 
+from core.config.app_config import AppConfig
 from core.game.game import Game
 from core.instance.instance import Instance
 from core.instance.metadata import Metadata
@@ -85,7 +86,7 @@ class TestModOrganizer(BaseTest):
         assert metadata == expected_metadata
 
     def test_load_instance(
-        self, mo2_instance_info: MO2InstanceInfo, qt_resources: None
+        self, app_config: AppConfig, mo2_instance_info: MO2InstanceInfo
     ) -> None:
         """
         Tests `core.mod_manager.modorganizer.modorganizer.ModOrganizer.load_instance()`.
@@ -96,7 +97,7 @@ class TestModOrganizer(BaseTest):
 
         # when
         instance: Instance = mo2.load_instance(
-            mo2_instance_info, FileBlacklist.get_files()
+            mo2_instance_info, app_config.modname_limit, FileBlacklist.get_files()
         )
 
         # then
@@ -176,7 +177,11 @@ class TestModOrganizer(BaseTest):
         )
 
     def test_install_mod(
-        self, test_fs: FakeFilesystem, instance: Instance, qt_resources: None
+        self,
+        app_config: AppConfig,
+        test_fs: FakeFilesystem,
+        instance: Instance,
+        qt_resources: None,
     ) -> None:
         """
         Tests `core.mod_manager.modorganizer.modorganizer.ModOrganizer.install_mod()`.
@@ -198,7 +203,7 @@ class TestModOrganizer(BaseTest):
             install_mo2=False,  # This is important for now as the download is not mocked, yet
         )
         dst_instance: Instance = mo2.load_instance(
-            instance_data, FileBlacklist.get_files()
+            instance_data, app_config.modname_limit, FileBlacklist.get_files()
         )
         overwritten_mod: Mod = self.get_mod_by_name(
             "Obsidian Weathers and Seasons", instance
@@ -218,9 +223,13 @@ class TestModOrganizer(BaseTest):
                 replace=True,
                 blacklist=FileBlacklist.get_files(),
             )
-        mo2.finalize_migration(dst_instance, instance_data, order_matters=True)
+        mo2.finalize_migration(
+            dst_instance, instance_data, order_matters=True, activate_new_instance=True
+        )
 
-        dst_instance = mo2.load_instance(instance_data, FileBlacklist.get_files())
+        dst_instance = mo2.load_instance(
+            instance_data, app_config.modname_limit, FileBlacklist.get_files()
+        )
         migrated_overwritten_mod: Mod = self.get_mod_by_name(
             "Obsidian Weathers and Seasons", dst_instance
         )
@@ -243,7 +252,11 @@ class TestModOrganizer(BaseTest):
         )
 
     def test_install_mod_with_separator(
-        self, test_fs: FakeFilesystem, instance: Instance, qt_resources: None
+        self,
+        app_config: AppConfig,
+        test_fs: FakeFilesystem,
+        instance: Instance,
+        qt_resources: None,
     ) -> None:
         """
         Tests `core.mod_manager.modorganizer.modorganizer.ModOrganizer.install_mod()`
@@ -266,7 +279,7 @@ class TestModOrganizer(BaseTest):
             install_mo2=False,  # This is important for now as the download is not mocked, yet
         )
         dst_instance: Instance = mo2.load_instance(
-            instance_data, FileBlacklist.get_files()
+            instance_data, app_config.modname_limit, FileBlacklist.get_files()
         )
         separator_mod: Mod = self.get_mod_by_name("Test Mods", instance)
 
@@ -280,9 +293,13 @@ class TestModOrganizer(BaseTest):
             replace=True,
             blacklist=FileBlacklist.get_files(),
         )
-        mo2.finalize_migration(dst_instance, instance_data, order_matters=True)
+        mo2.finalize_migration(
+            dst_instance, instance_data, order_matters=True, activate_new_instance=True
+        )
 
-        dst_instance = mo2.load_instance(instance_data, FileBlacklist.get_files())
+        dst_instance = mo2.load_instance(
+            instance_data, app_config.modname_limit, FileBlacklist.get_files()
+        )
         migrated_separator_mod: Mod = self.get_mod_by_name("Test Mods", dst_instance)
 
         # then

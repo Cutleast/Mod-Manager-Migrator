@@ -149,6 +149,8 @@ class InstanceOverviewWidget(QSplitter):
                 dst_mod_manager=dst_mod_manager,
                 use_hardlinks=app_config.use_hardlinks,
                 replace=app_config.replace_when_merge,
+                modname_limit=app_config.modname_limit,
+                activate_new_instance=app_config.activate_new_instance,
                 ldialog=ldialog,
             ),
             parent=AppContext.get_app().main_window,

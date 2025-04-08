@@ -6,6 +6,7 @@ from pathlib import Path
 
 from pyfakefs.fake_filesystem import FakeFilesystem
 
+from core.config.app_config import AppConfig
 from core.instance.instance import Instance
 from core.instance.mod import Mod
 from core.migrator.migration_report import MigrationReport
@@ -29,6 +30,7 @@ class TestMigrator(BaseTest):
 
     def test_migration_mo2_to_mo2(
         self,
+        app_config: AppConfig,
         test_fs: FakeFilesystem,
         mo2_instance_info: MO2InstanceInfo,
         instance: Instance,
@@ -64,6 +66,8 @@ class TestMigrator(BaseTest):
             dst_mod_manager=mo2,
             use_hardlinks=True,
             replace=True,
+            modname_limit=app_config.modname_limit,
+            activate_new_instance=app_config.activate_new_instance,
         )
 
         # then
@@ -71,7 +75,7 @@ class TestMigrator(BaseTest):
 
         # when
         migrated_instance: Instance = mo2.load_instance(
-            dst_info, FileBlacklist.get_files()
+            dst_info, app_config.modname_limit, FileBlacklist.get_files()
         )
 
         # then
@@ -80,6 +84,7 @@ class TestMigrator(BaseTest):
 
     def test_migration_mo2_to_vortex(
         self,
+        app_config: AppConfig,
         ready_vortex_db: MockPlyvelDB,
         test_fs: FakeFilesystem,
         mo2_instance_info: MO2InstanceInfo,
@@ -117,10 +122,20 @@ class TestMigrator(BaseTest):
             dst_mod_manager=vortex,
             use_hardlinks=True,
             replace=True,
+            modname_limit=app_config.modname_limit,
+            activate_new_instance=True,
         )
 
         # then
         assert not report.has_errors
+        assert (
+            ready_vortex_db.get(b"settings###profiles###activeProfileId")
+            == b'"5e6f7g8h9j"'
+        )
+        assert (
+            ready_vortex_db.get(b"settings###profiles###lastActiveProfile###skyrimse")
+            == b'"5e6f7g8h9j"'
+        )
 
         # when
         migrated_profile_info = ProfileInfo(
@@ -129,7 +144,7 @@ class TestMigrator(BaseTest):
             id="5e6f7g8h9j",
         )
         migrated_instance: Instance = vortex.load_instance(
-            migrated_profile_info, FileBlacklist.get_files()
+            migrated_profile_info, app_config.modname_limit, FileBlacklist.get_files()
         )
 
         # then
@@ -142,9 +157,68 @@ class TestMigrator(BaseTest):
         )
         assert len(migrated_instance.tools) == len(instance.tools)
 
+    def test_migration_to_vortex_without_activating_profile(
+        self,
+        app_config: AppConfig,
+        ready_vortex_db: MockPlyvelDB,
+        test_fs: FakeFilesystem,
+        mo2_instance_info: MO2InstanceInfo,
+        instance: Instance,
+    ) -> None:
+        """
+        Tests `core.migrator.migrator.Migrator.migrate()` to Vortex without activating
+        the new profile.
+        """
+
+        appdata_path: Path = resolve(Path("%APPDATA%") / "Vortex")
+        game_folder: Path = appdata_path / "skyrimse"
+        game_folder.mkdir(parents=True, exist_ok=True)
+
+        # given
+        mo2 = ModOrganizer()
+        vortex = Vortex()
+        vortex.db_path.mkdir(parents=True, exist_ok=True)
+        migrator = Migrator()
+        mo2_instance_info.game.installdir = Path(
+            "E:\\SteamLibrary\\Skyrim Special Edition"
+        )
+        mo2_instance_info.game.installdir.mkdir(parents=True, exist_ok=True)
+        dst_info = ProfileInfo(
+            display_name="Test Instance",
+            game=mo2_instance_info.game,
+            id="5e6f7g8h9j",
+        )
+
+        # when
+        report: MigrationReport = migrator.migrate(
+            src_instance=instance,
+            src_info=mo2_instance_info,
+            dst_info=dst_info,
+            src_mod_manager=mo2,
+            dst_mod_manager=vortex,
+            use_hardlinks=True,
+            replace=True,
+            modname_limit=app_config.modname_limit,
+            activate_new_instance=False,
+        )
+
+        # then
+        assert not report.has_errors
+
+        # when
+        assert (
+            ready_vortex_db.get(b"settings###profiles###activeProfileId")
+            != b'"5e6f7g8h9j"'
+        )
+        assert (
+            ready_vortex_db.get(b"settings###profiles###lastActiveProfile###skyrimse")
+            != b'"5e6f7g8h9j"'
+        )
+
     def test_migration_vortex_to_mo2(
         self,
         data_folder: Path,
+        app_config: AppConfig,
         full_vortex_db: MockPlyvelDB,
         test_fs: FakeFilesystem,
         vortex_profile_info: ProfileInfo,
@@ -179,7 +253,7 @@ class TestMigrator(BaseTest):
             install_mo2=False,  # This is important for now as the download is not mocked, yet
         )
         src_instance = vortex.load_instance(
-            vortex_profile_info, FileBlacklist.get_files()
+            vortex_profile_info, app_config.modname_limit, FileBlacklist.get_files()
         )
 
         # when
@@ -191,6 +265,8 @@ class TestMigrator(BaseTest):
             dst_mod_manager=mo2,
             use_hardlinks=True,
             replace=True,
+            modname_limit=app_config.modname_limit,
+            activate_new_instance=app_config.activate_new_instance,
         )
 
         # then
@@ -198,7 +274,7 @@ class TestMigrator(BaseTest):
 
         # when
         migrated_instance: Instance = mo2.load_instance(
-            dst_info, FileBlacklist.get_files()
+            dst_info, app_config.modname_limit, FileBlacklist.get_files()
         )
 
         # then
@@ -213,6 +289,7 @@ class TestMigrator(BaseTest):
     def test_migration_vortex_to_vortex(
         self,
         data_folder: Path,
+        app_config: AppConfig,
         full_vortex_db: MockPlyvelDB,
         test_fs: FakeFilesystem,
         vortex_profile_info: ProfileInfo,
@@ -241,7 +318,7 @@ class TestMigrator(BaseTest):
             id="5e6f7g8h9j",
         )
         src_instance = vortex.load_instance(
-            vortex_profile_info, FileBlacklist.get_files()
+            vortex_profile_info, app_config.modname_limit, FileBlacklist.get_files()
         )
 
         # when
@@ -253,10 +330,20 @@ class TestMigrator(BaseTest):
             dst_mod_manager=vortex,
             use_hardlinks=True,
             replace=True,
+            modname_limit=app_config.modname_limit,
+            activate_new_instance=True,
         )
 
         # then
         assert not report.has_errors
+        assert (
+            full_vortex_db.get(b"settings###profiles###activeProfileId")
+            == b'"5e6f7g8h9j"'
+        )
+        assert (
+            full_vortex_db.get(b"settings###profiles###lastActiveProfile###skyrimse")
+            == b'"5e6f7g8h9j"'
+        )
 
         # when
         migrated_profile_info = ProfileInfo(
@@ -265,7 +352,7 @@ class TestMigrator(BaseTest):
             id="5e6f7g8h9j",
         )
         migrated_instance: Instance = vortex.load_instance(
-            migrated_profile_info, FileBlacklist.get_files()
+            migrated_profile_info, app_config.modname_limit, FileBlacklist.get_files()
         )
 
         # then

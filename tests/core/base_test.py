@@ -13,6 +13,7 @@ import pytest
 from pyfakefs.fake_filesystem import FakeFilesystem
 from pytest_mock import MockerFixture
 
+from core.config.app_config import AppConfig
 from core.game.game import Game
 from core.instance.instance import Instance
 from core.instance.metadata import Metadata
@@ -56,6 +57,17 @@ class BaseTest:
         """
 
         return Path("tests") / "data"
+
+    @pytest.fixture
+    def app_config(self, data_folder: Path) -> AppConfig:
+        """
+        Returns the application config for the tests.
+
+        Returns:
+            AppConfig: The application config.
+        """
+
+        return AppConfig.load(data_folder / "config")
 
     @pytest.fixture
     def test_fs(self, data_folder: Path, fs: FakeFilesystem) -> FakeFilesystem:
@@ -107,7 +119,10 @@ class BaseTest:
 
     @pytest.fixture
     def instance(
-        self, mo2_instance_info: MO2InstanceInfo, qt_resources: None
+        self,
+        mo2_instance_info: MO2InstanceInfo,
+        app_config: AppConfig,
+        qt_resources: None,
     ) -> Instance:
         """
         Loads the test mod instance.
@@ -117,7 +132,7 @@ class BaseTest:
         """
 
         return ModOrganizer().load_instance(
-            mo2_instance_info, FileBlacklist.get_files()
+            mo2_instance_info, app_config.modname_limit, FileBlacklist.get_files()
         )
 
     @pytest.fixture

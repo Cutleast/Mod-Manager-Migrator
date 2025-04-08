@@ -9,6 +9,7 @@ from typing import Any
 import pytest
 from pyfakefs.fake_filesystem import FakeFilesystem
 
+from core.config.app_config import AppConfig
 from core.game.game import Game
 from core.instance.instance import Instance
 from core.instance.mod import Mod
@@ -35,6 +36,7 @@ class TestVortex(BaseTest):
     def test_load_instance(
         self,
         data_folder: Path,
+        app_config: AppConfig,
         vortex_profile_info: ProfileInfo,
         full_vortex_db: MockPlyvelDB,
         test_fs: FakeFilesystem,
@@ -58,11 +60,16 @@ class TestVortex(BaseTest):
 
         # when
         instance: Instance = vortex.load_instance(
-            vortex_profile_info, FileBlacklist.get_files()
+            vortex_profile_info, app_config.modname_limit, FileBlacklist.get_files()
         )
 
         # then
         assert len(instance.mods) == 7
+
+        # test mod name length limit
+        assert all(
+            len(mod.display_name) <= app_config.modname_limit for mod in instance.mods
+        )
 
         # when
         obsidian_weathers: Mod = self.get_mod_by_name(
@@ -212,6 +219,7 @@ class TestVortex(BaseTest):
 
     def test_install_mod(
         self,
+        app_config: AppConfig,
         test_fs: FakeFilesystem,
         ready_vortex_db: MockPlyvelDB,
         instance: Instance,
@@ -232,7 +240,9 @@ class TestVortex(BaseTest):
             game=Game.get_game_by_id("skyrimse"),
             id="1a2b3c4d",
         )
-        dst_profile: Instance = vortex.load_instance(profile_info)
+        dst_profile: Instance = vortex.load_instance(
+            profile_info, app_config.modname_limit, FileBlacklist.get_files()
+        )
         mod = instance.mods[1]
 
         # when
@@ -246,7 +256,9 @@ class TestVortex(BaseTest):
         )
 
         # then
-        dst_profile = vortex.load_instance(profile_info)
+        dst_profile = vortex.load_instance(
+            profile_info, app_config.modname_limit, FileBlacklist.get_files()
+        )
         assert dst_profile.mods[-1].metadata == mod.metadata
 
     def test_format_utc_timestamp(self) -> None:

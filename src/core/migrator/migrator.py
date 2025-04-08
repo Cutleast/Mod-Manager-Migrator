@@ -34,6 +34,8 @@ class Migrator(QObject):
         dst_mod_manager: ModManager,
         use_hardlinks: bool,
         replace: bool,
+        modname_limit: int,
+        activate_new_instance: bool,
         ldialog: Optional[LoadingDialog] = None,
     ) -> MigrationReport:
         """
@@ -47,6 +49,8 @@ class Migrator(QObject):
             dst_mod_manager (ModManager): Destination mod manager.
             use_hardlinks (bool): Whether to use hardlinks if possible.
             replace (bool): Whether to replace existing files.
+            modname_limit (int): A character limit for mod names.
+            activate_new_instance (bool): Whether to activate the new instance.
             ldialog (Optional[LoadingDialog], optional):
                 Optional loading dialog. Defaults to None.
 
@@ -71,6 +75,7 @@ class Migrator(QObject):
         self.log.info(f"Replace existing files: {replace}")
         self.log.info(f"Separate ini files: {src_instance.separate_ini_files}")
         self.log.info(f"Separate save games: {src_instance.separate_save_games}")
+        self.log.info(f"Activate new instance: {activate_new_instance}")
 
         blacklist: list[str] = FileBlacklist.get_files()
         self.log.info(f"File blacklist: {', '.join(blacklist)}")
@@ -88,7 +93,9 @@ class Migrator(QObject):
         # Try to load existing instance
         dst_instance: Instance
         try:
-            dst_instance = dst_mod_manager.load_instance(dst_info, blacklist, ldialog)
+            dst_instance = dst_mod_manager.load_instance(
+                dst_info, modname_limit, blacklist, ldialog
+            )
             self.log.warning("Migrating into existing instance...")
         except InstanceNotFoundError:
             dst_instance = dst_mod_manager.create_instance(dst_info, ldialog)
@@ -187,7 +194,7 @@ class Migrator(QObject):
             report.other_errors[self.tr("Failed to migrate additional files.")] = ex
 
         dst_mod_manager.finalize_migration(
-            dst_instance, dst_info, src_instance.order_matters
+            dst_instance, dst_info, src_instance.order_matters, activate_new_instance
         )
         self.log.info("Migration completed.")
         return report
