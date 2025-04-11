@@ -9,7 +9,7 @@ import sys
 from datetime import datetime
 from io import TextIOWrapper
 from pathlib import Path
-from typing import Callable, Optional, TextIO, override
+from typing import Any, Callable, Optional, TextIO, override
 
 from .base_enum import BaseEnum
 from .datetime import datetime_format_to_regex
@@ -184,3 +184,18 @@ class Logger(logging.Logger):
         """
 
         return self.__log_file_path
+
+    @staticmethod
+    def log_str_dict(logger: logging.Logger, string_dict: dict[str, Any]) -> None:
+        """
+        Prints the specified dictionary prettified and formatted to the specified logger
+        with log level `Logger.Level.INFO`.
+
+        Args:
+            logger (logging.Logger): Logger to print to
+            string_dict (dict[str, Any]): Dictionary to print
+        """
+
+        indent: int = max(len(key) + 1 for key in string_dict)
+        for key, value in string_dict.items():
+            logger.info(f"{key.rjust(indent)} = {value!r}")

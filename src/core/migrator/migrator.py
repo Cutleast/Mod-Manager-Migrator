@@ -12,6 +12,7 @@ from core.instance.instance import Instance
 from core.mod_manager.exceptions import InstanceNotFoundError
 from core.mod_manager.instance_info import InstanceInfo
 from core.mod_manager.mod_manager import ModManager
+from core.utilities.logger import Logger
 from ui.widgets.loading_dialog import LoadingDialog
 
 from .file_blacklist import FileBlacklist
@@ -66,10 +67,10 @@ class Migrator(QObject):
         report = MigrationReport()
 
         self.log.info("Source instance info:")
-        self.log_instance_info(src_info)
+        Logger.log_str_dict(self.log, src_info.__dict__)
 
         self.log.info("Destination instance info:")
-        self.log_instance_info(dst_info)
+        Logger.log_str_dict(self.log, dst_info.__dict__)
 
         self.log.info(f"Use hardlinks: {use_hardlinks}")
         self.log.info(f"Replace existing files: {replace}")
@@ -198,14 +199,3 @@ class Migrator(QObject):
         )
         self.log.info("Migration completed.")
         return report
-
-    def log_instance_info(self, instance_info: InstanceInfo) -> None:
-        """
-        Prints details from an instance to the log.
-
-        Args:
-            instance_info (InstanceInfo): Information about the instance.
-        """
-
-        for k, v in instance_info.__dict__.items():
-            self.log.info(f"{k}: {v}")
