@@ -10,6 +10,7 @@ from typing import Any, Optional, override
 
 import plyvel
 
+from core.game.exceptions import GameNotFoundError
 from core.game.game import Game
 from core.instance.instance import Instance
 from core.instance.metadata import Metadata
@@ -100,6 +101,7 @@ class Vortex(ModManager[ProfileInfo]):
         instance_data: ProfileInfo,
         modname_limit: int,
         file_blacklist: list[str] = [],
+        game_folder: Optional[Path] = None,
         ldialog: Optional[LoadingDialog] = None,
     ) -> Instance:
         instance_name: str = instance_data.display_name
@@ -108,6 +110,16 @@ class Vortex(ModManager[ProfileInfo]):
         if instance_name not in self.get_instance_names(game):
             raise InstanceNotFoundError(instance_name)
 
+        key: str = (
+            f"settings###gameMode###discovered###{instance_data.game.id.lower()}###path"
+        )
+
+        raw_game_folder: Optional[str] = self.__level_db.get_key(key)
+        if raw_game_folder is not None:
+            game_folder = Path(raw_game_folder)
+        elif game_folder is None:
+            raise GameNotFoundError
+
         self.log.info(f"Loading profile {instance_name!r}...")
         if ldialog is not None:
             ldialog.updateProgress(
@@ -115,10 +127,14 @@ class Vortex(ModManager[ProfileInfo]):
             )
 
         mods: list[Mod] = self._load_mods(
-            instance_data, modname_limit, file_blacklist, ldialog
+            instance_data, modname_limit, game_folder, file_blacklist, ldialog
         )
-        tools: list[Tool] = self._load_tools(instance_data, file_blacklist, ldialog)
-        instance = Instance(display_name=instance_name, mods=mods, tools=tools)
+        tools: list[Tool] = self._load_tools(
+            instance_data, game_folder, file_blacklist, ldialog
+        )
+        instance = Instance(
+            display_name=instance_name, game_folder=game_folder, mods=mods, tools=tools
+        )
 
         self.log.info(
             f"Loaded profile {instance_name!r} with {len(mods)} mod(s) "
@@ -132,6 +148,7 @@ class Vortex(ModManager[ProfileInfo]):
         self,
         instance_data: ProfileInfo,
         modname_limit: int,
+        game_folder: Path,
         file_blacklist: list[str] = [],
         ldialog: Optional[LoadingDialog] = None,
     ) -> list[Mod]:
@@ -267,7 +284,7 @@ class Vortex(ModManager[ProfileInfo]):
 
         mod_overrides: dict[Mod, list[Mod]] = self._get_reversed_mod_conflicts(mods)
         self.__process_file_overrides(
-            file_overrides, file_blacklist, mod_overrides, game
+            file_overrides, file_blacklist, mod_overrides, game, game_folder
         )
 
         self.log.debug(f"Loaded {len(mods)} mod(s) from instance {instance_name!r}.")
@@ -330,10 +347,11 @@ class Vortex(ModManager[ProfileInfo]):
         file_blacklist: list[str],
         mod_overrides: dict[Mod, list[Mod]],
         game: Game,
+        game_folder: Path,
     ) -> None:
         self.log.info(f"Processing file overrides for {len(file_overrides)} mod(s)...")
 
-        mods_folder: Path = game.installdir / game.mods_folder
+        mods_folder: Path = game_folder / game.mods_folder
 
         for mod, files in file_overrides.items():
             if mod not in mod_overrides:
@@ -369,14 +387,18 @@ class Vortex(ModManager[ProfileInfo]):
     def _load_tools(
         self,
         instance_data: ProfileInfo,
-        file_blacklist: list[str],
+        game_folder: Path,
+        file_blacklist: list[str] = [],
         ldialog: Optional[LoadingDialog] = None,
     ) -> list[Tool]:
         return []  # TODO: Implement this
 
     @override
     def create_instance(
-        self, instance_data: ProfileInfo, ldialog: Optional[LoadingDialog] = None
+        self,
+        instance_data: ProfileInfo,
+        game_folder: Path,
+        ldialog: Optional[LoadingDialog] = None,
     ) -> Instance:
         self.log.info(
             f"Creating profile {instance_data.display_name!r} "
@@ -412,7 +434,12 @@ class Vortex(ModManager[ProfileInfo]):
 
         self.log.info("Created Vortex profile.")
 
-        return Instance(display_name=instance_data.display_name, mods=[], tools=[])
+        return Instance(
+            display_name=instance_data.display_name,
+            game_folder=game_folder,
+            mods=[],
+            tools=[],
+        )
 
     @override
     def install_mod(
@@ -631,7 +658,9 @@ class Vortex(ModManager[ProfileInfo]):
         shutil.copytree(appdata_path / "state.v2", backup_path)
         self.log.info(f"Created backup of Vortex database at '{backup_path}'.")
 
-    def __set_file_overrides(self, mods: list[Mod], game: Game) -> None:
+    def __set_file_overrides(
+        self, mods: list[Mod], game: Game, game_folder: Path
+    ) -> None:
         for mod in mods:
             if not mod.file_conflicts:
                 continue
@@ -643,7 +672,7 @@ class Vortex(ModManager[ProfileInfo]):
                 "mods"
             ][game.id.lower()][full_mod_name]
             mod_data["fileOverrides"] = [
-                str(game.installdir / game.mods_folder / file)
+                str(game_folder / game.mods_folder / file)
                 for file in mod.file_conflicts
             ]
             self.__level_db.dump(mod_data, prefix + "###")
@@ -666,7 +695,11 @@ class Vortex(ModManager[ProfileInfo]):
         self.__level_db.dump(profile_data)
 
         # Set file overrides
-        self.__set_file_overrides(migrated_instance.mods, migrated_instance_data.game)
+        self.__set_file_overrides(
+            migrated_instance.mods,
+            migrated_instance_data.game,
+            migrated_instance.game_folder,
+        )
 
         if activate_new_instance:
             # Activate new profile

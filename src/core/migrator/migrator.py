@@ -55,6 +55,10 @@ class Migrator(QObject):
             ldialog (Optional[LoadingDialog], optional):
                 Optional loading dialog. Defaults to None.
 
+        Raises:
+            GameNotFoundError:
+                When the game folder could not be retrieved from the source instance.
+
         Returns:
             MigrationReport: A report containing migration errors.
         """
@@ -72,6 +76,9 @@ class Migrator(QObject):
         self.log.info("Destination instance info:")
         Logger.log_str_dict(self.log, dst_info.__dict__)
 
+        self.log.info(f"Mods: {len(src_instance.mods)}")
+        self.log.info(f"Tools: {len(src_instance.tools)}")
+        self.log.info(f"Game folder: {src_instance.game_folder}")
         self.log.info(f"Use hardlinks: {use_hardlinks}")
         self.log.info(f"Replace existing files: {replace}")
         self.log.info(f"Separate ini files: {src_instance.separate_ini_files}")
@@ -95,11 +102,13 @@ class Migrator(QObject):
         dst_instance: Instance
         try:
             dst_instance = dst_mod_manager.load_instance(
-                dst_info, modname_limit, blacklist, ldialog
+                dst_info, modname_limit, blacklist, ldialog=ldialog
             )
             self.log.warning("Migrating into existing instance...")
         except InstanceNotFoundError:
-            dst_instance = dst_mod_manager.create_instance(dst_info, ldialog)
+            dst_instance = dst_mod_manager.create_instance(
+                dst_info, src_instance.game_folder, ldialog
+            )
 
         for m, mod in enumerate(src_instance.mods):
             if ldialog is not None:

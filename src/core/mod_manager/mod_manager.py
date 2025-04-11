@@ -71,6 +71,7 @@ class ModManager[I: InstanceInfo](QObject):
         instance_data: I,
         modname_limit: int,
         file_blacklist: list[str] = [],
+        game_folder: Optional[Path] = None,
         ldialog: Optional[LoadingDialog] = None,
     ) -> Instance:
         """
@@ -80,8 +81,15 @@ class ModManager[I: InstanceInfo](QObject):
             instance_data (I): The data of the mod instance.
             modname_limit (int): A character limit for mod names.
             file_blacklist (list[str], optional): A list of files to ignore.
+            game_folder (Optional[Path], optional): The game folder of the instance.
             ldialog (Optional[LoadingDialog], optional):
                 Optional loading dialog. Defaults to None.
+
+        Raises:
+            InstanceNotFoundError: If the mod instance does not exist.
+            GameNotFoundError:
+                If the game folder of the instance could not be found and is not
+                specified.
 
         Returns:
             Instance: The mod instance with the given name.
@@ -92,6 +100,7 @@ class ModManager[I: InstanceInfo](QObject):
         self,
         instance_data: I,
         modname_limit: int,
+        game_folder: Path,
         file_blacklist: list[str] = [],
         ldialog: Optional[LoadingDialog] = None,
     ) -> list[Mod]:
@@ -101,6 +110,7 @@ class ModManager[I: InstanceInfo](QObject):
         Args:
             instance_data (I): The data of the mod instance.
             modname_limit (int): A character limit for mod names.
+            game_folder (Path): The game folder of the instance.
             file_blacklist (list[str], optional): A list of files to ignore.
             ldialog (Optional[LoadingDialog], optional):
                 Optional loading dialog. Defaults to None.
@@ -113,6 +123,7 @@ class ModManager[I: InstanceInfo](QObject):
     def _load_tools(
         self,
         instance_data: I,
+        game_folder: Path,
         file_blacklist: list[str] = [],
         ldialog: Optional[LoadingDialog] = None,
     ) -> list[Tool]:
@@ -121,6 +132,7 @@ class ModManager[I: InstanceInfo](QObject):
 
         Args:
             instance_data (I): The data of the mod instance.
+            game_folder (Path): The game folder of the instance.
             file_blacklist (list[str], optional): A list of files to ignore.
             ldialog (Optional[LoadingDialog], optional):
                 Optional loading dialog. Defaults to None.
@@ -194,13 +206,17 @@ class ModManager[I: InstanceInfo](QObject):
 
     @abstractmethod
     def create_instance(
-        self, instance_data: I, ldialog: Optional[LoadingDialog] = None
+        self,
+        instance_data: I,
+        game_folder: Path,
+        ldialog: Optional[LoadingDialog] = None,
     ) -> Instance:
         """
         Creates an instance in this mod manager.
 
         Args:
             instance_data (Instance_data): The customized instance data to create.
+            game_folder (Path): The game folder to use for the created instance.
             ldialog (Optional[LoadingDialog], optional):
                 Optional loading dialog. Defaults to None.
 

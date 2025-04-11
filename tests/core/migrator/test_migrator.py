@@ -42,9 +42,6 @@ class TestMigrator(BaseTest):
         # given
         mo2 = ModOrganizer()
         migrator = Migrator()
-        mo2_instance_info.game.installdir = Path(
-            "E:\\SteamLibrary\\Skyrim Special Edition"
-        )
         dst_path = Path("E:\\Modding\\Test Instance")
         dst_info = MO2InstanceInfo(
             display_name="Test Instance",
@@ -81,6 +78,7 @@ class TestMigrator(BaseTest):
         # then
         self.assert_modlists_equal(migrated_instance.mods, instance.mods)
         assert len(migrated_instance.tools) == len(instance.tools)
+        assert migrated_instance.game_folder == instance.game_folder
 
     def test_migration_mo2_to_vortex(
         self,
@@ -103,10 +101,6 @@ class TestMigrator(BaseTest):
         vortex = Vortex()
         vortex.db_path.mkdir(parents=True, exist_ok=True)
         migrator = Migrator()
-        mo2_instance_info.game.installdir = Path(
-            "E:\\SteamLibrary\\Skyrim Special Edition"
-        )
-        mo2_instance_info.game.installdir.mkdir(parents=True, exist_ok=True)
         dst_info = ProfileInfo(
             display_name="Test Instance",
             game=mo2_instance_info.game,
@@ -156,6 +150,7 @@ class TestMigrator(BaseTest):
             exclude_separators=True,  # Vortex doesn't support separators and ignores them when migrating
         )
         assert len(migrated_instance.tools) == len(instance.tools)
+        assert migrated_instance.game_folder == instance.game_folder
 
     def test_migration_to_vortex_without_activating_profile(
         self,
@@ -179,10 +174,6 @@ class TestMigrator(BaseTest):
         vortex = Vortex()
         vortex.db_path.mkdir(parents=True, exist_ok=True)
         migrator = Migrator()
-        mo2_instance_info.game.installdir = Path(
-            "E:\\SteamLibrary\\Skyrim Special Edition"
-        )
-        mo2_instance_info.game.installdir.mkdir(parents=True, exist_ok=True)
         dst_info = ProfileInfo(
             display_name="Test Instance",
             game=mo2_instance_info.game,
@@ -237,10 +228,6 @@ class TestMigrator(BaseTest):
         vortex.db_path.mkdir(parents=True, exist_ok=True)
         mo2 = ModOrganizer()
         migrator = Migrator()
-        vortex_profile_info.game.installdir = Path(
-            "E:\\SteamLibrary\\Skyrim Special Edition"
-        )
-        vortex_profile_info.game.installdir.mkdir(parents=True, exist_ok=True)
         dst_path = Path("E:\\Modding\\Test Instance")
         dst_info = MO2InstanceInfo(
             display_name="Test Instance",
@@ -285,6 +272,7 @@ class TestMigrator(BaseTest):
             self.__get_file_redirects(src_instance.mods, vortex),
         )
         assert len(migrated_instance.tools) == len(src_instance.tools)
+        assert migrated_instance.game_folder == src_instance.game_folder
 
     def test_migration_vortex_to_vortex(
         self,
@@ -308,10 +296,6 @@ class TestMigrator(BaseTest):
         vortex = Vortex()
         vortex.db_path.mkdir(parents=True, exist_ok=True)
         migrator = Migrator()
-        vortex_profile_info.game.installdir = Path(
-            "E:\\SteamLibrary\\Skyrim Special Edition"
-        )
-        vortex_profile_info.game.installdir.mkdir(parents=True, exist_ok=True)
         dst_info = ProfileInfo(
             display_name="Test Instance",
             game=vortex_profile_info.game,
@@ -320,6 +304,7 @@ class TestMigrator(BaseTest):
         src_instance = vortex.load_instance(
             vortex_profile_info, app_config.modname_limit, FileBlacklist.get_files()
         )
+        # src_instance.game_folder.mkdir(parents=True, exist_ok=True) TODO: Check if still required
 
         # when
         report: MigrationReport = migrator.migrate(

@@ -2,8 +2,6 @@
 Copyright (c) Cutleast
 """
 
-from pathlib import Path
-
 from core.game.game import Game
 
 from ..base_test import BaseTest
@@ -33,12 +31,11 @@ class TestGame(BaseTest):
         Tests the cached `core.game.game.Game.get_game_by_id()` method.
         """
 
-        # when
+        # given
         skyrimse: Game = Game.get_game_by_id("skyrimse")
 
-        # then
-        skyrimse.installdir = Path()
+        # when
         cached_skyrimse: Game = Game.get_game_by_id("skyrimse")
 
+        # then
         assert skyrimse is cached_skyrimse
-        assert skyrimse.installdir == cached_skyrimse.installdir

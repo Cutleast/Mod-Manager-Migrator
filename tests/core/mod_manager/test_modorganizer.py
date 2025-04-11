@@ -137,7 +137,7 @@ class TestModOrganizer(BaseTest):
         # given
         mo2 = ModOrganizer()
         game: Game = Game.get_game_by_id("skyrimse")
-        game.installdir = Path("E:\\Games\\Skyrim Special Edition")
+        game_folder = Path("E:\\SteamLibrary\\Skyrim Special Edition")
         test_instance_path = Path("E:\\Modding\\Test Instance")
         instance_data = MO2InstanceInfo(
             display_name="Test Instance",
@@ -151,7 +151,7 @@ class TestModOrganizer(BaseTest):
         )
 
         # when
-        instance: Instance = mo2.create_instance(instance_data)
+        instance: Instance = mo2.create_instance(instance_data, game_folder)
 
         # then
         assert instance.mods == []
@@ -172,9 +172,7 @@ class TestModOrganizer(BaseTest):
 
         # then
         assert ini_data["General"]["gameName"] == game.display_name
-        assert ini_data["General"]["gamePath"] == str(game.installdir).replace(
-            "\\", "/"
-        )
+        assert ini_data["General"]["gamePath"] == str(game_folder).replace("\\", "/")
 
     def test_install_mod(
         self,

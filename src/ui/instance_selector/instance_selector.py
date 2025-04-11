@@ -53,6 +53,11 @@ class InstanceSelector(QWidget):
     Maps games to their names.
     """
 
+    __game_folders: dict[Game, Path] = {}
+    """
+    Maps games to their game folders.
+    """
+
     __cur_game: Optional[Game] = None
     """
     Currently selected game.
@@ -183,37 +188,6 @@ class InstanceSelector(QWidget):
 
     def __on_game_select(self, value: str) -> None:
         selected_game: Optional[Game] = self.__games.get(value)
-
-        if selected_game is not None:
-            try:
-                selected_game.installdir
-            except GameNotFoundError:
-                QMessageBox.warning(
-                    AppContext.get_app().main_window,
-                    self.tr("Could not find game directory!"),
-                    self.tr(
-                        "Unable to find game directory. Please select it manually."
-                    ),
-                    buttons=QMessageBox.StandardButton.Ok,
-                )
-
-                file_dialog = QFileDialog(
-                    AppContext.get_app().main_window,
-                    caption=self.tr("Select game directory"),
-                    fileMode=QFileDialog.FileMode.Directory,
-                )
-
-                if file_dialog.exec() == QDialog.DialogCode.Accepted:
-                    folder_path = Path(file_dialog.selectedFiles()[0])
-
-                    if not folder_path.is_dir():
-                        raise FileNotFoundError(folder_path)
-
-                    selected_game.installdir = folder_path
-                else:
-                    self.__game_dropdown.setCurrentIndex(0)
-                    return
-
         self.__set_cur_game(selected_game)
 
     def __set_cur_game(self, game: Optional[Game]) -> None:
@@ -248,12 +222,9 @@ class InstanceSelector(QWidget):
         self.__cur_mod_manager = mod_manager
         self.__load_button.setText(self.tr("Load selected instance..."))
 
-    def load_instance(self) -> Instance:
+    def load_instance(self) -> None:
         """
-        Loads and returns the mod instance from the current selection.
-
-        Returns:
-            Instance: The mod instance.
+        Loads the mod instance from the current selection.
         """
 
         mod_manager: Optional[ModManager] = self.__cur_mod_manager
@@ -266,23 +237,51 @@ class InstanceSelector(QWidget):
 
         app_config: AppConfig = AppContext.get_app().app_config
 
-        instance_data = self.__mod_managers[mod_manager].get_instance(game)
-        self.__cur_mod_instance = LoadingDialog.run_callable(
-            lambda ldialog: mod_manager.load_instance(
-                instance_data=instance_data,
-                modname_limit=app_config.modname_limit,
-                file_blacklist=FileBlacklist.get_files(),
-                ldialog=ldialog,
-            )
+        instance_data: InstanceInfo = self.__mod_managers[mod_manager].get_instance(
+            game
         )
-        self.instance_selected.emit(self.__cur_mod_instance)
+        mod_instance: Instance
+        try:
+            mod_instance = LoadingDialog.run_callable(
+                lambda ldialog: mod_manager.load_instance(
+                    instance_data=instance_data,
+                    modname_limit=app_config.modname_limit,
+                    file_blacklist=FileBlacklist.get_files(),
+                    game_folder=self.__game_folders.get(game),
+                    ldialog=ldialog,
+                )
+            )
+        except GameNotFoundError:
+            QMessageBox.warning(
+                AppContext.get_app().main_window,
+                self.tr("Could not find game directory!"),
+                self.tr("Unable to find game directory. Please select it manually."),
+                buttons=QMessageBox.StandardButton.Ok,
+            )
 
-        self.__load_button.setText(self.tr("Instance loaded."))
-        self.__load_button.setDisabled(True)
+            file_dialog = QFileDialog(
+                AppContext.get_app().main_window,
+                caption=self.tr("Select game directory"),
+                fileMode=QFileDialog.FileMode.Directory,
+            )
 
-        self.__cur_instance_data = instance_data
+            if file_dialog.exec() == QDialog.DialogCode.Accepted:
+                folder_path = Path(file_dialog.selectedFiles()[0])
 
-        return self.__cur_mod_instance
+                if not folder_path.is_dir():
+                    raise FileNotFoundError(folder_path)
+
+                self.__game_folders[game] = folder_path
+            else:
+                self.__game_dropdown.setCurrentIndex(0)
+        else:
+            self.__load_button.setText(self.tr("Instance loaded."))
+            self.__load_button.setDisabled(True)
+
+            self.__cur_instance_data = instance_data
+            self.__cur_mod_instance = mod_instance
+
+            self.instance_selected.emit(self.__cur_mod_instance)
 
     def get_cur_instance_data(self) -> InstanceInfo:
         """

@@ -53,10 +53,6 @@ class TestVortex(BaseTest):
         # given
         vortex = Vortex()
         vortex.db_path.mkdir(parents=True, exist_ok=True)
-        vortex_profile_info.game.installdir = Path(
-            "E:\\SteamLibrary\\Skyrim Special Edition"
-        )
-        vortex_profile_info.game.installdir.mkdir(parents=True, exist_ok=True)
 
         # when
         instance: Instance = vortex.load_instance(
@@ -65,6 +61,9 @@ class TestVortex(BaseTest):
 
         # then
         assert len(instance.mods) == 7
+
+        # test game folder
+        assert instance.game_folder == Path("E:\\SteamLibrary\\Skyrim Special Edition")
 
         # test mod name length limit
         assert all(
@@ -107,6 +106,7 @@ class TestVortex(BaseTest):
         # given
         vortex = Vortex()
         vortex.db_path.mkdir(parents=True, exist_ok=True)
+        game_folder = Path("E:\\SteamLibrary\\Skyrim Special Edition")
         database: LevelDB = Utils.get_private_field(vortex, *TestVortex.DATABASE)
         profile_info = ProfileInfo(
             display_name="Test profile",
@@ -125,7 +125,7 @@ class TestVortex(BaseTest):
         }
 
         # when
-        vortex.create_instance(profile_info)
+        vortex.create_instance(profile_info, game_folder)
         profile_data: dict[str, Any] = database.load(prefix)["persistent"]["profiles"][
             profile_info.id
         ]

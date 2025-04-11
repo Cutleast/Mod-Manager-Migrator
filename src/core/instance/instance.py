@@ -3,6 +3,7 @@ Copyright (c) Cutleast
 """
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Optional
 
 from .mod import Mod
@@ -18,6 +19,11 @@ class Instance:
     display_name: str
     """
     The name that is visible to the user.
+    """
+
+    game_folder: Path
+    """
+    The path to the instance's game folder.
     """
 
     mods: list[Mod]

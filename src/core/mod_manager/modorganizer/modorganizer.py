@@ -3,10 +3,12 @@ Copyright (c) Cutleast
 """
 
 import os
+import re
 from pathlib import Path
 from typing import Any, Optional, override
 
 from core.archive.archive import Archive
+from core.game.exceptions import GameNotFoundError
 from core.game.game import Game
 from core.instance.instance import Instance
 from core.instance.metadata import Metadata
@@ -43,6 +45,8 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
 
     # TODO: Make this dynamic instead of a fixed url
     DOWNLOAD_URL: str = "https://github.com/ModOrganizer2/modorganizer/releases/download/v2.5.2/Mod.Organizer-2.5.2.7z"
+
+    BYTE_ARRAY_PATTERN: re.Pattern[str] = re.compile(r"^@ByteArray\((.*)\)$")
 
     appdata_path = resolve(Path("%LOCALAPPDATA%") / "ModOrganizer")
 
@@ -81,6 +85,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         instance_data: MO2InstanceInfo,
         modname_limit: int,
         file_blacklist: list[str] = [],
+        game_folder: Optional[Path] = None,
         ldialog: Optional[LoadingDialog] = None,
     ) -> Instance:
         instance_name: str = instance_data.display_name
@@ -97,6 +102,17 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
 
         if not mo2_ini_path.is_file():
             raise InstanceNotFoundError(f"{instance_name} > {profile_name}")
+
+        mo2_ini_data: dict[str, dict[str, Any]] = INIFile(mo2_ini_path).load_file()
+        raw_game_folder: Optional[str] = mo2_ini_data["General"].get("gamePath")
+        if raw_game_folder is not None:
+            raw_game_folder = ModOrganizer.BYTE_ARRAY_PATTERN.sub(
+                r"\1", raw_game_folder
+            )
+            raw_game_folder = raw_game_folder.replace("\\\\", "\\")
+            game_folder = Path(raw_game_folder)
+        elif game_folder is None:
+            raise GameNotFoundError
 
         self.log.info(
             f"Loading profile {profile_name!r} from instance "
@@ -124,6 +140,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
 
         instance = Instance(
             display_name=f"{instance_name} > {profile_name}",
+            game_folder=game_folder,
             mods=mods,
             tools=tools,
             order_matters=True,
@@ -368,7 +385,10 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
 
     @override
     def create_instance(
-        self, instance_data: MO2InstanceInfo, ldialog: Optional[LoadingDialog] = None
+        self,
+        instance_data: MO2InstanceInfo,
+        game_folder: Path,
+        ldialog: Optional[LoadingDialog] = None,
     ) -> Instance:
         self.log.info(f"Creating instance {instance_data.display_name!r}...")
 
@@ -395,9 +415,9 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         mo2_ini_file = INIFile(mo2_ini_path)
         mo2_ini_file.data = {
             "General": {
-                "gameName": "Skyrim Special Edition",
+                "gameName": game.display_name,
                 "selected_profile": "@ByteArray(Default)",
-                "gamePath": str(game.installdir).replace("\\", "/"),
+                "gamePath": str(game_folder).replace("\\", "/"),
                 "first_start": "true",
             },
             "Settings": {
@@ -428,6 +448,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
 
         return Instance(
             display_name=instance_data.display_name,
+            game_folder=game_folder,
             mods=[],
             tools=[],
             order_matters=True,
@@ -515,7 +536,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
             if instance_data.use_root_builder:
                 mod_folder /= "Root"
             else:
-                mod_folder = game.installdir
+                mod_folder = instance.game_folder
                 regular = False
         elif mod.deploy_path is not None:
             mod_folder /= mod.deploy_path

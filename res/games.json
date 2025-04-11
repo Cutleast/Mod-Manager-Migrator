@@ -10,10 +10,7 @@
             "EnderalPrefs.ini",
             "EnderalCustom.ini"
         ],
-        "mods_folder": "Data",
-        "reg_paths": [
-            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\SureAI\\Enderal\\installed path"
-        ]
+        "mods_folder": "Data"
     },
     {
         "id": "enderalspecialedition",
@@ -26,11 +23,7 @@
             "EnderalPrefs.ini",
             "EnderalCustom.ini"
         ],
-        "mods_folder": "Data",
-        "reg_paths": [
-            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\SureAI\\Enderal SE\\installed path",
-            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\GOG.com\\Games\\1708684988\\path"
-        ]
+        "mods_folder": "Data"
     },
     {
         "id": "enderalspecialedition_gog",
@@ -43,11 +36,7 @@
             "EnderalPrefs.ini",
             "EnderalCustom.ini"
         ],
-        "mods_folder": "Data",
-        "reg_paths": [
-            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\SureAI\\Enderal SE\\installed path",
-            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\GOG.com\\Games\\1708684988\\path"
-        ]
+        "mods_folder": "Data"
     },
     {
         "id": "fallout3",
@@ -59,11 +48,7 @@
             "Fallout.ini",
             "FalloutPrefs.ini"
         ],
-        "mods_folder": "Data",
-        "reg_paths": [
-            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\Fallout3\\installed path",
-            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\GOG.com\\Games\\1248282609\\path"
-        ]
+        "mods_folder": "Data"
     },
     {
         "id": "fallout4",
@@ -76,11 +61,7 @@
             "Fallout4Prefs.ini",
             "Fallout4Custom.ini"
         ],
-        "mods_folder": "Data",
-        "reg_paths": [
-            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\Fallout4\\installed path",
-            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\GOG.com\\Games\\1998527297\\path"
-        ]
+        "mods_folder": "Data"
     },
     {
         "id": "falloutnv",
@@ -92,11 +73,7 @@
             "Fallout.ini",
             "FalloutPrefs.ini"
         ],
-        "mods_folder": "Data",
-        "reg_paths": [
-            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\falloutnv\\installed path",
-            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\GOG.com\\Games\\1998527297\\path"
-        ]
+        "mods_folder": "Data"
     },
     {
         "id": "oblivion",
@@ -109,10 +86,7 @@
             "OblivionPrefs.ini",
             "BlendSettings.ini"
         ],
-        "mods_folder": "Data",
-        "reg_paths": [
-            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\Oblivion\\installed path"
-        ]
+        "mods_folder": "Data"
     },
     {
         "id": "skyrim",
@@ -125,10 +99,7 @@
             "SkyrimPrefs.ini",
             "SkyrimCustom.ini"
         ],
-        "mods_folder": "Data",
-        "reg_paths": [
-            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\Skyrim\\installed path"
-        ]
+        "mods_folder": "Data"
     },
     {
         "id": "skyrimse",
@@ -141,10 +112,7 @@
             "SkyrimPrefs.ini",
             "SkyrimCustom.ini"
         ],
-        "mods_folder": "Data",
-        "reg_paths": [
-            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Bethesda Softworks\\Skyrim Special Edition\\installed path"
-        ]
+        "mods_folder": "Data"
     },
     {
         "id": "skyrimse_gog",
@@ -157,9 +125,6 @@
             "SkyrimPrefs.ini",
             "SkyrimCustom.ini"
         ],
-        "mods_folder": "Data",
-        "reg_paths": [
-            "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\GOG.com\\Games\\1711230643\\path"
-        ]
+        "mods_folder": "Data"
     }
 ]

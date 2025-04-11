@@ -148,6 +148,7 @@ class BaseTest:
 
         return Instance(
             display_name="Test Instance",
+            game_folder=Path("E:\\SteamLibrary\\Skyrim Special Edition"),
             mods=[
                 Mod(
                     display_name=f"Test Mod {i}",
