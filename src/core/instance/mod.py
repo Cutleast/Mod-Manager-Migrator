@@ -7,6 +7,8 @@ from enum import Enum, auto
 from pathlib import Path
 from typing import Optional, override
 
+from core.utilities.cache import cache
+
 from .metadata import Metadata
 
 
@@ -79,35 +81,29 @@ class Mod:
     Each file is handled separately and has no impact on the loadorder.
     """
 
-    __files: Optional[list[Path]] = None  # type: ignore
-    __size: Optional[int] = None  # type: ignore
-
     @property
+    @cache
     def files(self) -> list[Path]:
         """
         List of files.
         """
 
-        if not self.__files:
-            self.__files = [
-                file.relative_to(self.path)
-                for file in self.path.rglob("*")
-                if file.is_file()
-            ]
-
-        return self.__files
+        return [
+            file.relative_to(self.path)
+            for file in self.path.rglob("*")
+            if file.is_file()
+        ]
 
     @property
+    @cache
     def size(self) -> int:
         """
         Total size of all files.
         """
 
-        if not self.__size:
-            self.__size = sum((self.path / file).stat().st_size for file in self.files)
+        return sum((self.path / file).stat().st_size for file in self.files)
 
-        return self.__size
-
+    @cache
     def get_modpage_url(self) -> Optional[str]:
         """
         Gets the modpage URL of the mod if it has one.

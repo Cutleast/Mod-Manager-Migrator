@@ -15,6 +15,7 @@ from core.game.game import Game
 from core.instance.instance import Instance
 from core.instance.mod import Mod
 from core.instance.tool import Tool
+from core.utilities.logger import Logger
 from core.utilities.scale import scale_value
 from ui.widgets.loading_dialog import LoadingDialog
 
@@ -142,6 +143,7 @@ class ModManager[I: InstanceInfo](QObject):
         """
 
     @staticmethod
+    @Logger.timeit(logger_name="ModManager")
     def _index_modlist(
         mods: list[Mod], file_blacklist: list[str]
     ) -> dict[str, list[Mod]]:

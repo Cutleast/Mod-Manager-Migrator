@@ -84,6 +84,23 @@
 				"problemMatcher": []
 			},
 			{
+				"label": "run-main-with-profiler",
+				"type": "shell",
+				"command": "${workspaceFolder}/.venv/scripts/python",
+				"args": [
+					"-m",
+					"cProfile",
+					"-o",
+					"${workspaceFolder}/mmm.prof",
+					"${workspaceFolder}/src/main.py"
+				],
+				"dependsOn": [
+					"compile-qrc"
+				],
+				"detail": "Runs main.py with a performance profiler.",
+				"problemMatcher": []
+			},
+			{
 				"label": "update-venv",
 				"type": "shell",
 				"command": "${workspaceFolder}/.venv/scripts/pip",
@@ -207,7 +224,8 @@
 		"python.testing.pytestArgs": [
 			"--ignore-glob=experiments/**/*.py",
 			"--ignore-glob=src/**/*.py",
-			"--log-level=DEBUG"
+			"--log-level=DEBUG",
+			"-vv"
 		],
 		"python.testing.pytestEnabled": true,
 		"python.testing.unittestEnabled": false,

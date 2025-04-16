@@ -129,6 +129,61 @@ class TestModOrganizer(BaseTest):
             == wet_and_cold
         )
 
+    @staticmethod
+    def process_conflicts_stub(mods: list[Mod], file_blacklist: list[str]) -> None:
+        """
+        Method stub for `ModOrganizer.__process_conflicts()`.
+        """
+
+        raise NotImplementedError
+
+    def test_process_conflicts(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """
+        Tests `ModOrganizer.__process_conflicts()`.
+        """
+
+        # given
+        mo2 = ModOrganizer()
+        mods: list[Mod] = [
+            TestModOrganizer.create_blank_mod("test_mod_1"),
+            TestModOrganizer.create_blank_mod("test_mod_2"),
+            TestModOrganizer.create_blank_mod("test_mod_3"),
+            TestModOrganizer.create_blank_mod("test_mod_4"),
+            TestModOrganizer.create_blank_mod("test_mod_5"),
+        ]
+        file_index: dict[str, list[Mod]] = {
+            "test_file_1": [mods[0], mods[2], mods[4]],
+            "test_file_2": [mods[0], mods[1]],
+            "test_file_2.mohidden": [mods[2]],
+            "test_file_3": [mods[4]],
+        }
+
+        for i in range(
+            100_000, 500_000
+        ):  # simulate a large mod list with lots of files
+            file_index[f"test_file_{i}"] = [mods[i // 100_000]]
+
+            # add some hidden files
+            if i % 5 == 0:
+                file_index[f"hidden_test_file_{i}.mohidden"] = [mods[i // 100_000]]
+
+        # when
+        monkeypatch.setattr(
+            ModOrganizer, "_index_modlist", lambda mods, file_blacklist: file_index
+        )
+        Utils.get_private_method(mo2, "process_conflicts", self.process_conflicts_stub)(
+            mods, []
+        )
+
+        # then
+        assert mods[0].mod_conflicts == [mods[2], mods[4], mods[1]]
+        assert mods[1].mod_conflicts == []
+        assert mods[2].mod_conflicts == [mods[4]]
+        assert mods[3].mod_conflicts == []
+        assert mods[4].mod_conflicts == []
+
+        assert mods[2].file_conflicts["test_file_2"] == mods[1]
+
     def test_create_instance(self, test_fs: FakeFilesystem, qt_resources: None) -> None:
         """
         Tests `core.mod_manager.modorganizer.modorganizer.ModOrganizer.create_instance()`.

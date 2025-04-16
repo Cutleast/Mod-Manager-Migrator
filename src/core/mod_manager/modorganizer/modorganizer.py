@@ -237,6 +237,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
                     else Mod.Type.Regular
                 ),
             )
+            mod.files  # build cache for mod files
             mods.append(mod)
 
         if ldialog is not None:
@@ -247,7 +248,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
                 show2=False,
             )
 
-        self.__process_conflicts(mods, file_blacklist)
+        self.__process_conflicts(mods, file_blacklist, ldialog)
 
         self.log.info(
             f"Loaded {len(mods)} mod(s) from {instance_name} > {profile_name}."
@@ -333,37 +334,48 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         with open(modlist_txt_path, "w", encoding="utf8") as modlist_file:
             modlist_file.writelines(lines)
 
-    @staticmethod
-    def __process_conflicts(mods: list[Mod], file_blacklist: list[str]) -> None:
+    def __process_conflicts(
+        self,
+        mods: list[Mod],
+        file_blacklist: list[str],
+        ldialog: Optional[LoadingDialog] = None,
+    ) -> None:
         file_index: dict[str, list[Mod]] = ModOrganizer._index_modlist(
             mods, file_blacklist
         )
+        self.log.debug(f"Modlist has {len(file_index)} file(s) in {len(mods)} mod(s).")
+
+        if ldialog is not None:
+            ldialog.updateProgress(
+                text1=self.tr("Processing mod conflicts..."),
+                value1=0,
+                max1=0,
+            )
 
         for mod_list in file_index.values():
-            mod_list = mod_list.copy()
-            while len(mod_list) > 1:
-                mod: Mod = mod_list.pop(0)
-                mod.mod_conflicts.extend(mod_list)
+            for m, mod in enumerate(mod_list):
+                mod.mod_conflicts.extend(mod_list[m + 1 :])
 
         # Remove duplicate conflicts
         for mod in mods:
             mod.mod_conflicts = unique(mod.mod_conflicts)
 
         # Process single file conflicts (.mohidden files)
+        if ldialog is not None:
+            ldialog.updateProgress(text1=self.tr("Processing single file conflicts..."))
+
         hidden_files: dict[str, list[Mod]] = {
-            f: m for f, m in file_index.items() if f.endswith(".mohidden")
+            f: m
+            for f, m in file_index.items()
+            if f.endswith(".mohidden") and f.removesuffix(".mohidden") in file_index
         }
+        self.log.debug(f"Found {len(hidden_files)} hidden file(s) with conflicts.")
 
         for hidden_file, mod_list in hidden_files.items():
             real_file: str = hidden_file.removesuffix(".mohidden")
-            if real_file in file_index:
-                overwriting_mod: Mod = file_index[real_file][-1]
-                for mod in mod_list:
-                    mod.file_conflicts[real_file] = overwriting_mod
-            else:
-                ModOrganizer.log.warning(
-                    f"Found hidden file without conflict: '{hidden_file}' in {mod_list}!"
-                )
+            overwriting_mod: Mod = file_index[real_file][-1]
+            for mod in mod_list:
+                mod.file_conflicts[real_file] = overwriting_mod
 
     @override
     def _load_tools(

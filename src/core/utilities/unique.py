@@ -21,7 +21,7 @@ def unique(iterable: Iterable[T], key: Optional[Callable[[T], Any]] = None) -> l
     """
 
     if key is None:
-        return list(set(iterable))
+        return list({item: None for item in iterable}.keys())
 
     else:
         return list({key(item): item for item in iterable}.values())

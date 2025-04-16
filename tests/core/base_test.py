@@ -325,3 +325,30 @@ class BaseTest:
             dst = Path(tmp_dir) / "full_state.v2.json"
             shutil.copyfile(src, dst)
             yield dst
+
+    @staticmethod
+    def create_blank_mod(mod_name: str) -> Mod:
+        """
+        Creates a blank mod with the specified name for usage in tests.
+
+        Args:
+            mod_name (str): The name of the mod
+
+        Returns:
+            Mod: The blank mod
+        """
+
+        return Mod(
+            display_name=mod_name,
+            path=Path(),
+            deploy_path=None,
+            metadata=Metadata(
+                mod_id=None,
+                file_id=None,
+                version="",
+                file_name=None,
+                game_id="skyrimspecialedition",
+            ),
+            installed=True,
+            enabled=True,
+        )
