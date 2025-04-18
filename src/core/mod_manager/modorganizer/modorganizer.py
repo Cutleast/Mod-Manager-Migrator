@@ -393,6 +393,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
             Path(file): Path(file).with_suffix(file.suffix.removesuffix(".mohidden"))
             for file in mod.files
             if file.suffix.endswith(".mohidden")
+            and str(file).lower() in mod.file_conflicts
         }
 
     @override
