@@ -104,9 +104,14 @@ class Mod:
         return sum((self.path / file).stat().st_size for file in self.files)
 
     @cache
-    def get_modpage_url(self) -> Optional[str]:
+    def get_modpage_url(self, direct: bool = False) -> Optional[str]:
         """
         Gets the modpage URL of the mod if it has one.
+
+        Args:
+            direct (bool, optional):
+                If True, the modpage URL will include the file ID.
+                Defaults to False.
 
         Returns:
             Optional[str]: The modpage URL of the mod if it has one, otherwise None.
@@ -122,7 +127,7 @@ class Mod:
             return None
 
         url = f"{base_url}/{game_id}/mods/{mod_id}"
-        if file_id:
+        if file_id and direct:
             url += f"?tab=files&file_id={file_id}"
 
         return url
