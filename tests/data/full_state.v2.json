@@ -63,6 +63,23 @@
                     "state": "installed",
                     "type": "dinput"
                 },
+                "Dynamic Interface Patcher-96891-v2-1-5-1739022413": {
+                    "attributes": {
+                        "customFileName": "Dynamic Interface Patcher - DIP",
+                        "downloadGame": "skyrimse",
+                        "fileId": 592350,
+                        "fileName": "Dynamic Interface Patcher-96891-v2-1-5-1739022413.7z",
+                        "installTime": "2025-04-12T10:00:00.000000Z",
+                        "logicalFileName": "Dynamic Interface Patcher v2.1.5",
+                        "modId": 96891,
+                        "source": "nexus",
+                        "version": "2.1.5"
+                    },
+                    "id": "Dynamic Interface Patcher-96891-v2-1-5-1739022413",
+                    "installationPath": "Dynamic Interface Patcher-96891-v2-1-5-1739022413",
+                    "state": "installed",
+                    "type": null
+                },
                 "Obsidian Weathers - 1.07a-12125-1-07a-1620568126": {
                     "attributes": {
                         "customFileName": "Obsidian Weathers and Seasons",
@@ -210,6 +227,10 @@
                         "enabled": true,
                         "enabledTime": 1743796955403
                     },
+                    "Dynamic Interface Patcher-96891-v2-1-5-1739022413": {
+                        "enabled": true,
+                        "enabledTime": 1743796955403
+                    },
                     "Obsidian Weathers - 1.07a-12125-1-07a-1620568126": {
                         "enabled": true,
                         "enabledTime": 1743698544319
@@ -282,7 +303,55 @@
                     "hidden": false,
                     "path": "E:\\SteamLibrary\\Skyrim Special Edition",
                     "pathSetManually": true,
-                    "tools": {}
+                    "tools": {
+                        "H1xbblsDRJg": {
+                            "custom": true,
+                            "defaultPrimary": false,
+                            "detach": true,
+                            "exclusive": false,
+                            "executable": null,
+                            "id": "H1xbblsDRJg",
+                            "logo": "H1xbblsDRJg.png",
+                            "name": "SSE Auto Translator",
+                            "parameters": [],
+                            "path": "C:\\Modding\\Tools\\SSE-AT\\SSE-AT.exe",
+                            "requiredFiles": [],
+                            "shell": false,
+                            "timestamp": 1744445464921,
+                            "workingDirectory": ""
+                        },
+                        "SJKWR9vAkx": {
+                            "custom": true,
+                            "defaultPrimary": false,
+                            "detach": true,
+                            "exclusive": false,
+                            "executable": null,
+                            "id": "SJKWR9vAkx",
+                            "logo": "SJKWR9vAkx.png",
+                            "name": "DIP",
+                            "parameters": [],
+                            "path": "E:\\Modding\\Vortex\\skyrimse\\Dynamic Interface Patcher-96891-v2-1-5-1739022413\\DIP\\DIP.exe",
+                            "requiredFiles": [],
+                            "shell": false,
+                            "timestamp": 1744444997315,
+                            "workingDirectory": "E:\\SteamLibrary\\Skyrim Special Edition"
+                        },
+                        "skse64": {
+                            "custom": false,
+                            "defaultPrimary": true,
+                            "exclusive": true,
+                            "id": "skse64",
+                            "logo": "SKSE.png",
+                            "name": "Skyrim Script Extender 64",
+                            "path": "E:\\SteamLibrary\\Skyrim Special Edition\\skse64_loader.exe",
+                            "relative": true,
+                            "requiredFiles": [
+                                "skse64_loader.exe"
+                            ],
+                            "shortName": "SKSE64",
+                            "timestamp": 1744444879451
+                        }
+                    }
                 }
             },
             "pickerLayout": "small",
@@ -335,6 +404,9 @@
             "cleanupOnDeploy": false,
             "confirmPurge": true,
             "installPathMode": "userData",
+            "installPath": {
+                "skyrimse": "E:\\Modding\\Vortex\\{game}"
+            },
             "installerSandbox": true,
             "showDropzone": true,
             "suggestInstallPathDirectory": "Vortex Mods"

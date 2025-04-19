@@ -124,6 +124,7 @@ class ModManager[I: InstanceInfo](QObject):
     def _load_tools(
         self,
         instance_data: I,
+        mods: list[Mod],
         game_folder: Path,
         file_blacklist: list[str] = [],
         ldialog: Optional[LoadingDialog] = None,
@@ -133,6 +134,7 @@ class ModManager[I: InstanceInfo](QObject):
 
         Args:
             instance_data (I): The data of the mod instance.
+            mods (list[Mod]): The list of already loaded mods.
             game_folder (Path): The game folder of the instance.
             file_blacklist (list[str], optional): A list of files to ignore.
             ldialog (Optional[LoadingDialog], optional):
@@ -141,6 +143,25 @@ class ModManager[I: InstanceInfo](QObject):
         Returns:
             list[Tool]: The list of tools.
         """
+
+    @staticmethod
+    def _get_mod_for_path(
+        path: Path, mods_by_folders: dict[Path, Mod]
+    ) -> Optional[Mod]:
+        """
+        Returns the mod that contains the given path.
+
+        Args:
+            path (Path): The path.
+            mods_by_folders (dict[Path, Mod]): The dict of mods by folders.
+
+        Returns:
+            Optional[Mod]: The mod that contains the given path or None.
+        """
+
+        for mod_path, mod in mods_by_folders.items():
+            if path.is_relative_to(mod_path):
+                return mod
 
     @staticmethod
     @Logger.timeit(logger_name="ModManager")

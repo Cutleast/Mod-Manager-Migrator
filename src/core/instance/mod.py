@@ -2,6 +2,8 @@
 Copyright (c) Cutleast
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from enum import Enum, auto
 from pathlib import Path
@@ -69,39 +71,68 @@ class Mod:
     Type of the mod.
     """
 
-    mod_conflicts: list["Mod"] = field(default_factory=list)
+    mod_conflicts: list[Mod] = field(default_factory=list)
     """
     List of mods that overwrite this mod.
     These conflicts are used for creating a loadorder.
     """
 
-    file_conflicts: dict[str, "Mod"] = field(default_factory=dict)
+    file_conflicts: dict[str, Mod] = field(default_factory=dict)
     """
     Mapping of file names that are explicitly overwritten by other mods.
     Each file is handled separately and has no impact on the loadorder.
     """
 
     @property
-    @cache
     def files(self) -> list[Path]:
         """
         List of files.
         """
 
-        return [
-            file.relative_to(self.path)
-            for file in self.path.rglob("*")
-            if file.is_file()
-        ]
+        return Mod.__get_files(self.path)
+
+    @staticmethod
+    @cache
+    def __get_files(path: Path) -> list[Path]:
+        return [file.relative_to(path) for file in path.rglob("*") if file.is_file()]
+
+    @staticmethod
+    def copy(mod: Mod) -> Mod:
+        """
+        Creates a copy of the specified mod.
+        Resets the cache of the files and size properties.
+
+        Args:
+            mod (Mod): Mod to copy
+
+        Returns:
+            Mod: Copied mod instance
+        """
+
+        return Mod(
+            display_name=mod.display_name,
+            path=mod.path,
+            deploy_path=mod.deploy_path,
+            metadata=mod.metadata,
+            installed=mod.installed,
+            enabled=mod.enabled,
+            mod_type=mod.mod_type,
+            mod_conflicts=mod.mod_conflicts,
+            file_conflicts=mod.file_conflicts,
+        )
 
     @property
-    @cache
     def size(self) -> int:
         """
         Total size of all files.
         """
 
-        return sum((self.path / file).stat().st_size for file in self.files)
+        return Mod.__get_size(self.path)
+
+    @staticmethod
+    @cache
+    def __get_size(path: Path) -> int:
+        return sum((path / file).stat().st_size for file in Mod.__get_files(path))
 
     @cache
     def get_modpage_url(self, direct: bool = False) -> Optional[str]:

@@ -13,6 +13,7 @@ from core.game.game import Game
 from core.instance.instance import Instance
 from core.instance.metadata import Metadata
 from core.instance.mod import Mod
+from core.instance.tool import Tool
 from core.migrator.file_blacklist import FileBlacklist
 from core.mod_manager.modorganizer.mo2_instance_info import MO2InstanceInfo
 from core.mod_manager.modorganizer.modorganizer import ModOrganizer
@@ -86,7 +87,10 @@ class TestModOrganizer(BaseTest):
         assert metadata == expected_metadata
 
     def test_load_instance(
-        self, app_config: AppConfig, mo2_instance_info: MO2InstanceInfo
+        self,
+        app_config: AppConfig,
+        test_fs: FakeFilesystem,
+        mo2_instance_info: MO2InstanceInfo,
     ) -> None:
         """
         Tests `core.mod_manager.modorganizer.modorganizer.ModOrganizer.load_instance()`.
@@ -101,7 +105,8 @@ class TestModOrganizer(BaseTest):
         )
 
         # then
-        assert len(instance.mods) == 8
+        assert len(instance.mods) == 9
+        assert len(instance.tools) == 3
 
         # when
         obsidian_weathers: Mod = self.get_mod_by_name(
@@ -128,6 +133,23 @@ class TestModOrganizer(BaseTest):
             wet_and_cold_german.file_conflicts["scripts\\_wetskyuiconfig.pex"]
             == wet_and_cold
         )
+
+        # when
+        skse_loader: Tool = self.get_tool_by_name("SKSE", instance)
+        dip: Tool = self.get_tool_by_name("DIP", instance)
+        dip_mod: Mod = self.get_mod_by_name("Dynamic Interface Patcher - DIP", instance)
+
+        # then
+        assert skse_loader.executable == Path("skse64_loader.exe")
+        assert skse_loader.mod is None
+        assert skse_loader.commandline_args == []
+        assert skse_loader.is_in_game_dir
+        assert skse_loader.working_dir is None
+        assert dip.executable == Path("DIP\\DIP.exe")
+        assert dip.mod is dip_mod
+        assert dip.commandline_args == []
+        assert not dip.is_in_game_dir
+        assert dip.working_dir is None
 
     @staticmethod
     def process_conflicts_stub(mods: list[Mod], file_blacklist: list[str]) -> None:
@@ -183,6 +205,33 @@ class TestModOrganizer(BaseTest):
         assert mods[4].mod_conflicts == []
 
         assert mods[2].file_conflicts["test_file_2"] == mods[1]
+
+    def test_get_actual_files(self) -> None:
+        """
+        Tests `ModOrganizer.get_actual_files()`.
+        """
+
+        # given
+        mo2 = ModOrganizer()
+        mod1_files: list[Path] = [Path("Test_File_1"), Path("test_file_2")]
+        mod1: Mod = self.create_blank_mod("test_mod_1", mod1_files)
+        mod2_files: list[Path] = [
+            Path("Test_File_2.mohidden"),
+            Path("Test_File_3"),
+            Path("test_file_4.mohidden"),
+        ]
+        mod2: Mod = self.create_blank_mod("test_mod_2", mod2_files)
+        mod2.file_conflicts = {"test_file_2": mod1}
+
+        # when
+        mod1_file_redirects: dict[Path, Path] = mo2.get_actual_files(mod1)
+        mod2_file_redirects: dict[Path, Path] = mo2.get_actual_files(mod2)
+
+        # then
+        assert mod1_file_redirects == {}
+        assert mod2_file_redirects == {
+            Path("test_file_2.mohidden"): Path("test_file_2")
+        }
 
     def test_create_instance(self, test_fs: FakeFilesystem, qt_resources: None) -> None:
         """
@@ -357,3 +406,46 @@ class TestModOrganizer(BaseTest):
 
         # then
         assert migrated_separator_mod.mod_type == Mod.Type.Separator
+
+    PROCESS_INI_ARGS_DATA: list[tuple[str, list[str]]] = [
+        (
+            r"""-D:\"C:\\Games\\Nolvus Ascension\\STOCK GAME\\Data\" -c:\"C:\\Games\\Nolvus Ascension\\TOOLS\\SSE Edit\\Cache\\\"""",
+            [
+                '-D:"C:\\Games\\Nolvus Ascension\\STOCK GAME\\Data"',
+                '-c:"C:\\Games\\Nolvus Ascension\\TOOLS\\SSE Edit\\Cache\\"',
+            ],
+        ),
+        (
+            r"""-DontCache -D:\"C:\\Games\\Nolvus Ascension\\STOCK GAME\\Data\"""",
+            [
+                "-DontCache",
+                '-D:"C:\\Games\\Nolvus Ascension\\STOCK GAME\\Data"',
+            ],
+        ),
+        (
+            r"""\"C:\\Games\\Nolvus Ascension\\STOCK GAME\"""",
+            [
+                "C:\\Games\\Nolvus Ascension\\STOCK GAME",
+            ],
+        ),
+        (
+            r'"--game=\"Skyrim Special Edition\""',
+            [
+                '--game="Skyrim Special Edition"',
+            ],
+        ),
+    ]
+
+    @pytest.mark.parametrize("raw_args, expected_args", PROCESS_INI_ARGS_DATA)
+    def test_process_ini_arguments(
+        self, raw_args: str, expected_args: list[str]
+    ) -> None:
+        """
+        Tests `ModOrganizer.process_ini_arguments()`.
+        """
+
+        # when
+        actual_args: list[str] = ModOrganizer.process_ini_arguments(raw_args)
+
+        # then
+        assert actual_args == expected_args

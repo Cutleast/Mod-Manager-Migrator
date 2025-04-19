@@ -146,7 +146,7 @@ class Instance:
 
                 # Get smallest index of all overwriting mods
                 overwriting_mods = [
-                    new_loadorder.index(overwriting_mod)
+                    new_loadorder.index(self.get_installed_mod(overwriting_mod))
                     for overwriting_mod in mod.mod_conflicts
                 ]
                 index = min(overwriting_mods)

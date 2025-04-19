@@ -13,11 +13,11 @@ from core.config.app_config import AppConfig
 from core.game.game import Game
 from core.instance.instance import Instance
 from core.instance.mod import Mod
+from core.instance.tool import Tool
 from core.migrator.file_blacklist import FileBlacklist
 from core.mod_manager.vortex.exceptions import VortexNotFullySetupError
 from core.mod_manager.vortex.profile_info import ProfileInfo
 from core.mod_manager.vortex.vortex import Vortex
-from core.utilities.env_resolver import resolve
 from core.utilities.leveldb import LevelDB
 from tests.utils import Utils
 
@@ -45,11 +45,6 @@ class TestVortex(BaseTest):
         Tests `core.mod_manager.modorganizer.modorganizer.ModOrganizer.load_instance()`.
         """
 
-        test_fs.add_real_directory(
-            data_folder / "skyrimse",
-            target_path=resolve(Path("%APPDATA%")) / "Vortex" / "skyrimse",
-        )
-
         # given
         vortex = Vortex()
         vortex.db_path.mkdir(parents=True, exist_ok=True)
@@ -60,7 +55,8 @@ class TestVortex(BaseTest):
         )
 
         # then
-        assert len(instance.mods) == 7
+        assert len(instance.mods) == 8
+        assert len(instance.tools) == 3
 
         # test game folder
         assert instance.game_folder == Path("E:\\SteamLibrary\\Skyrim Special Edition")
@@ -96,6 +92,23 @@ class TestVortex(BaseTest):
             == wet_and_cold
         )
 
+        # when
+        skse_loader: Tool = self.get_tool_by_name("Skyrim Script Extender 64", instance)
+        dip: Tool = self.get_tool_by_name("DIP", instance)
+        dip_mod: Mod = self.get_mod_by_name("Dynamic Interface Patcher - DIP", instance)
+
+        # then
+        assert skse_loader.executable == Path("skse64_loader.exe")
+        assert skse_loader.mod is None
+        assert skse_loader.commandline_args == []
+        assert skse_loader.is_in_game_dir
+        assert skse_loader.working_dir is None
+        assert dip.executable == Path("DIP\\DIP.exe")
+        assert dip.mod is dip_mod
+        assert dip.commandline_args == []
+        assert not dip.is_in_game_dir
+        assert dip.working_dir is None
+
     def test_create_instance(
         self, test_fs: FakeFilesystem, ready_vortex_db: MockPlyvelDB, qt_resources: None
     ) -> None:
@@ -111,7 +124,7 @@ class TestVortex(BaseTest):
         profile_info = ProfileInfo(
             display_name="Test profile",
             game=Game.get_game_by_id("skyrimse"),
-            id="1a2b3c4d",
+            id="5e6f7g8h9j",
         )
         prefix: str = f"persistent###profiles###{profile_info.id}###"
         expected_profile_data: dict[str, Any] = {
@@ -170,7 +183,7 @@ class TestVortex(BaseTest):
         profile_info = ProfileInfo(
             display_name="Test profile",
             game=Game.get_game_by_id("skyrimse"),
-            id=ProfileInfo.generate_id(),
+            id=Vortex.generate_id(),
         )
 
         # then
@@ -236,9 +249,9 @@ class TestVortex(BaseTest):
         database: LevelDB = Utils.get_private_field(vortex, *TestVortex.DATABASE)
         database.path.mkdir(parents=True, exist_ok=True)
         profile_info = ProfileInfo(
-            display_name="Test profile (1a2b3c4d)",
+            display_name="Test profile (5e6f7g8h9j)",
             game=Game.get_game_by_id("skyrimse"),
-            id="1a2b3c4d",
+            id="5e6f7g8h9j",
         )
         dst_profile: Instance = vortex.load_instance(
             profile_info, app_config.modname_limit, FileBlacklist.get_files()

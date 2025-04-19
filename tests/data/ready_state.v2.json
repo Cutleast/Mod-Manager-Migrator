@@ -145,6 +145,9 @@
             "cleanupOnDeploy": false,
             "confirmPurge": true,
             "installPathMode": "userData",
+            "installPath": {
+                "skyrimse": "E:\\Modding\\Vortex\\{game}"
+            },
             "installerSandbox": true,
             "showDropzone": true,
             "suggestInstallPathDirectory": "Vortex Mods"

@@ -10,6 +10,7 @@ from PySide6.QtWidgets import QGridLayout, QLabel, QLineEdit
 from core.game.game import Game
 from core.mod_manager.instance_info import InstanceInfo
 from core.mod_manager.vortex.profile_info import ProfileInfo
+from core.mod_manager.vortex.vortex import Vortex
 
 from .instance import InstanceWidget
 
@@ -51,7 +52,7 @@ class VortexWidget(InstanceWidget):
         profile = ProfileInfo(
             display_name=self.__profile_name_entry.text(),
             game=game,
-            id=ProfileInfo.generate_id(),
+            id=Vortex.generate_id(),
         )
 
         return profile

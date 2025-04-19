@@ -3,8 +3,11 @@ Copyright (c) Cutleast
 """
 
 import datetime
+import random
 import shutil
+import string
 import time
+from copy import copy
 from pathlib import Path
 from typing import Any, Optional, override
 
@@ -130,7 +133,7 @@ class Vortex(ModManager[ProfileInfo]):
             instance_data, modname_limit, game_folder, file_blacklist, ldialog
         )
         tools: list[Tool] = self._load_tools(
-            instance_data, game_folder, file_blacklist, ldialog
+            instance_data, mods, game_folder, file_blacklist, ldialog
         )
         instance = Instance(
             display_name=instance_name, game_folder=game_folder, mods=mods, tools=tools
@@ -387,11 +390,69 @@ class Vortex(ModManager[ProfileInfo]):
     def _load_tools(
         self,
         instance_data: ProfileInfo,
+        mods: list[Mod],
         game_folder: Path,
         file_blacklist: list[str] = [],
         ldialog: Optional[LoadingDialog] = None,
     ) -> list[Tool]:
-        return []  # TODO: Implement this
+        self.log.debug("Loading tools from Vortex...")
+        if ldialog is not None:
+            ldialog.updateProgress(self.tr("Loading tools from Vortex..."))
+
+        mods_by_folders: dict[Path, Mod] = {m.path: m for m in mods}
+        game_id: str = instance_data.game.id.lower()
+        tools_data: dict[str, Any] = (
+            self.__level_db.load(
+                f"settings###gameMode###discovered###{game_id}###tools"
+            )
+            .get("settings", {})
+            .get("gameMode", {})
+            .get("discovered", {})
+            .get(game_id, {})
+            .get("tools", {})
+        )
+
+        tools: list[Tool] = []
+        for tool_id, tool_data in tools_data.items():
+            try:
+                name: str = tool_data["name"]
+                raw_exe_path: str = tool_data["path"]
+                raw_working_dir: Optional[str] = tool_data.get("workingDir") or None
+                args: list[str] = tool_data.get("parameters") or []
+            except Exception as ex:
+                self.log.error(
+                    f"Failed to load tool with id {tool_id!r}: {ex}", exc_info=ex
+                )
+                continue
+
+            exe_path = Path(raw_exe_path)
+            working_dir: Optional[Path] = (
+                Path(raw_working_dir) if raw_working_dir is not None else None
+            )
+            if working_dir == game_folder:
+                working_dir = None
+
+            mod: Optional[Mod] = Vortex._get_mod_for_path(exe_path, mods_by_folders)
+            is_in_game_dir: bool = False
+            if mod is not None:
+                exe_path = exe_path.relative_to(mod.path)
+            elif exe_path.is_relative_to(game_folder):
+                exe_path = exe_path.relative_to(game_folder)
+                is_in_game_dir = True
+
+            tool = Tool(
+                display_name=name,
+                mod=mod,
+                executable=exe_path,
+                commandline_args=args,
+                working_dir=working_dir,
+                is_in_game_dir=is_in_game_dir,
+            )
+            tools.append(tool)
+
+        self.log.info(f"Loaded {len(tools)} tools from Vortex.")
+
+        return tools
 
     @override
     def create_instance(
@@ -438,7 +499,7 @@ class Vortex(ModManager[ProfileInfo]):
             display_name=instance_data.display_name,
             game_folder=game_folder,
             mods=[],
-            tools=[],
+            tools=self._load_tools(instance_data, [], game_folder, ldialog=ldialog),
         )
 
     @override
@@ -460,6 +521,7 @@ class Vortex(ModManager[ProfileInfo]):
             return
 
         game_id: str = instance_data.game.id.lower()
+        staging_folder: Path = self.__get_staging_folder(instance_data.game)
         mods_data: dict[str, Any] = (
             self.__level_db.load(f"persistent###mods###{game_id}###")
             .setdefault("persistence", {})
@@ -468,6 +530,8 @@ class Vortex(ModManager[ProfileInfo]):
         )
 
         file_name: str = self.__get_unique_file_name(mod).rsplit(".", 1)[0]
+        mod_folder: Path = staging_folder / file_name
+
         if file_name not in mods_data:
             logical_file_name: str = Vortex.get_logical_file_name(
                 self.__get_unique_file_name(mod), mod.metadata.mod_id or 0
@@ -494,11 +558,9 @@ class Vortex(ModManager[ProfileInfo]):
             }
             mods_data[file_name] = moddata
 
-            staging_folder: Path = self.__get_staging_folder(instance_data.game)
-
             self._migrate_mod_files(
                 mod,
-                staging_folder / file_name,
+                mod_folder,
                 file_redirects,
                 use_hardlinks,
                 replace,
@@ -559,7 +621,9 @@ class Vortex(ModManager[ProfileInfo]):
         self.__level_db.dump(profiles_data, prefix="persistent###profiles###")
 
         if not instance.is_mod_installed(mod):
-            instance.mods.append(mod)
+            new_mod: Mod = Mod.copy(mod)
+            new_mod.path = mod_folder
+            instance.mods.append(new_mod)
 
     def __get_staging_folder(self, game: Game) -> Path:
         appdata_path: Path = resolve(Path("%APPDATA%") / "Vortex")
@@ -597,6 +661,39 @@ class Vortex(ModManager[ProfileInfo]):
         ldialog: Optional[LoadingDialog] = None,
     ) -> None:
         self.log.info(f"Adding tool {tool.display_name!r}...")
+
+        if tool in instance.tools:
+            self.log.info(f"Tool {tool.display_name!r} already exists.")
+            return
+
+        game_id: str = instance_data.game.id.lower()
+        tool_id: str = Vortex.generate_id(length=11)
+        new_tool: Tool = copy(tool)
+        if new_tool.mod is not None:
+            # Map tool to the installed mod
+            new_tool.mod = instance.get_installed_mod(new_tool.mod)
+        tool_data: dict[str, Any] = {
+            "custom": True,
+            "defaultPrimary": False,
+            "detach": True,
+            "exclusive": False,
+            "executable": None,
+            "id": tool_id,
+            "logo": f"{tool_id}.png",
+            "name": new_tool.display_name,
+            "parameters": [],
+            "path": str(new_tool.get_full_executable_path(instance.game_folder)),
+            "requiredFiles": [],
+            "shell": False,
+            "timestamp": int(time.time()),
+            "workingDirectory": str(new_tool.working_dir or ""),
+        }
+
+        tool_prefix: str = (
+            f"settings###gameMode###discovered###{game_id}###tools###{tool_id}###"
+        )
+        self.__level_db.dump(tool_data, prefix=tool_prefix)
+        instance.tools.append(new_tool)
 
     @override
     def get_instance_ini_dir(self, instance_data: ProfileInfo) -> Path:
@@ -832,3 +929,19 @@ class Vortex(ModManager[ProfileInfo]):
         """
 
         return int(str(round(timestamp, 3)).replace(".", ""))
+
+    @staticmethod
+    def generate_id(length: int = 9) -> str:
+        """
+        Generates a unique id for a new profile or tool.
+
+        Args:
+            length (int): The length of the generated profile/tool id
+
+        Returns:
+            str: The generated profile/tool id
+        """
+
+        return "".join(
+            [random.choice(string.ascii_letters + string.digits) for _ in range(length)]
+        )

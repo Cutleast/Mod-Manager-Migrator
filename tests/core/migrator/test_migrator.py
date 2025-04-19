@@ -9,6 +9,7 @@ from pyfakefs.fake_filesystem import FakeFilesystem
 from core.config.app_config import AppConfig
 from core.instance.instance import Instance
 from core.instance.mod import Mod
+from core.instance.tool import Tool
 from core.migrator.migration_report import MigrationReport
 from core.migrator.migrator import FileBlacklist, Migrator
 from core.mod_manager.mod_manager import ModManager
@@ -65,6 +66,7 @@ class TestMigrator(BaseTest):
             replace=True,
             modname_limit=app_config.modname_limit,
             activate_new_instance=app_config.activate_new_instance,
+            included_tools=instance.tools,
         )
 
         # then
@@ -77,7 +79,7 @@ class TestMigrator(BaseTest):
 
         # then
         self.assert_modlists_equal(migrated_instance.mods, instance.mods)
-        assert len(migrated_instance.tools) == len(instance.tools)
+        self.assert_tools_equal(migrated_instance.tools, instance.tools)
         assert migrated_instance.game_folder == instance.game_folder
 
     def test_migration_mo2_to_vortex(
@@ -118,6 +120,7 @@ class TestMigrator(BaseTest):
             replace=True,
             modname_limit=app_config.modname_limit,
             activate_new_instance=True,
+            included_tools=instance.tools,
         )
 
         # then
@@ -149,7 +152,7 @@ class TestMigrator(BaseTest):
             self.__get_file_redirects(instance.mods, mo2),
             exclude_separators=True,  # Vortex doesn't support separators and ignores them when migrating
         )
-        assert len(migrated_instance.tools) == len(instance.tools)
+        self.assert_tools_equal(migrated_instance.tools, instance.tools)
         assert migrated_instance.game_folder == instance.game_folder
 
     def test_migration_to_vortex_without_activating_profile(
@@ -191,6 +194,7 @@ class TestMigrator(BaseTest):
             replace=True,
             modname_limit=app_config.modname_limit,
             activate_new_instance=False,
+            included_tools=instance.tools,
         )
 
         # then
@@ -217,11 +221,6 @@ class TestMigrator(BaseTest):
         """
         Tests `core.migrator.migrator.Migrator.migrate()` from Vortex to MO2.
         """
-
-        test_fs.add_real_directory(
-            data_folder / "skyrimse",
-            target_path=resolve(Path("%APPDATA%")) / "Vortex" / "skyrimse",
-        )
 
         # given
         vortex = Vortex()
@@ -254,6 +253,7 @@ class TestMigrator(BaseTest):
             replace=True,
             modname_limit=app_config.modname_limit,
             activate_new_instance=app_config.activate_new_instance,
+            included_tools=src_instance.tools,
         )
 
         # then
@@ -271,7 +271,7 @@ class TestMigrator(BaseTest):
             self.__get_file_redirects(migrated_instance.mods, mo2),
             self.__get_file_redirects(src_instance.mods, vortex),
         )
-        assert len(migrated_instance.tools) == len(src_instance.tools)
+        self.assert_tools_equal(migrated_instance.tools, src_instance.tools)
         assert migrated_instance.game_folder == src_instance.game_folder
 
     def test_migration_vortex_to_vortex(
@@ -285,12 +285,6 @@ class TestMigrator(BaseTest):
         """
         Tests `core.migrator.migrator.Migrator.migrate()` from Vortex to Vortex.
         """
-
-        test_fs.add_real_directory(
-            data_folder / "skyrimse",
-            read_only=False,
-            target_path=resolve(Path("%APPDATA%")) / "Vortex" / "skyrimse",
-        )
 
         # given
         vortex = Vortex()
@@ -317,6 +311,7 @@ class TestMigrator(BaseTest):
             replace=True,
             modname_limit=app_config.modname_limit,
             activate_new_instance=True,
+            included_tools=src_instance.tools,
         )
 
         # then
@@ -342,7 +337,7 @@ class TestMigrator(BaseTest):
 
         # then
         self.assert_modlists_equal(migrated_instance.loadorder, src_instance.loadorder)
-        assert len(migrated_instance.tools) == len(src_instance.tools)
+        self.assert_tools_equal(migrated_instance.tools, src_instance.tools)
 
     def assert_modlists_equal(
         self,
@@ -420,6 +415,33 @@ class TestMigrator(BaseTest):
                         )
                     ),
                 )
+
+    def assert_tools_equal(self, tools1: list[Tool], tools2: list[Tool]) -> None:
+        """
+        Asserts that two lists of tools are equal.
+        Compares name, (relative) path, arguments and mod mappings.
+
+        Args:
+            tools1 (list[Tool]): First list of tools
+            tools2 (list[Tool]): Second list of tools
+        """
+
+        toolnames1: list[str] = [tool.display_name for tool in tools1]
+        toolnames2: list[str] = [tool.display_name for tool in tools2]
+
+        assert toolnames1 == toolnames2
+
+        for tool1, tool2 in zip(tools1, tools2):
+            assert tool1.executable == tool2.executable
+            assert tool1.commandline_args == tool2.commandline_args
+            assert tool1.is_in_game_dir == tool2.is_in_game_dir
+            assert tool1.working_dir == tool2.working_dir
+
+            if tool1.mod is not None and tool2.mod is not None:
+                assert tool1.mod is not tool2.mod
+                assert tool1.mod.metadata == tool2.mod.metadata
+            else:
+                assert tool1.mod == tool2.mod
 
     def __get_file_redirects(
         self, mods: list[Mod], src_mod_manager: ModManager

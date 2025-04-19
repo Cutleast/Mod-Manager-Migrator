@@ -6,7 +6,7 @@ import json
 import shutil
 import tempfile
 from pathlib import Path
-from typing import Generator
+from typing import Generator, Optional, override
 from unittest.mock import MagicMock
 
 import pytest
@@ -18,10 +18,12 @@ from core.game.game import Game
 from core.instance.instance import Instance
 from core.instance.metadata import Metadata
 from core.instance.mod import Mod
+from core.instance.tool import Tool
 from core.migrator.file_blacklist import FileBlacklist
 from core.mod_manager.modorganizer.mo2_instance_info import MO2InstanceInfo
 from core.mod_manager.modorganizer.modorganizer import ModOrganizer
 from core.mod_manager.vortex.profile_info import ProfileInfo
+from core.utilities.env_resolver import resolve
 from core.utilities.leveldb import LevelDB
 
 from ._setup.mock_plyvel import MockPlyvelDB
@@ -79,12 +81,26 @@ class BaseTest:
         """
 
         fs.add_real_directory(data_folder)
+        fs.add_real_directory(
+            data_folder / "mod_instance",
+            read_only=False,
+            target_path="C:\\Modding\\Test Instance",
+        )
+        fs.add_real_directory(
+            data_folder / "skyrimse",
+            read_only=False,
+            target_path=resolve(Path("%APPDATA%")) / "Vortex" / "skyrimse",
+        )
+        fs.add_real_directory(
+            data_folder / "skyrimse_mods",
+            read_only=False,
+            target_path="E:\\Modding\\Vortex\\skyrimse",
+        )
+
         return fs
 
     @pytest.fixture
-    def mo2_instance_info(
-        self, data_folder: Path, qt_resources: None
-    ) -> MO2InstanceInfo:
+    def mo2_instance_info(self, qt_resources: None) -> MO2InstanceInfo:
         """
         Returns the MO2 instance info of the test mod instance.
 
@@ -92,14 +108,16 @@ class BaseTest:
             MO2InstanceInfo: The instance info of the test mod instance.
         """
 
+        base_dir_path = Path("C:\\Modding\\Test Instance")
+
         return MO2InstanceInfo(
             display_name="Test Instance",
             game=Game.get_game_by_id("skyrimse"),
             profile="Default",
             is_global=False,
-            base_folder=data_folder / "mod_instance",
-            mods_folder=data_folder / "mod_instance" / "mods",
-            profiles_folder=data_folder / "mod_instance" / "profiles",
+            base_folder=base_dir_path,
+            mods_folder=base_dir_path / "mods",
+            profiles_folder=base_dir_path / "profiles",
         )
 
     @pytest.fixture
@@ -122,6 +140,7 @@ class BaseTest:
         self,
         mo2_instance_info: MO2InstanceInfo,
         app_config: AppConfig,
+        test_fs: FakeFilesystem,
         qt_resources: None,
     ) -> Instance:
         """
@@ -201,6 +220,30 @@ class BaseTest:
             raise ValueError(f"No mod with name {mod_name} found in mod instance.")
 
         return mod
+
+    def get_tool_by_name(self, tool_name: str, mod_instance: Instance) -> Tool:
+        """
+        Gets a tool by its name from the specified mod instance.
+
+        Args:
+            tool_name (str): The name of the tool
+            mod_instance (Instance): The mod instance
+
+        Raises:
+            ValueError: When no tool with the specified name is found
+
+        Returns:
+            Tool: The tool
+        """
+
+        try:
+            tool: Tool = next(
+                (tool for tool in mod_instance.tools if tool.display_name == tool_name)
+            )
+        except StopIteration:
+            raise ValueError(f"No tool with name {tool_name} found in mod instance.")
+
+        return tool
 
     @pytest.fixture
     def ready_vortex_db(
@@ -327,18 +370,30 @@ class BaseTest:
             yield dst
 
     @staticmethod
-    def create_blank_mod(mod_name: str) -> Mod:
+    def create_blank_mod(mod_name: str, files: Optional[list[Path]] = None) -> Mod:
         """
         Creates a blank mod with the specified name for usage in tests.
 
         Args:
             mod_name (str): The name of the mod
+            files (Optional[list[Path]], optional):
+                The files of the mod. Defaults to None.
 
         Returns:
             Mod: The blank mod
         """
 
-        return Mod(
+        class MockMod(Mod):
+            """
+            Mod subclass for mocking the files property.
+            """
+
+            @property
+            @override
+            def files(self) -> list[Path]:
+                return files or []
+
+        return MockMod(
             display_name=mod_name,
             path=Path(),
             deploy_path=None,

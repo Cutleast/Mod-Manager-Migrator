@@ -4,6 +4,7 @@ Copyright (c) Cutleast
 
 import os
 import re
+from copy import copy
 from pathlib import Path
 from typing import Any, Optional, override
 
@@ -47,6 +48,9 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
     DOWNLOAD_URL: str = "https://github.com/ModOrganizer2/modorganizer/releases/download/v2.5.2/Mod.Organizer-2.5.2.7z"
 
     BYTE_ARRAY_PATTERN: re.Pattern[str] = re.compile(r"^@ByteArray\((.*)\)$")
+    INI_ARG_PATTERN: re.Pattern[str] = re.compile(r'(?:[^ "]+|"[^"]+")+')
+    INI_ARG_QUOTED_PATTERN: re.Pattern[str] = re.compile(r'^"?(([^"]|\\")+)"?$')
+    INI_QUOTE_PATTERN: re.Pattern[str] = re.compile(r'^"([^"]+)"$')
 
     appdata_path = resolve(Path("%LOCALAPPDATA%") / "ModOrganizer")
 
@@ -126,7 +130,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
             )
 
         mods: list[Mod] = self._load_mods(
-            instance_data, modname_limit, file_blacklist, ldialog
+            instance_data, modname_limit, game_folder, file_blacklist, ldialog
         )
 
         if ldialog is not None:
@@ -136,7 +140,9 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
                 ),
             )
 
-        tools: list[Tool] = self._load_tools(instance_data, file_blacklist, ldialog)
+        tools: list[Tool] = self._load_tools(
+            instance_data, mods, game_folder, file_blacklist, ldialog
+        )
 
         instance = Instance(
             display_name=f"{instance_name} > {profile_name}",
@@ -158,6 +164,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         self,
         instance_data: MO2InstanceInfo,
         modname_limit: int,
+        game_folder: Path,
         file_blacklist: list[str] = [],
         ldialog: Optional[LoadingDialog] = None,
     ) -> list[Mod]:
@@ -381,10 +388,101 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
     def _load_tools(
         self,
         instance_data: MO2InstanceInfo,
+        mods: list[Mod],
+        game_folder: Path,
         file_blacklist: list[str] = [],
         ldialog: Optional[LoadingDialog] = None,
     ) -> list[Tool]:
-        return []  # TODO: Implement this
+        instance_name: str = instance_data.display_name
+        profile_name: str = instance_data.profile
+        mods_by_folders: dict[Path, Mod] = {m.path: m for m in mods}
+
+        self.log.info(f"Loading tools from {instance_name} > {profile_name}...")
+        if ldialog is not None:
+            ldialog.updateProgress(
+                text1=self.tr("Loading tools from {0} > {1}...").format(
+                    instance_name, profile_name
+                ),
+            )
+
+        mo2_ini_path: Path = instance_data.base_folder / "ModOrganizer.ini"
+        mo2_ini_data: dict[str, dict[str, Any]] = INIFile(mo2_ini_path).load_file()
+        custom_executables: dict[str, Any] = mo2_ini_data.get("customExecutables", {})
+        custom_executables_size = int(custom_executables.get("size", 0))
+        tools: list[Tool] = []
+
+        for i in range(1, custom_executables_size + 1):
+            try:
+                raw_exe_path: str = custom_executables[f"{i}\\binary"]
+                raw_args: str = custom_executables[f"{i}\\arguments"] or ""
+                name: str = custom_executables[f"{i}\\title"]
+                raw_working_dir: Optional[str] = custom_executables[
+                    f"{i}\\workingDirectory"
+                ]
+            except Exception as ex:
+                self.log.error(f"Failed to load tool with index {i}: {ex}", exc_info=ex)
+                continue
+
+            exe_path = Path(raw_exe_path)
+            working_dir: Optional[Path] = (
+                Path(raw_working_dir) if raw_working_dir is not None else None
+            )
+            if working_dir == game_folder:
+                working_dir = None
+
+            mod: Optional[Mod] = ModOrganizer._get_mod_for_path(
+                exe_path, mods_by_folders
+            )
+            is_in_game_dir: bool = False
+            if mod is not None:
+                exe_path = exe_path.relative_to(mod.path)
+            elif exe_path.is_relative_to(game_folder):
+                exe_path = exe_path.relative_to(game_folder)
+                is_in_game_dir = True
+
+            tool = Tool(
+                display_name=name,
+                mod=mod,
+                executable=exe_path,
+                commandline_args=ModOrganizer.process_ini_arguments(raw_args),
+                working_dir=working_dir,
+                is_in_game_dir=is_in_game_dir,
+            )
+            tools.append(tool)
+
+        self.log.info(
+            f"Loaded {len(tools)} tool(s) from {instance_name} > {profile_name}."
+        )
+
+        return tools
+
+    @staticmethod
+    def process_ini_arguments(raw_args: str) -> list[str]:
+        """
+        Processes a raw string of commandline arguments for an executable by splitting
+        it into a list of separate arguments.
+
+        Examples:
+            `-D:\\"C:\\\\Games\\\\Nolvus Ascension\\\\STOCK GAME\\\\Data\\" -c:\\"C:\\\\Games\\\\Nolvus Ascension\\\\TOOLS\\\\SSE Edit\\\\Cache\\\\\\"`
+
+            => `[r'-D:"C:\\Games\\Nolvus Ascension\\STOCK GAME\\Data"', r'-c:"C:\\Games\\Nolvus Ascension\\TOOLS\\SSE Edit\\Cache\\"']`
+
+        Args:
+            raw_args (str): Raw string of commandline arguments.
+
+        Returns:
+            list[str]: List of commandline arguments.
+        """
+
+        if raw_args.startswith('"') and raw_args.endswith('"'):
+            raw_args = ModOrganizer.INI_ARG_QUOTED_PATTERN.sub(r"\1", raw_args)
+        raw_args = raw_args.replace('\\"', '"').replace("\\\\", "\\")
+
+        raw_matches: list[str] = ModOrganizer.INI_ARG_PATTERN.findall(raw_args)
+        args: list[str] = [
+            ModOrganizer.INI_QUOTE_PATTERN.sub(r"\1", arg) for arg in raw_matches
+        ]
+        return args
 
     @override
     @staticmethod
@@ -393,7 +491,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
             Path(file): Path(file).with_suffix(file.suffix.removesuffix(".mohidden"))
             for file in mod.files
             if file.suffix.endswith(".mohidden")
-            and str(file).lower() in mod.file_conflicts
+            and str(file).lower().removesuffix(".mohidden") in mod.file_conflicts
         }
 
     @override
@@ -607,7 +705,9 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
             existing_mod.file_conflicts.update(mod.file_conflicts)
 
         elif regular:
-            instance.mods.append(mod)
+            new_mod: Mod = Mod.copy(mod)
+            new_mod.path = mod_folder
+            instance.mods.append(new_mod)
 
     @override
     def add_tool(
@@ -620,8 +720,73 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         blacklist: list[str] = [],
         ldialog: Optional[LoadingDialog] = None,
     ) -> None:
-        # TODO: Implement this
-        ...
+        if tool in instance.tools:
+            return
+
+        self.log.info(f"Adding tool {tool.display_name!r}...")
+
+        mo2_ini_path: Path = instance_data.base_folder / "ModOrganizer.ini"
+        mo2_ini_file = INIFile(mo2_ini_path)
+        custom_executables: dict[str, Any] = mo2_ini_file.data.setdefault(
+            "customExecutables", {"size": 0}
+        )
+        new_index = int(custom_executables["size"]) + 1
+
+        new_tool: Tool = copy(tool)
+        if new_tool.mod is not None:
+            # Map tool to the installed mod
+            new_tool.mod = instance.get_installed_mod(new_tool.mod)
+
+        custom_executables.update(
+            ModOrganizer._tool_to_ini_data(new_tool, new_index, instance.game_folder)
+        )
+        custom_executables["size"] = new_index
+
+        mo2_ini_file.save_file()
+
+    @staticmethod
+    def _tool_to_ini_data(tool: Tool, index: int, game_folder: Path) -> dict[str, Any]:
+        """
+        Creates a INI data section for the specified tool to be written to an
+        instance's ModOrganizer.ini file.
+
+        Args:
+            tool (Tool): Tool to add to the instance
+            index (int): New index for the tool
+            game_folder (Path): Path to the game folder
+
+        Returns:
+            dict[str, Any]: INI data
+        """
+
+        return {
+            f"{index}\\arguments": ModOrganizer.prepare_ini_arguments(
+                tool.commandline_args
+            ),
+            f"{index}\\binary": str(tool.get_full_executable_path(game_folder)).replace(
+                "\\", "/"
+            ),
+            f"{index}\\hide": False,
+            f"{index}\\ownicon": False,
+            f"{index}\\steamAppID": None,
+            f"{index}\\title": tool.display_name,
+            f"{index}\\toolbar": False,
+            f"{index}\\workingDirectory": str(tool.working_dir or ""),
+        }
+
+    @staticmethod
+    def prepare_ini_arguments(args: list[str]) -> str:
+        """
+        Prepares a list of arguments for writing to a ModOrganizer.ini file.
+
+        Args:
+            args (list[str]): List of arguments
+
+        Returns:
+            str: Concatenated and escaped list of arguments
+        """
+
+        return repr(" ".join(args))[1:-1]
 
     @override
     def get_instance_ini_dir(self, instance_data: MO2InstanceInfo) -> Path:

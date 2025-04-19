@@ -9,6 +9,7 @@ from typing import Optional
 from PySide6.QtCore import QObject
 
 from core.instance.instance import Instance
+from core.instance.tool import Tool
 from core.mod_manager.exceptions import InstanceNotFoundError
 from core.mod_manager.instance_info import InstanceInfo
 from core.mod_manager.mod_manager import ModManager
@@ -37,6 +38,7 @@ class Migrator(QObject):
         replace: bool,
         modname_limit: int,
         activate_new_instance: bool,
+        included_tools: list[Tool],
         ldialog: Optional[LoadingDialog] = None,
     ) -> MigrationReport:
         """
@@ -52,6 +54,7 @@ class Migrator(QObject):
             replace (bool): Whether to replace existing files.
             modname_limit (int): A character limit for mod names.
             activate_new_instance (bool): Whether to activate the new instance.
+            included_tools (list[Tool]): A list of tools to migrate.
             ldialog (Optional[LoadingDialog], optional):
                 Optional loading dialog. Defaults to None.
 
@@ -143,13 +146,13 @@ class Migrator(QObject):
                 )
                 report.failed_mods[mod] = ex
 
-        for t, tool in enumerate(src_instance.tools):
+        for t, tool in enumerate(included_tools):
             if ldialog is not None:
                 ldialog.updateProgress(
                     text1=self.tr("Migrating tools...")
-                    + f" ({t}/{len(src_instance.tools)})",
+                    + f" ({t}/{len(included_tools)})",
                     value1=t,
-                    max1=len(src_instance.tools),
+                    max1=len(included_tools),
                     show2=True,
                     text2=tool.display_name,
                 )

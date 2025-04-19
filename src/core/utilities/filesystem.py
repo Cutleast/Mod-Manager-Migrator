@@ -5,6 +5,7 @@ Copyright (c) Cutleast
 import ctypes
 import ctypes.wintypes
 import logging
+import os
 from os import makedirs
 from pathlib import Path
 from shutil import copyfile, disk_usage
@@ -134,3 +135,19 @@ def clean_fs_string(text: str) -> str:
     output = output.strip().rstrip(".")
 
     return output
+
+
+def open_in_explorer(path: Path) -> None:
+    """
+    Opens the specified path in the Windows Explorer.
+    Opens the parent folder and selects the item if the specified path
+    is a file otherwise it just opens the folder.
+
+    Args:
+        path (Path): The path to open.
+    """
+
+    if path.is_dir():
+        os.startfile(path)
+    else:
+        os.system(f'explorer.exe /select,"{path}"')

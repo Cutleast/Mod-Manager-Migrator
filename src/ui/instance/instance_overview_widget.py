@@ -23,7 +23,7 @@ from ui.widgets.smooth_scroll_area import SmoothScrollArea
 
 from ..instance_creator.instance_creator import InstanceCreator
 from ..instance_selector.instance_selector import InstanceSelector
-from .modlist_widget import ModlistWidget
+from .instance_widget import InstanceWidget
 
 
 class InstanceOverviewWidget(QSplitter):
@@ -34,7 +34,7 @@ class InstanceOverviewWidget(QSplitter):
     __sidebar_widget: SmoothScrollArea
     __instance_selector: InstanceSelector
     __instance_creator: InstanceCreator
-    __modlist_widget: ModlistWidget
+    __instance_widget: InstanceWidget
 
     def __init__(self) -> None:
         super().__init__()
@@ -89,9 +89,9 @@ class InstanceOverviewWidget(QSplitter):
         self.__sidebar_widget.setMinimumWidth(500)
 
     def __init_modlist(self) -> None:
-        self.__modlist_widget = ModlistWidget()
+        self.__instance_widget = InstanceWidget()
         self.setCollapsible(1, True)
-        self.addWidget(self.__modlist_widget)
+        self.addWidget(self.__instance_widget)
 
     def display_modinstance(self, instance: Instance) -> None:
         """
@@ -101,7 +101,7 @@ class InstanceOverviewWidget(QSplitter):
             instance (Instance): The instance to display.
         """
 
-        self.__modlist_widget.display_modinstance(instance)
+        self.__instance_widget.display_modinstance(instance)
         self.__instance_creator.setEnabled(True)
 
     def migrate(self) -> None:
@@ -135,7 +135,7 @@ class InstanceOverviewWidget(QSplitter):
             raise ValueError("No source instance selected!")
 
         InstanceOverviewWidget._apply_checked_mods(
-            src_instance, self.__modlist_widget.checked_mods
+            src_instance, self.__instance_widget.checked_mods
         )
 
         app_config: AppConfig = AppContext.get_app().app_config
@@ -151,6 +151,7 @@ class InstanceOverviewWidget(QSplitter):
                 replace=app_config.replace_when_merge,
                 modname_limit=app_config.modname_limit,
                 activate_new_instance=app_config.activate_new_instance,
+                included_tools=self.__instance_widget.checked_tools,
                 ldialog=ldialog,
             ),
             parent=AppContext.get_app().main_window,
