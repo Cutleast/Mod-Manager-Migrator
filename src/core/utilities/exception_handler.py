@@ -74,7 +74,7 @@ class ExceptionHandler(QObject):
 
         error_message: str
         if isinstance(exc_value, ExceptionBase):
-            error_message = exc_value.getLocalizedMessage()
+            error_message = str(exc_value)
         else:
             error_message = self.tr("An unexpected error occured: ") + str(exc_value)
         detailed_msg = traceback
