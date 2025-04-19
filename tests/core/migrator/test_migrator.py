@@ -4,6 +4,7 @@ Copyright (c) Cutleast
 
 from pathlib import Path
 
+import pytest
 from pyfakefs.fake_filesystem import FakeFilesystem
 
 from core.config.app_config import AppConfig
@@ -18,6 +19,9 @@ from core.mod_manager.modorganizer.modorganizer import ModOrganizer
 from core.mod_manager.vortex.profile_info import ProfileInfo
 from core.mod_manager.vortex.vortex import Vortex
 from core.utilities.env_resolver import resolve
+from core.utilities.exceptions import NotEnoughSpaceError
+from core.utilities.filesystem import get_free_disk_space
+from core.utilities.scale import scale_value
 from tests.utils import Utils
 
 from .._setup.mock_plyvel import MockPlyvelDB
@@ -338,6 +342,100 @@ class TestMigrator(BaseTest):
         # then
         self.assert_modlists_equal(migrated_instance.loadorder, src_instance.loadorder)
         self.assert_tools_equal(migrated_instance.tools, src_instance.tools)
+
+    def test_not_enough_space_error(
+        self,
+        app_config: AppConfig,
+        test_fs: FakeFilesystem,
+        mo2_instance_info: MO2InstanceInfo,
+        instance: Instance,
+    ) -> None:
+        """
+        Tests that `Migrator.migrate()` raises the NotEnoughSpaceError exception correctly.
+        """
+
+        # given
+        mo2 = ModOrganizer()
+        migrator = Migrator()
+        dst_path = Path("F:\\Modding\\Test Instance")
+        dst_info = MO2InstanceInfo(
+            display_name="Test Instance",
+            game=mo2_instance_info.game,
+            profile="Default",
+            is_global=False,
+            base_folder=dst_path,
+            mods_folder=dst_path / "mods",
+            profiles_folder=dst_path / "profiles",
+            install_mo2=False,  # This is important for now as the download is not mocked, yet
+        )
+        test_fs.set_disk_usage(instance.size // 2, dst_path.drive)
+
+        # when / then
+        with pytest.raises(NotEnoughSpaceError) as ex:
+            migrator.migrate(
+                src_instance=instance,
+                src_info=mo2_instance_info,
+                dst_info=dst_info,
+                src_mod_manager=mo2,
+                dst_mod_manager=mo2,
+                use_hardlinks=True,
+                replace=True,
+                modname_limit=app_config.modname_limit,
+                activate_new_instance=True,
+                included_tools=instance.tools,
+            )
+        assert dst_path.drive in str(ex.value)
+        assert scale_value(instance.size) in str(ex.value)
+        assert scale_value(get_free_disk_space(dst_path.drive)) in str(ex.value)
+
+        # given
+        dst_path = Path("C:\\Modding\\Migrated Test Instance")
+        dst_info = MO2InstanceInfo(
+            display_name="Migrated Test Instance",
+            game=mo2_instance_info.game,
+            profile="Default",
+            is_global=False,
+            base_folder=dst_path,
+            mods_folder=dst_path / "mods",
+            profiles_folder=dst_path / "profiles",
+            install_mo2=False,  # This is important for now as the download is not mocked, yet
+        )
+        test_fs.set_disk_usage(int(instance.size * 1.5), dst_path.drive)
+
+        # when / then
+        with pytest.raises(NotEnoughSpaceError) as ex:
+            migrator.migrate(
+                src_instance=instance,
+                src_info=mo2_instance_info,
+                dst_info=dst_info,
+                src_mod_manager=mo2,
+                dst_mod_manager=mo2,
+                use_hardlinks=False,
+                replace=True,
+                modname_limit=app_config.modname_limit,
+                activate_new_instance=True,
+                included_tools=instance.tools,
+            )
+        assert dst_path.drive in str(ex.value)
+        assert scale_value(instance.size) in str(ex.value)
+        assert scale_value(get_free_disk_space(dst_path.drive)) in str(ex.value)
+
+        # when
+        report: MigrationReport = migrator.migrate(
+            src_instance=instance,
+            src_info=mo2_instance_info,
+            dst_info=dst_info,
+            src_mod_manager=mo2,
+            dst_mod_manager=mo2,
+            use_hardlinks=True,
+            replace=True,
+            modname_limit=app_config.modname_limit,
+            activate_new_instance=app_config.activate_new_instance,
+            included_tools=instance.tools,
+        )
+
+        # then
+        assert not report.has_errors
 
     def assert_modlists_equal(
         self,

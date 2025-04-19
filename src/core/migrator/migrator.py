@@ -13,7 +13,10 @@ from core.instance.tool import Tool
 from core.mod_manager.exceptions import InstanceNotFoundError
 from core.mod_manager.instance_info import InstanceInfo
 from core.mod_manager.mod_manager import ModManager
+from core.utilities.exceptions import NotEnoughSpaceError
+from core.utilities.filesystem import get_free_disk_space
 from core.utilities.logger import Logger
+from core.utilities.scale import scale_value
 from ui.widgets.loading_dialog import LoadingDialog
 
 from .file_blacklist import FileBlacklist
@@ -75,6 +78,7 @@ class Migrator(QObject):
 
         self.log.info("Source instance info:")
         Logger.log_str_dict(self.log, src_info.__dict__)
+        self.log.info(f"Source size: {scale_value(src_instance.size)}")
 
         self.log.info("Destination instance info:")
         Logger.log_str_dict(self.log, dst_info.__dict__)
@@ -91,7 +95,21 @@ class Migrator(QObject):
         blacklist: list[str] = FileBlacklist.get_files()
         self.log.info(f"File blacklist: {', '.join(blacklist)}")
 
-        dst_mod_manager.check_destination_disk_space(dst_info, src_instance.size)
+        src_drive: str = src_mod_manager.get_mods_path(src_info).drive
+        dst_drive: str = dst_mod_manager.get_mods_path(dst_info).drive
+
+        if src_drive != dst_drive or not use_hardlinks:
+            available_space: int = get_free_disk_space(dst_drive)
+            self.log.debug(
+                f"Available space on '{dst_drive}': {scale_value(available_space)}"
+            )
+            if available_space < src_instance.size:
+                raise NotEnoughSpaceError(
+                    dst_drive,
+                    scale_value(src_instance.size),
+                    scale_value(available_space),
+                )
+
         dst_mod_manager.prepare_migration(dst_info)
 
         if ldialog is not None:

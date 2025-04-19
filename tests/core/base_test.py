@@ -97,6 +97,10 @@ class BaseTest:
             target_path="E:\\Modding\\Vortex\\skyrimse",
         )
 
+        # Set total disk sizes to 1 GB
+        fs.set_disk_usage(total_size=1024**3, path="C:")
+        fs.set_disk_usage(total_size=1024**3, path="E:")
+
         return fs
 
     @pytest.fixture

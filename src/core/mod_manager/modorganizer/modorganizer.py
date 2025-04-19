@@ -23,8 +23,7 @@ from core.mod_manager.modorganizer.exceptions import (
 )
 from core.utilities.downloader import Downloader
 from core.utilities.env_resolver import resolve
-from core.utilities.exceptions import NotEnoughSpaceError
-from core.utilities.filesystem import clean_fs_string, get_free_disk_space
+from core.utilities.filesystem import clean_fs_string
 from core.utilities.ini_file import INIFile
 from core.utilities.progress_update import ProgressUpdate
 from core.utilities.scale import scale_value
@@ -961,13 +960,5 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         return text
 
     @override
-    def check_destination_disk_space(
-        self, dst_info: MO2InstanceInfo, src_size: int
-    ) -> None:
-        mods_folder: Path = dst_info.mods_folder
-        free_space: int = get_free_disk_space(mods_folder.drive)
-
-        if free_space < src_size:
-            raise NotEnoughSpaceError(
-                mods_folder.drive, scale_value(src_size), scale_value(free_space)
-            )
+    def get_mods_path(self, instance_data: MO2InstanceInfo) -> Path:
+        return instance_data.mods_folder

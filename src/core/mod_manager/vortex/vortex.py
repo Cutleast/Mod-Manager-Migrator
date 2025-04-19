@@ -20,10 +20,8 @@ from core.instance.metadata import Metadata
 from core.instance.mod import Mod
 from core.instance.tool import Tool
 from core.utilities.env_resolver import resolve
-from core.utilities.exceptions import NotEnoughSpaceError
-from core.utilities.filesystem import clean_fs_string, get_free_disk_space
+from core.utilities.filesystem import clean_fs_string
 from core.utilities.leveldb import LevelDB
-from core.utilities.scale import scale_value
 from ui.widgets.loading_dialog import LoadingDialog
 
 from ..exceptions import InstanceNotFoundError
@@ -824,16 +822,8 @@ class Vortex(ModManager[ProfileInfo]):
         return text
 
     @override
-    def check_destination_disk_space(
-        self, dst_info: ProfileInfo, src_size: int
-    ) -> None:
-        staging_folder: Path = self.__get_staging_folder(dst_info.game)
-
-        free_space: int = get_free_disk_space(staging_folder.drive)
-        if free_space < src_size:
-            raise NotEnoughSpaceError(
-                staging_folder.drive, scale_value(src_size), scale_value(free_space)
-            )
+    def get_mods_path(self, instance_data: ProfileInfo) -> Path:
+        return self.__get_staging_folder(instance_data.game)
 
     def __get_unique_file_name(self, mod: Mod) -> str:
         return mod.metadata.file_name or Vortex.create_unique_file_name(

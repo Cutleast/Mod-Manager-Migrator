@@ -590,14 +590,13 @@ class ModManager[I: InstanceInfo](QObject):
         return ""
 
     @abstractmethod
-    def check_destination_disk_space(self, dst_info: I, src_size: int) -> None:
+    def get_mods_path(self, instance_data: I) -> Path:
         """
-        Checks if the disk for the destination instance has enough space.
-
-        Raises:
-            NotEnoughSpaceError: when the disk has not enough space.
+        Returns the path to the specified instance's mods folder.
 
         Args:
-            dst_info (I): The data of the destination instance.
-            src_size (int): Size of the source instance in bytes.
+            instance_data (I): The data of the instance.
+
+        Returns:
+            Path: The path to the mods folder.
         """
