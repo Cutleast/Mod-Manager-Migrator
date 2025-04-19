@@ -101,12 +101,12 @@
 <context>
     <name>InstanceOverviewWidget</name>
     <message>
-        <location filename="src/ui/instance/instance_overview_widget.py" line="162"/>
+        <location filename="src/ui/instance/instance_overview_widget.py" line="163"/>
         <source>Migration completed with errors!</source>
         <translation>Migration mit Fehlern abgeschlossen!</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/instance_overview_widget.py" line="167"/>
+        <location filename="src/ui/instance/instance_overview_widget.py" line="168"/>
         <source>Migration completed with errors! Click &apos;Ok&apos; to open the report.
 
 </source>
@@ -115,12 +115,12 @@
 </translation>
     </message>
     <message>
-        <location filename="src/ui/instance/instance_overview_widget.py" line="176"/>
+        <location filename="src/ui/instance/instance_overview_widget.py" line="177"/>
         <source>Migration Complete</source>
         <translation>Migration abgeschlossen</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/instance_overview_widget.py" line="179"/>
+        <location filename="src/ui/instance/instance_overview_widget.py" line="180"/>
         <source>Migration completed successfully!
 
 </source>
@@ -178,6 +178,19 @@
         <location filename="src/ui/instance_selector/instance_selector.py" line="278"/>
         <source>Instance loaded.</source>
         <translation>Instanz geladen.</translation>
+    </message>
+</context>
+<context>
+    <name>InstanceWidget</name>
+    <message>
+        <location filename="src/ui/instance/instance_widget.py" line="31"/>
+        <source>Modlist</source>
+        <translation>Modliste</translation>
+    </message>
+    <message>
+        <location filename="src/ui/instance/instance_widget.py" line="32"/>
+        <source>Tools</source>
+        <translation>Tools</translation>
     </message>
 </context>
 <context>
@@ -301,27 +314,27 @@
 <context>
     <name>Migrator</name>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="96"/>
+        <location filename="src/core/migrator/migrator.py" line="117"/>
         <source>Migrating instance {0}...</source>
         <translation>Instanz {0} wird migriert...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="117"/>
+        <location filename="src/core/migrator/migrator.py" line="138"/>
         <source>Migrating mods...</source>
         <translation>Mods werden migriert...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="150"/>
+        <location filename="src/core/migrator/migrator.py" line="171"/>
         <source>Migrating tools...</source>
         <translation>Tools werden migriert...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="190"/>
+        <location filename="src/core/migrator/migrator.py" line="211"/>
         <source>Failed to migrate INI files.</source>
         <translation>Migration der INI-Dateien fehlgeschlagen.</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="204"/>
+        <location filename="src/core/migrator/migrator.py" line="225"/>
         <source>Failed to migrate additional files.</source>
         <translation>Migration der zusätzlichen Dateien fehlgeschlagen.</translation>
     </message>
@@ -329,39 +342,46 @@
 <context>
     <name>ModOrganizer</name>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="123"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="170"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="199"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="126"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="176"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="205"/>
         <source>Loading mods from {0} &gt; {1}...</source>
         <translation>Mods von {0} &gt; {1} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="244"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="251"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="356"/>
         <source>Processing mod conflicts...</source>
         <translation>Modkonflikte werden verarbeitet...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="134"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="137"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="402"/>
         <source>Loading tools from {0} &gt; {1}...</source>
         <translation>Tools von {0} &gt; {1} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="465"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="371"/>
+        <source>Processing single file conflicts...</source>
+        <translation>Einzelkonflikte werden verarbeitet...</translation>
+    </message>
+    <message>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="575"/>
         <source>Downloading and installing ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen und installiert...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="485"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="595"/>
         <source>Downloading ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="507"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="617"/>
         <source>Extracting archive...</source>
         <translation>Archiv wird entpackt...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="783"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="960"/>
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of the new MO2 installation.</source>
         <translation>Die Nutzung von Root Builder wurde aktiviert.
@@ -619,6 +639,72 @@ Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von
     </message>
 </context>
 <context>
+    <name>ToolsMenu</name>
+    <message>
+        <location filename="src/ui/instance/tools_menu.py" line="37"/>
+        <source>Expand all</source>
+        <translation>Alle aufklappen</translation>
+    </message>
+    <message>
+        <location filename="src/ui/instance/tools_menu.py" line="45"/>
+        <source>Collapse all</source>
+        <translation>Alle einklappen</translation>
+    </message>
+    <message>
+        <location filename="src/ui/instance/tools_menu.py" line="57"/>
+        <source>Include selected tool(s)</source>
+        <translation>Ausgewählte(s) Tool(s) in Migration einschließen</translation>
+    </message>
+    <message>
+        <location filename="src/ui/instance/tools_menu.py" line="51"/>
+        <source>Exclude selected tool(s)</source>
+        <translation>Ausgewählte(s) Tool(s) von Migration ausschließen</translation>
+    </message>
+    <message>
+        <location filename="src/ui/instance/tools_menu.py" line="66"/>
+        <source>Open mod page on Nexus Mods...</source>
+        <translation>Modseite auf Nexus Mods öffnen...</translation>
+    </message>
+    <message>
+        <location filename="src/ui/instance/tools_menu.py" line="72"/>
+        <source>Open in Explorer...</source>
+        <translation>Im Explorer öffnen...</translation>
+    </message>
+</context>
+<context>
+    <name>ToolsWidget</name>
+    <message>
+        <location filename="src/ui/instance/tools_widget.py" line="67"/>
+        <source>Included Tools:</source>
+        <translation>Zur Migration ausgewählte Tools:</translation>
+    </message>
+    <message>
+        <location filename="src/ui/instance/tools_widget.py" line="87"/>
+        <source>Name</source>
+        <translation>Name</translation>
+    </message>
+    <message>
+        <location filename="src/ui/instance/tools_widget.py" line="88"/>
+        <source>Mod</source>
+        <translation>Mod</translation>
+    </message>
+    <message>
+        <location filename="src/ui/instance/tools_widget.py" line="89"/>
+        <source>Executable Path</source>
+        <translation>Pfad zur Executable</translation>
+    </message>
+    <message>
+        <location filename="src/ui/instance/tools_widget.py" line="90"/>
+        <source>Arguments</source>
+        <translation>Startargumente</translation>
+    </message>
+    <message>
+        <location filename="src/ui/instance/tools_widget.py" line="91"/>
+        <source>Working Directory</source>
+        <translation>Arbeitsverzeichnis</translation>
+    </message>
+</context>
+<context>
     <name>UpdaterDialog</name>
     <message>
         <location filename="src/ui/widgets/updater_dialog.py" line="37"/>
@@ -639,18 +725,23 @@ Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von
 <context>
     <name>Vortex</name>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="126"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="127"/>
         <source>Loading profile {0}...</source>
         <translation>Profil {0} wird geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="162"/>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="198"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="163"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="199"/>
         <source>Loading mods from profile {0}...</source>
         <translation>Mods von Profil {0} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="727"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="398"/>
+        <source>Loading tools from Vortex...</source>
+        <translation>Tools werden von Vortex geladen...</translation>
+    </message>
+    <message>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="822"/>
         <source>Vortex is currently deployed to the game folder. It is strongly recommended to purge the game directory before using the migrated instance.</source>
         <translation>Vortex ist zurzeit in das Spielverzeichnis deployed. Es wird empfohlen, das Spielverzeichnis vor der Nutzung der migrierten Instanz zu säubern.</translation>
     </message>
@@ -669,7 +760,7 @@ Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von
         <translation>Profil:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance_creator/vortex.py" line="36"/>
+        <location filename="src/ui/instance_creator/vortex.py" line="37"/>
         <source>Profile name:</source>
         <translation>Profilname:</translation>
     </message>
