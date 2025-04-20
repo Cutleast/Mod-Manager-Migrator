@@ -4,7 +4,10 @@ Copyright (c) Cutleast
 
 import qtawesome as qta
 from PySide6.QtCore import Qt, Signal
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QHBoxLayout, QLineEdit, QPushButton
+
+from ui.utilities.icon_provider import get_icon_name_for_palette
 
 
 class SearchBar(QLineEdit):
@@ -27,7 +30,7 @@ class SearchBar(QLineEdit):
         super().__init__(*args, **kwargs)
 
         self.addAction(
-            qta.icon("fa.search", color=self.palette().text().color()),
+            QIcon(":/icons/" + get_icon_name_for_palette("search", self.palette())),
             QLineEdit.ActionPosition.LeadingPosition,
         )
         self.setPlaceholderText(self.tr("Search..."))
