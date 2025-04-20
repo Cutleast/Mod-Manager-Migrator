@@ -46,7 +46,7 @@ class MenuBar(QMenuBar):
 
         update_action = help_menu.addAction(self.tr("Check for updates..."))
         update_action.setIcon(
-            qta.icon("fa.refresh", color=self.palette().text().color())
+            qta.icon("mdi6.refresh", color=self.palette().text().color())
         )
         update_action.triggered.connect(self.__check_for_updates)
 

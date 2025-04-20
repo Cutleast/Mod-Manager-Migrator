@@ -47,7 +47,7 @@ class SearchBar(QLineEdit):
             qta.icon(
                 "mdi6.format-letter-case",
                 color=self.palette().text().color(),
-                scale_factor=1.5,
+                scale_factor=1.3,
             )
         )
         self.__cs_toggle.setCheckable(True)
@@ -60,7 +60,7 @@ class SearchBar(QLineEdit):
         self.__clear_button = QPushButton()
         self.__clear_button.setCursor(Qt.CursorShape.ArrowCursor)
         self.__clear_button.setIcon(
-            qta.icon("fa.close", color=self.palette().text().color())
+            qta.icon("mdi6.close", color=self.palette().text().color())
         )
         self.__clear_button.clicked.connect(lambda: self.setText(""))
         self.__clear_button.clicked.connect(self.setFocus)

@@ -538,12 +538,12 @@ Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von
 <context>
     <name>SearchBar</name>
     <message>
-        <location filename="src/ui/widgets/search_bar.py" line="37"/>
+        <location filename="src/ui/widgets/search_bar.py" line="36"/>
         <source>Search...</source>
         <translation>Suchen...</translation>
     </message>
     <message>
-        <location filename="src/ui/widgets/search_bar.py" line="57"/>
+        <location filename="src/ui/widgets/search_bar.py" line="56"/>
         <source>Toggle case sensitivity</source>
         <translation>Groß-/Kleinschreibung beachten</translation>
     </message>

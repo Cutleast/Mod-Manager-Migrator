@@ -47,13 +47,13 @@ class ModlistMenu(Menu):
         collapse_all_action.triggered.connect(self.__parent.collapseAll)
 
         self.__uncheck_action = self.addAction(
-            qta.icon("fa.close", color=self.palette().text().color()),
+            qta.icon("mdi6.close", color=self.palette().text().color()),
             self.tr("Disable selected mod(s)"),
         )
         self.__uncheck_action.triggered.connect(self.__parent.uncheck_selected)
 
         self.__check_action = self.addAction(
-            qta.icon("fa.check", color=self.palette().text().color()),
+            qta.icon("mdi6.check", color=self.palette().text().color()),
             self.tr("Enable selected mod(s)"),
         )
         self.__check_action.triggered.connect(self.__parent.check_selected)
