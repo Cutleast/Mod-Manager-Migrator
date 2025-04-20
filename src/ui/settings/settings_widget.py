@@ -147,7 +147,7 @@ class SettingsWidget(SmoothScrollArea):
         hardlinks_help_button = LinkButton(
             url="https://github.com/Cutleast/Mod-Manager-Migrator/Hardlinks.md",
             display_text=self.tr("What are hardlinks?"),
-            icon=qta.icon("mdi6.help", color=self.palette().text().color()),
+            icon=qta.icon("ri.information-line", color=self.palette().text().color()),
         )
         hlayout.addWidget(hardlinks_help_button)
 
