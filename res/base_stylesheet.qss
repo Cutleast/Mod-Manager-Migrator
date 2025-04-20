@@ -63,12 +63,15 @@ QPushButton#primary
 QPushButton#primary:hover:!disabled
 {
     background: <highlighted_accent>;
-    border-color: <highlighted_accent>;
 }
 QPushButton#primary:disabled
 {
     background: #666666;
     border-color: #666666;
+}
+QPushButton:checked
+{
+    border-color: <accent_color>;
 }
 
 /* Text Fields */
