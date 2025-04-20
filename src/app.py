@@ -33,7 +33,7 @@ class App(QApplication):
     """
 
     APP_NAME: str = "Mod Manager Migrator"
-    APP_VERSION: str = "3.0.0-alpha-1"
+    APP_VERSION: str = "3.0.0-alpha-2"
 
     args: Namespace
     app_config: AppConfig

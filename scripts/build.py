@@ -12,7 +12,7 @@ from pathlib import Path
 
 import jstyleson as json
 
-APP_VERSION: str = "3.0.0-alpha-1"
+APP_VERSION: str = "3.0.0-alpha-2"
 DIST_FOLDER = Path("dist")
 OUTPUT_FOLDER = DIST_FOLDER / "MMM"
 OUTPUT_ARCHIVE = DIST_FOLDER / f"MMM v{APP_VERSION}.zip"
