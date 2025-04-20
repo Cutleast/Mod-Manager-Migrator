@@ -16,7 +16,7 @@ dependencies = [
     "pyside6",
     "pyuac",
     "pywin32",
-    "qtawesome<1.4.0",
+    "qtawesome",
     "rarfile",
     "requests",
     "semantic-version",
