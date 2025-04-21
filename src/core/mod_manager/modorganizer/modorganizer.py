@@ -18,7 +18,6 @@ from core.instance.tool import Tool
 from core.mod_manager.exceptions import InstanceNotFoundError
 from core.mod_manager.modorganizer.exceptions import (
     CannotInstallGlobalMo2Error,
-    GlobalInstanceDetectedError,
     InvalidGlobalInstancePathError,
 )
 from core.utilities.downloader import Downloader
@@ -805,10 +804,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
 
     @override
     def prepare_migration(self, instance_data: MO2InstanceInfo) -> None:
-        if not instance_data.is_global and self.detect_global_instances():
-            raise GlobalInstanceDetectedError
-
-        elif instance_data.is_global:
+        if instance_data.is_global:
             mo2_ini_path: Path = instance_data.base_folder / "ModOrganizer.ini"
             if not mo2_ini_path.is_relative_to(self.appdata_path):
                 raise InvalidGlobalInstancePathError
@@ -958,12 +954,22 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         text: str = ""
 
         if migrated_instance_data.use_root_builder:
-            text = self.tr(
-                "The usage of root builder was enabled.\n"
-                "In order to correctly deploy the root files, you have to download and "
-                'extract the root builder plugin from Nexus Mods to the "plugins" '
-                "folder of the new MO2 installation."
+            text = (
+                self.tr(
+                    "The usage of root builder was enabled.\n"
+                    "In order to correctly deploy the root files, you have to download and "
+                    'extract the root builder plugin from Nexus Mods to the "plugins" '
+                    "folder of the new MO2 installation."
+                )
+                + "\n\n"
             )
+
+        if not migrated_instance_data.is_global and self.detect_global_instances():
+            text += self.tr(
+                "At least one global instance was detected.\n"
+                "Global instances cause issues with portable instances and it is "
+                "recommended to delete (or rename) the following folder:\n{0}"
+            ).format(str(self.appdata_path))
 
         return text
 

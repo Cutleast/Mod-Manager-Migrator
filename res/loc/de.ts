@@ -342,50 +342,59 @@
 <context>
     <name>ModOrganizer</name>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="126"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="176"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="205"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="127"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="177"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="206"/>
         <source>Loading mods from {0} &gt; {1}...</source>
         <translation>Mods von {0} &gt; {1} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="251"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="356"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="252"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="357"/>
         <source>Processing mod conflicts...</source>
         <translation>Modkonflikte werden verarbeitet...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="137"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="402"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="138"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="403"/>
         <source>Loading tools from {0} &gt; {1}...</source>
         <translation>Tools von {0} &gt; {1} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="371"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="372"/>
         <source>Processing single file conflicts...</source>
         <translation>Einzelkonflikte werden verarbeitet...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="575"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="582"/>
         <source>Downloading and installing ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen und installiert...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="595"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="602"/>
         <source>Downloading ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="617"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="624"/>
         <source>Extracting archive...</source>
         <translation>Archiv wird entpackt...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="960"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="964"/>
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of the new MO2 installation.</source>
         <translation>Die Nutzung von Root Builder wurde aktiviert.
 Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von Nexus Mods heruntergeladen und in den &quot;plugins&quot;-Ordner der neuen MO2 Installation entpackt werden.</translation>
+    </message>
+    <message>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="972"/>
+        <source>At least one global instance was detected.
+Global instances cause issues with portable instances and it is recommended to delete (or rename) the following folder:
+{0}</source>
+        <translation>Mindestens eine globale Instanz wurde gefunden.
+Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfohlen, den folgenden Ordner zu löschen (oder umzubenennen):
+{0}</translation>
     </message>
 </context>
 <context>
@@ -822,16 +831,9 @@ Bitte diesen Schritten folgen und erneut versuchen:
         <translation>Ungültiger Pfad für eine global Instanz! Der Pfad darf nicht außerhalb von %LOCALAPPDATA%\ModOrganizer liegen, wenn &quot;Global&quot; als Instanztyp gewählt wird!</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/exceptions.py" line="42"/>
+        <location filename="src/core/mod_manager/modorganizer/exceptions.py" line="40"/>
         <source>Cannot install MO2 when a global instance is selected as destination!</source>
         <translation>MO2 kann nicht installiert werden, wenn eine globale Instanz als Ziel gewählt ist!</translation>
-    </message>
-    <message>
-        <location filename="src/core/mod_manager/modorganizer/exceptions.py" line="57"/>
-        <source>Cannot create a portable instance because at least one global instance was detected!
-Global instances cause issues with portable instances.</source>
-        <translation>Kann keine portable Instanz erstellen, da mindestens eine globale Instanz gefunden wurde!
-Globale Instanzen verursachen Probleme mit portablen Instanzen.</translation>
     </message>
 </context>
 </TS>

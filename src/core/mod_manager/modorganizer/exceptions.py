@@ -37,20 +37,3 @@ class CannotInstallGlobalMo2Error(PreMigrationCheckFailedError):
             "exceptions",
             "Cannot install MO2 when a global instance is selected as destination!",
         )
-
-
-class GlobalInstanceDetectedError(PreMigrationCheckFailedError):
-    """
-    Exception when at least one global instance was detected
-    and it was tried to create a portable instance.
-
-    Global instances cause issues with portable instances.
-    """
-
-    @override
-    def getLocalizedMessage(self) -> str:
-        return QApplication.translate(
-            "exceptions",
-            "Cannot create a portable instance because at least one global instance was "
-            "detected!\nGlobal instances cause issues with portable instances.",
-        )
