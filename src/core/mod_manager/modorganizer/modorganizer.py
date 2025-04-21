@@ -108,7 +108,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
             raise InstanceNotFoundError(f"{instance_name} > {profile_name}")
 
         mo2_ini_data: dict[str, dict[str, Any]] = INIFile(mo2_ini_path).load_file()
-        raw_game_folder: Optional[str] = mo2_ini_data["General"].get("gamePath")
+        raw_game_folder: Optional[str] = mo2_ini_data.get("General", {}).get("gamePath")
         if raw_game_folder is not None:
             raw_game_folder = ModOrganizer.BYTE_ARRAY_PATTERN.sub(
                 r"\1", raw_game_folder
