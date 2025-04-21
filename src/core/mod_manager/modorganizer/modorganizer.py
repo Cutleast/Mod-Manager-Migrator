@@ -50,6 +50,8 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
     INI_ARG_PATTERN: re.Pattern[str] = re.compile(r'(?:[^ "]+|"[^"]+")+')
     INI_ARG_QUOTED_PATTERN: re.Pattern[str] = re.compile(r'^"?(([^"]|\\")+)"?$')
     INI_QUOTE_PATTERN: re.Pattern[str] = re.compile(r'^"([^"]+)"$')
+    EXE_BLACKLIST: list[str] = ["Explorer++.exe"]
+    """List of executable names to ignore when loading tools."""
 
     appdata_path = resolve(Path("%LOCALAPPDATA%") / "ModOrganizer")
 
@@ -423,6 +425,12 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
                 continue
 
             exe_path = Path(raw_exe_path)
+            if exe_path.name in ModOrganizer.EXE_BLACKLIST:
+                self.log.debug(
+                    f"Skipped tool '{exe_path.name}' due to mod manager blacklist."
+                )
+                continue
+
             working_dir: Optional[Path] = (
                 Path(raw_working_dir) if raw_working_dir is not None else None
             )
