@@ -2,7 +2,7 @@
 Copyright (c) Cutleast
 """
 
-from typing import Optional
+from typing import Callable, Optional
 
 
 def matches_filter(
@@ -28,3 +28,26 @@ def matches_filter(
         filter = filter.lower()
 
     return filter.strip() in text.strip()
+
+
+def get_first_match[T](items: list[T], filter_func: Callable[[T], bool]) -> T:
+    """
+    Returns the first item of the specified list the specified filter function
+    returns True for.
+
+    Args:
+        items (list[T]): List of items to check.
+        filter_func (Callable[[T], bool]): Filter function.
+
+    Raises:
+        ValueError: If no item matches the filter function.
+
+    Returns:
+        T: First item that matches the filter function.
+    """
+
+    for item in items:
+        if filter_func(item):
+            return item
+
+    raise ValueError("No item matches the filter function")

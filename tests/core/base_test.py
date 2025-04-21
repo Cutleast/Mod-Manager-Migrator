@@ -397,9 +397,14 @@ class BaseTest:
             def files(self) -> list[Path]:
                 return files or []
 
+            @property
+            @override
+            def size(self) -> int:
+                return len(self.files)
+
         return MockMod(
             display_name=mod_name,
-            path=Path(),
+            path=Path(mod_name),
             deploy_path=None,
             metadata=Metadata(
                 mod_id=None,

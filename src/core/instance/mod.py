@@ -166,3 +166,10 @@ class Mod:
     @override
     def __hash__(self) -> int:
         return hash((self.path, self.metadata))
+
+    @override
+    def __eq__(self, value: object) -> bool:
+        if not isinstance(value, Mod):
+            return False
+
+        return hash(self) == hash(value)

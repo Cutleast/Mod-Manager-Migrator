@@ -6,6 +6,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
+from core.utilities.filter import get_first_match
+
 from .mod import Mod
 from .tool import Tool
 
@@ -67,17 +69,11 @@ class Instance:
             bool: `True` if the mod is installed, `False` otherwise
         """
 
-        mod_id: Optional[int] = mod.metadata.mod_id
-        file_id: Optional[int] = mod.metadata.file_id
-
-        return (
-            any(
-                (mod_id == m.metadata.mod_id and mod_id is not None)
-                and (file_id == m.metadata.file_id and file_id is not None)
-                for m in self.mods
-            )
-            or mod in self.mods
-        )
+        try:
+            self.get_installed_mod(mod)
+            return True
+        except ValueError:
+            return False
 
     def get_installed_mod(self, mod: Mod) -> Mod:
         """
@@ -87,28 +83,22 @@ class Instance:
             mod (Mod): The mod to get.
 
         Raises:
-            ValueError: If the mod is not installed
+            ValueError: If the mod is not installed or cannot be found
 
         Returns:
             Mod: The matching mod
         """
 
-        if mod in self.mods:
-            return self.mods[self.mods.index(mod)]
-
-        if mod.metadata.mod_id is None or mod.metadata.file_id is None:
-            raise ValueError("Mod id and file id required for identifying mod!")
-
-        installed_mods: dict[tuple[int, int], Mod] = {
-            (m.metadata.mod_id, m.metadata.file_id): m
-            for m in self.mods
-            if m.metadata.mod_id is not None and m.metadata.file_id is not None
-        }
-
-        if (mod.metadata.mod_id, mod.metadata.file_id) in installed_mods:
-            return installed_mods[(mod.metadata.mod_id, mod.metadata.file_id)]
-
-        raise ValueError("Mod not installed!")
+        return get_first_match(
+            self.mods,
+            lambda m: m == mod
+            or m.metadata == mod.metadata
+            or (
+                m.metadata.mod_id == mod.metadata.mod_id
+                and m.metadata.file_id == mod.metadata.file_id
+            )
+            or m.display_name == mod.display_name,
+        )
 
     @property
     def loadorder(self) -> list[Mod]:
