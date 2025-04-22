@@ -106,13 +106,6 @@ class InstanceSelector(QWidget):
         self.__init_footer()
 
     def __init_header(self) -> None:
-        # Title label
-        title_label = QLabel(self.tr("Choose the source instance:"))
-        title_label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        title_label.setObjectName("h3")
-        self.__vlayout.addWidget(title_label, 0, Qt.AlignmentFlag.AlignHCenter)
-        self.__vlayout.addSpacing(25)
-
         # Mod Manager selection
         glayout = QGridLayout()
         glayout.setContentsMargins(0, 0, 0, 0)

@@ -10,14 +10,12 @@ from PySide6.QtWidgets import (
     QComboBox,
     QGridLayout,
     QLabel,
-    QPushButton,
     QSpinBox,
     QStackedLayout,
     QVBoxLayout,
     QWidget,
 )
 
-from app_context import AppContext
 from core.game.game import Game
 from core.mod_manager import MOD_MANAGERS
 from core.mod_manager.instance_info import InstanceInfo
@@ -50,7 +48,6 @@ class InstanceCreator(QWidget):
     __vlayout: QVBoxLayout
     __mod_manager_dropdown: QComboBox
     __instance_stack_layout: QStackedLayout
-    __migrate_button: QPushButton
     __placeholder_widget: QWidget
 
     def __init__(self) -> None:
@@ -67,17 +64,8 @@ class InstanceCreator(QWidget):
 
         self.__init_header()
         self.__init_instance_widgets()
-        self.__init_footer()
 
     def __init_header(self) -> None:
-        # Title label
-        title_label = QLabel(self.tr("Configure the destination instance:"))
-        title_label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        title_label.setObjectName("h3")
-        self.__vlayout.addWidget(title_label, 0, Qt.AlignmentFlag.AlignHCenter)
-        self.__vlayout.addSpacing(25)
-
-        # Mod Manager selection
         glayout = QGridLayout()
         glayout.setContentsMargins(0, 0, 0, 0)
         glayout.setColumnStretch(0, 1)
@@ -118,21 +106,10 @@ class InstanceCreator(QWidget):
             mod_manager: ModManager = mod_manager_ids[instance_widget_type.id]()
 
             instance_widget: InstanceWidget = instance_widget_type()
-            instance_widget.valid.connect(
-                lambda valid: self.__migrate_button.setEnabled(valid)
-            )
+            instance_widget.valid.connect(self.instance_valid.emit)
 
             self.__instance_stack_layout.addWidget(instance_widget)
             self.__mod_managers[mod_manager] = instance_widget
-
-    def __init_footer(self) -> None:
-        self.__migrate_button = QPushButton(self.tr("Migrate..."))
-        self.__migrate_button.setEnabled(False)
-        self.__migrate_button.setObjectName("primary")
-        self.__migrate_button.clicked.connect(AppContext.get_app().migrate)
-        self.__vlayout.addWidget(self.__migrate_button)
-
-        self.__vlayout.addStretch()
 
     def __on_mod_manager_select(self, value: str) -> None:
         mod_manager_names: dict[str, ModManager] = {
@@ -148,10 +125,10 @@ class InstanceCreator(QWidget):
         if mod_manager is not None:
             instance_widget: InstanceWidget = self.__mod_managers[mod_manager]
             self.__instance_stack_layout.setCurrentWidget(instance_widget)
-            self.__migrate_button.setEnabled(instance_widget.validate())
+            self.instance_valid.emit(instance_widget.validate())
         else:
             self.__instance_stack_layout.setCurrentWidget(self.__placeholder_widget)
-            self.__migrate_button.setDisabled(True)
+            self.instance_valid.emit(False)
 
         self.__sel_mod_manager = mod_manager
 

@@ -4,9 +4,8 @@ Copyright (c) Cutleast
 
 from typing import Optional
 
-import qtawesome as qta
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QLabel, QMessageBox, QSplitter, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QMessageBox, QSplitter
 
 from app_context import AppContext
 from core.config.app_config import AppConfig
@@ -17,23 +16,18 @@ from core.migrator.migration_report import MigrationReport
 from core.migrator.migrator import Migrator
 from core.mod_manager.instance_info import InstanceInfo
 from core.mod_manager.mod_manager import ModManager
+from ui.instance.instance_widget import InstanceWidget
 from ui.migrator.migration_report_dialog import MigrationReportDialog
+from ui.migrator.migrator_widget import MigratorWidget
 from ui.widgets.loading_dialog import LoadingDialog
-from ui.widgets.smooth_scroll_area import SmoothScrollArea
-
-from ..instance_creator.instance_creator import InstanceCreator
-from ..instance_selector.instance_selector import InstanceSelector
-from .instance_widget import InstanceWidget
 
 
-class InstanceOverviewWidget(QSplitter):
+class MainWidget(QSplitter):
     """
-    Class for displaying the migrated modlist.
+    Class for main widget containing the migrator widget and the loaded instance widget.
     """
 
-    __sidebar_widget: SmoothScrollArea
-    __instance_selector: InstanceSelector
-    __instance_creator: InstanceCreator
+    __migrator_widget: MigratorWidget
     __instance_widget: InstanceWidget
 
     def __init__(self) -> None:
@@ -41,68 +35,31 @@ class InstanceOverviewWidget(QSplitter):
 
         self.__init_ui()
 
+        self.__migrator_widget.src_selected.connect(self.__display_modinstance)
         AppContext.get_app().migration_signal.connect(self.migrate)
 
     def __init_ui(self) -> None:
         self.setOrientation(Qt.Orientation.Horizontal)
 
-        self.__init_sidebar()
+        self.__init_migrator_widget()
         self.__init_modlist()
 
         self.setSizes([self.width(), 0])
 
-    def __init_sidebar(self) -> None:
-        self.__sidebar_widget = SmoothScrollArea()
-        self.addWidget(self.__sidebar_widget)
+    def __init_migrator_widget(self) -> None:
+        self.__migrator_widget = MigratorWidget()
+        self.addWidget(self.__migrator_widget)
 
-        scroll_widget = QWidget()
-        scroll_widget.setObjectName("transparent")
-        self.__sidebar_widget.setWidget(scroll_widget)
-
-        vlayout = QVBoxLayout()
-        scroll_widget.setLayout(vlayout)
-
-        self.__instance_selector = InstanceSelector()
-        self.__instance_selector.instance_selected.connect(self.display_modinstance)
-        self.__instance_selector.instance_selected.connect(
-            lambda _: self.setSizes([int(0.3 * self.width()), int(0.7 * self.width())])
-        )
-        vlayout.addWidget(self.__instance_selector, stretch=1)
-
-        vlayout.addStretch()
-
-        right_arrow = QLabel()
-        right_arrow.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        right_arrow.setPixmap(
-            qta.icon("mdi6.chevron-down", color="#ffffff", scale_factor=2).pixmap(
-                96, 96
-            )
-        )
-        vlayout.addWidget(right_arrow)
-
-        vlayout.addStretch()
-
-        self.__instance_creator = InstanceCreator()
-        self.__instance_creator.setDisabled(True)
-        vlayout.addWidget(self.__instance_creator, stretch=1)
-
-        self.__sidebar_widget.setMinimumWidth(500)
+        self.__migrator_widget.setMinimumWidth(500)
 
     def __init_modlist(self) -> None:
         self.__instance_widget = InstanceWidget()
         self.setCollapsible(1, True)
         self.addWidget(self.__instance_widget)
 
-    def display_modinstance(self, instance: Instance) -> None:
-        """
-        Displays a modlist.
-
-        Args:
-            instance (Instance): The instance to display.
-        """
-
+    def __display_modinstance(self, instance: Instance) -> None:
         self.__instance_widget.display_modinstance(instance)
-        self.__instance_creator.setEnabled(True)
+        self.setSizes([int(0.3 * self.width()), int(0.7 * self.width())])
 
     def migrate(self) -> None:
         """
@@ -110,31 +67,37 @@ class InstanceOverviewWidget(QSplitter):
         destination instance.
         """
 
-        game: Optional[Game] = self.__instance_selector.get_cur_game()
+        game: Optional[Game] = self.__migrator_widget.get_selected_game()
         if game is None:
             raise ValueError("No game selected!")
 
         src_mod_manager: Optional[ModManager] = (
-            self.__instance_selector.get_selected_mod_manager()
+            self.__migrator_widget.get_src_mod_manager()
         )
 
         dst_mod_manager: Optional[ModManager] = (
-            self.__instance_creator.get_selected_mod_manager()
+            self.__migrator_widget.get_dst_mod_manager()
         )
 
         if src_mod_manager is None or dst_mod_manager is None:
             raise ValueError("No mod manager selected!")
 
-        dst_info: InstanceInfo = self.__instance_creator.get_instance_data(game)
-        src_instance: Optional[Instance] = (
-            self.__instance_selector.get_cur_mod_instance()
+        dst_info: Optional[InstanceInfo] = self.__migrator_widget.get_dst_instance_info(
+            game
         )
-        src_info: InstanceInfo = self.__instance_selector.get_cur_instance_data()
 
-        if src_instance is None:
+        if dst_info is None:
+            raise ValueError("No destination instance selected!")
+
+        src_instance: Optional[Instance] = self.__migrator_widget.get_src_instance()
+        src_info: Optional[InstanceInfo] = (
+            self.__migrator_widget.get_src_instance_info()
+        )
+
+        if src_info is None or src_instance is None:
             raise ValueError("No source instance selected!")
 
-        InstanceOverviewWidget._apply_checked_mods(
+        MainWidget._apply_checked_mods(
             src_instance, self.__instance_widget.checked_mods
         )
 

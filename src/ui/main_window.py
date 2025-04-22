@@ -9,7 +9,7 @@ from PySide6.QtWidgets import QMainWindow
 
 from app_context import AppContext
 
-from .instance.instance_overview_widget import InstanceOverviewWidget
+from .main_widget import MainWidget
 from .menubar import MenuBar
 from .statusbar import StatusBar
 
@@ -23,7 +23,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setMenuBar(MenuBar())
-        self.setCentralWidget(InstanceOverviewWidget())
+        self.setCentralWidget(MainWidget())
         self.setStatusBar(StatusBar())
 
         self.resize(1000, 700)

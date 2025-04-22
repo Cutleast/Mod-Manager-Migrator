@@ -10,7 +10,7 @@ from PySide6.QtWidgets import QLineEdit, QRadioButton
 from pytestqt.qtbot import QtBot
 
 from core.utilities.env_resolver import resolve
-from ui.instance_creator.modorganizer import ModOrganizerWidget
+from ui.migrator.instance_creator.modorganizer import ModOrganizerWidget
 
 os.environ["QT_QPA_PLATFORM"] = "offscreen"  # render widgets off-screen
 

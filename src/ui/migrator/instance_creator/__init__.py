@@ -2,9 +2,8 @@
 Copyright (c) Cutleast
 """
 
-from ui.instance_selector.modorganizer import ModOrganizerWidget
-
 from .instance import InstanceWidget
+from .modorganizer import ModOrganizerWidget
 from .vortex import VortexWidget
 
 INSTANCE_WIDGETS: list[type[InstanceWidget]] = [
