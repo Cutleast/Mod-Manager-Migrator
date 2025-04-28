@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from base_test import BaseTest
 from pyfakefs.fake_filesystem import FakeFilesystem
 
 from core.config.app_config import AppConfig
@@ -19,8 +20,6 @@ from core.mod_manager.modorganizer.mo2_instance_info import MO2InstanceInfo
 from core.mod_manager.modorganizer.modorganizer import ModOrganizer
 from core.utilities.ini_file import INIFile
 from tests.utils import Utils
-
-from ..base_test import BaseTest
 
 
 class TestModOrganizer(BaseTest):

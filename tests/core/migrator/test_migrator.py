@@ -5,7 +5,9 @@ Copyright (c) Cutleast
 from pathlib import Path
 
 import pytest
+from base_test import BaseTest
 from pyfakefs.fake_filesystem import FakeFilesystem
+from setup.mock_plyvel import MockPlyvelDB
 
 from core.config.app_config import AppConfig
 from core.instance.instance import Instance
@@ -23,9 +25,6 @@ from core.utilities.exceptions import NotEnoughSpaceError
 from core.utilities.filesystem import get_free_disk_space
 from core.utilities.scale import scale_value
 from tests.utils import Utils
-
-from .._setup.mock_plyvel import MockPlyvelDB
-from ..base_test import BaseTest
 
 
 class TestMigrator(BaseTest):

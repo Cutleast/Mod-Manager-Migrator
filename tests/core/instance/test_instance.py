@@ -2,10 +2,10 @@
 Copyright (c) Cutleast
 """
 
+from base_test import BaseTest
+
 from core.instance.instance import Instance
 from core.instance.mod import Mod
-
-from ..base_test import BaseTest
 
 
 class TestInstance(BaseTest):

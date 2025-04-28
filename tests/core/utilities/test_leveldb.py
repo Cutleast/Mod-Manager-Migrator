@@ -6,11 +6,10 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from base_test import BaseTest
+from setup.mock_plyvel import MockPlyvelDB
 
 from core.utilities.leveldb import LevelDB
-
-from .._setup.mock_plyvel import MockPlyvelDB
-from ..base_test import BaseTest
 
 
 class TestLevelDB(BaseTest):

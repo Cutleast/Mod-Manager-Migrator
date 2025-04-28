@@ -12,6 +12,7 @@ from unittest.mock import MagicMock
 import pytest
 from pyfakefs.fake_filesystem import FakeFilesystem
 from pytest_mock import MockerFixture
+from setup.mock_plyvel import MockPlyvelDB
 
 from core.config.app_config import AppConfig
 from core.game.game import Game
@@ -26,12 +27,10 @@ from core.mod_manager.vortex.profile_info import ProfileInfo
 from core.utilities.env_resolver import resolve
 from core.utilities.leveldb import LevelDB
 
-from ._setup.mock_plyvel import MockPlyvelDB
-
 
 class BaseTest:
     """
-    Base class for all core-related tests.
+    Base class for all tests.
     """
 
     @pytest.fixture

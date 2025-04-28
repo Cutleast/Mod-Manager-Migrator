@@ -7,7 +7,9 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from base_test import BaseTest
 from pyfakefs.fake_filesystem import FakeFilesystem
+from setup.mock_plyvel import MockPlyvelDB
 
 from core.config.app_config import AppConfig
 from core.game.game import Game
@@ -20,9 +22,6 @@ from core.mod_manager.vortex.profile_info import ProfileInfo
 from core.mod_manager.vortex.vortex import Vortex
 from core.utilities.leveldb import LevelDB
 from tests.utils import Utils
-
-from .._setup.mock_plyvel import MockPlyvelDB
-from ..base_test import BaseTest
 
 
 class TestVortex(BaseTest):

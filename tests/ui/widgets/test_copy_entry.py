@@ -8,10 +8,10 @@ from pytestqt.qtbot import QtBot
 from ui.widgets.copy_edit import CopyLineEdit
 
 from .._setup.clipboard import Clipboard
-from ..base_test import BaseTest
+from ..ui_test import UiTest
 
 
-class TestCopyLineEdit(BaseTest):
+class TestCopyLineEdit(UiTest):
     """
     Tests `ui.widgets.copy_edit.CopyLineEdit`.
     """

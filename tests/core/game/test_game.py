@@ -2,9 +2,9 @@
 Copyright (c) Cutleast
 """
 
-from core.game.game import Game
+from base_test import BaseTest
 
-from ..base_test import BaseTest
+from core.game.game import Game
 
 
 class TestGame(BaseTest):

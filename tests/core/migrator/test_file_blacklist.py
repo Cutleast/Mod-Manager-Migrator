@@ -2,9 +2,9 @@
 Copyright (c) Cutleast
 """
 
-from core.migrator.file_blacklist import FileBlacklist
+from base_test import BaseTest
 
-from ..base_test import BaseTest
+from core.migrator.file_blacklist import FileBlacklist
 
 
 class TestFileBlacklist(BaseTest):

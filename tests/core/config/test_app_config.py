@@ -7,14 +7,13 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from base_test import BaseTest
 from pydantic_core import ValidationError
 from pyfakefs.fake_filesystem import FakeFilesystem
 
 from app import Language
 from core.config.app_config import AppConfig
 from core.utilities.logger import Logger
-
-from ..base_test import BaseTest
 
 
 class TestAppConfig(BaseTest):
