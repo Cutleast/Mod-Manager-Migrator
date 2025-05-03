@@ -43,7 +43,7 @@ class Vortex(ModManager[ProfileInfo]):
     Dict of game names in the meta.ini file to game classes.
     """
 
-    db_path: Path = resolve(Path("%APPDATA%") / "Vortex" / "state.v2")
+    db_path: Path
     __level_db: LevelDB
 
     __conflict_rules: Optional[dict[Mod, list[dict]]] = None
@@ -51,6 +51,7 @@ class Vortex(ModManager[ProfileInfo]):
     def __init__(self) -> None:
         super().__init__()
 
+        self.db_path = resolve(Path("%APPDATA%") / "Vortex" / "state.v2")
         self.__level_db = LevelDB(
             self.db_path, use_symlink=not LevelDB.is_db_readable(self.db_path)
         )
