@@ -12,7 +12,7 @@ class TestGame(BaseTest):
     Tests for `core.game.game.Game`.
     """
 
-    def test_get_games_with_cache(self, qt_resources: None) -> None:
+    def test_get_games_with_cache(self) -> None:
         """
         Tests the cached `core.game.game.Game.get_supported_games()` method.
         """
@@ -26,7 +26,7 @@ class TestGame(BaseTest):
         assert games1 is games2
         assert all(games1[i] is games2[i] for i in range(len(games1)))
 
-    def test_get_game_by_id_with_cache(self, qt_resources: None) -> None:
+    def test_get_game_by_id_with_cache(self) -> None:
         """
         Tests the cached `core.game.game.Game.get_game_by_id()` method.
         """

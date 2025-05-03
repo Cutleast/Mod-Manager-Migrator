@@ -14,6 +14,7 @@ from pyfakefs.fake_filesystem import FakeFilesystem
 from pytest_mock import MockerFixture
 from setup.mock_plyvel import MockPlyvelDB
 
+import resources_rc  # type: ignore # noqa: F401
 from core.config.app_config import AppConfig
 from core.game.game import Game
 from core.instance.instance import Instance
@@ -103,7 +104,7 @@ class BaseTest:
         return fs
 
     @pytest.fixture
-    def mo2_instance_info(self, qt_resources: None) -> MO2InstanceInfo:
+    def mo2_instance_info(self) -> MO2InstanceInfo:
         """
         Returns the MO2 instance info of the test mod instance.
 
@@ -124,7 +125,7 @@ class BaseTest:
         )
 
     @pytest.fixture
-    def vortex_profile_info(self, qt_resources: None) -> ProfileInfo:
+    def vortex_profile_info(self) -> ProfileInfo:
         """
         Returns the Vortex profile info of the test mod instance.
 
@@ -144,7 +145,6 @@ class BaseTest:
         mo2_instance_info: MO2InstanceInfo,
         app_config: AppConfig,
         test_fs: FakeFilesystem,
-        qt_resources: None,
     ) -> Instance:
         """
         Loads the test mod instance.
@@ -191,14 +191,6 @@ class BaseTest:
             tools=[],
             order_matters=False,
         )
-
-    @pytest.fixture
-    def qt_resources(self) -> None:
-        """
-        Provides the compiled Qt resources by importing them.
-        """
-
-        import src.resources_rc  # type: ignore # noqa: F401
 
     def get_mod_by_name(self, mod_name: str, mod_instance: Instance) -> Mod:
         """

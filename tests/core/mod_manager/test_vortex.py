@@ -109,7 +109,7 @@ class TestVortex(BaseTest):
         assert dip.working_dir is None
 
     def test_create_instance(
-        self, test_fs: FakeFilesystem, ready_vortex_db: MockPlyvelDB, qt_resources: None
+        self, test_fs: FakeFilesystem, ready_vortex_db: MockPlyvelDB
     ) -> None:
         """
         Tests `core.mod_manager.vortex.Vortex.create_instance()`
@@ -168,9 +168,7 @@ class TestVortex(BaseTest):
             == json.dumps(profile_info.display_name).encode()
         )
 
-    def test_vortex_not_installed(
-        self, empty_vortex_db: MockPlyvelDB, qt_resources: None
-    ) -> None:
+    def test_vortex_not_installed(self, empty_vortex_db: MockPlyvelDB) -> None:
         """
         Tests if `core.mod_manager.vortex.Vortex` raises a `VortexNotInstalledError`
         when running a pre-migration check on an empty Vortex database.
@@ -235,13 +233,12 @@ class TestVortex(BaseTest):
         test_fs: FakeFilesystem,
         ready_vortex_db: MockPlyvelDB,
         instance: Instance,
-        qt_resources: None,
     ) -> None:
         """
         Tests `core.mod_manager.vortex.Vortex.install_mod()`.
         """
 
-        self.test_create_instance(test_fs, ready_vortex_db, qt_resources)
+        self.test_create_instance(test_fs, ready_vortex_db)
 
         # given
         vortex = Vortex()

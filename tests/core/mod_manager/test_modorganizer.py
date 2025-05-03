@@ -60,11 +60,7 @@ class TestModOrganizer(BaseTest):
 
     @pytest.mark.parametrize("meta_ini_path, expected_metadata", PARSE_META_INI_DATA)
     def test_parse_meta_ini(
-        self,
-        meta_ini_path: Path,
-        expected_metadata: Metadata,
-        data_folder: Path,
-        qt_resources: None,
+        self, meta_ini_path: Path, expected_metadata: Metadata, data_folder: Path
     ) -> None:
         """
         Tests `core.mod_manager.modorganizer.modorganizer.ModOrganizer.__parse_meta_ini()`.
@@ -232,7 +228,7 @@ class TestModOrganizer(BaseTest):
             Path("test_file_2.mohidden"): Path("test_file_2")
         }
 
-    def test_create_instance(self, test_fs: FakeFilesystem, qt_resources: None) -> None:
+    def test_create_instance(self, test_fs: FakeFilesystem) -> None:
         """
         Tests `core.mod_manager.modorganizer.modorganizer.ModOrganizer.create_instance()`.
         """
@@ -278,17 +274,13 @@ class TestModOrganizer(BaseTest):
         assert ini_data["General"]["gamePath"] == str(game_folder).replace("\\", "/")
 
     def test_install_mod(
-        self,
-        app_config: AppConfig,
-        test_fs: FakeFilesystem,
-        instance: Instance,
-        qt_resources: None,
+        self, app_config: AppConfig, test_fs: FakeFilesystem, instance: Instance
     ) -> None:
         """
         Tests `core.mod_manager.modorganizer.modorganizer.ModOrganizer.install_mod()`.
         """
 
-        self.test_create_instance(test_fs, qt_resources)
+        self.test_create_instance(test_fs)
 
         # given
         mo2 = ModOrganizer()
@@ -353,18 +345,14 @@ class TestModOrganizer(BaseTest):
         )
 
     def test_install_mod_with_separator(
-        self,
-        app_config: AppConfig,
-        test_fs: FakeFilesystem,
-        instance: Instance,
-        qt_resources: None,
+        self, app_config: AppConfig, test_fs: FakeFilesystem, instance: Instance
     ) -> None:
         """
         Tests `core.mod_manager.modorganizer.modorganizer.ModOrganizer.install_mod()`
         with a separator mod.
         """
 
-        self.test_create_instance(test_fs, qt_resources)
+        self.test_create_instance(test_fs)
 
         # given
         mo2 = ModOrganizer()

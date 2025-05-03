@@ -12,7 +12,7 @@ class TestFileBlacklist(BaseTest):
     Tests `core.migrator.file_blacklist.FileBlacklist`.
     """
 
-    def test_file_blacklist(self, qt_resources: None) -> None:
+    def test_file_blacklist(self) -> None:
         """
         Tests `core.migrator.file_blacklist.FileBlacklist.get_files()`.
         """
