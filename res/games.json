@@ -126,5 +126,18 @@
             "SkyrimCustom.ini"
         ],
         "mods_folder": "Data"
+    },
+    {
+        "id": "skyrimvr",
+        "display_name": "Skyrim VR",
+        "short_name": "SkyrimVR",
+        "nexus_id": "skyrimspecialedition",
+        "inidir": "%DOCUMENTS%\\My Games\\Skyrim VR",
+        "inifiles": [
+            "SkyrimVR.ini",
+            "SkyrimPrefs.ini",
+            "SkyrimCustom.ini"
+        ],
+        "mods_folder": "Data"
     }
 ]
