@@ -8,3 +8,4 @@ __pycache__
 *.old
 *.prof
 *.qm
+.coverage
