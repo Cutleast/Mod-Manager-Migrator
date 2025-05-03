@@ -22,25 +22,40 @@ from core.mod_manager.instance_info import InstanceInfo
 from core.mod_manager.mod_manager import ModManager
 
 from . import INSTANCE_WIDGETS
-from .instance import InstanceWidget
+from .base_selector_widget import BaseSelectorWidget
 
 
-class InstanceCreator(QWidget):
+class InstanceSelectorWidget(QWidget):
     """
-    Widget for creating and customizing the destination instance.
+    Widget for selecting the source instance.
     """
 
     instance_valid = Signal(bool)
     """
-    This signal is emitted when the instance is valid.
+    This signal is emitted when the validation status of the selected instance changes.
     """
 
-    __sel_mod_manager: Optional[ModManager] = None
+    changed = Signal()
     """
-    Selected destination mod manager.
+    This signal is emitted everytime the user changes something at the selection.
     """
 
-    __mod_managers: dict[ModManager, InstanceWidget]
+    __cur_game: Optional[Game] = None
+    """
+    Currently selected game.
+    """
+
+    __cur_instance_data: Optional[InstanceInfo] = None
+    """
+    Currently selected instance data.
+    """
+
+    __cur_mod_manager: Optional[ModManager] = None
+    """
+    Currently selected mod manager.
+    """
+
+    __mod_managers: dict[ModManager, BaseSelectorWidget]
     """
     Maps mod managers to their corresponding instance widgets.
     """
@@ -73,22 +88,23 @@ class InstanceCreator(QWidget):
         self.__vlayout.addLayout(glayout)
 
         mod_manager_label = QLabel(self.tr("Mod Manager:"))
-        glayout.addWidget(mod_manager_label, 0, 0)
+        glayout.addWidget(mod_manager_label, 1, 0)
 
         self.__mod_manager_dropdown = QComboBox()
         self.__mod_manager_dropdown.installEventFilter(self)
         self.__mod_manager_dropdown.setEditable(False)
         self.__mod_manager_dropdown.addItem(self.tr("Please select..."))
         self.__mod_manager_dropdown.addItems(
-            [mod_manager.display_name for mod_manager in MOD_MANAGERS]
+            [mod_manager.get_display_name() for mod_manager in MOD_MANAGERS]
         )
         for m, mod_manager in enumerate(MOD_MANAGERS, start=1):
-            self.__mod_manager_dropdown.setItemIcon(m, QIcon(mod_manager.icon_name))
-
+            self.__mod_manager_dropdown.setItemIcon(
+                m, QIcon(mod_manager.get_icon_name())
+            )
         self.__mod_manager_dropdown.currentTextChanged.connect(
             self.__on_mod_manager_select
         )
-        glayout.addWidget(self.__mod_manager_dropdown, 0, 1)
+        glayout.addWidget(self.__mod_manager_dropdown, 1, 1)
 
     def __init_instance_widgets(self) -> None:
         self.__instance_stack_layout = QStackedLayout()
@@ -99,21 +115,37 @@ class InstanceCreator(QWidget):
 
         self.__mod_managers = {}
         mod_manager_ids: dict[str, type[ModManager]] = {
-            mod_manager.id: mod_manager for mod_manager in MOD_MANAGERS
+            mod_manager.get_id(): mod_manager for mod_manager in MOD_MANAGERS
         }
 
         for instance_widget_type in INSTANCE_WIDGETS:
-            mod_manager: ModManager = mod_manager_ids[instance_widget_type.id]()
+            mod_manager: ModManager = mod_manager_ids[instance_widget_type.get_id()]()
+            instance_widget: BaseSelectorWidget = instance_widget_type()
 
-            instance_widget: InstanceWidget = instance_widget_type()
-            instance_widget.valid.connect(self.instance_valid.emit)
+            instance_widget.changed.connect(self.changed.emit)
+            instance_widget.valid.connect(self.__on_valid)
 
             self.__instance_stack_layout.addWidget(instance_widget)
             self.__mod_managers[mod_manager] = instance_widget
 
+    def set_cur_game(self, game: Optional[Game]) -> None:
+        """
+        Sets the current game of the instance selector widget.
+
+        Args:
+            game (Optional[Game]): The game
+        """
+
+        self.__cur_game = game
+
+        # Reset selected instance
+        self.__mod_manager_dropdown.setCurrentIndex(0)
+        self.__cur_mod_manager = None
+        self.__cur_instance_data = None
+
     def __on_mod_manager_select(self, value: str) -> None:
         mod_manager_names: dict[str, ModManager] = {
-            mod_manager.display_name: mod_manager
+            mod_manager.get_display_name(): mod_manager
             for mod_manager in self.__mod_managers.keys()
         }
 
@@ -123,51 +155,64 @@ class InstanceCreator(QWidget):
 
     def __set_cur_mod_manager(self, mod_manager: Optional[ModManager]) -> None:
         if mod_manager is not None:
-            instance_widget: InstanceWidget = self.__mod_managers[mod_manager]
-            self.__instance_stack_layout.setCurrentWidget(instance_widget)
-            self.instance_valid.emit(instance_widget.validate())
-        else:
-            self.__instance_stack_layout.setCurrentWidget(self.__placeholder_widget)
-            self.instance_valid.emit(False)
+            game: Optional[Game] = self.__cur_game
 
-        self.__sel_mod_manager = mod_manager
+            if game is None:
+                raise ValueError("No game selected.")
+
+            instance_widget: BaseSelectorWidget = self.__mod_managers[mod_manager]
+            instance_widget.set_instances(mod_manager.get_instance_names(game))
+            self.__instance_stack_layout.setCurrentWidget(instance_widget)
+            self.__on_valid(instance_widget.validate())
+        else:
+            cur_widget: QWidget = self.__instance_stack_layout.currentWidget()
+            if isinstance(cur_widget, BaseSelectorWidget):
+                cur_widget.reset()
+            self.__instance_stack_layout.setCurrentWidget(self.__placeholder_widget)
+            self.__on_valid(False)
+
+        self.__cur_mod_manager = mod_manager
+        self.changed.emit()
+
+    def __on_valid(self, valid: bool) -> None:
+        if valid and self.__cur_mod_manager is not None and self.__cur_game is not None:
+            instance_widget: BaseSelectorWidget = self.__mod_managers[
+                self.__cur_mod_manager
+            ]
+            if instance_widget.validate():
+                self.__cur_instance_data = instance_widget.get_instance(self.__cur_game)
+            else:
+                self.__cur_instance_data = None
+        else:
+            self.__cur_instance_data = None
+
+        self.instance_valid.emit(self.__cur_instance_data is not None)
+
+    def get_cur_instance_data(self) -> InstanceInfo:
+        """
+        Returns the currently selected instance data.
+
+        Raises:
+            ValueError: when no instance data is selected.
+
+        Returns:
+            InstanceInfo: The instance data.
+        """
+
+        if self.__cur_instance_data is None:
+            raise ValueError("No instance data selected.")
+
+        return self.__cur_instance_data
 
     def get_selected_mod_manager(self) -> Optional[ModManager]:
         """
         Returns the currently selected mod manager.
 
         Returns:
-            Optional[ModManager]: The selected mod manager.
+            Optional[ModManager]: The selected mod manager or None.
         """
 
-        return self.__sel_mod_manager
-
-    def get_instance_data(self, game: Game) -> InstanceInfo:
-        """
-        Returns the customized destination instance data.
-
-        Args:
-            game (Game): The selected game.
-
-        Raises:
-            ValueError:
-                when no mod manager is selected or the customized instance is invalid.
-
-        Returns:
-            InstanceData: The customized destination instance data.
-        """
-
-        mod_manager: Optional[ModManager] = self.get_selected_mod_manager()
-
-        if mod_manager is None:
-            raise ValueError("No mod manager selected!")
-
-        instance_widget: InstanceWidget = self.__mod_managers[mod_manager]
-
-        if not instance_widget.validate():
-            raise ValueError("Customized instance data is invalid!")
-
-        return instance_widget.get_instance(game)
+        return self.__cur_mod_manager
 
     @override
     def eventFilter(self, source: QObject, event: QEvent) -> bool:

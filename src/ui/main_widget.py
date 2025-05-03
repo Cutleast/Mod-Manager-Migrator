@@ -27,16 +27,20 @@ class MainWidget(QSplitter):
     Class for main widget containing the migrator widget and the loaded instance widget.
     """
 
+    app_config: AppConfig
+
     __migrator_widget: MigratorWidget
     __instance_widget: InstanceWidget
 
-    def __init__(self) -> None:
+    def __init__(self, app_config: AppConfig) -> None:
         super().__init__()
+
+        self.app_config = app_config
 
         self.__init_ui()
 
         self.__migrator_widget.src_selected.connect(self.__display_modinstance)
-        AppContext.get_app().migration_signal.connect(self.migrate)
+        self.__migrator_widget.migration_started.connect(self.migrate)
 
     def __init_ui(self) -> None:
         self.setOrientation(Qt.Orientation.Horizontal)
@@ -47,7 +51,7 @@ class MainWidget(QSplitter):
         self.setSizes([self.width(), 0])
 
     def __init_migrator_widget(self) -> None:
-        self.__migrator_widget = MigratorWidget()
+        self.__migrator_widget = MigratorWidget(self.app_config)
         self.addWidget(self.__migrator_widget)
 
         self.__migrator_widget.setMinimumWidth(500)

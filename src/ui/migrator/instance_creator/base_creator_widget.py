@@ -2,6 +2,7 @@
 Copyright (c) Cutleast
 """
 
+import logging
 from abc import abstractmethod
 
 from PySide6.QtCore import Signal
@@ -11,14 +12,9 @@ from core.game.game import Game
 from core.mod_manager.instance_info import InstanceInfo
 
 
-class InstanceWidget(QWidget):
+class BaseCreatorWidget[I: InstanceInfo](QWidget):
     """
     Base class for customizing an instance for a preselected mod manager.
-    """
-
-    id: str
-    """
-    Id of the corresponding mod manager.
     """
 
     valid = Signal(bool)
@@ -26,10 +22,22 @@ class InstanceWidget(QWidget):
     This signal gets emitted when the validation of the customized instance changes.
     """
 
+    log: logging.Logger
+
     def __init__(self) -> None:
         super().__init__()
 
+        self.log = logging.getLogger(self.__class__.__name__)
+
         self._init_ui()
+
+    @staticmethod
+    @abstractmethod
+    def get_id() -> str:
+        """
+        Returns:
+            str: The internal id of the corresponding mod manager.
+        """
 
     @abstractmethod
     def _init_ui(self) -> None: ...
@@ -44,7 +52,7 @@ class InstanceWidget(QWidget):
         """
 
     @abstractmethod
-    def get_instance(self, game: Game) -> InstanceInfo:
+    def get_instance(self, game: Game) -> I:
         """
         Gets the data for the customized instance.
 
@@ -52,5 +60,5 @@ class InstanceWidget(QWidget):
             game (Game): The game of the instance
 
         Returns:
-            InstanceInfo: The data for the customized instance
+            I: The data for the customized instance
         """

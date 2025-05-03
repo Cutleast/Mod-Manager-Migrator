@@ -8,22 +8,24 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QGridLayout, QLabel, QLineEdit
 
 from core.game.game import Game
-from core.mod_manager.instance_info import InstanceInfo
 from core.mod_manager.vortex.profile_info import ProfileInfo
 from core.mod_manager.vortex.vortex import Vortex
 
-from .instance import InstanceWidget
+from .base_creator_widget import BaseCreatorWidget
 
 
-class VortexWidget(InstanceWidget):
+class VortexCreatorWidget(BaseCreatorWidget[ProfileInfo]):
     """
     Class for creating and customizing Vortex profiles.
     """
 
-    id = "vortex"
-
     __glayout: QGridLayout
     __profile_name_entry: QLineEdit
+
+    @override
+    @staticmethod
+    def get_id() -> str:
+        return Vortex.get_id()
 
     @override
     def _init_ui(self) -> None:
@@ -48,7 +50,7 @@ class VortexWidget(InstanceWidget):
         return bool(self.__profile_name_entry.text().strip())
 
     @override
-    def get_instance(self, game: Game) -> InstanceInfo:
+    def get_instance(self, game: Game) -> ProfileInfo:
         profile = ProfileInfo(
             display_name=self.__profile_name_entry.text(),
             game=game,

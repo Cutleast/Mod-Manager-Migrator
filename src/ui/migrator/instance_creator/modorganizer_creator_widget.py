@@ -2,7 +2,6 @@
 Copyright (c) Cutleast
 """
 
-import logging
 from pathlib import Path
 from typing import override
 
@@ -18,21 +17,18 @@ from PySide6.QtWidgets import (
 )
 
 from core.game.game import Game
-from core.mod_manager.instance_info import InstanceInfo
 from core.mod_manager.modorganizer.mo2_instance_info import MO2InstanceInfo
+from core.mod_manager.modorganizer.modorganizer import ModOrganizer
 from core.utilities.env_resolver import resolve
 from ui.widgets.browse_edit import BrowseLineEdit
 
-from .instance import InstanceWidget
+from .base_creator_widget import BaseCreatorWidget
 
 
-class ModOrganizerWidget(InstanceWidget):
+class ModOrganizerCreatorWidget(BaseCreatorWidget[MO2InstanceInfo]):
     """
     Class for creating and customizing ModOrganizer instances.
     """
-
-    id = "modorganizer"
-    log: logging.Logger = logging.getLogger("ModOrganizerWidget")
 
     __glayout: QGridLayout
     __instance_name_entry: QLineEdit
@@ -42,6 +38,11 @@ class ModOrganizerWidget(InstanceWidget):
     __mods_path_entry: BrowseLineEdit
     __install_mo2: QCheckBox
     __use_root_builder: QCheckBox
+
+    @override
+    @staticmethod
+    def get_id() -> str:
+        return ModOrganizer.get_id()
 
     @override
     def _init_ui(self) -> None:
@@ -219,7 +220,7 @@ class ModOrganizerWidget(InstanceWidget):
         return valid
 
     @override
-    def get_instance(self, game: Game) -> InstanceInfo:
+    def get_instance(self, game: Game) -> MO2InstanceInfo:
         mo2_instance = MO2InstanceInfo(
             display_name=self.__instance_name_entry.text(),
             game=game,

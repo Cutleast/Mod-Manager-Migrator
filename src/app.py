@@ -9,7 +9,7 @@ from argparse import Namespace
 from pathlib import Path
 from typing import override
 
-from PySide6.QtCore import QTranslator, Signal
+from PySide6.QtCore import QTranslator
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QMessageBox
 
@@ -53,11 +53,6 @@ class App(QApplication):
 
     doc_path: Path
 
-    migration_signal = Signal()
-    """
-    This signal gets emitted when the migration is to be started.
-    """
-
     def __init__(self, args: Namespace) -> None:
         super().__init__()
 
@@ -86,7 +81,7 @@ class App(QApplication):
         ui_mode: UIMode = UIMode.get(self.app_config.ui_mode, UIMode.System)
         self.stylesheet_processor = StylesheetProcessor(self, ui_mode)
         self.exception_handler = ExceptionHandler(self)
-        self.main_window = MainWindow()
+        self.main_window = MainWindow(self.app_config)
 
         self.app_config.print_settings_to_log()
         self.log.info("App started.")
@@ -181,10 +176,3 @@ class App(QApplication):
             self.app_config.log_file_name,
             self.app_config.log_num_of_files,
         )
-
-    def migrate(self) -> None:
-        """
-        Starts the migration.
-        """
-
-        self.migration_signal.emit()

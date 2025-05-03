@@ -10,19 +10,23 @@ from PySide6.QtWidgets import QComboBox, QGridLayout, QLabel
 
 from core.game.game import Game
 from core.mod_manager.vortex.profile_info import ProfileInfo
+from core.mod_manager.vortex.vortex import Vortex
 
-from .instance import InstanceWidget
+from .base_selector_widget import BaseSelectorWidget
 
 
-class VortexWidget(InstanceWidget):
+class VortexSelectorWidget(BaseSelectorWidget[ProfileInfo]):
     """
     Class for selecting profiles from Vortex.
     """
 
-    id = "vortex"
-
     __profile_dropdown: QComboBox
     __glayout: QGridLayout
+
+    @override
+    @staticmethod
+    def get_id() -> str:
+        return Vortex.get_id()
 
     @override
     def _init_ui(self) -> None:
@@ -67,3 +71,7 @@ class VortexWidget(InstanceWidget):
         profile_id: str = match.group(2)
 
         return ProfileInfo(display_name=instance_name, game=game, id=profile_id)
+
+    @override
+    def reset(self) -> None:
+        self.__profile_dropdown.setCurrentIndex(0)

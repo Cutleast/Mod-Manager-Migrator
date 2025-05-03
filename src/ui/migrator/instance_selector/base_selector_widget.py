@@ -13,14 +13,9 @@ from core.game.game import Game
 from core.mod_manager.instance_info import InstanceInfo
 
 
-class InstanceWidget(QWidget):
+class BaseSelectorWidget[I: InstanceInfo](QWidget):
     """
     Base class for selecting instances from a preselected mod manager.
-    """
-
-    id: str
-    """
-    Id of the corresponding mod manager.
     """
 
     _instance_names: list[str]
@@ -38,7 +33,7 @@ class InstanceWidget(QWidget):
     This signal gets emitted when the validation of the selected instance changes.
     """
 
-    def __init__(self, instance_names: list[str] = []):
+    def __init__(self, instance_names: list[str] = []) -> None:
         super().__init__()
 
         self._instance_names = instance_names
@@ -46,6 +41,14 @@ class InstanceWidget(QWidget):
         self._init_ui()
 
         self.changed.connect(self.__on_change)
+
+    @staticmethod
+    @abstractmethod
+    def get_id() -> str:
+        """
+        Returns:
+            str: The internal id of the corresponding mod manager
+        """
 
     @abstractmethod
     def _init_ui(self) -> None: ...
@@ -84,6 +87,12 @@ class InstanceWidget(QWidget):
 
         Returns:
             InstanceInfo: The data for the selected instance
+        """
+
+    @abstractmethod
+    def reset(self) -> None:
+        """
+        Resets the user selection.
         """
 
     @override

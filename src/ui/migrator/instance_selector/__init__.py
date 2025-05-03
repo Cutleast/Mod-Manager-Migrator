@@ -2,13 +2,13 @@
 Copyright (c) Cutleast
 """
 
-from .instance import InstanceWidget
-from .modorganizer import ModOrganizerWidget
-from .vortex import VortexWidget
+from .base_selector_widget import BaseSelectorWidget
+from .modorganizer_selector_widget import ModOrganizerSelectorWidget
+from .vortex_selector_widget import VortexSelectorWidget
 
-INSTANCE_WIDGETS: list[type[InstanceWidget]] = [
-    VortexWidget,
-    ModOrganizerWidget,
+INSTANCE_WIDGETS: list[type[BaseSelectorWidget]] = [
+    VortexSelectorWidget,
+    ModOrganizerSelectorWidget,
 ]
 """
 List of available instance widgets.

@@ -14,20 +14,23 @@ from core.mod_manager.modorganizer.modorganizer import ModOrganizer
 from core.utilities.env_resolver import resolve
 from ui.widgets.browse_edit import BrowseLineEdit
 
-from .instance import InstanceWidget
+from .base_selector_widget import BaseSelectorWidget
 
 
-class ModOrganizerWidget(InstanceWidget):
+class ModOrganizerSelectorWidget(BaseSelectorWidget[MO2InstanceInfo]):
     """
     Class for selecting instances from Mod Organizer 2.
     """
-
-    id = "modorganizer"
 
     __instance_dropdown: QComboBox
     __portable_path_entry: BrowseLineEdit
     __profile_dropdown: QComboBox
     __glayout: QGridLayout
+
+    @override
+    @staticmethod
+    def get_id() -> str:
+        return ModOrganizer.get_id()
 
     @override
     def _init_ui(self) -> None:
@@ -160,3 +163,9 @@ class ModOrganizerWidget(InstanceWidget):
             mods_folder=mods_folder,
             profiles_folder=profiles_folder,
         )
+
+    @override
+    def reset(self) -> None:
+        self.__instance_dropdown.setCurrentIndex(0)
+        self.__portable_path_entry.setText("")
+        self.__profile_dropdown.setCurrentIndex(0)
