@@ -56,9 +56,7 @@ class Vortex(ModManager[ProfileInfo]):
             self.db_path, use_symlink=not LevelDB.is_db_readable(self.db_path)
         )
 
-        self.__games = {
-            "skyrimse": Game.get_game_by_id("skyrimse"),
-        }
+        self.__games = {g.id: g for g in Game.get_supported_games()}
 
     @override
     def __repr__(self) -> str:
@@ -249,26 +247,33 @@ class Vortex(ModManager[ProfileInfo]):
                 continue
 
             mod_id: Optional[int] = None
-            if mod_meta_data.get("modId"):
-                mod_id = int(mod_meta_data["modId"])
             file_id: Optional[int] = None
-            if mod_meta_data.get("fileId"):
-                file_id = int(mod_meta_data["fileId"])
-            version: str = mod_meta_data.get("version") or ""
-
-            # Remove trailing .0 if any
-            while version.endswith(".0") and version.count(".") > 1:
-                version = version.removesuffix(".0")
-
+            version: str = ""
             dl_game_id: str = instance_data.game.nexus_id
-            if (
-                "downloadGame" in mod_meta_data
-                and mod_meta_data["downloadGame"] in self.__games
-            ):
-                dl_game_id = self.__games[mod_meta_data["downloadGame"]].nexus_id
-            elif "downloadGame" in mod_meta_data:
-                self.log.warning(
-                    f"Unknown game for mod {display_name!r}: {mod_meta_data['downloadGame']}"
+            try:
+                if mod_meta_data.get("modId"):
+                    mod_id = int(mod_meta_data["modId"])
+                if mod_meta_data.get("fileId"):
+                    file_id = int(mod_meta_data["fileId"])
+                version = mod_meta_data.get("version") or ""
+
+                # Remove trailing .0 if any
+                while version.endswith(".0") and version.count(".") > 1:
+                    version = version.removesuffix(".0")
+
+                if (
+                    "downloadGame" in mod_meta_data
+                    and mod_meta_data["downloadGame"] in self.__games
+                ):
+                    dl_game_id = self.__games[mod_meta_data["downloadGame"]].nexus_id
+                elif "downloadGame" in mod_meta_data:
+                    self.log.warning(
+                        f"Unknown game for mod {display_name!r}: {mod_meta_data['downloadGame']}"
+                    )
+            except Exception as ex:
+                self.log.error(
+                    f"Failed to process metadata for mod {display_name!r}: {ex}",
+                    exc_info=ex,
                 )
 
             mod = Mod(
