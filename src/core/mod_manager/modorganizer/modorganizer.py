@@ -38,10 +38,6 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
     Mod manager class for Mod Organizer 2.
     """
 
-    display_name = "Mod Organizer 2"
-    id = "modorganizer"
-    icon_name = ":/icons/mo2.png"
-
     # TODO: Make this dynamic instead of a fixed url
     DOWNLOAD_URL: str = "https://github.com/ModOrganizer2/modorganizer/releases/download/v2.5.2/Mod.Organizer-2.5.2.7z"
 
@@ -60,6 +56,21 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
     @override
     def __repr__(self) -> str:
         return "ModOrganizer"
+
+    @override
+    @staticmethod
+    def get_id() -> str:
+        return "modorganizer"
+
+    @override
+    @staticmethod
+    def get_display_name() -> str:
+        return "Mod Organizer 2"
+
+    @override
+    @staticmethod
+    def get_icon_name() -> str:
+        return ":/icons/mo2.png"
 
     @override
     def get_instance_names(self, game: Game) -> list[str]:

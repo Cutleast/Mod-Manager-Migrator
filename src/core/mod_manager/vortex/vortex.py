@@ -38,10 +38,6 @@ class Vortex(ModManager[ProfileInfo]):
     Mod manager class for Vortex.
     """
 
-    display_name = "Vortex"
-    id = "vortex"
-    icon_name = ":/icons/vortex.png"
-
     __games: dict[str, Game]
     """
     Dict of game names in the meta.ini file to game classes.
@@ -66,6 +62,21 @@ class Vortex(ModManager[ProfileInfo]):
     @override
     def __repr__(self) -> str:
         return "Vortex"
+
+    @override
+    @staticmethod
+    def get_id() -> str:
+        return "vortex"
+
+    @override
+    @staticmethod
+    def get_display_name() -> str:
+        return "Vortex"
+
+    @override
+    @staticmethod
+    def get_icon_name() -> str:
+        return ":/icons/vortex.png"
 
     @override
     def get_instance_names(self, game: Game) -> list[str]:

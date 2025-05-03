@@ -71,7 +71,8 @@ class Migrator(QObject):
 
         self.log.info(
             f"Migrating instance {src_info.display_name!r} from "
-            f"{src_mod_manager.display_name} to {dst_mod_manager.display_name}..."
+            f"{src_mod_manager.get_display_name()} to "
+            f"{dst_mod_manager.get_display_name()}..."
         )
 
         report = MigrationReport()

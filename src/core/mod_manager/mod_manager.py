@@ -27,21 +27,6 @@ class ModManager[I: InstanceInfo](QObject):
     Abstract class for mod managers.
     """
 
-    display_name: str
-    """
-    The name of the mod manager.
-    """
-
-    id: str
-    """
-    The internal id of the mod manager.
-    """
-
-    icon_name: str
-    """
-    The name of the icon resource of the mod manager.
-    """
-
     log: logging.Logger
 
     def __init__(self) -> None:
@@ -49,9 +34,33 @@ class ModManager[I: InstanceInfo](QObject):
 
         self.log = logging.getLogger(self.__repr__())
 
+    @staticmethod
+    @abstractmethod
+    def get_id() -> str:
+        """
+        Returns:
+            str: The internal id of the mod manager.
+        """
+
+    @staticmethod
+    @abstractmethod
+    def get_display_name() -> str:
+        """
+        Returns:
+            str: The display name of the mod manager.
+        """
+
+    @staticmethod
+    @abstractmethod
+    def get_icon_name() -> str:
+        """
+        Returns:
+            str: The name of the icon resource of the mod manager.
+        """
+
     @override
     def __hash__(self) -> int:
-        return hash(self.id)
+        return hash(self.get_id())
 
     @abstractmethod
     def get_instance_names(self, game: Game) -> list[str]:
