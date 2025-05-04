@@ -55,3 +55,18 @@ class NotEnoughSpaceError(ExceptionBase):
             "exceptions",
             "Not enough space ({2}) on the destination disk ({0})!\nRequired space: {1}",
         )
+
+
+class SameSourceDestinationError(ExceptionBase):
+    """
+    Exception when the source and destination are the same.
+    """
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    @override
+    def getLocalizedMessage(self) -> str:
+        return QApplication.translate(
+            "exceptions", "Source and destination must not be the same!"
+        )

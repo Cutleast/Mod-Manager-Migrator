@@ -13,7 +13,7 @@ from core.instance.tool import Tool
 from core.mod_manager.exceptions import InstanceNotFoundError
 from core.mod_manager.instance_info import InstanceInfo
 from core.mod_manager.mod_manager import ModManager
-from core.utilities.exceptions import NotEnoughSpaceError
+from core.utilities.exceptions import NotEnoughSpaceError, SameSourceDestinationError
 from core.utilities.filesystem import get_free_disk_space
 from core.utilities.logger import Logger
 from core.utilities.scale import scale_value
@@ -64,10 +64,17 @@ class Migrator(QObject):
         Raises:
             GameNotFoundError:
                 When the game folder could not be retrieved from the source instance.
+            SameSourceDestinationError:
+                When the source and destination instances are the same.
+            NotEnoughSpaceError:
+                When the destination disk has not enough space.
 
         Returns:
             MigrationReport: A report containing migration errors.
         """
+
+        if src_info == dst_info:
+            raise SameSourceDestinationError
 
         self.log.info(
             f"Migrating instance {src_info.display_name!r} from "
