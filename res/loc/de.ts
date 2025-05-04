@@ -28,12 +28,12 @@
 <context>
     <name>App</name>
     <message>
-        <location filename="src/app.py" line="152"/>
+        <location filename="src/app.py" line="155"/>
         <source>Path Limit Enabled</source>
         <translation>Pfadlängenbegrenzung ist aktiviert</translation>
     </message>
     <message>
-        <location filename="src/app.py" line="158"/>
+        <location filename="src/app.py" line="161"/>
         <source>The NTFS path length limit is enabled and paths longer than 255 characters will cause issues. Would you like to disable it (admin rights may be required)? A reboot is required for this to take effect.</source>
         <translation>Die NTFS Pfadlängenbegrenzung ist aktiviert und Pfade mit mehr als 255 Zeichen werden Fehler verursachen. Soll die Begrenzung deaktiviert werden (Administratorrechte könnten erforderlich sein)? Ein anschließender Neustart des Computers ist notwendig, damit die Begrenzung vollständig deaktiviert ist.</translation>
     </message>
@@ -266,27 +266,27 @@
 <context>
     <name>Migrator</name>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="118"/>
+        <location filename="src/core/migrator/migrator.py" line="125"/>
         <source>Migrating instance {0}...</source>
         <translation>Instanz {0} wird migriert...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="139"/>
+        <location filename="src/core/migrator/migrator.py" line="146"/>
         <source>Migrating mods...</source>
         <translation>Mods werden migriert...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="172"/>
+        <location filename="src/core/migrator/migrator.py" line="179"/>
         <source>Migrating tools...</source>
         <translation>Tools werden migriert...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="212"/>
+        <location filename="src/core/migrator/migrator.py" line="219"/>
         <source>Failed to migrate INI files.</source>
         <translation>Migration der INI-Dateien fehlgeschlagen.</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="226"/>
+        <location filename="src/core/migrator/migrator.py" line="233"/>
         <source>Failed to migrate additional files.</source>
         <translation>Migration der zusätzlichen Dateien fehlgeschlagen.</translation>
     </message>
@@ -821,11 +821,16 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
         <translation>Die Modinstanz {0} konnte nicht gefunden werden!</translation>
     </message>
     <message>
-        <location filename="src/core/utilities/exceptions.py" line="58"/>
+        <location filename="src/core/utilities/exceptions.py" line="60"/>
         <source>Not enough space ({2}) on the destination disk ({0})!
 Required space: {1}</source>
         <translation>Nicht genug Speicher ({2}) auf dem Zieldatenträger ({0}) vorhanden!
 Benötigter Speicherplatz: {1}</translation>
+    </message>
+    <message>
+        <location filename="src/core/utilities/exceptions.py" line="73"/>
+        <source>Source and destination must not be the same!</source>
+        <translation>Quelle und Ziel dürfen nicht übereinstimmen!</translation>
     </message>
     <message>
         <location filename="src/core/game/exceptions.py" line="23"/>
