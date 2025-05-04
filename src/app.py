@@ -33,7 +33,7 @@ class App(QApplication):
     """
 
     APP_NAME: str = "Mod Manager Migrator"
-    APP_VERSION: str = "3.0.0-alpha-2"
+    APP_VERSION: str = "development"
 
     args: Namespace
     app_config: AppConfig
@@ -114,7 +114,10 @@ class App(QApplication):
 
         self.__clean_old_data()
 
-        Updater(self.APP_VERSION).run()
+        try:
+            Updater(self.APP_VERSION).run()
+        except Exception as ex:
+            self.log.warning(f"Failed to check for updates: {ex}", exc_info=ex)
 
         self.main_window.show()
         self.detect_path_limit()
