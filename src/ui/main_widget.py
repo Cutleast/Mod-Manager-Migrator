@@ -86,12 +86,7 @@ class MainWidget(QSplitter):
         if src_mod_manager is None or dst_mod_manager is None:
             raise ValueError("No mod manager selected!")
 
-        dst_info: Optional[InstanceInfo] = self.__migrator_widget.get_dst_instance_info(
-            game
-        )
-
-        if dst_info is None:
-            raise ValueError("No destination instance selected!")
+        dst_info: InstanceInfo = self.__migrator_widget.get_dst_instance_info(game)
 
         src_instance: Optional[Instance] = self.__migrator_widget.get_src_instance()
         src_info: Optional[InstanceInfo] = (

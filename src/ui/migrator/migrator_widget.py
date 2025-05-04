@@ -18,6 +18,8 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QPushButton,
     QSpinBox,
+    QTabBar,
+    QTabWidget,
     QVBoxLayout,
     QWidget,
 )
@@ -67,6 +69,8 @@ class MigratorWidget(SmoothScrollArea):
     __src_selector: InstanceSelectorWidget
     __load_src_button: QPushButton
 
+    __dst_instance_tab: QTabWidget
+    __dst_selector: InstanceSelectorWidget
     __dst_creator: InstanceCreatorWidget
     __migrate_button: QPushButton
 
@@ -84,6 +88,8 @@ class MigratorWidget(SmoothScrollArea):
         )
         self.__migrate_button.clicked.connect(self.migration_started.emit)
         self.__dst_creator.instance_valid.connect(self.__migrate_button.setEnabled)
+        self.__dst_selector.instance_valid.connect(self.__migrate_button.setEnabled)
+        self.__dst_instance_tab.currentChanged.connect(self.__on_dst_tab_change)
 
     def __init_ui(self) -> None:
         scroll_widget = QWidget()
@@ -108,7 +114,7 @@ class MigratorWidget(SmoothScrollArea):
 
         self.__vlayout.addStretch()
 
-        self.__init_dst_creator()
+        self.__init_dst_instance_tab()
         self.__init_footer()
 
     def __init_game_dropdown(self) -> None:
@@ -151,16 +157,36 @@ class MigratorWidget(SmoothScrollArea):
         self.__load_src_button.clicked.connect(self.__load_src_instance)
         self.__vlayout.addWidget(self.__load_src_button)
 
-    def __init_dst_creator(self) -> None:
+    def __init_dst_instance_tab(self) -> None:
         title_label = QLabel(self.tr("Configure the destination instance:"))
         title_label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         title_label.setObjectName("h3")
         self.__vlayout.addWidget(title_label, 0, Qt.AlignmentFlag.AlignHCenter)
         self.__vlayout.addSpacing(15)
 
+        self.__dst_instance_tab = QTabWidget()
+        self.__dst_instance_tab.tabBar().setExpanding(True)
+        self.__dst_instance_tab.setObjectName("centered_tab")
+        self.__dst_instance_tab.setDisabled(True)
+        self.__dst_instance_tab.tabBar().installEventFilter(self)
+        self.__vlayout.addWidget(self.__dst_instance_tab)
+
         self.__dst_creator = InstanceCreatorWidget()
-        self.__dst_creator.setDisabled(True)
-        self.__vlayout.addWidget(self.__dst_creator)
+        self.__dst_instance_tab.addTab(
+            self.__dst_creator, self.tr("Create new instance")
+        )
+
+        self.__dst_selector = InstanceSelectorWidget()
+        self.__dst_instance_tab.addTab(
+            self.__dst_selector,
+            self.tr("Select existing instance") + " " + self.tr("(Experimental)"),
+        )
+
+    def __on_dst_tab_change(self, index: int) -> None:
+        if index == 0:
+            self.__migrate_button.setEnabled(self.__dst_creator.validate())
+        else:
+            self.__migrate_button.setEnabled(self.__dst_selector.validate())
 
     def __init_footer(self) -> None:
         self.__migrate_button = QPushButton(self.tr("Migrate..."))
@@ -171,6 +197,7 @@ class MigratorWidget(SmoothScrollArea):
     def __on_game_select(self, value: str) -> None:
         self.__cur_game = self.__games.get(value)
         self.__src_selector.set_cur_game(self.__cur_game)
+        self.__dst_selector.set_cur_game(self.__cur_game)
         self.__src_selector.setEnabled(self.__cur_game is not None)
 
         self.__cur_instance = None
@@ -228,7 +255,7 @@ class MigratorWidget(SmoothScrollArea):
             self.__cur_instance = mod_instance
             self.src_selected.emit(self.__cur_instance)
 
-        self.__dst_creator.setEnabled(self.get_src_instance() is not None)
+        self.__dst_instance_tab.setEnabled(self.get_src_instance() is not None)
 
     def get_selected_game(self) -> Optional[Game]:
         """
@@ -278,26 +305,35 @@ class MigratorWidget(SmoothScrollArea):
             Optional[ModManager]: The mod manager
         """
 
-        return self.__dst_creator.get_selected_mod_manager()
+        if self.__dst_instance_tab.currentWidget() is self.__dst_creator:
+            return self.__dst_creator.get_selected_mod_manager()
+        else:
+            return self.__dst_selector.get_selected_mod_manager()
 
-    def get_dst_instance_info(self, game: Game) -> Optional[InstanceInfo]:
+    def get_dst_instance_info(self, game: Game) -> InstanceInfo:
         """
         Returns the instance data for the selected or configured destination instance.
 
         Args:
             game (Game): The selected game
 
+        Raises:
+            ValueError: when the selected or configured destination instance is invalid
+
         Returns:
-            Optional[InstanceInfo]: The instance data
+            InstanceInfo: The instance data
         """
 
-        return self.__dst_creator.get_instance_data(game)
+        if self.__dst_instance_tab.currentWidget() is self.__dst_creator:
+            return self.__dst_creator.get_instance_data(game)
+        else:
+            return self.__dst_selector.get_cur_instance_data()
 
     @override
     def eventFilter(self, source: QObject, event: QEvent) -> bool:
         if (
             event.type() == QEvent.Type.Wheel
-            and (isinstance(source, QComboBox) or isinstance(source, QSpinBox))
+            and isinstance(source, (QComboBox, QSpinBox, QTabBar))
             and isinstance(event, QWheelEvent)
         ):
             self.wheelEvent(event)

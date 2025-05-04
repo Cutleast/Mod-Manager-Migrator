@@ -7,7 +7,7 @@ from typing import Any, Optional
 
 import pytest
 from pyfakefs.fake_filesystem import FakeFilesystem
-from PySide6.QtWidgets import QComboBox, QLineEdit, QPushButton
+from PySide6.QtWidgets import QComboBox, QLineEdit, QPushButton, QTabWidget
 from pytestqt.qtbot import QtBot
 from setup.mock_plyvel import MockPlyvelDB
 from utils import Utils
@@ -61,7 +61,7 @@ class TestMigratorWidget(UiTest):
     and InstanceCreator.
     """
 
-    SRC_MOD_MANAGERS: tuple[str, type[dict[ModManager, BaseSelectorWidget]]] = (
+    MOD_MANAGER_SELECTORS: tuple[str, type[dict[ModManager, BaseSelectorWidget]]] = (
         "mod_managers",
         dict,
     )
@@ -70,17 +70,26 @@ class TestMigratorWidget(UiTest):
     LOAD_SRC_BUTTON: tuple[str, type[QPushButton]] = ("load_src_button", QPushButton)
     """Identifier for accessing the private load_src_button field."""
 
+    DST_INSTANCE_TAB: tuple[str, type[QTabWidget]] = ("dst_instance_tab", QTabWidget)
+    """Identifier for accessing the private dst_instance_tab field."""
+
     DST_CREATOR: tuple[str, type[InstanceCreatorWidget]] = (
         "dst_creator",
         InstanceCreatorWidget,
     )
     """Identifier for accessing the private dst_creator field."""
 
-    DST_MOD_MANAGERS: tuple[str, type[dict[ModManager, BaseCreatorWidget]]] = (
+    MOD_MANAGER_CREATORS: tuple[str, type[dict[ModManager, BaseCreatorWidget]]] = (
         "mod_managers",
         dict,
     )
     """Identifier for accessing the private mod_managers field of InstanceCreator."""
+
+    DST_SELECTOR: tuple[str, type[InstanceSelectorWidget]] = (
+        "dst_selector",
+        InstanceSelectorWidget,
+    )
+    """Identifier for accessing the private dst_selector field."""
 
     MIGRATE_BUTTON: tuple[str, type[QPushButton]] = ("migrate_button", QPushButton)
     """Identifier for accessing the private migrate_button field."""
@@ -114,11 +123,8 @@ class TestMigratorWidget(UiTest):
         load_src_button: QPushButton = Utils.get_private_field(
             widget, *TestMigratorWidget.LOAD_SRC_BUTTON
         )
-        dst_creator: InstanceCreatorWidget = Utils.get_private_field(
-            widget, *TestMigratorWidget.DST_CREATOR
-        )
-        dst_mod_manager_dropdown: QComboBox = Utils.get_private_field(
-            dst_creator, *TestMigratorWidget.MOD_MANAGER_DROPDOWN
+        dst_instance_tab: QTabWidget = Utils.get_private_field(
+            widget, *TestMigratorWidget.DST_INSTANCE_TAB
         )
         migrate_button: QPushButton = Utils.get_private_field(
             widget, *TestMigratorWidget.MIGRATE_BUTTON
@@ -135,9 +141,8 @@ class TestMigratorWidget(UiTest):
             src_selector.get_cur_instance_data()
         assert not load_src_button.isEnabled()
 
-        assert not dst_mod_manager_dropdown.isEnabled()
-        assert dst_creator.get_selected_mod_manager() is None
-        assert not dst_creator.isEnabled()
+        assert not dst_instance_tab.isEnabled()
+        assert dst_instance_tab.currentIndex() == 0
         assert not migrate_button.isEnabled()
 
     def test_select_src_instance(
@@ -163,7 +168,9 @@ class TestMigratorWidget(UiTest):
             src_selector, *TestMigratorWidget.MOD_MANAGER_DROPDOWN
         )
         src_mod_managers: dict[ModManager, BaseSelectorWidget] = (
-            Utils.get_private_field(src_selector, *TestMigratorWidget.SRC_MOD_MANAGERS)
+            Utils.get_private_field(
+                src_selector, *TestMigratorWidget.MOD_MANAGER_SELECTORS
+            )
         )
         load_src_button: QPushButton = Utils.get_private_field(
             widget, *TestMigratorWidget.LOAD_SRC_BUTTON
@@ -263,7 +270,9 @@ class TestMigratorWidget(UiTest):
             src_selector, *TestMigratorWidget.MOD_MANAGER_DROPDOWN
         )
         src_mod_managers: dict[ModManager, BaseSelectorWidget] = (
-            Utils.get_private_field(src_selector, *TestMigratorWidget.SRC_MOD_MANAGERS)
+            Utils.get_private_field(
+                src_selector, *TestMigratorWidget.MOD_MANAGER_SELECTORS
+            )
         )
         vortex: Vortex = {m.get_id(): m for m in src_mod_managers}[Vortex.get_id()]  # type: ignore
         vortex.db_path.mkdir(parents=True, exist_ok=True)
@@ -351,6 +360,9 @@ class TestMigratorWidget(UiTest):
         self.test_select_src_instance(widget, ui_test_fs, instance, qtbot)
 
         # given
+        dst_instance_tab: QTabWidget = Utils.get_private_field(
+            widget, *TestMigratorWidget.DST_INSTANCE_TAB
+        )
         dst_creator: InstanceCreatorWidget = Utils.get_private_field(
             widget, *TestMigratorWidget.DST_CREATOR
         )
@@ -358,7 +370,7 @@ class TestMigratorWidget(UiTest):
             dst_creator, *TestMigratorWidget.MOD_MANAGER_DROPDOWN
         )
         dst_mod_managers: dict[ModManager, BaseCreatorWidget] = Utils.get_private_field(
-            dst_creator, *TestMigratorWidget.DST_MOD_MANAGERS
+            dst_creator, *TestMigratorWidget.MOD_MANAGER_CREATORS
         )
         vortex: Vortex = {m.get_id(): m for m in dst_mod_managers}[Vortex.get_id()]  # type: ignore
         vortex.db_path.mkdir(parents=True, exist_ok=True)
@@ -367,8 +379,7 @@ class TestMigratorWidget(UiTest):
         )
 
         # then
-        assert dst_creator.isEnabled()
-        assert dst_mod_manager_dropdown.isEnabled()
+        assert dst_instance_tab.isEnabled()
         assert dst_creator.get_selected_mod_manager() is None
         assert not migrate_button.isEnabled()
 
@@ -404,3 +415,140 @@ class TestMigratorWidget(UiTest):
         # when/then
         with qtbot.waitSignal(widget.migration_started):
             migrate_button.click()
+
+    def test_dst_instance_tab(
+        self,
+        widget: MigratorWidget,
+        ui_test_fs: FakeFilesystem,
+        full_vortex_db: MockPlyvelDB,
+        instance: Instance,
+        qtbot: QtBot,
+    ) -> None:
+        """
+        Tests the switching between the destination instance creator and selector.
+        """
+
+        self.test_select_src_instance(widget, ui_test_fs, instance, qtbot)
+
+        # given
+        skyrimse: Game = Game.get_game_by_id("skyrimse")
+        dst_instance_tab: QTabWidget = Utils.get_private_field(
+            widget, *TestMigratorWidget.DST_INSTANCE_TAB
+        )
+        dst_creator: InstanceCreatorWidget = Utils.get_private_field(
+            widget, *TestMigratorWidget.DST_CREATOR
+        )
+        dst_selector: InstanceSelectorWidget = Utils.get_private_field(
+            widget, *TestMigratorWidget.DST_SELECTOR
+        )
+        creator_mod_manager_dropdown: QComboBox = Utils.get_private_field(
+            dst_creator, *TestMigratorWidget.MOD_MANAGER_DROPDOWN
+        )
+        mod_manager_creators: dict[ModManager, BaseCreatorWidget] = (
+            Utils.get_private_field(
+                dst_creator, *TestMigratorWidget.MOD_MANAGER_CREATORS
+            )
+        )
+        creator_vortex: Vortex = {m.get_id(): m for m in mod_manager_creators}[
+            Vortex.get_id()
+        ]  # type: ignore
+        creator_vortex.db_path.mkdir(parents=True, exist_ok=True)
+        selector_mod_manager_dropdown: QComboBox = Utils.get_private_field(
+            dst_selector, *TestMigratorWidget.MOD_MANAGER_DROPDOWN
+        )
+        mod_manager_selectors: dict[ModManager, BaseSelectorWidget] = (
+            Utils.get_private_field(
+                dst_selector, *TestMigratorWidget.MOD_MANAGER_SELECTORS
+            )
+        )
+        selector_vortex: Vortex = {m.get_id(): m for m in mod_manager_selectors}[
+            Vortex.get_id()
+        ]  # type: ignore
+        selector_vortex.db_path.mkdir(parents=True, exist_ok=True)
+        migrate_button: QPushButton = Utils.get_private_field(
+            widget, *TestMigratorWidget.MIGRATE_BUTTON
+        )
+
+        # then
+        assert dst_instance_tab.isEnabled()
+        assert dst_instance_tab.currentIndex() == 0
+        assert dst_instance_tab.currentWidget() is dst_creator
+        assert not migrate_button.isEnabled()
+
+        # when
+        dst_instance_tab.setCurrentWidget(dst_selector)
+
+        # then
+        assert dst_instance_tab.currentIndex() == 1
+        assert dst_instance_tab.currentWidget() is dst_selector
+        assert selector_mod_manager_dropdown.isEnabled()
+        assert not migrate_button.isEnabled()
+
+        # when
+        selector_mod_manager_dropdown.setCurrentText(Vortex.get_display_name())
+        vortex_selector_widget: BaseSelectorWidget = mod_manager_selectors[
+            selector_vortex
+        ]
+
+        # then
+        assert isinstance(vortex_selector_widget, VortexSelectorWidget)
+
+        # when
+        selector_profile_dropdown: QComboBox = Utils.get_private_field(
+            vortex_selector_widget, "profile_dropdown", QComboBox
+        )
+
+        # then
+        assert selector_profile_dropdown.isEnabled()
+        assert selector_profile_dropdown.count() == 3
+        assert not migrate_button.isEnabled()
+
+        # when
+        selector_profile_dropdown.setCurrentIndex(1)
+
+        # then
+        assert migrate_button.isEnabled()
+
+        # when
+        dst_instance_tab.setCurrentWidget(dst_creator)
+
+        # then
+        assert not migrate_button.isEnabled()
+
+        # when
+        vortex_creator_widget: BaseCreatorWidget = mod_manager_creators[creator_vortex]
+
+        # then
+        assert isinstance(vortex_creator_widget, VortexCreatorWidget)
+
+        # when
+        creator_mod_manager_dropdown.setCurrentText(Vortex.get_display_name())
+        Utils.get_private_field(
+            vortex_creator_widget, "profile_name_entry", QLineEdit
+        ).setText("test")
+
+        # then
+        assert migrate_button.isEnabled()
+
+        # when
+        dst_instance_tab.setCurrentWidget(dst_selector)
+
+        # then
+        assert migrate_button.isEnabled()
+
+        # when
+        with qtbot.waitSignal(widget.migration_started):
+            migrate_button.click()
+
+        # then
+        assert widget.get_dst_instance_info(skyrimse) == ProfileInfo(
+            display_name="Default (BkIX54nayg)", game=skyrimse, id="BkIX54nayg"
+        )
+
+        # when
+        dst_instance_tab.setCurrentWidget(dst_creator)
+        with qtbot.waitSignal(widget.migration_started):
+            migrate_button.click()
+
+        # then
+        assert widget.get_dst_instance_info(skyrimse).display_name == "test"

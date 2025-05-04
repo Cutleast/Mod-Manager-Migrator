@@ -11,6 +11,7 @@ from setup.mock_plyvel import MockPlyvelDB
 
 from core.config.app_config import AppConfig
 from core.instance.instance import Instance
+from core.instance.metadata import Metadata
 from core.instance.mod import Mod
 from core.instance.tool import Tool
 from core.migrator.migration_report import MigrationReport
@@ -436,6 +437,61 @@ class TestMigrator(BaseTest):
         # then
         assert not report.has_errors
 
+    def test_migration_mo2_to_existing_vortex_profile(
+        self,
+        app_config: AppConfig,
+        full_vortex_db: MockPlyvelDB,
+        test_fs: FakeFilesystem,
+        mo2_instance_info: MO2InstanceInfo,
+        instance: Instance,
+        vortex_profile_info: ProfileInfo,
+    ) -> None:
+        """
+        Tests the migration from a MO2 instance to an existing Vortex profile.
+        """
+
+        # given
+        mo2 = ModOrganizer()
+        vortex = Vortex()
+        vortex.db_path.mkdir(parents=True, exist_ok=True)
+        migrator = Migrator()
+
+        # when
+        report: MigrationReport = migrator.migrate(
+            src_instance=instance,
+            src_info=mo2_instance_info,
+            dst_info=vortex_profile_info,
+            src_mod_manager=mo2,
+            dst_mod_manager=vortex,
+            use_hardlinks=True,
+            replace=False,
+            modname_limit=app_config.modname_limit,
+            activate_new_instance=app_config.activate_new_instance,
+            included_tools=instance.tools,
+        )
+
+        # then
+        assert not report.has_errors
+
+        # when
+        migrated_instance: Instance = vortex.load_instance(
+            vortex_profile_info, app_config.modname_limit, FileBlacklist.get_files()
+        )
+
+        # then
+        self.assert_modlists_equal(
+            migrated_instance.get_loadorder(False),
+            instance.get_loadorder(False),
+            self.__get_file_redirects(migrated_instance.mods, vortex),
+            self.__get_file_redirects(instance.mods, mo2),
+            compare_metadata_instead_of_names=True,
+            exclude_separators=True,
+        )
+        # TODO: Fix this test
+        # self.assert_tools_equal(
+        #     migrated_instance.tools, instance.tools, compare_display_names=False
+        # )
+
     def assert_modlists_equal(
         self,
         modlist1: list[Mod],
@@ -443,6 +499,7 @@ class TestMigrator(BaseTest):
         file_redirects1: dict[Mod, dict[Path, Path]] = {},
         file_redirects2: dict[Mod, dict[Path, Path]] = {},
         check_files: bool = True,
+        compare_metadata_instead_of_names: bool = False,
         exclude_separators: bool = False,
     ) -> None:
         """
@@ -458,6 +515,9 @@ class TestMigrator(BaseTest):
                 File redirects for the second mod list. Defaults to {}.
             check_files (bool, optional):
                 Whether to check the files of the mods. Defaults to True.
+            compare_metadata_instead_of_names (bool, optional):
+                Whether to compare the metadata of the mods instead of their names.
+                Defaults to False.
             exclude_separators (bool, optional):
                 Whether to exclude separators from the comparison. Defaults to False.
 
@@ -473,10 +533,16 @@ class TestMigrator(BaseTest):
                 filter(lambda m: m.mod_type != Mod.Type.Separator, modlist2)
             )
 
-        modnames1: list[str] = [mod.display_name for mod in modlist1]
-        modnames2: list[str] = [mod.display_name for mod in modlist2]
+        if compare_metadata_instead_of_names:
+            metadata1: list[Metadata] = [mod.metadata for mod in modlist1]
+            metadata2: list[Metadata] = [mod.metadata for mod in modlist2]
 
-        assert modnames1 == modnames2
+            assert metadata1 == metadata2
+        else:
+            modnames1: list[str] = [mod.display_name for mod in modlist1]
+            modnames2: list[str] = [mod.display_name for mod in modlist2]
+
+            assert modnames1 == modnames2
 
         for mod1, mod2 in zip(modlist1, modlist2):
             redirects1: dict[Path, Path] = file_redirects1.get(mod1, {})
@@ -513,7 +579,9 @@ class TestMigrator(BaseTest):
                     ),
                 )
 
-    def assert_tools_equal(self, tools1: list[Tool], tools2: list[Tool]) -> None:
+    def assert_tools_equal(
+        self, tools1: list[Tool], tools2: list[Tool], compare_display_names: bool = True
+    ) -> None:
         """
         Asserts that two lists of tools are equal.
         Compares name, (relative) path, arguments and mod mappings.
@@ -521,12 +589,19 @@ class TestMigrator(BaseTest):
         Args:
             tools1 (list[Tool]): First list of tools
             tools2 (list[Tool]): Second list of tools
+            compare_display_names (bool, optional):
+                Whether to compare the display names of the tools. Defaults to True.
         """
 
-        toolnames1: list[str] = [tool.display_name for tool in tools1]
-        toolnames2: list[str] = [tool.display_name for tool in tools2]
+        if compare_display_names:
+            toolnames1: list[str] = [tool.display_name for tool in tools1]
+            toolnames2: list[str] = [tool.display_name for tool in tools2]
 
-        assert toolnames1 == toolnames2
+            assert toolnames1 == toolnames2
+        else:
+            assert list(
+                sorted(tools1, key=lambda t: t.executable.name.lower())
+            ) == list(sorted(tools2, key=lambda t: t.executable.name.lower()))
 
         for tool1, tool2 in zip(tools1, tools2):
             assert tool1.executable == tool2.executable

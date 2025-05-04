@@ -144,6 +144,22 @@ class InstanceCreatorWidget(QWidget):
 
         return self.__sel_mod_manager
 
+    def validate(self) -> bool:
+        """
+        Returns whether the currently selected instance data is valid.
+
+        Returns:
+            bool: whether the currently selected instance data is valid
+        """
+
+        if self.__sel_mod_manager is not None:
+            instance_widget: BaseCreatorWidget = self.__mod_managers[
+                self.__sel_mod_manager
+            ]
+            return instance_widget.validate()
+
+        return False
+
     def get_instance_data(self, game: Game) -> InstanceInfo:
         """
         Returns the customized destination instance data.

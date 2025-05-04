@@ -188,6 +188,22 @@ class InstanceSelectorWidget(QWidget):
 
         self.instance_valid.emit(self.__cur_instance_data is not None)
 
+    def validate(self) -> bool:
+        """
+        Returns whether the currently selected instance data is valid.
+
+        Returns:
+            bool: whether the currently selected instance data is valid
+        """
+
+        if self.__cur_mod_manager is not None and self.__cur_game is not None:
+            instance_widget: BaseSelectorWidget = self.__mod_managers[
+                self.__cur_mod_manager
+            ]
+            return instance_widget.validate()
+
+        return False
+
     def get_cur_instance_data(self) -> InstanceInfo:
         """
         Returns the currently selected instance data.
