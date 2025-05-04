@@ -30,13 +30,13 @@ class Migrator(QObject):
 
     log: logging.Logger = logging.getLogger("Migrator")
 
-    def migrate(
+    def migrate[S: InstanceInfo, D: InstanceInfo](
         self,
         src_instance: Instance,
-        src_info: InstanceInfo,
-        dst_info: InstanceInfo,
-        src_mod_manager: ModManager,
-        dst_mod_manager: ModManager,
+        src_info: S,
+        dst_info: D,
+        src_mod_manager: ModManager[S],
+        dst_mod_manager: ModManager[D],
         use_hardlinks: bool,
         replace: bool,
         modname_limit: int,
@@ -49,10 +49,10 @@ class Migrator(QObject):
 
         Args:
             src_instance (Instance): Source mod instance.
-            src_info (InstanceInfo): Information about the source mod instance.
-            dst_info (InstanceInfo): Information about the destination mod instance.
-            src_mod_manager (ModManager): Source mod manager.
-            dst_mod_manager (ModManager): Destination mod manager.
+            src_info (S): Information about the source mod instance.
+            dst_info (D): Information about the destination mod instance.
+            src_mod_manager (ModManager[S]): Source mod manager.
+            dst_mod_manager (ModManager[D]): Destination mod manager.
             use_hardlinks (bool): Whether to use hardlinks if possible.
             replace (bool): Whether to replace existing files.
             modname_limit (int): A character limit for mod names.
