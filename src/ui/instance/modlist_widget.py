@@ -169,21 +169,28 @@ class ModlistWidget(QWidget):
 
         cur_separator: Optional[QTreeWidgetItem] = None
         for i, mod in enumerate(instance.loadorder):
-            # Process separator
-            if mod.mod_type == Mod.Type.Separator:
-                cur_separator = ModlistWidget._create_separator_item(mod, i)
-                self.__modlist_tree_items[mod] = cur_separator
-                self.__tree_widget.addTopLevelItem(cur_separator)
+            match mod.mod_type:
+                # Process separator
+                case Mod.Type.Separator:
+                    cur_separator = ModlistWidget._create_separator_item(mod, i)
+                    self.__modlist_tree_items[mod] = cur_separator
+                    self.__tree_widget.addTopLevelItem(cur_separator)
 
-            # Process mod
-            else:
-                mod_item = ModlistWidget._create_mod_item(mod, i)
-                self.__modlist_tree_items[mod] = mod_item
-
-                if cur_separator is not None:
-                    cur_separator.addChild(mod_item)
-                else:
+                # Process overwrite folder
+                case Mod.Type.Overwrite:
+                    mod_item = ModlistWidget._create_overwrite_mod_item(mod, i)
+                    self.__modlist_tree_items[mod] = mod_item
                     self.__tree_widget.addTopLevelItem(mod_item)
+
+                # Process mod
+                case Mod.Type.Regular:
+                    mod_item = ModlistWidget._create_mod_item(mod, i)
+                    self.__modlist_tree_items[mod] = mod_item
+
+                    if cur_separator is not None:
+                        cur_separator.addChild(mod_item)
+                    else:
+                        self.__tree_widget.addTopLevelItem(mod_item)
 
     @staticmethod
     def _create_separator_item(separator: Mod, index: int) -> QTreeWidgetItem:
@@ -226,6 +233,23 @@ class ModlistWidget(QWidget):
         mod_item.setCheckState(
             0, Qt.CheckState.Checked if mod.enabled else Qt.CheckState.Unchecked
         )
+
+        return mod_item
+
+    @staticmethod
+    def _create_overwrite_mod_item(mod: Mod, index: int) -> QTreeWidgetItem:
+        mod_item = QTreeWidgetItem(
+            [
+                mod.display_name,
+                "",  # Version
+                scale_value(mod.size),
+                "",  # Mod Priority
+            ]
+        )
+        mod_item.setToolTip(0, mod_item.text(0))
+        mod_item.setDisabled(False)
+        mod_item.setTextAlignment(0, Qt.AlignmentFlag.AlignCenter)
+        mod_item.setTextAlignment(2, Qt.AlignmentFlag.AlignCenter)
 
         return mod_item
 

@@ -27,6 +27,7 @@ from ui.widgets.loading_dialog import LoadingDialog
 from ..exceptions import InstanceNotFoundError
 from ..mod_manager import ModManager
 from .exceptions import (
+    OverwriteModNotSupportedError,
     VortexIsRunningError,
     VortexNotFullySetupError,
 )
@@ -534,6 +535,9 @@ class Vortex(ModManager[ProfileInfo]):
         if mod.mod_type == Mod.Type.Separator:
             self.log.info("Skipped mod because separators are not supported by Vortex.")
             return
+
+        if mod.mod_type == Mod.Type.Overwrite:
+            raise OverwriteModNotSupportedError
 
         game_id: str = instance_data.game.id.lower()
         staging_folder: Path = self.__get_staging_folder(instance_data.game)

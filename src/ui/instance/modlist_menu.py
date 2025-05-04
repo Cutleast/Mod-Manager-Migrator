@@ -81,10 +81,8 @@ class ModlistMenu(Menu):
         current_item: Optional[Mod] = self.__parent.get_current_item()
 
         if current_item is not None:
-            self.__uncheck_action.setVisible(
-                current_item.mod_type != Mod.Type.Separator
-            )
-            self.__check_action.setVisible(current_item.mod_type != Mod.Type.Separator)
+            self.__uncheck_action.setVisible(current_item.mod_type == Mod.Type.Regular)
+            self.__check_action.setVisible(current_item.mod_type == Mod.Type.Regular)
             self.__open_modpage_action.setVisible(
                 current_item.get_modpage_url() is not None
             )

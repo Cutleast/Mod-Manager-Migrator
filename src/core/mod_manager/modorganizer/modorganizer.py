@@ -258,6 +258,23 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
             mod.files  # build cache for mod files
             mods.append(mod)
 
+        # Load overwrite folder as mod
+        overwrite_folder: Path = ModOrganizer.get_overwrite_folder(mo2_ini_path)
+        if overwrite_folder.is_dir() and os.listdir(overwrite_folder):
+            overwrite_mod = Mod(
+                display_name="Overwrite",
+                path=overwrite_folder,
+                deploy_path=None,
+                metadata=Metadata(
+                    mod_id=None, file_id=None, version="", file_name=None, game_id=""
+                ),
+                installed=True,
+                enabled=True,
+                mod_type=Mod.Type.Overwrite,
+            )
+            overwrite_mod.files  # build cache for mod files
+            mods.append(overwrite_mod)
+
         if ldialog is not None:
             ldialog.updateProgress(
                 text1=self.tr("Processing mod conflicts..."),
@@ -348,6 +365,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
                 + "\n"
             )
             for mod in reversed(mods)
+            if mod.mod_type != Mod.Type.Overwrite
         ]
         with open(modlist_txt_path, "w", encoding="utf8") as modlist_file:
             modlist_file.writelines(lines)
@@ -654,51 +672,63 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
 
         game: Game = instance_data.game
 
-        regular: bool = True
-        mod_name: str = mod.display_name
-        if mod.mod_type == Mod.Type.Separator:
-            mod_name += "_separator"
-        mod_folder: Path = instance_data.mods_folder / clean_fs_string(mod_name)
-        meta_ini_path: Path = mod_folder / "meta.ini"
-        if mod.deploy_path is not None and mod.deploy_path == Path("."):
-            if instance_data.use_root_builder:
-                mod_folder /= "Root"
-            else:
-                mod_folder = instance.game_folder
-                regular = False
-        elif mod.deploy_path is not None:
-            mod_folder /= mod.deploy_path
+        mod_folder: Path
+        regular_deployment: bool = True
 
-        self.log.debug(f"Deploy path: {mod.deploy_path}")
-        self.log.debug(f"Mod folder: {mod_folder}")
+        if mod.mod_type in [Mod.Type.Regular, Mod.Type.Separator]:
+            mod_name: str = mod.display_name
+            if mod.mod_type == Mod.Type.Separator:
+                mod_name += "_separator"
+            mod_folder = instance_data.mods_folder / clean_fs_string(mod_name)
+            meta_ini_path: Path = mod_folder / "meta.ini"
+            if mod.deploy_path is not None and mod.deploy_path == Path("."):
+                if instance_data.use_root_builder:
+                    mod_folder /= "Root"
+                else:
+                    mod_folder = instance.game_folder
+                    regular_deployment = False
+            elif mod.deploy_path is not None:
+                mod_folder /= mod.deploy_path
 
-        if mod_folder.is_dir() and regular:
-            self.log.warning(
-                f"Mod {mod.display_name!r} already exists! Merging files..."
-            )
-        mod_folder.mkdir(parents=True, exist_ok=True)
+            self.log.debug(f"Deploy path: {mod.deploy_path}")
+            self.log.debug(f"Mod folder: {mod_folder}")
 
-        # Create and write metadata to meta.ini
-        # if the mod doesn't already have one
-        if regular and Path("meta.ini") not in mod.files:
-            meta_ini_file = INIFile(meta_ini_path)
-            meta_ini_file.data = {
-                "General": {
-                    "game": game.short_name,
-                    "modid": mod.metadata.mod_id,
-                    "version": mod.metadata.version,
-                    "installationFile": mod.metadata.file_name,
-                },
-                "installedFiles": {
-                    "1\\modid": mod.metadata.mod_id,
-                    "size": "1",
-                    "1\\fileid": mod.metadata.file_id,
-                },
-            }
-            meta_ini_file.save_file()
-        elif regular and Path("meta.ini") in mod.files:
-            meta_ini_path.write_bytes((mod.path / "meta.ini").read_bytes())
-            self.log.info("Copied original meta.ini from mod.")
+            if mod_folder.is_dir() and regular_deployment:
+                self.log.warning(
+                    f"Mod {mod.display_name!r} already exists! Merging files..."
+                )
+            mod_folder.mkdir(parents=True, exist_ok=True)
+
+            # Create and write metadata to meta.ini
+            # if the mod doesn't already have one
+            if regular_deployment and Path("meta.ini") not in mod.files:
+                meta_ini_file = INIFile(meta_ini_path)
+                meta_ini_file.data = {
+                    "General": {
+                        "game": game.short_name,
+                        "modid": mod.metadata.mod_id,
+                        "version": mod.metadata.version,
+                        "installationFile": mod.metadata.file_name,
+                    },
+                    "installedFiles": {
+                        "1\\modid": mod.metadata.mod_id,
+                        "size": "1",
+                        "1\\fileid": mod.metadata.file_id,
+                    },
+                }
+                meta_ini_file.save_file()
+            elif regular_deployment and Path("meta.ini") in mod.files:
+                meta_ini_path.write_bytes((mod.path / "meta.ini").read_bytes())
+                self.log.info("Copied original meta.ini from mod.")
+
+        # Process overwrite folder
+        elif mod.mod_type == Mod.Type.Overwrite:
+            mo2_ini_path: Path = instance_data.base_folder / "ModOrganizer.ini"
+            mod_folder: Path = ModOrganizer.get_overwrite_folder(mo2_ini_path)
+
+        else:
+            self.log.error(f"Unknown mod type: {mod.mod_type}")
+            return
 
         self._migrate_mod_files(
             mod, mod_folder, file_redirects, use_hardlinks, replace, blacklist, ldialog
@@ -721,7 +751,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
             )
             existing_mod.file_conflicts.update(mod.file_conflicts)
 
-        elif regular:
+        elif regular_deployment:
             new_mod: Mod = Mod.copy(mod)
             new_mod.path = mod_folder
             instance.mods.append(new_mod)
@@ -909,6 +939,34 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
             prof_dir = base_dir / "profiles"
 
         return prof_dir
+
+    @staticmethod
+    def get_overwrite_folder(mo2_ini_path: Path) -> Path:
+        """
+        Gets the path to the overwrite folder of the specified MO2 instance.
+
+        Args:
+            mo2_ini_path (Path): Path to the ModOrganizer.ini file of the instance.
+
+        Returns:
+            Path: Path to the overwrite folder.
+        """
+
+        ini_file = INIFile(mo2_ini_path)
+        ini_data: dict[str, Any] = ini_file.load_file()
+
+        settings: dict[str, Any] = ini_data["Settings"]
+        base_dir = Path(settings.get("base_directory", mo2_ini_path.parent))
+
+        overwrite_dir: Path
+        if "overwrite_directory" in settings:
+            overwrite_dir = resolve(
+                Path(settings["overwrite_directory"]), base_dir=str(base_dir)
+            )
+        else:
+            overwrite_dir = base_dir / "overwrite"
+
+        return overwrite_dir
 
     @staticmethod
     def get_profile_names(mo2_ini_path: Path) -> list[str]:

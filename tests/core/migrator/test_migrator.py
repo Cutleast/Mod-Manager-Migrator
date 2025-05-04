@@ -19,6 +19,7 @@ from core.migrator.migrator import FileBlacklist, Migrator
 from core.mod_manager.mod_manager import ModManager
 from core.mod_manager.modorganizer.mo2_instance_info import MO2InstanceInfo
 from core.mod_manager.modorganizer.modorganizer import ModOrganizer
+from core.mod_manager.vortex.exceptions import OverwriteModNotSupportedError
 from core.mod_manager.vortex.profile_info import ProfileInfo
 from core.mod_manager.vortex.vortex import Vortex
 from core.utilities.env_resolver import resolve
@@ -128,7 +129,14 @@ class TestMigrator(BaseTest):
         )
 
         # then
-        assert not report.has_errors
+        assert not report.failed_tools
+        assert len(report.failed_mods) == 1
+        assert list(report.failed_mods) == [  # check that only the overwrite mod failed
+            instance.mods[-1]
+        ]
+        assert isinstance(
+            report.failed_mods[instance.mods[-1]], OverwriteModNotSupportedError
+        )
         assert (
             ready_vortex_db.get(b"settings###profiles###activeProfileId")
             == b'"5e6f7g8h9j"'
@@ -155,6 +163,7 @@ class TestMigrator(BaseTest):
             self.__get_file_redirects(migrated_instance.mods, vortex),
             self.__get_file_redirects(instance.mods, mo2),
             exclude_separators=True,  # Vortex doesn't support separators and ignores them when migrating
+            exclude_overwrite=True,  # Vortex doesn't support the overwrite mod type
         )
         self.assert_tools_equal(migrated_instance.tools, instance.tools)
         assert migrated_instance.game_folder == instance.game_folder
@@ -202,7 +211,10 @@ class TestMigrator(BaseTest):
         )
 
         # then
-        assert not report.has_errors
+        assert not report.failed_tools
+        assert list(report.failed_mods) == [  # check that only the overwrite mod failed
+            instance.mods[-1]
+        ]
 
         # when
         assert (
@@ -471,7 +483,10 @@ class TestMigrator(BaseTest):
         )
 
         # then
-        assert not report.has_errors
+        assert not report.failed_tools
+        assert list(report.failed_mods) == [  # check that only the overwrite mod failed
+            instance.mods[-1]
+        ]
 
         # when
         migrated_instance: Instance = vortex.load_instance(
@@ -486,6 +501,7 @@ class TestMigrator(BaseTest):
             self.__get_file_redirects(instance.mods, mo2),
             compare_metadata_instead_of_names=True,
             exclude_separators=True,
+            exclude_overwrite=True,
         )
         # TODO: Fix this test
         # self.assert_tools_equal(
@@ -501,6 +517,7 @@ class TestMigrator(BaseTest):
         check_files: bool = True,
         compare_metadata_instead_of_names: bool = False,
         exclude_separators: bool = False,
+        exclude_overwrite: bool = False,
     ) -> None:
         """
         Asserts that two mod lists are equal. Compares loadorder, metadata, enabled
@@ -520,6 +537,9 @@ class TestMigrator(BaseTest):
                 Defaults to False.
             exclude_separators (bool, optional):
                 Whether to exclude separators from the comparison. Defaults to False.
+            exclude_overwrite (bool, optional):
+                Whether to exclude the overwrite mod from the comparison.
+                Defaults to False.
 
         Raises:
             AssertionError: When the mod lists are not equal.
@@ -531,6 +551,14 @@ class TestMigrator(BaseTest):
             )
             modlist2 = list(
                 filter(lambda m: m.mod_type != Mod.Type.Separator, modlist2)
+            )
+
+        if exclude_overwrite:
+            modlist1 = list(
+                filter(lambda m: m.mod_type != Mod.Type.Overwrite, modlist1)
+            )
+            modlist2 = list(
+                filter(lambda m: m.mod_type != Mod.Type.Overwrite, modlist2)
             )
 
         if compare_metadata_instead_of_names:

@@ -51,3 +51,19 @@ class VortexNotFullySetupError(PreMigrationCheckFailedError):
             "1. Install Vortex\n2. Start Vortex and enable the mod management for the "
             "game.\n3. Enable profile management in Vortex' settings.",
         )
+
+
+class OverwriteModNotSupportedError(ModManagerError):
+    """
+    Exception that occurs when attempting to install a mod of type Overwrite
+    (MO2 overwrite folder).
+    """
+
+    @override
+    def getLocalizedMessage(self) -> str:
+        return QApplication.translate(
+            "exceptions",
+            "The overwrite folder of MO2 is not supported by Vortex!\n"
+            "Please create a separate mod from the overwrite folder and restart the "
+            "migration.",
+        )

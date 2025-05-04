@@ -100,7 +100,7 @@ class TestModOrganizer(BaseTest):
         )
 
         # then
-        assert len(instance.mods) == 9
+        assert len(instance.mods) == 10
         assert len(instance.tools) == 3
 
         # when
@@ -145,6 +145,14 @@ class TestModOrganizer(BaseTest):
         assert dip.commandline_args == []
         assert not dip.is_in_game_dir
         assert dip.working_dir is None
+
+        # when
+        overwrite_mod: Mod = instance.mods[-1]
+
+        # then
+        assert overwrite_mod.display_name == "Overwrite"
+        assert overwrite_mod.mod_type == Mod.Type.Overwrite
+        assert overwrite_mod.files == [Path("test.txt")]
 
     @staticmethod
     def process_conflicts_stub(mods: list[Mod], file_blacklist: list[str]) -> None:
@@ -393,6 +401,67 @@ class TestModOrganizer(BaseTest):
 
         # then
         assert migrated_separator_mod.mod_type == Mod.Type.Separator
+
+    def test_install_mod_with_overwrite(
+        self, app_config: AppConfig, test_fs: FakeFilesystem, instance: Instance
+    ) -> None:
+        """
+        Tests `core.mod_manager.modorganizer.modorganizer.ModOrganizer.install_mod()`
+        with an overwrite mod.
+        """
+
+        self.test_create_instance(test_fs)
+
+        # given
+        mo2 = ModOrganizer()
+        test_instance_path = Path("E:\\Modding\\Test Instance")
+        instance_data = MO2InstanceInfo(
+            display_name="Test Instance",
+            game=Game.get_game_by_id("skyrimse"),
+            profile="Default",
+            is_global=False,
+            base_folder=test_instance_path,
+            mods_folder=test_instance_path / "mods",
+            profiles_folder=test_instance_path / "profiles",
+            install_mo2=False,  # This is important for now as the download is not mocked, yet
+        )
+        dst_instance: Instance = mo2.load_instance(
+            instance_data, app_config.modname_limit, FileBlacklist.get_files()
+        )
+        overwrite_mod: Mod = instance.mods[-1]
+
+        # when
+        mo2.install_mod(
+            overwrite_mod,
+            dst_instance,
+            instance_data,
+            file_redirects=mo2.get_actual_files(overwrite_mod),
+            use_hardlinks=True,
+            replace=True,
+            blacklist=FileBlacklist.get_files(),
+        )
+        mo2.finalize_migration(
+            dst_instance, instance_data, order_matters=True, activate_new_instance=True
+        )
+
+        dst_instance = mo2.load_instance(
+            instance_data, app_config.modname_limit, FileBlacklist.get_files()
+        )
+        migrated_overwrite_mod: Mod = dst_instance.mods[-1]
+
+        # then
+        assert migrated_overwrite_mod.mod_type == Mod.Type.Overwrite
+        assert Path("E:\\Modding\\Test Instance\\overwrite\\test.txt").is_file()
+        assert (
+            Path("E:\\Modding\\Test Instance\\overwrite\\test.txt").read_text()
+            == "This file should make MMM to load the overwrite folder as extra mod."
+        )
+        assert (
+            "+Overwrite"
+            not in Path("E:\\Modding\\Test Instance\\profiles\\Default\\modlist.txt")
+            .read_text()
+            .splitlines()
+        )
 
     PROCESS_INI_ARGS_DATA: list[tuple[str, list[str]]] = [
         (

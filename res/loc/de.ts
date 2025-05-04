@@ -370,53 +370,53 @@
         <translation>Mods von {0} &gt; {1} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="263"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="368"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="280"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="386"/>
         <source>Processing mod conflicts...</source>
         <translation>Modkonflikte werden verarbeitet...</translation>
     </message>
     <message>
         <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="149"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="414"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="432"/>
         <source>Loading tools from {0} &gt; {1}...</source>
         <translation>Tools von {0} &gt; {1} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="383"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="401"/>
         <source>Processing single file conflicts...</source>
         <translation>Einzelkonflikte werden verarbeitet...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="593"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="611"/>
         <source>Downloading and installing ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen und installiert...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="613"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="631"/>
         <source>Downloading ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="635"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="653"/>
         <source>Extracting archive...</source>
         <translation>Archiv wird entpackt...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="977"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1035"/>
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of your MO2 installation if not already installed.</source>
         <translation>Die Nutzung von Root Builder wurde aktiviert.
 Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von Nexus Mods heruntergeladen und in den &quot;plugins&quot;-Ordner deiner MO2 Installation entpackt werden, wenn nicht bereits installiert.</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="987"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1045"/>
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of the new MO2 installation.</source>
         <translation>Die Nutzung von Root Builder wurde aktiviert.
 Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von Nexus Mods heruntergeladen und in den &quot;plugins&quot;-Ordner der neuen MO2 Installation entpackt werden.</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="995"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1053"/>
         <source>At least one global instance was detected.
 Global instances cause issues with portable instances and it is recommended to delete (or rename) the following folder:
 {0}</source>
@@ -765,23 +765,23 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
 <context>
     <name>Vortex</name>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="137"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="138"/>
         <source>Loading profile {0}...</source>
         <translation>Profil {0} wird geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="173"/>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="209"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="174"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="210"/>
         <source>Loading mods from profile {0}...</source>
         <translation>Mods von Profil {0} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="415"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="416"/>
         <source>Loading tools from Vortex...</source>
         <translation>Tools werden von Vortex geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="839"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="843"/>
         <source>Vortex is currently deployed to the game folder. It is strongly recommended to purge the game directory before using the migrated instance.</source>
         <translation>Vortex ist zurzeit in das Spielverzeichnis deployed. Es wird empfohlen, das Spielverzeichnis vor der Nutzung der migrierten Instanz zu säubern.</translation>
     </message>
@@ -852,7 +852,7 @@ Bitte Vortex öffnen und das Spielverzeichnis bereinigen.
 Dann auf &quot;Fortfahren&quot; klicken, um die Migration abzuschließen.</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/exceptions.py" line="54"/>
+        <location filename="src/core/mod_manager/vortex/exceptions.py" line="56"/>
         <source>Vortex is not installed or fully setup.
 Follow these steps and try again:
 1. Install Vortex
@@ -863,6 +863,13 @@ Bitte diesen Schritten folgen und erneut versuchen:
 1. Vortex installieren
 2. Vortex starten und das Mod-Management für das Spiel aktivieren.
 3. Profilverwaltung in den Vortex Einstellungen aktivieren.</translation>
+    </message>
+    <message>
+        <location filename="src/core/mod_manager/vortex/exceptions.py" line="70"/>
+        <source>The overwrite folder of MO2 is not supported by Vortex!
+Please create a separate mod from the overwrite folder and restart the migration.</source>
+        <translation>Der Overwrite-Ordner von MO2 wird nicht von Vortex unterstützt!
+Bitte eine separate Mod aus dem Overwrite-Ordner erstellen und die Migration erneut ausführen.</translation>
     </message>
     <message>
         <location filename="src/core/mod_manager/modorganizer/exceptions.py" line="28"/>

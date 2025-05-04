@@ -66,6 +66,11 @@ class Mod:
         The mod is a separator.
         """
 
+        Overwrite = auto()
+        """
+        The mod represents the overwrite folder of an MO2 instance.
+        """
+
     mod_type: Type = Type.Regular
     """
     Type of the mod.
