@@ -7,7 +7,9 @@
   * Add option to automatically download and install MO2 for portable instances
 * Add support for Root Builder plugin (MO2)
 * Add support for migrating into existing instances
+  * This is considered experimental and should be used at your own risk!
 * Add support for migrating tools
+* Add limited support for MO2's overwrite folder (only when migrating to other MO2 instances)
 * Improve UX and error messages
 
 # v2.5
