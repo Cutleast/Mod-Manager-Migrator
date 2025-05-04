@@ -4,7 +4,6 @@ Copyright (c) Cutleast
 
 import logging
 import sys
-from traceback import format_exception
 from types import TracebackType
 from typing import Callable
 from winsound import MessageBeep as alert
@@ -14,6 +13,8 @@ from PySide6.QtWidgets import QApplication
 
 from core.utilities.exceptions import ExceptionBase
 from ui.widgets.error_dialog import ErrorDialog
+
+from .exceptions import format_exception
 
 
 class ExceptionHandler(QObject):
@@ -69,7 +70,7 @@ class ExceptionHandler(QObject):
             sys.__excepthook__(exc_type, exc_value, exc_traceback)
             return
 
-        traceback = "".join(format_exception(exc_type, exc_value, exc_traceback))
+        traceback = format_exception(exc_value, only_message_when_localized=False)
         self.log.critical("An uncaught exception occured:\n" + traceback)
 
         error_message: str

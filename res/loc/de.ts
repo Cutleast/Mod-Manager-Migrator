@@ -65,12 +65,12 @@
 <context>
     <name>ExceptionHandler</name>
     <message>
-        <location filename="src/core/utilities/exception_handler.py" line="79"/>
+        <location filename="src/core/utilities/exception_handler.py" line="80"/>
         <source>An unexpected error occured: </source>
         <translation>Ein unerwarteter Fehler ist aufgetreten: </translation>
     </message>
     <message>
-        <location filename="src/core/utilities/exception_handler.py" line="84"/>
+        <location filename="src/core/utilities/exception_handler.py" line="85"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
@@ -821,14 +821,14 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
         <translation>Die Modinstanz {0} konnte nicht gefunden werden!</translation>
     </message>
     <message>
-        <location filename="src/core/utilities/exceptions.py" line="60"/>
+        <location filename="src/core/utilities/exceptions.py" line="67"/>
         <source>Not enough space ({2}) on the destination disk ({0})!
 Required space: {1}</source>
         <translation>Nicht genug Speicher ({2}) auf dem Zieldatenträger ({0}) vorhanden!
 Benötigter Speicherplatz: {1}</translation>
     </message>
     <message>
-        <location filename="src/core/utilities/exceptions.py" line="73"/>
+        <location filename="src/core/utilities/exceptions.py" line="80"/>
         <source>Source and destination must not be the same!</source>
         <translation>Quelle und Ziel dürfen nicht übereinstimmen!</translation>
     </message>
