@@ -25,7 +25,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "cx-freeze<8.1.0",
+    "cx-freeze",
     "pyfakefs",
     "pyright",
     "pytest",
