@@ -129,7 +129,7 @@
     <message>
         <location filename="src/ui/widgets/loading_dialog.py" line="369"/>
         <source>Are you sure you want to cancel? This may have unwanted consequences, depending on the current running process!</source>
-        <translation>Sind Sie sicher, dass Sie abbrechen möchten? Je nach laufendem Vorgang kann dies ungewollte Konsequenzen haben!</translation>
+        <translation>Bist du sicher, dass du abbrechen möchtest? Je nach laufendem Vorgang kann das unbeabsichtigte Konsequenzen haben!</translation>
     </message>
     <message>
         <location filename="src/ui/widgets/loading_dialog.py" line="374"/>
@@ -406,7 +406,7 @@
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of your MO2 installation if not already installed.</source>
         <translation>Die Nutzung von Root Builder wurde aktiviert.
-Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von Nexus Mods heruntergeladen und in den &quot;plugins&quot;-Ordner Ihrer MO2 Installation entpackt werden, wenn nicht bereits installiert.</translation>
+Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von Nexus Mods heruntergeladen und in den &quot;plugins&quot;-Ordner deiner MO2 Installation entpackt werden, wenn nicht bereits installiert.</translation>
     </message>
     <message>
         <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="987"/>
