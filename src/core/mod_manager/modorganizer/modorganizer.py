@@ -965,15 +965,27 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         text: str = ""
 
         if migrated_instance_data.use_root_builder:
-            text = (
-                self.tr(
-                    "The usage of root builder was enabled.\n"
-                    "In order to correctly deploy the root files, you have to download and "
-                    'extract the root builder plugin from Nexus Mods to the "plugins" '
-                    "folder of the new MO2 installation."
+            if migrated_instance_data.is_global:
+                text = (
+                    self.tr(
+                        "The usage of root builder was enabled.\n"
+                        "In order to correctly deploy the root files, you have to "
+                        "download and extract the root builder plugin from Nexus Mods "
+                        'to the "plugins" folder of your MO2 installation if not '
+                        "already installed."
+                    )
+                    + "\n\n"
                 )
-                + "\n\n"
-            )
+            else:
+                text = (
+                    self.tr(
+                        "The usage of root builder was enabled.\n"
+                        "In order to correctly deploy the root files, you have to "
+                        "download and extract the root builder plugin from Nexus Mods "
+                        'to the "plugins" folder of the new MO2 installation.'
+                    )
+                    + "\n\n"
+                )
 
         if not migrated_instance_data.is_global and self.detect_global_instances():
             text += self.tr(
