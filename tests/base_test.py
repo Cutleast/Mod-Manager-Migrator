@@ -96,6 +96,7 @@ class BaseTest:
             read_only=False,
             target_path="E:\\Modding\\Vortex\\skyrimse",
         )
+        fs.add_real_directory(Path("C:\\Users\\Public"), read_only=False)
 
         # Set total disk sizes to 1 GB
         fs.set_disk_usage(total_size=1024**3, path="C:")

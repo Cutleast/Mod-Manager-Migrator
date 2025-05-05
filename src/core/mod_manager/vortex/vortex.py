@@ -54,7 +54,10 @@ class Vortex(ModManager[ProfileInfo]):
 
         self.db_path = resolve(Path("%APPDATA%") / "Vortex" / "state.v2")
         self.__level_db = LevelDB(
-            self.db_path, use_symlink=not LevelDB.is_db_readable(self.db_path)
+            self.db_path,
+            use_symlink=(
+                not LevelDB.is_db_readable(self.db_path) and self.db_path.is_dir()
+            ),
         )
 
         self.__games = {g.id: g for g in Game.get_supported_games()}
