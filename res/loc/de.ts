@@ -765,23 +765,23 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
 <context>
     <name>Vortex</name>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="138"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="141"/>
         <source>Loading profile {0}...</source>
         <translation>Profil {0} wird geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="174"/>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="210"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="177"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="213"/>
         <source>Loading mods from profile {0}...</source>
         <translation>Mods von Profil {0} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="416"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="419"/>
         <source>Loading tools from Vortex...</source>
         <translation>Tools werden von Vortex geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="843"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="846"/>
         <source>Vortex is currently deployed to the game folder. It is strongly recommended to purge the game directory before using the migrated instance.</source>
         <translation>Vortex ist zurzeit in das Spielverzeichnis deployed. Es wird empfohlen, das Spielverzeichnis vor der Nutzung der migrierten Instanz zu säubern.</translation>
     </message>
