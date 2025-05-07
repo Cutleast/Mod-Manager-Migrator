@@ -1057,3 +1057,22 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
     @override
     def get_mods_path(self, instance_data: MO2InstanceInfo) -> Path:
         return instance_data.mods_folder
+
+    @override
+    def is_instance_existing(self, instance_data: MO2InstanceInfo) -> bool:
+        instance_name: str = instance_data.display_name
+        profile_name: str = instance_data.profile
+        game: Game = instance_data.game
+
+        if instance_data.is_global and instance_name in self.get_instance_names(game):
+            return True
+
+        instance_path: Path = instance_data.base_folder
+        mo2_ini_path: Path = instance_path / "ModOrganizer.ini"
+        if mo2_ini_path.is_file():
+            profile_path: Path = (
+                ModOrganizer.get_profiles_folder(mo2_ini_path) / profile_name
+            )
+            return profile_path.is_dir()
+
+        return False

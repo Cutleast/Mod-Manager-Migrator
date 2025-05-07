@@ -959,3 +959,7 @@ class Vortex(ModManager[ProfileInfo]):
         return "".join(
             [random.choice(string.ascii_letters + string.digits) for _ in range(length)]
         )
+
+    @override
+    def is_instance_existing(self, instance_data: ProfileInfo) -> bool:
+        return instance_data.display_name in self.get_instance_names(instance_data.game)

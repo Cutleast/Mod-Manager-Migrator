@@ -505,3 +505,58 @@ class TestModOrganizer(BaseTest):
 
         # then
         assert actual_args == expected_args
+
+    def test_is_instance_existing(
+        self, test_fs: FakeFilesystem, mo2_instance_info: MO2InstanceInfo
+    ) -> None:
+        """
+        Tests `ModOrganizer.is_instance_existing()`.
+        """
+
+        # given
+        mo2 = ModOrganizer()
+
+        # when/then
+        assert mo2.is_instance_existing(mo2_instance_info)
+
+        # when
+        non_existing_instance_info = MO2InstanceInfo(
+            display_name="Non Existing Instance",
+            game=Game.get_game_by_id("skyrimse"),
+            profile="Default",
+            is_global=False,
+            base_folder=Path("E:\\Modding\\Non Existing Instance"),
+            mods_folder=Path("E:\\Modding\\Non Existing Instance\\mods"),
+            profiles_folder=Path("E:\\Modding\\Non Existing Instance\\profiles"),
+        )
+
+        # then
+        assert not mo2.is_instance_existing(non_existing_instance_info)
+
+        # when
+        non_existing_profile = MO2InstanceInfo(
+            display_name=mo2_instance_info.display_name,
+            game=mo2_instance_info.game,
+            profile="Non Existing Profile",
+            is_global=mo2_instance_info.is_global,
+            base_folder=mo2_instance_info.base_folder,
+            mods_folder=mo2_instance_info.mods_folder,
+            profiles_folder=mo2_instance_info.profiles_folder,
+        )
+
+        # then
+        assert not mo2.is_instance_existing(non_existing_profile)
+
+        # when
+        wrong_game = MO2InstanceInfo(
+            display_name=mo2_instance_info.display_name,
+            game=Game.get_game_by_id("skyrim"),
+            profile=mo2_instance_info.profile,
+            is_global=mo2_instance_info.is_global,
+            base_folder=mo2_instance_info.base_folder,
+            mods_folder=mo2_instance_info.mods_folder,
+            profiles_folder=mo2_instance_info.profiles_folder,
+        )
+
+        # then
+        assert mo2.is_instance_existing(wrong_game)

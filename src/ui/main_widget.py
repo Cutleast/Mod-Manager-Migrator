@@ -96,6 +96,22 @@ class MainWidget(QSplitter):
         if src_info is None or src_instance is None:
             raise ValueError("No source instance selected!")
 
+        if dst_mod_manager.is_instance_existing(dst_info):
+            reply = QMessageBox.question(
+                AppContext.get_app().main_window,
+                self.tr("Destination instance already exists!"),
+                self.tr(
+                    "Are you sure you want to migrate to the existing destination "
+                    "instance?\nThis feature is considered experimental and could cause "
+                    "issues.\nContinue at your own risk!"
+                ),
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                QMessageBox.StandardButton.No,
+            )
+
+            if reply != QMessageBox.StandardButton.Yes:
+                return
+
         MainWidget._apply_checked_mods(
             src_instance, self.__instance_widget.checked_mods
         )

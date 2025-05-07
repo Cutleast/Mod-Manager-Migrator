@@ -609,3 +609,15 @@ class ModManager[I: InstanceInfo](QObject):
         Returns:
             Path: The path to the mods folder.
         """
+
+    @abstractmethod
+    def is_instance_existing(self, instance_data: I) -> bool:
+        """
+        Checks if the specified instance exists.
+
+        Args:
+            instance_data (I): The data of the instance.
+
+        Returns:
+            bool: Whether the instance exists.
+        """

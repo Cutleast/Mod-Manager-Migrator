@@ -299,3 +299,27 @@ class TestVortex(BaseTest):
 
         # then
         assert actual_result == expected_result
+
+    def test_is_instance_existing(
+        self, full_vortex_db: MockPlyvelDB, vortex_profile_info: ProfileInfo
+    ) -> None:
+        """
+        Tests `Vortex.is_instance_existing()`.
+        """
+
+        # given
+        vortex = Vortex()
+        vortex.db_path.mkdir(parents=True, exist_ok=True)
+
+        # when/then
+        assert vortex.is_instance_existing(vortex_profile_info)
+
+        # when
+        non_existing_profile = ProfileInfo(
+            display_name="Non Existing Profile",
+            game=vortex_profile_info.game,
+            id="xyz1234",
+        )
+
+        # then
+        assert not vortex.is_instance_existing(non_existing_profile)

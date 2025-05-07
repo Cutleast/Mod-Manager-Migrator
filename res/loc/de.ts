@@ -153,12 +153,26 @@
 <context>
     <name>MainWidget</name>
     <message>
-        <location filename="src/ui/main_widget.py" line="125"/>
+        <location filename="src/ui/main_widget.py" line="102"/>
+        <source>Destination instance already exists!</source>
+        <translation>Zielinstanz existiert bereits!</translation>
+    </message>
+    <message>
+        <location filename="src/ui/main_widget.py" line="107"/>
+        <source>Are you sure you want to migrate to the existing destination instance?
+This feature is considered experimental and could cause issues.
+Continue at your own risk!</source>
+        <translation>Bist du sicher, dass du in die bestehende Zielinstanz migrieren möchtest?
+Diese Funktion ist experimentell und könnte Probleme verursachen.
+Fortfahren auf eigene Gefahr!</translation>
+    </message>
+    <message>
+        <location filename="src/ui/main_widget.py" line="141"/>
         <source>Migration completed with errors!</source>
         <translation>Migration mit Fehlern abgeschlossen!</translation>
     </message>
     <message>
-        <location filename="src/ui/main_widget.py" line="130"/>
+        <location filename="src/ui/main_widget.py" line="146"/>
         <source>Migration completed with errors! Click &apos;Ok&apos; to open the report.
 
 </source>
@@ -167,12 +181,12 @@
 </translation>
     </message>
     <message>
-        <location filename="src/ui/main_widget.py" line="139"/>
+        <location filename="src/ui/main_widget.py" line="155"/>
         <source>Migration Complete</source>
         <translation>Migration abgeschlossen</translation>
     </message>
     <message>
-        <location filename="src/ui/main_widget.py" line="142"/>
+        <location filename="src/ui/main_widget.py" line="158"/>
         <source>Migration completed successfully!
 
 </source>
