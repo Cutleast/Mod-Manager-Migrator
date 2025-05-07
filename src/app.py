@@ -4,6 +4,7 @@ Copyright (c) Cutleast
 
 import logging
 import os
+import platform
 import shutil
 import subprocess
 import sys
@@ -86,8 +87,28 @@ class App(QApplication):
         self.exception_handler = ExceptionHandler(self)
         self.main_window = MainWindow(self.app_config)
 
+        self.log_basic_info()
         self.app_config.print_settings_to_log()
         self.log.info("App started.")
+
+    def log_basic_info(self) -> None:
+        """
+        Logs basic information.
+        """
+
+        width = 100
+        log_title = f" {App.APP_NAME} ".center(width, "=")
+        self.log.info(f"\n{'=' * width}\n{log_title}\n{'=' * width}")
+        self.log.info(f"Program Version: {App.APP_VERSION}")
+        self.log.info(f"Executed command: {subprocess.list2cmdline(sys.argv)}")
+        self.log.info(f"Current Path: {self.cur_path}")
+        self.log.info(f"Resource Path: {self.res_path}")
+        self.log.info(f"Data Path: {self.data_path}")
+        self.log.info(f"Log Path: {self.log_path}")
+        self.log.info(
+            "Detected Platform: "
+            f"{platform.system()} {platform.version()} {platform.architecture()[0]}"
+        )
 
     def load_translation(self) -> None:
         """
