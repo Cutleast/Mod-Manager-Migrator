@@ -397,7 +397,12 @@ QMenu::item
     border-radius: 4px;
     margin: 2px;
     padding: 6px;
+    padding-left: 12px;
     padding-right: 24px;
+}
+QMenu::icon
+{
+    padding-left: 10px;
 }
 QAction,
 QToolButton
