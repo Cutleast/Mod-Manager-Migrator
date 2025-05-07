@@ -456,6 +456,10 @@ class ModManager[I: InstanceInfo](QObject):
                     text3=f"{file.name} ({scale_value(file.stat().st_size)})",
                 )
 
+            if not file.is_file():
+                self.log.warning(f"Skipped not existing file: {str(file)!r}")
+                continue
+
             dest_folder.mkdir(parents=True, exist_ok=True)
 
             if dst_path.is_file() and replace:
