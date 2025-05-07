@@ -37,6 +37,11 @@ class SettingsWidget(SmoothScrollArea):
     This signal gets emitted when a setting changes.
     """
 
+    restart_required = Signal()
+    """
+    This signal gets emitted when a setting change requires a restart.
+    """
+
     __app_config: AppConfig
 
     __vlayout: QVBoxLayout
@@ -90,6 +95,9 @@ class SettingsWidget(SmoothScrollArea):
         )
         self.__log_level_box.installEventFilter(self)
         self.__log_level_box.currentTextChanged.connect(lambda _: self.changed.emit())
+        self.__log_level_box.currentTextChanged.connect(
+            lambda _: self.restart_required.emit()
+        )
         app_settings_glayout.addWidget(self.__log_level_box, 0, 1)
 
         log_num_of_files_label = QLabel(self.tr("Number of newest log files to keep:"))
@@ -100,6 +108,9 @@ class SettingsWidget(SmoothScrollArea):
         self.__log_num_of_files_box.setValue(self.__app_config.log_num_of_files)
         self.__log_num_of_files_box.installEventFilter(self)
         self.__log_num_of_files_box.valueChanged.connect(lambda _: self.changed.emit())
+        self.__log_num_of_files_box.valueChanged.connect(
+            lambda _: self.restart_required.emit()
+        )
         app_settings_glayout.addWidget(self.__log_num_of_files_box, 1, 1)
 
         language_label = QLabel(self.tr("Language:"))
@@ -111,6 +122,9 @@ class SettingsWidget(SmoothScrollArea):
         self.__language_box.setCurrentText(self.__app_config.language.name)
         self.__language_box.installEventFilter(self)
         self.__language_box.currentTextChanged.connect(lambda _: self.changed.emit())
+        self.__language_box.currentTextChanged.connect(
+            lambda _: self.restart_required.emit()
+        )
         app_settings_glayout.addWidget(self.__language_box, 2, 1)
 
         ui_mode_label = QLabel(self.tr("UI mode:"))
@@ -122,6 +136,9 @@ class SettingsWidget(SmoothScrollArea):
         self.__ui_mode_box.setCurrentText(self.__app_config.ui_mode.capitalize())
         self.__ui_mode_box.installEventFilter(self)
         self.__ui_mode_box.currentTextChanged.connect(lambda _: self.changed.emit())
+        self.__ui_mode_box.currentTextChanged.connect(
+            lambda _: self.restart_required.emit()
+        )
         app_settings_glayout.addWidget(self.__ui_mode_box, 3, 1)
 
     def __init_migration_settings(self) -> None:

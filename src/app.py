@@ -3,7 +3,10 @@ Copyright (c) Cutleast
 """
 
 import logging
+import os
 import shutil
+import subprocess
+import sys
 import time
 from argparse import Namespace
 from pathlib import Path
@@ -179,3 +182,14 @@ class App(QApplication):
             self.app_config.log_file_name,
             self.app_config.log_num_of_files,
         )
+
+    def restart_application(self) -> None:
+        """
+        Restarts the application.
+        """
+
+        self.log.info("Restarting application...")
+
+        os.startfile(subprocess.list2cmdline(sys.argv))
+
+        self.exit()

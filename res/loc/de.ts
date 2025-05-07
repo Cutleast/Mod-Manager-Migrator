@@ -615,76 +615,97 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
 <context>
     <name>SettingsDialog</name>
     <message>
-        <location filename="src/ui/settings/settings_dialog.py" line="44"/>
-        <location filename="src/ui/settings/settings_dialog.py" line="74"/>
+        <location filename="src/ui/settings/settings_dialog.py" line="42"/>
+        <location filename="src/ui/settings/settings_dialog.py" line="66"/>
+        <location filename="src/ui/settings/settings_dialog.py" line="97"/>
         <source>Settings</source>
         <translation>Einstellungen</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_dialog.py" line="61"/>
+        <location filename="src/ui/settings/settings_dialog.py" line="84"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_dialog.py" line="67"/>
+        <location filename="src/ui/settings/settings_dialog.py" line="90"/>
         <source>Save</source>
         <translation>Speichern</translation>
+    </message>
+    <message>
+        <location filename="src/ui/settings/settings_dialog.py" line="111"/>
+        <source>Restart required</source>
+        <translation>Neustart erforderlich</translation>
+    </message>
+    <message>
+        <location filename="src/ui/settings/settings_dialog.py" line="116"/>
+        <source>The app must be restarted for the changes to take effect! Restart now?</source>
+        <translation>Die App muss neugestartet werden, damit die Änderungen wirksam werden! Jetzt neustarten?</translation>
+    </message>
+    <message>
+        <location filename="src/ui/settings/settings_dialog.py" line="120"/>
+        <source>No</source>
+        <translation>Nein</translation>
+    </message>
+    <message>
+        <location filename="src/ui/settings/settings_dialog.py" line="121"/>
+        <source>Yes</source>
+        <translation>Ja</translation>
     </message>
 </context>
 <context>
     <name>SettingsWidget</name>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="73"/>
+        <location filename="src/ui/settings/settings_widget.py" line="78"/>
         <source>App settings</source>
         <translation>Appeinstellungen</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="80"/>
+        <location filename="src/ui/settings/settings_widget.py" line="85"/>
         <source>Log level:</source>
         <translation>Log Level:</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="95"/>
+        <location filename="src/ui/settings/settings_widget.py" line="103"/>
         <source>Number of newest log files to keep:</source>
         <translation>Anzahl der zu behaltenden Logdateien:</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="105"/>
+        <location filename="src/ui/settings/settings_widget.py" line="116"/>
         <source>Language:</source>
         <translation>Sprache:</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="116"/>
+        <location filename="src/ui/settings/settings_widget.py" line="130"/>
         <source>UI mode:</source>
         <translation>UI Modus:</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="128"/>
+        <location filename="src/ui/settings/settings_widget.py" line="145"/>
         <source>Migration settings</source>
         <translation>Migrationseinstellungen</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="135"/>
+        <location filename="src/ui/settings/settings_widget.py" line="152"/>
         <source>Use hardlinks if possible:</source>
         <translation>Hardlinks, wenn möglich, verwenden:</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="149"/>
+        <location filename="src/ui/settings/settings_widget.py" line="166"/>
         <source>What are hardlinks?</source>
         <translation>Was sind Hardlinks?</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="156"/>
+        <location filename="src/ui/settings/settings_widget.py" line="173"/>
         <source>Replace existing files when merging instances:</source>
         <translation>Bestehende Dateien beim Zusammenführen von Instanzen ersetzen:</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="171"/>
+        <location filename="src/ui/settings/settings_widget.py" line="188"/>
         <source>Activate destination instance after migration if supported by the destination mod manager:</source>
         <translation>Zielinstanz nach der Migration, wenn vom Ziel-Mod Manager unterstützt, aktivieren:</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="188"/>
+        <location filename="src/ui/settings/settings_widget.py" line="205"/>
         <source>Character limit for mod names (strongly recommended when migrating to MO2):</source>
         <translation>Zeichenbegrenzung für Modnamen (dringend empfohlen, wenn zu MO2 migriert wird):</translation>
     </message>
