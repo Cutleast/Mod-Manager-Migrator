@@ -73,6 +73,17 @@ QPushButton:checked
 {
     border-color: <accent_color>;
 }
+QStatusBar QPushButton
+{
+    background: transparent;
+    border-color: transparent;
+    padding: 3px;
+    margin: 0px;
+}
+QStatusBar::item
+{
+    border: 0px;
+}
 
 /* Text Fields */
 QLineEdit,

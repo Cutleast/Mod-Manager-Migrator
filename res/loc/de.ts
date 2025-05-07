@@ -184,53 +184,63 @@
 <context>
     <name>MenuBar</name>
     <message>
-        <location filename="src/ui/menubar.py" line="27"/>
+        <location filename="src/ui/menubar.py" line="39"/>
         <source>File</source>
         <translation>Datei</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="36"/>
+        <location filename="src/ui/menubar.py" line="50"/>
         <source>Exit</source>
         <translation>Beenden</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="30"/>
+        <location filename="src/ui/menubar.py" line="42"/>
         <source>Settings</source>
         <translation>Einstellungen</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="44"/>
+        <location filename="src/ui/menubar.py" line="59"/>
         <source>Help</source>
         <translation>Hilfe</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="47"/>
+        <location filename="src/ui/menubar.py" line="62"/>
         <source>Check for updates...</source>
         <translation>Nach Updates suchen...</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="55"/>
+        <location filename="src/ui/menubar.py" line="70"/>
         <source>Fix Windows Path Limit...</source>
         <translation>Windows-Pfadlängenbegrenzung deaktivieren...</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="67"/>
+        <location filename="src/ui/menubar.py" line="84"/>
+        <source>Get support on our Discord server...</source>
+        <translation>Erhalte Unterstützung auf unserem Discord Server...</translation>
+    </message>
+    <message>
+        <location filename="src/ui/menubar.py" line="89"/>
+        <source>Open mod page on Nexus Mods...</source>
+        <translation>Modseite auf Nexus Mods öffnen...</translation>
+    </message>
+    <message>
+        <location filename="src/ui/menubar.py" line="96"/>
         <source>About</source>
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="73"/>
-        <location filename="src/ui/menubar.py" line="95"/>
+        <location filename="src/ui/menubar.py" line="102"/>
+        <location filename="src/ui/menubar.py" line="124"/>
         <source>About Qt</source>
         <translation>Über Qt</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="85"/>
+        <location filename="src/ui/menubar.py" line="114"/>
         <source>No Updates Available</source>
         <translation>Keine Updates verfügbar</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="86"/>
+        <location filename="src/ui/menubar.py" line="115"/>
         <source>There are no updates available.</source>
         <translation>Es sind keine Updates verfügbar.</translation>
     </message>
@@ -668,12 +678,17 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
 <context>
     <name>StatusBar</name>
     <message>
-        <location filename="src/ui/statusbar.py" line="54"/>
+        <location filename="src/ui/statusbar.py" line="49"/>
+        <source>Support me on Ko-fi</source>
+        <translation>Unterstütze mich auf Ko-fi</translation>
+    </message>
+    <message>
+        <location filename="src/ui/statusbar.py" line="64"/>
         <source>Copy log to clipboard</source>
         <translation>Log in Zwischenablage kopieren</translation>
     </message>
     <message>
-        <location filename="src/ui/statusbar.py" line="64"/>
+        <location filename="src/ui/statusbar.py" line="74"/>
         <source>View log</source>
         <translation>Log anzeigen</translation>
     </message>

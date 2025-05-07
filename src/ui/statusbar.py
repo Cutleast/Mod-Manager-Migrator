@@ -6,11 +6,13 @@ from typing import Optional
 
 import qtawesome as qta
 from PySide6.QtCore import QSize, Qt, Signal
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QLabel, QPushButton, QStatusBar
 
 from app_context import AppContext
 from core.utilities.logger import Logger
 from core.utilities.trim import trim_string
+from ui.widgets.link_button import LinkButton
 from ui.widgets.log_window import LogWindow
 
 
@@ -41,6 +43,14 @@ class StatusBar(QStatusBar):
         )
         self.status_label.setMinimumWidth(100)
         self.insertPermanentWidget(0, self.status_label, stretch=1)
+
+        kofi_button = LinkButton(
+            "https://ko-fi.com/cutleast",
+            self.tr("Support me on Ko-fi"),
+            QIcon(":/icons/ko-fi.png"),
+        )
+        # kofi_button.setFixedHeight(20)
+        self.addPermanentWidget(kofi_button)
 
         copy_log_button = QPushButton()
         copy_log_button.setFixedSize(20, 20)

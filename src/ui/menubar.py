@@ -2,6 +2,8 @@
 Copyright (c) Cutleast
 """
 
+import webbrowser
+
 import qtawesome as qta
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
@@ -21,9 +23,19 @@ class MenuBar(QMenuBar):
     Menu bar for main window.
     """
 
+    DISCORD_URL: str = "https://discord.gg/pqEHdWDf8z"
+    """URL to our Discord server."""
+
+    NEXUSMODS_URL: str = "https://www.nexusmods.com/site/mods/545/"
+    """URL to MMM's Nexus Mods page."""
+
     def __init__(self) -> None:
         super().__init__()
 
+        self.__init_file_menu()
+        self.__init_help_menu()
+
+    def __init_file_menu(self) -> None:
         file_menu = Menu(title=self.tr("File"))
         self.addMenu(file_menu)
 
@@ -33,6 +45,8 @@ class MenuBar(QMenuBar):
         )
         settings_action.triggered.connect(self.__open_settings)
 
+        file_menu.addSeparator()
+
         exit_action = file_menu.addAction(self.tr("Exit"))
         exit_action.setIcon(
             QIcon(":/icons/exit_dark.svg")
@@ -41,6 +55,7 @@ class MenuBar(QMenuBar):
         )
         exit_action.triggered.connect(QApplication.exit)
 
+    def __init_help_menu(self) -> None:
         help_menu = Menu(title=self.tr("Help"))
         self.addMenu(help_menu)
 
@@ -61,6 +76,20 @@ class MenuBar(QMenuBar):
         path_limit_action.triggered.connect(
             lambda: PathLimitFixer.disable_path_limit(AppContext.get_app().res_path)
         )
+
+        help_menu.addSeparator()
+
+        discord_action = help_menu.addAction(
+            self.tr("Get support on our Discord server...")
+        )
+        discord_action.setIcon(QIcon(":/icons/discord.png"))
+        discord_action.setToolTip(MenuBar.DISCORD_URL)
+        discord_action.triggered.connect(lambda: webbrowser.open(MenuBar.DISCORD_URL))
+
+        nm_action = help_menu.addAction(self.tr("Open mod page on Nexus Mods..."))
+        nm_action.setIcon(QIcon(":/icons/nexus_mods.png"))
+        nm_action.setToolTip(MenuBar.NEXUSMODS_URL)
+        nm_action.triggered.connect(lambda: webbrowser.open(MenuBar.NEXUSMODS_URL))
 
         help_menu.addSeparator()
 
