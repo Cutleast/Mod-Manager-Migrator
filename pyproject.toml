@@ -26,6 +26,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "cx-freeze",
+    "md2bbcode",
     "pyfakefs",
     "pyright",
     "pytest",
