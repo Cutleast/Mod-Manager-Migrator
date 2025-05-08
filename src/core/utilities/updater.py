@@ -21,7 +21,7 @@ class Updater(QObject):
     log: logging.Logger = logging.getLogger("Updater")
 
     REPO_NAME: str = "Mod-Manager-Migrator"
-    REPO_BRANCH: str = "master"
+    REPO_BRANCH: str = "main"
     REPO_OWNER: str = "Cutleast"
     CHANGELOG_URL: str = f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/{REPO_BRANCH}/Changelog.md"
     UPDATE_URL: str = f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/{REPO_BRANCH}/update.json"
