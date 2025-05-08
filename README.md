@@ -24,6 +24,7 @@ This is a tool for migrating modding instances (modlists) between mod managers.
 # 🕹Features
 
 - Fully automated migration
+- Automatic detection of used game folder
 - New instance is customizable
 - Migrate to existing instances to merge two instances into one (experimental)
 - Support for global and portable MO2 instances
@@ -33,6 +34,9 @@ This is a tool for migrating modding instances (modlists) between mod managers.
 - Uses hardlinks by default when source and destination are on the same disk to save on space
   - Can be disabled in *File* > *Settings* > *Use hardlinks [...]*
   - [What are hardlinks?](./Hardlinks.md)
+- Automatic detection of Windows path length limit
+  - Windows paths are limited to 255 characters which can cause issues for mods with long paths
+  - MMM will ask at the start to disable that limit when not already disabled
 
 ### What gets migrated and what not
 
@@ -42,7 +46,7 @@ This is a tool for migrating modding instances (modlists) between mod managers.
 | Tools/Executables (eg. xEdit, Bodyslide, SSE-AT, etc.) including link to installed mod (if any), working directory, start arguments | Custom tool icons                                                                    |
 | Conflict rules                                                                                                                      | Overwrite folder (MO2 -> Vortex)                                                     |
 | Separate file conflict rules                                                                                                        | LOOT rules (Vortex -> MO2 and vice versa)                                            |
-| Plugin loadorder: plugins.txt and loadorder.txt                                                                                     |                                                                                      |
+| Plugin loadorder: plugins.txt and loadorder.txt                                                                                     | Downloads and link to download folder                                                |
 
 ### Supported Games
 
@@ -76,7 +80,7 @@ To migrate an instance, follow these steps:
 8. Click on "Migrate" and wait for it to finish.
 9. If there are errors, check them carefully and (where appropiate) follow their recommendations and instructions.
 
-# Frequently Asked Questions (FAQ)
+# ❓Frequently Asked Questions (FAQ)
 
 ### Can I delete the old instance after the migration is complete?
 
@@ -99,12 +103,7 @@ No, not at the moment. Please see [What gets migrated and what not](#what-gets-m
 
 # 🫶Contributing
 
-### Translations
-
-Create your translation for your desired language under [res/loc](./res/loc) and make a pull request.
-I strongly recommend using QtLinguist. A VS Code task is already set up in the .code-workspace file to open QtLinguist with the German localisation that can easily adapted for other languages by changing its "de_DE" value.
-
-### Feedback (Suggestions/Issues)
+## Feedback (Suggestions/Issues)
 
 If you encountered an issue/error or have a suggestion, open an issue with sufficient information.
 
@@ -115,25 +114,39 @@ If you encountered an issue/error or have a suggestion, open an issue with suffi
 1. Install [Python 3.12](https://www.python.org/downloads/) (Make sure that you add it to PATH!)
 2. Install [uv](https://github.com/astral-sh/uv#installation)
 3. Clone repository
-4. Open terminal in repository folder
+4. Open a terminal in the cloned repository folder
 5. Run the following command to init your local environment and to install all dependencies
    `uv sync`
 
 ### 2. Execute from source
 
-1. Open terminal in src folder
+1. Open a terminal in the root folder of this repo
 2. Execute main file with uv
    `uv run src\main.py`
 
 ### 3. Compile and build executable
 
-1. Run `build.bat` with activated virtual environment from the root folder of this repo.
-2. The executable and all dependencies are built in the `dist/MMM`-Folder and gets packed in a `dist/Mod Manager Migrator v[version].zip`.
+1. Run `build.bat` from the root folder of this repo.
+2. The executable and all dependencies are built in the `dist/MMM`-Folder and get packed in a `dist/Mod Manager Migrator v[version].zip`.
+
+## Translations
+
+Make sure to follow the steps under [Code contributions](#code-contributions) above to install all requirements, including the Qt tools to translate this app.
+
+1. To generate a translation file for a new language, copy the following line in [update_lupdate_file.bat](./update_lupdate_file.bat):
+`--add-translation=res/loc/de.ts ^`, insert it directly beneath it and change the `de` value to the short code of your language.
+For example, to generate a file for French, the new line would look like this: `--add-translation=res/loc/fr.ts ^`
+2. Run `update_lupdate_file.bat && update_qts.bat` to generate the translation file for your language.
+3. Open the translation file in Qt Linguist with `uv run pyside6-linguist res/loc/<language>.ts`, eg. `uv run pyside6-linguist res/loc/fr.ts`.
+4. Translate MMM and save the file with Ctrl+S.
+5. For your language to show up in MMM's settings: add a line, similar to the existing languages, under `class Language(BaseEnum):` in [localisation.py](./src/core/utilities/localisation.py). For example, for French: `French = "fr_FR"`.
+6. Optional: Run `compile_qts.bat && uv run src\main.py` and change the language in *Settings* to your translation (and restart) to see your translation in action.
+7. Create a pull request from your changes and I will check over it and merge it if there are no issues with it.
 
 # 🔗Credits
 
-- Code by Cutleast ([GitHub](https://github.com/Cutleast) | [NexusMods](https://www.nexusmods.com/users/65733731))
-- Icon, modpage images and idea by Wuerfelhusten ([NexusMods](https://www.nexusmods.com/users/122160268))
+- Code by Cutleast ([GitHub](https://github.com/Cutleast) | [NexusMods](https://next.nexusmods.com/profile/Cutleast))
+- Icon, modpage images and idea by Wuerfelhusten ([NexusMods](https://next.nexusmods.com/profile/Wuerfelhusten))
 - Qt by The [Qt Company Ltd](https://qt.io)
 - FontAwesome Icons by [FontAwesome](https://github.com/FortAwesome/Font-Awesome)
 
