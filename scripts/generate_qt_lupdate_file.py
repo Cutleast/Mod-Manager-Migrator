@@ -70,10 +70,12 @@ class ProjectFileGenerator:
     def __init__(self, root_dir: Path):
         self._root_dir = root_dir
 
-    def add(self, directories: list[Path], files: list[Path]):
+    def add(
+        self, directories: list[Path], files: list[Path], exclude_files: list[Path]
+    ):
         for directory in directories:
             for path in directory.rglob("*"):
-                if path.is_file():
+                if path.is_file() and path not in exclude_files:
                     self._files.append(path)
         self._files.extend(files)
 
@@ -91,7 +93,7 @@ class ProjectFileGenerator:
     def sort_files(self):
         self._files = sorted(self._files)
 
-    def generate_project_file(self, file: Path):
+    def generate_project_file(self, file: Path, include_paths: list[str]):
         files = [
             str(path)
             for path in self._files
@@ -104,7 +106,7 @@ class ProjectFileGenerator:
         ]
         structure = {
             "excluded": [],
-            "includePaths": [],
+            "includePaths": include_paths,
             "projectFile": "",
             "sources": files,
             "translations": translations,
@@ -129,11 +131,25 @@ def main():
         help="Directory to include. Can be used multiple times",
     )
     parser.add_argument(
+        "--include-path",
+        type=str,
+        action="append",
+        default=[],
+        help="Directory to add to includePaths. Can be used multiple times",
+    )
+    parser.add_argument(
         "--include-file",
         type=str,
         action="append",
         default=[],
         help="File to include. Can be used multiple times",
+    )
+    parser.add_argument(
+        "--exclude-file",
+        type=str,
+        action="append",
+        default=[],
+        help="File to exclude. Can be used multiple times",
     )
     parser.add_argument(
         "--add-translation",
@@ -156,6 +172,7 @@ def run(args):
     out_file = Path(args.out_file)
     directories = [Path(path).absolute() for path in args.include_directory]
     files = [Path(path).absolute() for path in args.include_file]
+    exclude_files = [Path(path).absolute() for path in args.exclude_file]
     translations = [Path(path).absolute() for path in args.add_translation]
 
     validator = ArgumentValidator()
@@ -166,12 +183,12 @@ def run(args):
     validator.break_on_errors()
 
     generator = ProjectFileGenerator(root_dir=root_dir)
-    generator.add(directories, files)
+    generator.add(directories, files, exclude_files)
     generator.add_translations(translations)
     generator.make_files_relative()
     generator.remove_irrelevant_files()
     generator.sort_files()
-    generator.generate_project_file(file=out_file)
+    generator.generate_project_file(file=out_file, include_paths=args.include_path)
 
 
 if __name__ == "__main__":
