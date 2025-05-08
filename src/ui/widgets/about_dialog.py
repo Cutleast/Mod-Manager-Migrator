@@ -2,10 +2,11 @@
 Copyright (c) Cutleast
 """
 
-import os
+import webbrowser
 from typing import Optional
 
-from PySide6.QtCore import Qt
+import qtawesome as qta
+from PySide6.QtCore import QSize, Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QDialog,
@@ -42,11 +43,15 @@ class AboutDialog(QDialog):
         tab_widget = QTabWidget()
         tab_widget.tabBar().setExpanding(True)
         tab_widget.setObjectName("centered_tab")
+        tab_widget.setIconSize(QSize(16, 16))
         vlayout.addWidget(tab_widget)
 
         about_tab = QWidget()
         about_tab.setObjectName("transparent")
         tab_widget.addTab(about_tab, self.tr("About"))
+        tab_widget.setTabIcon(
+            0, qta.icon("fa5s.info-circle", color=self.palette().text().color())
+        )
 
         hlayout = QHBoxLayout()
         about_tab.setLayout(hlayout)
@@ -77,7 +82,6 @@ class AboutDialog(QDialog):
             "NexusMods</a>)<br><br>Licensed under "
             "Attribution-NonCommercial-NoDerivatives 4.0 International"
         )
-        text = text.replace("[VERSION]", app_version)
 
         # Add translator credit if available
         translator_info: str = self.tr("<<Put your translator information here.>>")
@@ -93,9 +97,12 @@ class AboutDialog(QDialog):
 
         licenses_tab = QListWidget()
         tab_widget.addTab(licenses_tab, self.tr("Used Software"))
+        tab_widget.setTabIcon(
+            1, qta.icon("mdi6.script-text-outline", color=self.palette().text().color())
+        )
 
         licenses_tab.addItems(list(LICENSES.keys()))
 
         licenses_tab.itemDoubleClicked.connect(
-            lambda item: os.startfile(LICENSES[item.text()])
+            lambda item: webbrowser.open(LICENSES[item.text()])
         )

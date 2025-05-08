@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Optional, override
 
 import qtawesome as qta
-from PySide6.QtCore import QEvent, QObject, Qt, Signal
+from PySide6.QtCore import QEvent, QObject, QSize, Qt, Signal
 from PySide6.QtGui import QIcon, QWheelEvent
 from PySide6.QtWidgets import (
     QApplication,
@@ -91,6 +91,8 @@ class MigratorWidget(SmoothScrollArea):
         self.__dst_selector.instance_valid.connect(self.__migrate_button.setEnabled)
         self.__dst_instance_tab.currentChanged.connect(self.__on_dst_tab_change)
 
+        self.setMinimumWidth(610)
+
     def __init_ui(self) -> None:
         scroll_widget = QWidget()
         scroll_widget.setObjectName("transparent")
@@ -139,10 +141,22 @@ class MigratorWidget(SmoothScrollArea):
         hlayout.addSpacing(9)
 
     def __init_src_selector(self) -> None:
+        hlayout = QHBoxLayout()
+        hlayout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.__vlayout.addLayout(hlayout)
+
+        icon_label = QLabel()
+        icon_label.setPixmap(
+            qta.icon(
+                "mdi6.database-export-outline", color=self.palette().text().color()
+            ).pixmap(42, 42)
+        )
+        hlayout.addWidget(icon_label)
+
         title_label = QLabel(self.tr("Choose the source instance:"))
-        title_label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         title_label.setObjectName("h3")
-        self.__vlayout.addWidget(title_label, 0, Qt.AlignmentFlag.AlignHCenter)
+        hlayout.addWidget(title_label)
+
         self.__vlayout.addSpacing(15)
 
         self.__init_game_dropdown()
@@ -158,10 +172,22 @@ class MigratorWidget(SmoothScrollArea):
         self.__vlayout.addWidget(self.__load_src_button)
 
     def __init_dst_instance_tab(self) -> None:
+        hlayout = QHBoxLayout()
+        hlayout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.__vlayout.addLayout(hlayout)
+
+        icon_label = QLabel()
+        icon_label.setPixmap(
+            qta.icon(
+                "mdi6.database-import-outline", color=self.palette().text().color()
+            ).pixmap(42, 42)
+        )
+        hlayout.addWidget(icon_label)
+
         title_label = QLabel(self.tr("Configure the destination instance:"))
         title_label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         title_label.setObjectName("h3")
-        self.__vlayout.addWidget(title_label, 0, Qt.AlignmentFlag.AlignHCenter)
+        hlayout.addWidget(title_label)
         self.__vlayout.addSpacing(15)
 
         self.__dst_instance_tab = QTabWidget()
@@ -169,17 +195,28 @@ class MigratorWidget(SmoothScrollArea):
         self.__dst_instance_tab.setObjectName("centered_tab")
         self.__dst_instance_tab.setDisabled(True)
         self.__dst_instance_tab.tabBar().installEventFilter(self)
+        self.__dst_instance_tab.setIconSize(QSize(24, 24))
         self.__vlayout.addWidget(self.__dst_instance_tab)
 
         self.__dst_creator = InstanceCreatorWidget()
         self.__dst_instance_tab.addTab(
             self.__dst_creator, self.tr("Create new instance")
         )
+        self.__dst_instance_tab.setTabIcon(
+            0,
+            qta.icon("mdi6.database-plus-outline", color=self.palette().text().color()),
+        )
 
         self.__dst_selector = InstanceSelectorWidget()
         self.__dst_instance_tab.addTab(
             self.__dst_selector,
             self.tr("Select existing instance") + " " + self.tr("(Experimental)"),
+        )
+        self.__dst_instance_tab.setTabIcon(
+            1,
+            qta.icon(
+                "mdi6.database-search-outline", color=self.palette().text().color()
+            ),
         )
 
     def __on_dst_tab_change(self, index: int) -> None:

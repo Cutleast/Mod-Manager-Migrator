@@ -27,7 +27,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(MainWidget(app_config))
         self.setStatusBar(StatusBar())
 
-        self.resize(1000, 700)
+        self.resize(1300, 800)
         self.setStyleSheet(AppContext.get_app().styleSheet())
 
     @override

@@ -2,6 +2,8 @@
 Copyright (c) Cutleast
 """
 
+import qtawesome as qta
+from PySide6.QtCore import QSize
 from PySide6.QtWidgets import QTabWidget
 
 from core.instance.instance import Instance
@@ -29,7 +31,16 @@ class InstanceWidget(QTabWidget):
         self.__tools_tab = ToolsWidget()
 
         self.addTab(self.__modlist_tab, self.tr("Modlist"))
+        self.setTabIcon(
+            0,
+            qta.icon("mdi6.format-list-checks", color=self.palette().text().color()),
+        )
         self.addTab(self.__tools_tab, self.tr("Tools"))
+        self.setTabIcon(
+            1,
+            qta.icon("mdi6.tools", color=self.palette().text().color()),
+        )
+        self.setIconSize(QSize(24, 24))
 
     def display_modinstance(self, instance: Instance) -> None:
         """

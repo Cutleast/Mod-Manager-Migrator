@@ -54,11 +54,8 @@ class MainWidget(QSplitter):
         self.__migrator_widget = MigratorWidget(self.app_config)
         self.addWidget(self.__migrator_widget)
 
-        self.__migrator_widget.setMinimumWidth(500)
-
     def __init_modlist(self) -> None:
         self.__instance_widget = InstanceWidget()
-        self.setCollapsible(1, True)
         self.addWidget(self.__instance_widget)
 
     def __display_modinstance(self, instance: Instance) -> None:

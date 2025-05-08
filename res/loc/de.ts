@@ -4,23 +4,23 @@
 <context>
     <name>AboutDialog</name>
     <message>
-        <location filename="src/ui/widgets/about_dialog.py" line="37"/>
-        <location filename="src/ui/widgets/about_dialog.py" line="49"/>
+        <location filename="src/ui/widgets/about_dialog.py" line="38"/>
+        <location filename="src/ui/widgets/about_dialog.py" line="51"/>
         <source>About</source>
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="src/ui/widgets/about_dialog.py" line="80"/>
+        <location filename="src/ui/widgets/about_dialog.py" line="87"/>
         <source>Created by Cutleast (&lt;a href=&apos;https://www.nexusmods.com/users/65733731&apos;&gt;NexusMods&lt;/a&gt; | &lt;a href=&apos;https://github.com/cutleast&apos;&gt;GitHub&lt;/a&gt; | &lt;a href=&apos;https://ko-fi.com/cutleast&apos;&gt;Ko-Fi&lt;/a&gt;)&lt;br&gt;&lt;br&gt;Icon by Wuerfelhusten (&lt;a href=&apos;https://www.nexusmods.com/users/122160268&apos;&gt;NexusMods&lt;/a&gt;)&lt;br&gt;&lt;br&gt;Licensed under Attribution-NonCommercial-NoDerivatives 4.0 International</source>
         <translation>Erstellt von Cutleast (&lt;a href=&apos;https://www.nexusmods.com/users/65733731&apos;&gt;NexusMods&lt;/a&gt; | &lt;a href=&apos;https://github.com/cutleast&apos;&gt;GitHub&lt;/a&gt; | &lt;a href=&apos;https://ko-fi.com/cutleast&apos;&gt;Ko-Fi&lt;/a&gt;)&lt;br&gt;&lt;br&gt;Logo von Wuerfelhusten (&lt;a href=&apos;https://www.nexusmods.com/users/122160268&apos;&gt;NexusMods&lt;/a&gt;)&lt;br&gt;&lt;br&gt;Lizensiert unter Attribution-NonCommercial-NoDerivatives 4.0 International</translation>
     </message>
     <message>
-        <location filename="src/ui/widgets/about_dialog.py" line="84"/>
+        <location filename="src/ui/widgets/about_dialog.py" line="88"/>
         <source>&lt;&lt;Put your translator information here.&gt;&gt;</source>
         <translation>&lt;&lt;Put your translator information here.&gt;&gt;</translation>
     </message>
     <message>
-        <location filename="src/ui/widgets/about_dialog.py" line="95"/>
+        <location filename="src/ui/widgets/about_dialog.py" line="99"/>
         <source>Used Software</source>
         <translation>Verwendete Software</translation>
     </message>
@@ -104,12 +104,12 @@
 <context>
     <name>InstanceWidget</name>
     <message>
-        <location filename="src/ui/instance/instance_widget.py" line="31"/>
+        <location filename="src/ui/instance/instance_widget.py" line="33"/>
         <source>Modlist</source>
         <translation>Modliste</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/instance_widget.py" line="32"/>
+        <location filename="src/ui/instance/instance_widget.py" line="38"/>
         <source>Tools</source>
         <translation>Tools</translation>
     </message>
@@ -153,12 +153,12 @@
 <context>
     <name>MainWidget</name>
     <message>
-        <location filename="src/ui/main_widget.py" line="102"/>
+        <location filename="src/ui/main_widget.py" line="99"/>
         <source>Destination instance already exists!</source>
         <translation>Zielinstanz existiert bereits!</translation>
     </message>
     <message>
-        <location filename="src/ui/main_widget.py" line="107"/>
+        <location filename="src/ui/main_widget.py" line="104"/>
         <source>Are you sure you want to migrate to the existing destination instance?
 This feature is considered experimental and could cause issues.
 Continue at your own risk!</source>
@@ -167,12 +167,12 @@ Diese Funktion ist experimentell und könnte Probleme verursachen.
 Fortfahren auf eigene Gefahr!</translation>
     </message>
     <message>
-        <location filename="src/ui/main_widget.py" line="141"/>
+        <location filename="src/ui/main_widget.py" line="138"/>
         <source>Migration completed with errors!</source>
         <translation>Migration mit Fehlern abgeschlossen!</translation>
     </message>
     <message>
-        <location filename="src/ui/main_widget.py" line="146"/>
+        <location filename="src/ui/main_widget.py" line="143"/>
         <source>Migration completed with errors! Click &apos;Ok&apos; to open the report.
 
 </source>
@@ -181,12 +181,12 @@ Fortfahren auf eigene Gefahr!</translation>
 </translation>
     </message>
     <message>
-        <location filename="src/ui/main_widget.py" line="155"/>
+        <location filename="src/ui/main_widget.py" line="152"/>
         <source>Migration Complete</source>
         <translation>Migration abgeschlossen</translation>
     </message>
     <message>
-        <location filename="src/ui/main_widget.py" line="158"/>
+        <location filename="src/ui/main_widget.py" line="155"/>
         <source>Migration completed successfully!
 
 </source>
@@ -319,67 +319,67 @@ Fortfahren auf eigene Gefahr!</translation>
     <name>MigratorWidget</name>
     <message>
         <location filename="src/ui/migrator/migrator_widget.py" line="87"/>
-        <location filename="src/ui/migrator/migrator_widget.py" line="154"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="168"/>
         <source>Load selected instance...</source>
         <translation>Ausgewählte Instanz laden...</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="125"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="127"/>
         <source>Game:</source>
         <translation>Spiel:</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="133"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="135"/>
         <source>Please select...</source>
         <translation>Bitte auswählen...</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="142"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="156"/>
         <source>Choose the source instance:</source>
         <translation>Quellinstanz auswählen:</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="161"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="187"/>
         <source>Configure the destination instance:</source>
         <translation>Zielinstanz konfigurieren:</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="177"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="204"/>
         <source>Create new instance</source>
         <translation>Neue Instanz erstellen</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="182"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="213"/>
         <source>Select existing instance</source>
         <translation>Bestehende Instanz auswählen</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="182"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="213"/>
         <source>(Experimental)</source>
         <translation>(Experimentell)</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="192"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="229"/>
         <source>Migrate...</source>
         <translation>Migration starten...</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="231"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="268"/>
         <source>Could not find game directory!</source>
         <translation>Spielverzeichnis konnte nicht gefunden werden!</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="232"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="269"/>
         <source>Unable to find game directory. Please select it manually.</source>
         <translation>Das Spielverzeichnis konnte nicht gefunden werden. Bitte manuell auswählen.</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="238"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="275"/>
         <source>Select game directory</source>
         <translation>Spielverzeichnis auswählen</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="252"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="289"/>
         <source>Instance loaded.</source>
         <translation>Instanz geladen.</translation>
     </message>

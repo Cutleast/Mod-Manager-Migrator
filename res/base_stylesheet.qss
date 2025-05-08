@@ -435,6 +435,8 @@ QTabWidget::pane
 QTabBar
 {
     border-radius: 8px;
+    margin-left: 12px;
+    margin-right: 12px;
 }
 QTabBar::tab
 {
@@ -442,9 +444,18 @@ QTabBar::tab
     border: 0px solid;
     height: 25px;
     padding: 4px;
-    spacing: 4px;
+    padding-left: 16px;
+    padding-right: 16px;
     margin: 4px;
     border-radius: 4px;
+}
+QTabBar::tab:first
+{
+    margin-left: 16px;
+}
+QTabBar::tab:last
+{
+    margin-right: 16px;
 }
 QTabBar::tab:selected
 {
@@ -460,11 +471,6 @@ QTabBar::close-button
 QTabWidget::tab-bar#centered_tab
 {
     alignment: center;
-}
-QTabWidget#centered_tab QTabBar::tab
-{
-    padding-left: 25px;
-    padding-right: 25px;
 }
 
 /* Tooltips */
