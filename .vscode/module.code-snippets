@@ -1,0 +1,37 @@
+{
+	"Copyright Module Prefix": {
+		"scope": "python",
+		"prefix": "cutleast",
+		"body": [
+			"\"\"\"\nCopyright (c) Cutleast\n\"\"\"\n\n$1"
+		]
+	},
+	"Import QtAwesome": {
+		"scope": "python",
+		"prefix": "qta",
+		"body": [
+			"import qtawesome as qta\n$1"
+		]
+	},
+	"Import QtCore": {
+		"scope": "python",
+		"prefix": "qtc",
+		"body": [
+			"from PySide6.QtCore import $1"
+		]
+	},
+	"Import QtGui": {
+		"scope": "python",
+		"prefix": "qtg",
+		"body": [
+			"from PySide6.QtGui import $1"
+		]
+	},
+	"Import QtWidgets": {
+		"scope": "python",
+		"prefix": "qtw",
+		"body": [
+			"from PySide6.QtWidgets import $1"
+		]
+	}
+}

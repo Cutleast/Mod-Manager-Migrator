@@ -1,0 +1,212 @@
+{
+    "app": {
+        "appVersion": "1.13.7",
+        "extensions": {},
+        "installType": "regular",
+        "instanceId": "a6e7b802-1642-470d-9a94-b00ce067acb8",
+        "migrations": [],
+        "version": "",
+        "warnedAdmin": 0
+    },
+    "confidential": {
+        "account": {
+            "nexus": {
+                "ForcedLogout": false
+            }
+        }
+    },
+    "persistent": {
+        "changelogs": {
+            "changelogs": []
+        },
+        "deployment": {
+            "needToDeploy": {
+                "skyrimse": false
+            }
+        },
+        "downloads": {
+            "files": {},
+            "speed": 0,
+            "speedHistory": []
+        },
+        "gameMode": {
+            "versions": {
+                "skyrimse": "1.6.1170.0"
+            }
+        },
+        "history": {
+            "historyStacks": {
+                "mods": [],
+                "plugins": []
+            }
+        },
+        "profiles": {
+            "BkIX54nayg": {
+                "gameId": "skyrimse",
+                "id": "BkIX54nayg",
+                "lastActivated": 1743698462966,
+                "name": "Default"
+            }
+        }
+    },
+    "settings": {
+        "automation": {
+            "deploy": true,
+            "enable": true,
+            "install": true,
+            "minimized": false,
+            "start": false
+        },
+        "baldursgate3": {
+            "autoExportLoadOrder": true,
+            "extensionVersion": "0.0.0",
+            "migration": true,
+            "playerProfile": "global"
+        },
+        "collections": {
+            "sortAdded": "datedownloaded",
+            "sortWorkshop": "recentlyupdated"
+        },
+        "downloads": {
+            "copyOnIFF": false,
+            "maxBandwidth": 0,
+            "maxChunks": 4,
+            "maxParallelDownloads": 1,
+            "minChunkSize": 1048576,
+            "path": "{USERDATA}\\downloads",
+            "showDropzone": true,
+            "showGraph": true
+        },
+        "firststeps": {
+            "dismissAll": false
+        },
+        "fnis": {
+            "autoRun": false
+        },
+        "gameMode": {
+            "discovered": {
+                "skyrimse": {
+                    "environment": {
+                        "SteamAPPId": "489830"
+                    },
+                    "hidden": false,
+                    "path": "E:\\SteamLibrary\\Skyrim Special Edition",
+                    "pathSetManually": true,
+                    "tools": {}
+                }
+            },
+            "pickerLayout": "small",
+            "searchPaths": [],
+            "sortManaged": "alphabetical",
+            "sortUnmanaged": "alphabetical"
+        },
+        "interface": {
+            "advanced": false,
+            "currentTheme": "__default",
+            "dashboardLayout": [
+                "ToDo List",
+                "Onboarding",
+                "Mods of the Month",
+                "Tools",
+                "Extensions",
+                "Recently Managed",
+                "Go Premium",
+                "Announcements",
+                "Changelog",
+                "News",
+                "Latest Mods"
+            ],
+            "desktopNotifications": true,
+            "foregroundDL": true,
+            "hideTopLevelCategory": false,
+            "language": "en",
+            "primaryTool": {
+                "skyrimse": "skse64"
+            },
+            "profilesVisible": true,
+            "relativeTimes": true,
+            "tools": {
+                "order": {
+                    "skyrimse": [
+                        "SSEEdit",
+                        "WryeBash",
+                        "FNIS",
+                        "skse64",
+                        "bodyslide",
+                        "creation-kit-64"
+                    ]
+                }
+            }
+        },
+        "mods": {
+            "activator": {
+                "skyrimse": "hardlink_activator"
+            },
+            "cleanupOnDeploy": false,
+            "confirmPurge": true,
+            "installPathMode": "userData",
+            "installPath": {
+                "skyrimse": "E:\\Modding\\Vortex\\{game}"
+            },
+            "installerSandbox": true,
+            "showDropzone": true,
+            "suggestInstallPathDirectory": "Vortex Mods"
+        },
+        "nexus": {
+            "associateNXM": true
+        },
+        "notifications": {
+            "suppress": {
+                "switched-to-beta-channel": true,
+                "vortex-update-available-notification": true
+            }
+        },
+        "plugins": {
+            "autoEnable": false,
+            "autoSort": true
+        },
+        "profiles": {
+            "activeProfileId": "BkIX54nayg",
+            "lastActiveProfile": {
+                "skyrimse": "BkIX54nayg"
+            },
+            "nextProfileId": "BkIX54nayg"
+        },
+        "saves": {
+            "monitorEnabled": true
+        },
+        "tables": {
+            "mods": {
+                "attributes": {
+                    "script-extender-error-check": {
+                        "enabled": false
+                    }
+                }
+            }
+        },
+        "update": {
+            "channel": "stable"
+        },
+        "window": {
+            "customTitlebar": true,
+            "maximized": false,
+            "position": {
+                "x": 0,
+                "y": 0
+            },
+            "tabsMinimized": false,
+            "zoomFactor": 1
+        },
+        "witcher3": {
+            "prioritytype": "prefix-based",
+            "suppressModLimitPatch": false
+        },
+        "workarounds": {
+            "modTypeConflictsEnabled": true,
+            "userSymlinks": false
+        }
+    },
+    "user": {
+        "multiUser": false
+    }
+}

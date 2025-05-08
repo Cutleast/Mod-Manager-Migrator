@@ -1,13 +1,11 @@
-.venv
-.vscode
-tests
-main.build
-main.dist
-**__pycache__
-*.txt
-**.old
-**_old.py
-!requirements.txt
-Mod-Manager-Migrator.code-workspace
-MMM
-MMM *.zip
+/data
+/dist
+/qt_lupdate.json
+/src/resources_rc.py
+/.pytest_cache
+/.venv
+__pycache__
+*.old
+*.prof
+*.qm
+.coverage

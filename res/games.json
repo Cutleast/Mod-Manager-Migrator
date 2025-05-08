@@ -1,0 +1,143 @@
+[
+    {
+        "id": "enderal",
+        "display_name": "Enderal",
+        "short_name": "Enderal",
+        "nexus_id": "enderal",
+        "inidir": "%DOCUMENTS%\\My Games\\Enderal",
+        "inifiles": [
+            "Enderal.ini",
+            "EnderalPrefs.ini",
+            "EnderalCustom.ini"
+        ],
+        "mods_folder": "Data"
+    },
+    {
+        "id": "enderalspecialedition",
+        "display_name": "Enderal Special Edition",
+        "short_name": "EnderalSpecialEdition",
+        "nexus_id": "enderalspecialedition",
+        "inidir": "%DOCUMENTS%\\My Games\\Enderal Special Edition",
+        "inifiles": [
+            "Enderal.ini",
+            "EnderalPrefs.ini",
+            "EnderalCustom.ini"
+        ],
+        "mods_folder": "Data"
+    },
+    {
+        "id": "enderalspecialedition_gog",
+        "display_name": "Enderal Special Edition (GOG)",
+        "short_name": "EnderalSpecialEdition",
+        "nexus_id": "enderalspecialedition",
+        "inidir": "%DOCUMENTS%\\My Games\\Enderal Special Edition GOG",
+        "inifiles": [
+            "Enderal.ini",
+            "EnderalPrefs.ini",
+            "EnderalCustom.ini"
+        ],
+        "mods_folder": "Data"
+    },
+    {
+        "id": "fallout3",
+        "display_name": "Fallout 3",
+        "short_name": "Fallout3",
+        "nexus_id": "fallout3",
+        "inidir": "%DOCUMENTS%\\My Games\\Fallout 3",
+        "inifiles": [
+            "Fallout.ini",
+            "FalloutPrefs.ini"
+        ],
+        "mods_folder": "Data"
+    },
+    {
+        "id": "fallout4",
+        "display_name": "Fallout 4",
+        "short_name": "Fallout4",
+        "nexus_id": "fallout4",
+        "inidir": "%DOCUMENTS%\\My Games\\Fallout4",
+        "inifiles": [
+            "Fallout4.ini",
+            "Fallout4Prefs.ini",
+            "Fallout4Custom.ini"
+        ],
+        "mods_folder": "Data"
+    },
+    {
+        "id": "falloutnv",
+        "display_name": "Fallout: New Vegas",
+        "short_name": "FalloutNV",
+        "nexus_id": "newvegas",
+        "inidir": "%DOCUMENTS%\\My Games\\FalloutNV",
+        "inifiles": [
+            "Fallout.ini",
+            "FalloutPrefs.ini"
+        ],
+        "mods_folder": "Data"
+    },
+    {
+        "id": "oblivion",
+        "display_name": "Oblivion",
+        "short_name": "Oblivion",
+        "nexus_id": "oblivion",
+        "inidir": "%DOCUMENTS%\\My Games\\Oblivion",
+        "inifiles": [
+            "Oblivion.ini",
+            "OblivionPrefs.ini",
+            "BlendSettings.ini"
+        ],
+        "mods_folder": "Data"
+    },
+    {
+        "id": "skyrim",
+        "display_name": "Skyrim",
+        "short_name": "Skyrim",
+        "nexus_id": "skyrim",
+        "inidir": "%DOCUMENTS%\\My Games\\Skyrim",
+        "inifiles": [
+            "Skyrim.ini",
+            "SkyrimPrefs.ini",
+            "SkyrimCustom.ini"
+        ],
+        "mods_folder": "Data"
+    },
+    {
+        "id": "skyrimse",
+        "display_name": "Skyrim Special Edition",
+        "short_name": "SkyrimSE",
+        "nexus_id": "skyrimspecialedition",
+        "inidir": "%DOCUMENTS%\\My Games\\Skyrim Special Edition",
+        "inifiles": [
+            "Skyrim.ini",
+            "SkyrimPrefs.ini",
+            "SkyrimCustom.ini"
+        ],
+        "mods_folder": "Data"
+    },
+    {
+        "id": "skyrimse_gog",
+        "display_name": "Skyrim Special Edition (GOG)",
+        "short_name": "SkyrimSE",
+        "nexus_id": "skyrimspecialedition",
+        "inidir": "%DOCUMENTS%\\My Games\\Skyrim Special Edition GOG",
+        "inifiles": [
+            "Skyrim.ini",
+            "SkyrimPrefs.ini",
+            "SkyrimCustom.ini"
+        ],
+        "mods_folder": "Data"
+    },
+    {
+        "id": "skyrimvr",
+        "display_name": "Skyrim VR",
+        "short_name": "SkyrimVR",
+        "nexus_id": "skyrimspecialedition",
+        "inidir": "%DOCUMENTS%\\My Games\\Skyrim VR",
+        "inifiles": [
+            "SkyrimVR.ini",
+            "SkyrimPrefs.ini",
+            "SkyrimCustom.ini"
+        ],
+        "mods_folder": "Data"
+    }
+]

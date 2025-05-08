@@ -1,0 +1,104 @@
+[color=#f6a440][size=6]Description[/size][/color]
+This is a tool for migrating modding instances between mod managers. Originally planned as a tool to import Vortex Collections into Mod Organizer 2, it got expanded to a general migration tool for mod instances with a lot more features than that.
+
+[center]
+[url=https://discord.gg/pqEHdWDf8z][img]https://i.imgur.com/VMdA0q7.png[/img][/url][url=https://ko-fi.com/cutleast][img]https://i.imgur.com/ROFYznU.png[/img][/url][url=https://github.com/Cutleast/Mod-Manager-Migrator][img]https://i.imgur.com/x6joDMm.png[/img][/url]
+[/center]
+
+[color=#f6a440][size=6]Features[/size][/color]
+- Fully automated migration
+- Automatic detection of used game folder
+- New instance is customizable
+- Migrate to existing instances to merge two instances into one (experimental)
+- Support for global and portable MO2 instances
+    - Automatically download and install MO2 for portable MO2 instances
+- Automatically converts Vortex conflict rules to a MO2 loadorder and vice versa
+    - Also supports separate file conflicts and .mohidden files
+- Uses hardlinks by default when source and destination are on the same disk to save on space
+    - Can be disabled in [i]File[/i] > [i]Settings[/i] > [i]Use hardlinks [...][/i]
+    - [url=https://github.com/Cutleast/Mod-Manager-Migrator/blob/main/Hardlinks.md]What are Hardlinks?[/url]
+- Automatic detection of Windows path length limit
+    - Windows paths are limited to 255 characters which can cause issues for mods with long paths
+    - MMM will ask at the start to disable that limit when not already disabled
+
+[b][size=3]What gets migrated and what not[/size][/b]
+See [url=https://github.com/Cutleast/Mod-Manager-Migrator/tree/main#what-gets-migrated-and-what-not]What gets migrated and what not[/url] for a full up-to-date list.
+
+[b][size=3]Supported Games[/size][/b]
+[list]
+[*]Enderal (+ Special Edition)
+[*]Fallout 3
+[*]Fallout 4
+[*]Fallout: New Vegas
+[*]Oblivion (not the Remastered version)
+[*]Skyrim (all versions incl. VR and GOG)
+[/list]
+
+[b][size=3]Supported Mod Managers[/size][/b]
+[list]
+[*]Vortex
+[*]Mod Organizer 2
+[/list]
+
+[b][size=3]Known Issues/Limitations[/size][/b]
+[list]
+[*]Cannot migrate from Vortex if it is used in "Shared" mode ([url=https://imgur.com/fyKAgK7]Vortex > Settings > Vortex[/url])
+[/list]
+
+[color=#f6a440][size=6]Usage[/size][/color]
+To migrate an instance follow these steps:
+[list=1]
+[*]Select the game of the instance you want to migrate.
+[*]Select the source mod manager.
+[*]Enter the required information for the respective mod manager.
+[*]Click on "Load instance..." to load and display the source instance.
+[*]Select whether you want to create a new instance or want to migrate to an existing one (experimental).
+[*]Select the destination mod manager (may be the source mod manager to duplicate an instance).
+[*]Either customize the destination instance as desired or select one similar to the source.
+[*]Click on "Migrate" and wait for it to finish.
+[*]If there are errors, check them carefully and (where appropiate) follow their recommendations and instructions.
+[/list]
+
+[color=#f6a440][size=6]Frequently Asked Questions (FAQ)[/size][/color]
+[size=3][b]Can I delete the old instance after the migration is complete?[/b][/size]
+[list]
+[*]Yes, but before deleting the old instance make sure that the migrated instance works fine and that there were no errors during the migration.
+[*][b]I take no responsibility for modlists that get deleted without verifying that the destination instance works![/b]
+[/list]
+
+[size=3][b]I got an OverwriteModNotSupportedError for a mod called "Overwrite" when migrating an MO2 instance[/b][/size]
+[list]
+[*]This is fully intentional and expected when migrating a MO2 instance with a non-empty overwrite folder to Vortex, as Vortex does not have anything similar (generated files stay in the game folder).
+[*]As suggested in the error message, to solve this, create a mod from the files in the overwrite folder and rerun the migration. Do this by right-click > [i]Create mod from overwrite[/i] on the mod "Overwrite" at the very bottom of your modlist in MO2.
+[/list]
+
+[size=3][b]I got a FileNotFoundError for one or multiple mods[/b][/size]
+[list]
+[*]Please check the length of the mentioned file path: If it is longer than 255 characters, you didn't fix the path limit when prompted after starting MMM.
+[*]If the path is shorter than 255 characters, please create an issue or create a post in #support on our [url=https://discord.gg/pqEHdWDf8z]Discord server[/url].
+[/list]
+
+[size=3][b]Are my LOOT rules migrated from Vortex to MO2 or vice versa?[/b][/size]
+[list]
+[*]No, not at the moment. Please see [url=https://github.com/Cutleast/Mod-Manager-Migrator/tree/main#what-gets-migrated-and-what-not]What gets migrated and what not[/url] for a full up-to-date list.
+[/list]
+
+[color=#f6a440][size=6]Contributing[/size][/color]
+Check out the [url=https://github.com/Cutleast/Mod-Manager-Migrator]GitHub repository[/url] for instructions.
+
+[color=#f6a440][size=6]My other Stuff[/size][/color]
+[url=https://www.nexusmods.com/skyrimspecialedition/mods/111491][img]https://i.imgur.com/eRKy8G6.png[/img][/url]
+
+[url=https://www.nexusmods.com/skyrimspecialedition/mods/96891][img]https://i.imgur.com/hfM6oJs.jpg[/img][/url]
+
+[url=https://www.nexusmods.com/skyrimspecialedition/mods/106185][img]https://i.imgur.com/76duvpl.png[/img][/url]
+
+[color=#f6a440][size=6]Credits[/size][/color]
+[list]
+[*]Code by Cutleast ([url=https://next.nexusmods.com/profile/Cutleast]NexusMods[/url] | [url=https://github.com/cutleast]GitHub[/url])
+[*]Icon, modpage images and idea by [url=https://next.nexusmods.com/profile/Wuerfelhusten]Wuerfelhusten[/url]
+[*]Qt by [url=https://qt.io/]The Qt Company Ltd[/url]
+[*]FontAwesome Icons by [url=https://github.com/FortAwesome/Font-Awesome]FontAwesome[/url]
+[/list]
+
+See [url=https://github.com/Cutleast/Mod-Manager-Migrator/blob/main/src/core/utilities/licenses.py]licenses.py[/url] for a full list of used libraries, dependencies and their respective licenses.
