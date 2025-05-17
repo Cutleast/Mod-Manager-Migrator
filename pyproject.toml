@@ -33,6 +33,7 @@ dev = [
     "pytest-cov",
     "pytest-mock",
     "pytest-qt",
+    "ruff",
 ]
 
 [tool.pytest.ini_options]
