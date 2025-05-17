@@ -100,7 +100,7 @@ class TestModOrganizer(BaseTest):
         )
 
         # then
-        assert len(instance.mods) == 10
+        assert len(instance.mods) == 11
         assert len(instance.tools) == 3
 
         # when
@@ -401,6 +401,7 @@ class TestModOrganizer(BaseTest):
 
         # then
         assert migrated_separator_mod.mod_type == Mod.Type.Separator
+        assert dst_instance.loadorder[-1] is migrated_separator_mod
 
     def test_install_mod_with_overwrite(
         self, app_config: AppConfig, test_fs: FakeFilesystem, instance: Instance
