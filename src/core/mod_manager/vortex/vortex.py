@@ -691,7 +691,7 @@ class Vortex(ModManager[ProfileInfo]):
         game_id: str = instance_data.game.id.lower()
         tool_id: str = Vortex.generate_id(length=11)
         new_tool: Tool = copy(tool)
-        if new_tool.mod is not None:
+        if new_tool.mod is not None and instance.is_mod_installed(new_tool.mod):
             # Map tool to the installed mod
             new_tool.mod = instance.get_installed_mod(new_tool.mod)
         tool_data: dict[str, Any] = {
