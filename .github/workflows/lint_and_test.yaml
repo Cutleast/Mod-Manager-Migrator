@@ -25,10 +25,12 @@ jobs:
       - name: Run Ruff
         run: |
           uv run ruff check src
+          uv run ruff check tests
 
       - name: Run Pyright
         run: |
           uv run pyright src
+          uv run pyright tests
 
       - name: Run Pytest
         run: |
