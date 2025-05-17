@@ -290,27 +290,27 @@ Fortfahren auf eigene Gefahr!</translation>
 <context>
     <name>Migrator</name>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="125"/>
+        <location filename="src/core/migrator/migrator.py" line="126"/>
         <source>Migrating instance {0}...</source>
         <translation>Instanz {0} wird migriert...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="146"/>
+        <location filename="src/core/migrator/migrator.py" line="149"/>
         <source>Migrating mods...</source>
         <translation>Mods werden migriert...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="179"/>
+        <location filename="src/core/migrator/migrator.py" line="182"/>
         <source>Migrating tools...</source>
         <translation>Tools werden migriert...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="219"/>
+        <location filename="src/core/migrator/migrator.py" line="222"/>
         <source>Failed to migrate INI files.</source>
         <translation>Migration der INI-Dateien fehlgeschlagen.</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="233"/>
+        <location filename="src/core/migrator/migrator.py" line="236"/>
         <source>Failed to migrate additional files.</source>
         <translation>Migration der zusätzlichen Dateien fehlgeschlagen.</translation>
     </message>

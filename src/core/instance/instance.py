@@ -94,12 +94,13 @@ class Instance:
             lambda m: m == mod
             or (
                 (
-                    m.metadata == mod.metadata
+                    (m.display_name == mod.display_name and m.metadata == mod.metadata)
                     or (
                         m.metadata.mod_id == mod.metadata.mod_id
                         and m.metadata.file_id == mod.metadata.file_id
+                        and bool(m.metadata.mod_id)
+                        and bool(m.metadata.file_id)
                     )
-                    or m.display_name == mod.display_name
                 )
                 and m.mod_type == mod.mod_type
             ),
