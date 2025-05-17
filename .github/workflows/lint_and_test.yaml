@@ -1,0 +1,41 @@
+name: Lint and test
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Set up virtual environment with uv
+        run: |
+          uv sync
+
+      - name: Run Ruff
+        run: |
+          uv run ruff check src
+          uv run ruff check tests
+
+      - name: Run Pyright
+        run: |
+          uv run pyright src
+          uv run pyright tests
+
+      - name: Run Pytest
+        run: |
+          cmd /c update_lupdate_file.bat
+          cmd /c update_qts.bat
+          cmd /c compile_qts.bat
+          cmd /c compile_qrc.bat
+          uv run pytest
