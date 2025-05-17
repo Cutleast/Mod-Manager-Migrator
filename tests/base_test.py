@@ -3,6 +3,7 @@ Copyright (c) Cutleast
 """
 
 import json
+import os
 import shutil
 import tempfile
 from pathlib import Path
@@ -50,6 +51,15 @@ class BaseTest:
             yield Path(tmp_dir)
 
     @pytest.fixture
+    def real_cwd(self) -> Path:
+        """
+        Returns:
+            Path: The real current working directory.
+        """
+
+        return Path.cwd()
+
+    @pytest.fixture
     def data_folder(self) -> Path:
         """
         Returns the path to the test data folder.
@@ -81,11 +91,38 @@ class BaseTest:
         """
 
         fs.add_real_directory(data_folder)
+        os.chdir(data_folder.parent.parent)
+
         fs.add_real_directory(
             data_folder / "mod_instance",
             read_only=False,
             target_path="C:\\Modding\\Test Instance",
         )
+
+        global_mo2_path: Path = (
+            resolve(Path("%LOCALAPPDATA%")) / "ModOrganizer" / "Test Instance"
+        )
+        fs.add_real_directory(
+            data_folder / "mod_instance" / "mods",
+            read_only=False,
+            target_path=global_mo2_path / "mods",
+        )
+        fs.add_real_directory(
+            data_folder / "mod_instance" / "overwrite",
+            read_only=False,
+            target_path=global_mo2_path / "overwrite",
+        )
+        fs.add_real_directory(
+            data_folder / "mod_instance" / "profiles",
+            read_only=False,
+            target_path=global_mo2_path / "profiles",
+        )
+        fs.add_real_file(
+            data_folder / "mod_instance" / "ModOrganizer_global.ini",
+            read_only=False,
+            target_path=global_mo2_path / "ModOrganizer.ini",
+        )
+
         fs.add_real_directory(
             data_folder / "skyrimse",
             read_only=False,
