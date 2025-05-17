@@ -87,6 +87,7 @@ class Migrator(QObject):
         self.log.info("Source instance info:")
         Logger.log_str_dict(self.log, src_info.__dict__)
         self.log.info(f"Source size: {scale_value(src_instance.size)}")
+        self.log.info(f"Source order matters: {src_instance.order_matters}")
 
         self.log.info("Destination instance info:")
         Logger.log_str_dict(self.log, dst_info.__dict__)
@@ -139,7 +140,9 @@ class Migrator(QObject):
                 dst_info, src_instance.game_folder, ldialog
             )
 
-        for m, mod in enumerate(src_instance.mods):
+        self.log.info(f"Destination order matters: {dst_instance.order_matters}")
+
+        for m, mod in enumerate(src_instance.loadorder):
             if ldialog is not None:
                 ldialog.updateProgress(
                     text1=self.tr("Migrating mods...")
