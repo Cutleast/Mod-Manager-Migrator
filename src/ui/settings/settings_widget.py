@@ -42,6 +42,11 @@ class SettingsWidget(SmoothScrollArea):
     This signal gets emitted when a setting change requires a restart.
     """
 
+    HARDLINKS_URL: str = (
+        "https://github.com/Cutleast/Mod-Manager-Migrator/blob/main/Hardlinks.md"
+    )
+    """URL to Hardlinks.md file on GitHub."""
+
     __app_config: AppConfig
 
     __vlayout: QVBoxLayout
@@ -162,7 +167,7 @@ class SettingsWidget(SmoothScrollArea):
         hlayout.addWidget(self.__use_hardlinks_box)
 
         hardlinks_help_button = LinkButton(
-            url="https://github.com/Cutleast/Mod-Manager-Migrator/Hardlinks.md",
+            url=SettingsWidget.HARDLINKS_URL,
             display_text=self.tr("What are hardlinks?"),
             icon=qta.icon("ri.information-line", color=self.palette().text().color()),
         )
