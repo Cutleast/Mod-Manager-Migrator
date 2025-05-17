@@ -3,7 +3,7 @@
 Copyright (c) Cutleast
 """
 
-from PySide6.QtCore import QEvent, Qt
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QColor, QLinearGradient, QPainter
 from PySide6.QtWidgets import (
     QApplication,
