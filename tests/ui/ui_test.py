@@ -21,7 +21,7 @@ class UiTest(BaseTest):
     """
 
     @pytest.fixture
-    def ui_test_fs(self, test_fs: FakeFilesystem) -> FakeFilesystem:
+    def ui_test_fs(self, real_cwd: Path, test_fs: FakeFilesystem) -> FakeFilesystem:
         """
         Extends fake filesystem with data folders for qtawesome and other ui-related
         dependencies.
@@ -31,7 +31,7 @@ class UiTest(BaseTest):
         """
 
         test_fs.add_real_directory(
-            Path(".venv") / "lib" / "site-packages" / "qtawesome" / "fonts"
+            real_cwd / ".venv" / "lib" / "site-packages" / "qtawesome" / "fonts"
         )
 
         return test_fs

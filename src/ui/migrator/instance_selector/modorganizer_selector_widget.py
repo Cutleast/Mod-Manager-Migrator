@@ -126,8 +126,7 @@ class ModOrganizerSelectorWidget(BaseSelectorWidget[MO2InstanceInfo]):
                     self.__portable_path_entry.text() + "/ModOrganizer.ini"
                 ).is_file()
             )
-            and self.__profile_dropdown.currentIndex() != 0
-        )
+        ) and self.__profile_dropdown.currentIndex() != 0
 
         return valid
 
