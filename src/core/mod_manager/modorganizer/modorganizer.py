@@ -780,7 +780,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         new_index = int(custom_executables["size"]) + 1
 
         new_tool: Tool = copy(tool)
-        if new_tool.mod is not None:
+        if new_tool.mod is not None and instance.is_mod_installed(new_tool.mod):
             # Map tool to the installed mod
             new_tool.mod = instance.get_installed_mod(new_tool.mod)
 
