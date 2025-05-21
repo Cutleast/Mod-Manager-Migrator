@@ -1,3 +1,10 @@
+# v3.0.1
+
+- Fix separators losing their loadorder position when migrating from MO2 -> MO2
+- Fix "What are Hardlinks?" button in settings
+- Fix migration of tools if the mapped mod is not installed
+- Fix "Load selected instance..." button not being disabled when loading a global MO2 instance without a profile selected
+
 # v3.0.0
 
 * Rewrite the entire codebase
