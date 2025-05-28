@@ -10,7 +10,11 @@
             "EnderalPrefs.ini",
             "EnderalCustom.ini"
         ],
-        "mods_folder": "Data"
+        "mods_folder": "Data",
+        "additional_files": [
+            "loadorder.txt",
+            "plugins.txt"
+        ]
     },
     {
         "id": "enderalspecialedition",
@@ -23,7 +27,11 @@
             "EnderalPrefs.ini",
             "EnderalCustom.ini"
         ],
-        "mods_folder": "Data"
+        "mods_folder": "Data",
+        "additional_files": [
+            "loadorder.txt",
+            "plugins.txt"
+        ]
     },
     {
         "id": "enderalspecialedition_gog",
@@ -36,7 +44,11 @@
             "EnderalPrefs.ini",
             "EnderalCustom.ini"
         ],
-        "mods_folder": "Data"
+        "mods_folder": "Data",
+        "additional_files": [
+            "loadorder.txt",
+            "plugins.txt"
+        ]
     },
     {
         "id": "fallout3",
@@ -48,7 +60,11 @@
             "Fallout.ini",
             "FalloutPrefs.ini"
         ],
-        "mods_folder": "Data"
+        "mods_folder": "Data",
+        "additional_files": [
+            "loadorder.txt",
+            "plugins.txt"
+        ]
     },
     {
         "id": "fallout4",
@@ -61,7 +77,11 @@
             "Fallout4Prefs.ini",
             "Fallout4Custom.ini"
         ],
-        "mods_folder": "Data"
+        "mods_folder": "Data",
+        "additional_files": [
+            "loadorder.txt",
+            "plugins.txt"
+        ]
     },
     {
         "id": "falloutnv",
@@ -73,7 +93,11 @@
             "Fallout.ini",
             "FalloutPrefs.ini"
         ],
-        "mods_folder": "Data"
+        "mods_folder": "Data",
+        "additional_files": [
+            "loadorder.txt",
+            "plugins.txt"
+        ]
     },
     {
         "id": "oblivion",
@@ -86,7 +110,11 @@
             "OblivionPrefs.ini",
             "BlendSettings.ini"
         ],
-        "mods_folder": "Data"
+        "mods_folder": "Data",
+        "additional_files": [
+            "loadorder.txt",
+            "plugins.txt"
+        ]
     },
     {
         "id": "skyrim",
@@ -99,7 +127,11 @@
             "SkyrimPrefs.ini",
             "SkyrimCustom.ini"
         ],
-        "mods_folder": "Data"
+        "mods_folder": "Data",
+        "additional_files": [
+            "loadorder.txt",
+            "plugins.txt"
+        ]
     },
     {
         "id": "skyrimse",
@@ -112,7 +144,11 @@
             "SkyrimPrefs.ini",
             "SkyrimCustom.ini"
         ],
-        "mods_folder": "Data"
+        "mods_folder": "Data",
+        "additional_files": [
+            "loadorder.txt",
+            "plugins.txt"
+        ]
     },
     {
         "id": "skyrimse_gog",
@@ -125,7 +161,11 @@
             "SkyrimPrefs.ini",
             "SkyrimCustom.ini"
         ],
-        "mods_folder": "Data"
+        "mods_folder": "Data",
+        "additional_files": [
+            "loadorder.txt",
+            "plugins.txt"
+        ]
     },
     {
         "id": "skyrimvr",
@@ -138,6 +178,10 @@
             "SkyrimPrefs.ini",
             "SkyrimCustom.ini"
         ],
-        "mods_folder": "Data"
+        "mods_folder": "Data",
+        "additional_files": [
+            "loadorder.txt",
+            "plugins.txt"
+        ]
     }
 ]

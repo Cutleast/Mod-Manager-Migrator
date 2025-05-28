@@ -16,6 +16,7 @@ from core.instance.mod import Mod
 from core.instance.tool import Tool
 from core.migrator.migration_report import MigrationReport
 from core.migrator.migrator import FileBlacklist, Migrator
+from core.mod_manager.instance_info import InstanceInfo
 from core.mod_manager.mod_manager import ModManager
 from core.mod_manager.modorganizer.mo2_instance_info import MO2InstanceInfo
 from core.mod_manager.modorganizer.modorganizer import ModOrganizer
@@ -86,6 +87,7 @@ class TestMigrator(BaseTest):
         self.assert_modlists_equal(migrated_instance.mods, instance.mods)
         self.assert_tools_equal(migrated_instance.tools, instance.tools)
         assert migrated_instance.game_folder == instance.game_folder
+        self.assert_additional_files_equal(mo2_instance_info, dst_info, mo2, mo2)
 
     def test_migration_mo2_to_vortex(
         self,
@@ -167,6 +169,9 @@ class TestMigrator(BaseTest):
         )
         self.assert_tools_equal(migrated_instance.tools, instance.tools)
         assert migrated_instance.game_folder == instance.game_folder
+        self.assert_additional_files_equal(
+            mo2_instance_info, migrated_profile_info, mo2, vortex
+        )
 
     def test_migration_to_vortex_without_activating_profile(
         self,
@@ -289,6 +294,7 @@ class TestMigrator(BaseTest):
         )
         self.assert_tools_equal(migrated_instance.tools, src_instance.tools)
         assert migrated_instance.game_folder == src_instance.game_folder
+        self.assert_additional_files_equal(vortex_profile_info, dst_info, vortex, mo2)
 
     def test_migration_vortex_to_vortex(
         self,
@@ -354,6 +360,9 @@ class TestMigrator(BaseTest):
         # then
         self.assert_modlists_equal(migrated_instance.loadorder, src_instance.loadorder)
         self.assert_tools_equal(migrated_instance.tools, src_instance.tools)
+        self.assert_additional_files_equal(
+            vortex_profile_info, dst_info, vortex, vortex
+        )
 
     def test_not_enough_space_error(
         self,
@@ -503,6 +512,9 @@ class TestMigrator(BaseTest):
             exclude_separators=True,
             exclude_overwrite=True,
         )
+        self.assert_additional_files_equal(
+            mo2_instance_info, vortex_profile_info, mo2, vortex
+        )
         # TODO: Fix this test
         # self.assert_tools_equal(
         #     migrated_instance.tools, instance.tools, compare_display_names=False
@@ -642,6 +654,35 @@ class TestMigrator(BaseTest):
                 assert tool1.mod.metadata == tool2.mod.metadata
             else:
                 assert tool1.mod == tool2.mod
+
+    def assert_additional_files_equal[I1: InstanceInfo, I2: InstanceInfo](
+        self,
+        src_info: I1,
+        dst_info: I2,
+        src_mod_manager: ModManager[I1],
+        dst_mod_manager: ModManager[I2],
+    ) -> None:
+        """
+        Asserts that the additional files of two instances are equal.
+
+        Args:
+            src_info (I1): Source instance info
+            dst_info (I2): Destination instance info
+            src_mod_manager (ModManager[I1]): Source mod manager
+            dst_mod_manager (ModManager[I2]): Destination mod manager
+        """
+
+        source_files: list[Path] = [
+            f.relative_to(src_mod_manager.get_additional_files_folder(src_info))
+            for f in src_mod_manager.get_additional_files(src_info)
+        ]
+
+        destination_files: list[Path] = [
+            f.relative_to(dst_mod_manager.get_additional_files_folder(dst_info))
+            for f in dst_mod_manager.get_additional_files(dst_info)
+        ]
+
+        assert source_files == destination_files
 
     def __get_file_redirects(
         self, mods: list[Mod], src_mod_manager: ModManager
