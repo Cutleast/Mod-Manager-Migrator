@@ -133,6 +133,31 @@ class Game(BaseModel):
 
         raise ValueError(f"Game '{short_name}' not found!")
 
+    @staticmethod
+    @cache
+    def get_game_by_nexus_id(nexus_id: str) -> Game:
+        """
+        Gets a game by its nexus id.
+
+        Args:
+            nexus_id (str): Game nexus id
+
+        Raises:
+            ValueError: when the game could not be found
+
+        Returns:
+            Game: Game with specified nexus id
+        """
+
+        games: dict[str, Game] = {
+            game.nexus_id: game for game in reversed(Game.get_supported_games())
+        }
+
+        if nexus_id in games:
+            return games[nexus_id]
+
+        raise ValueError(f"Game '{nexus_id}' not found!")
+
     @override
     def __hash__(self) -> int:
         return hash((self.id, self.display_name, self.short_name, self.nexus_id))

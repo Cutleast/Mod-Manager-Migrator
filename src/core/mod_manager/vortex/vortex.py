@@ -561,10 +561,20 @@ class Vortex(ModManager[ProfileInfo]):
             source: str = "nexus" if mod.metadata.mod_id else "other"
             modtype: Optional[str] = "dinput" if mod.deploy_path else None
 
+            dl_game_id: str
+            try:
+                dl_game_id = Game.get_game_by_nexus_id(mod.metadata.game_id).id.lower()
+            except ValueError:
+                self.log.warning(
+                    f"Unsupported game '{mod.metadata.game_id}' for mod! Falling back "
+                    "to instance's default..."
+                )
+                dl_game_id = instance_data.game.id.lower()
+
             moddata: dict[str, Any] = {
                 "attributes": {
                     "customFileName": mod.display_name,
-                    "downloadGame": game_id,
+                    "downloadGame": dl_game_id,
                     "installTime": Vortex.format_utc_timestamp(time.time()),
                     "fileName": self.__get_unique_file_name(mod),
                     "fileId": mod.metadata.file_id,

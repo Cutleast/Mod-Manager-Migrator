@@ -670,7 +670,15 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
     ) -> None:
         self.log.info(f"Installing mod {mod.display_name!r}...")
 
-        game: Game = instance_data.game
+        game: Game
+        try:
+            game = Game.get_game_by_nexus_id(mod.metadata.game_id)
+        except ValueError:
+            self.log.warning(
+                f"Unsupported game '{mod.metadata.game_id}' for mod! Falling back to "
+                "instance's default..."
+            )
+            game = instance_data.game
 
         mod_folder: Path
         regular_deployment: bool = True
@@ -705,7 +713,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
                 meta_ini_file = INIFile(meta_ini_path)
                 meta_ini_file.data = {
                     "General": {
-                        "game": game.short_name,
+                        "gameName": game.short_name,
                         "modid": mod.metadata.mod_id,
                         "version": mod.metadata.version,
                         "installationFile": mod.metadata.file_name,

@@ -426,21 +426,21 @@ Fortfahren auf eigene Gefahr!</translation>
         <translation>Archiv wird entpackt...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1035"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1043"/>
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of your MO2 installation if not already installed.</source>
         <translation>Die Nutzung von Root Builder wurde aktiviert.
 Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von Nexus Mods heruntergeladen und in den &quot;plugins&quot;-Ordner deiner MO2 Installation entpackt werden, wenn nicht bereits installiert.</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1045"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1053"/>
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of the new MO2 installation.</source>
         <translation>Die Nutzung von Root Builder wurde aktiviert.
 Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von Nexus Mods heruntergeladen und in den &quot;plugins&quot;-Ordner der neuen MO2 Installation entpackt werden.</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1053"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1061"/>
         <source>At least one global instance was detected.
 Global instances cause issues with portable instances and it is recommended to delete (or rename) the following folder:
 {0}</source>
@@ -831,7 +831,7 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
         <translation>Tools werden von Vortex geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="846"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="856"/>
         <source>Vortex is currently deployed to the game folder. It is strongly recommended to purge the game directory before using the migrated instance.</source>
         <translation>Vortex ist zurzeit in das Spielverzeichnis deployed. Es wird empfohlen, das Spielverzeichnis vor der Nutzung der migrierten Instanz zu säubern.</translation>
     </message>
