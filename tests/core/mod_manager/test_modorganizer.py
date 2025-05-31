@@ -53,7 +53,7 @@ class TestModOrganizer(BaseTest):
                 file_id=128013,
                 version="1.1.3",
                 file_name="RSSE Children Overhaul 1.1.3 with hotfix 1-2650-1-1-3HF1-1583835543.7z",
-                game_id="skyrimspecialedition",
+                game_id="enderalspecialedition",  # to test mods from different games
             ),
         ),
     ]

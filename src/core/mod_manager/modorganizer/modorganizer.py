@@ -25,6 +25,7 @@ from core.utilities.env_resolver import resolve
 from core.utilities.filesystem import clean_fs_string
 from core.utilities.ini_file import INIFile
 from core.utilities.progress_update import ProgressUpdate
+from core.utilities.reverse_dict import reverse_dict
 from core.utilities.scale import scale_value
 from core.utilities.unique import unique
 from ui.widgets.loading_dialog import LoadingDialog
@@ -49,6 +50,11 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
     """List of executable names to ignore when loading tools."""
 
     appdata_path = resolve(Path("%LOCALAPPDATA%") / "ModOrganizer")
+
+    GAME_SHORT_NAME_OVERRIDES: dict[str, str] = {
+        "EnderalSpecialEdition": "EnderalSE",
+    }
+    """Dictionary of overrides for game short names."""
 
     def __init__(self) -> None:
         super().__init__()
@@ -292,6 +298,10 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         return mods
 
     def __parse_meta_ini(self, meta_ini_path: Path, default_game: Game) -> Metadata:
+        short_name_overrides: dict[str, str] = reverse_dict(
+            ModOrganizer.GAME_SHORT_NAME_OVERRIDES
+        )
+
         ini_file = INIFile(meta_ini_path)
         meta_ini_data: dict[str, Any] = ini_file.load_file()
 
@@ -312,7 +322,10 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
                     version = version.removesuffix(".0")
 
                 try:
-                    game_id = Game.get_game_by_short_name(general["gameName"]).nexus_id
+                    game_name: str = general["gameName"]
+                    game_id = Game.get_game_by_short_name(
+                        short_name_overrides.get(game_name, game_name)
+                    ).nexus_id
                 except KeyError:
                     self.log.warning(
                         f"No game specified for {meta_ini_path.parent.name!r}!"
@@ -713,7 +726,9 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
                 meta_ini_file = INIFile(meta_ini_path)
                 meta_ini_file.data = {
                     "General": {
-                        "gameName": game.short_name,
+                        "gameName": ModOrganizer.GAME_SHORT_NAME_OVERRIDES.get(
+                            game.short_name, game.short_name
+                        ),
                         "modid": mod.metadata.mod_id,
                         "version": mod.metadata.version,
                         "installationFile": mod.metadata.file_name,
