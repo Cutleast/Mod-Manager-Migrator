@@ -137,6 +137,7 @@ class MigratorWidget(SmoothScrollArea):
         for g, game in enumerate(self.__games.values(), start=1):
             self.__game_dropdown.setItemIcon(g, QIcon(f":/icons/{game.short_name}.ico"))
         self.__game_dropdown.currentTextChanged.connect(self.__on_game_select)
+        self.__game_dropdown.setFixedWidth(250)
         hlayout.addWidget(self.__game_dropdown)
         hlayout.addSpacing(9)
 
