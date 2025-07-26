@@ -90,7 +90,8 @@ class ModlistMenu(Menu):
             self.__uncheck_action.setVisible(False)
             self.__check_action.setVisible(False)
             self.__open_modpage_action.setVisible(False)
-            self.__open_in_explorer_action.setVisible(False)
+
+        self.__open_in_explorer_action.setVisible(current_item is not None)
 
         self.exec(QCursor.pos())
 
