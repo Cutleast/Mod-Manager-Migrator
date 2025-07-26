@@ -1,5 +1,17 @@
 [
     {
+        "id": "cyberpunk2077",
+        "display_name": "Cyberpunk 2077",
+        "short_name": "Cyberpunk2077",
+        "nexus_id": "cyberpunk2077",
+        "inidir": "%LOCALAPPDATA%\\CD Projekt Red\\Cyberpunk 2077",
+        "inifiles": [
+            "UserSettings.json"
+        ],
+        "mods_folder": "",
+        "additional_files": []
+    },
+    {
         "id": "enderal",
         "display_name": "Enderal",
         "short_name": "Enderal",
