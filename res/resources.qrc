@@ -1,37 +1,55 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
     <qresource>
-        <!-- Icons -->
-        <file>icons/arrow_down_dark.svg</file>
-        <file>icons/arrow_down_light.svg</file>
-        <file>icons/arrow_left_dark.svg</file>
-        <file>icons/arrow_left_light.svg</file>
-        <file>icons/arrow_right_dark.svg</file>
-        <file>icons/arrow_right_light.svg</file>
-        <file>icons/arrow_up_dark.svg</file>
-        <file>icons/arrow_up_light.svg</file>
-        <file>icons/checkmark_dark.svg</file>
-        <file>icons/checkmark_light.svg</file>
-        <file>icons/close.svg</file>
+        <!-- Dark mode icons -->
+        <file alias="icons/dark/arrow_down.svg">../core-res/icons/dark/arrow_down.svg</file>
+        <file alias="icons/dark/arrow_left.svg">../core-res/icons/dark/arrow_left.svg</file>
+        <file alias="icons/dark/arrow_right.svg">../core-res/icons/dark/arrow_right.svg</file>
+        <file alias="icons/dark/arrow_up.svg">../core-res/icons/dark/arrow_up.svg</file>
+        <file alias="icons/dark/checkmark.svg">../core-res/icons/dark/checkmark.svg</file>
+        <file alias="icons/dark/exit.svg">../core-res/icons/dark/exit.svg</file>
+        <file alias="icons/dark/horizontal_grip.png">../core-res/icons/dark/horizontal_grip.png</file>
+        <file alias="icons/dark/qt.svg">../core-res/icons/dark/qt.svg</file>
+        <file alias="icons/dark/quick_reference.svg">../core-res/icons/dark/quick_reference.svg</file>
+        <file alias="icons/dark/search.svg">../core-res/icons/dark/search.svg</file>
+        <file alias="icons/dark/vertical_grip.png">../core-res/icons/dark/vertical_grip.png</file>
+
+        <!-- Disabled icons -->
+        <file alias="icons/disabled/arrow_down.svg">../core-res/icons/disabled/arrow_down.svg</file>
+        <file alias="icons/disabled/arrow_left.svg">../core-res/icons/disabled/arrow_left.svg</file>
+        <file alias="icons/disabled/arrow_right.svg">../core-res/icons/disabled/arrow_right.svg</file>
+        <file alias="icons/disabled/arrow_up.svg">../core-res/icons/disabled/arrow_up.svg</file>
+
+        <!-- Light mode icons -->
+        <file alias="icons/light/arrow_down.svg">../core-res/icons/light/arrow_down.svg</file>
+        <file alias="icons/light/arrow_left.svg">../core-res/icons/light/arrow_left.svg</file>
+        <file alias="icons/light/arrow_right.svg">../core-res/icons/light/arrow_right.svg</file>
+        <file alias="icons/light/arrow_up.svg">../core-res/icons/light/arrow_up.svg</file>
+        <file alias="icons/light/checkmark.svg">../core-res/icons/light/checkmark.svg</file>
+        <file alias="icons/light/exit.svg">../core-res/icons/light/exit.svg</file>
+        <file alias="icons/light/horizontal_grip.png">../core-res/icons/light/horizontal_grip.png</file>
+        <file alias="icons/light/qt.svg">../core-res/icons/light/qt.svg</file>
+        <file alias="icons/light/quick_reference.svg">../core-res/icons/light/quick_reference.svg</file>
+        <file alias="icons/light/search.svg">../core-res/icons/light/search.svg</file>
+        <file alias="icons/light/vertical_grip.png">../core-res/icons/light/vertical_grip.png</file>
+
+        <!-- Other icons -->
+        <file alias="icons/close.svg">../core-res/icons/close.svg</file>
+        <file alias="icons/discord.png">../core-res/icons/discord.png</file>
+        <file alias="icons/ko-fi.png">../core-res/icons/ko-fi.png</file>
+        <file alias="icons/nexus_mods.png">../core-res/icons/nexus_mods.png</file>
+
+        <!-- MMM Icons -->
         <file>icons/Cyberpunk2077.ico</file>
-        <file>icons/discord.png</file>
         <file>icons/Enderal.ico</file>
         <file>icons/EnderalSpecialEdition.ico</file>
-        <file>icons/exit_dark.svg</file>
-        <file>icons/exit_light.svg</file>
         <file>icons/Fallout3.ico</file>
         <file>icons/Fallout4.ico</file>
         <file>icons/FalloutNV.ico</file>
-        <file>icons/grip_dark.png</file>
-        <file>icons/grip_light.png</file>
-        <file>icons/ko-fi.png</file>
         <file>icons/mmm.ico</file>
         <file>icons/mmm.svg</file>
         <file>icons/mo2.png</file>
-        <file>icons/nexus_mods.png</file>
         <file>icons/Oblivion.ico</file>
-        <file>icons/search_dark.svg</file>
-        <file>icons/search_light.svg</file>
         <file>icons/Skyrim.ico</file>
         <file>icons/SkyrimSE.ico</file>
         <file>icons/vortex.png</file>
@@ -49,11 +67,14 @@
         <!-- Other -->
         <file>blacklist</file>
 
-        <!-- Stylesheets & Theme files -->
-        <file>base_stylesheet.qss</file>
-        <file>dark_stylesheet.qss</file>
+        <!-- Stylesheets -->
+        <file alias="base_stylesheet.qss">../core-res/base_stylesheet.qss</file>
+        <file alias="dark_stylesheet.qss">../core-res/dark_stylesheet.qss</file>
+        <file alias="light_stylesheet.qss">../core-res/light_stylesheet.qss</file>
+
+        <!-- MMM Theme files -->
+        <file>style.qss</file>
         <file>dark_theme.json</file>
-        <file>light_stylesheet.qss</file>
         <file>light_theme.json</file>
     </qresource>
 </RCC>

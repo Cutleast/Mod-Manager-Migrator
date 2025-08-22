@@ -6,6 +6,8 @@ from pathlib import Path
 
 import pytest
 from base_test import BaseTest
+from cutleast_core_lib.core.utilities.env_resolver import resolve
+from cutleast_core_lib.core.utilities.scale import scale_value
 from pyfakefs.fake_filesystem import FakeFilesystem
 from setup.mock_plyvel import MockPlyvelDB
 
@@ -23,11 +25,8 @@ from core.mod_manager.modorganizer.modorganizer import ModOrganizer
 from core.mod_manager.vortex.exceptions import OverwriteModNotSupportedError
 from core.mod_manager.vortex.profile_info import ProfileInfo
 from core.mod_manager.vortex.vortex import Vortex
-from core.utilities.env_resolver import resolve
 from core.utilities.exceptions import NotEnoughSpaceError
 from core.utilities.filesystem import get_free_disk_space
-from core.utilities.scale import scale_value
-from tests.utils import Utils
 
 
 class TestMigrator(BaseTest):
@@ -598,25 +597,22 @@ class TestMigrator(BaseTest):
                 f: m.metadata for f, m in mod2.file_conflicts.items()
             }
             if check_files:
-                assert Utils.compare_path_list(
-                    list(
-                        filter(  # Do not check special files
-                            lambda f: str(f).lower() not in FileBlacklist.get_files()
-                            and str(f) not in mod1.file_conflicts
-                            and f not in redirects1
-                            and f not in redirects2,
-                            mod1.files,
-                        )
-                    ),
-                    list(
-                        filter(  # Do not check special files
-                            lambda f: str(f).lower() not in FileBlacklist.get_files()
-                            and str(f) not in mod2.file_conflicts
-                            and f not in redirects2
-                            and f not in redirects1,
-                            mod2.files,
-                        )
-                    ),
+                assert list(
+                    filter(  # Do not check special files
+                        lambda f: str(f).lower() not in FileBlacklist.get_files()
+                        and str(f) not in mod1.file_conflicts
+                        and f not in redirects1
+                        and f not in redirects2,
+                        mod1.files,
+                    )
+                ) == list(
+                    filter(  # Do not check special files
+                        lambda f: str(f).lower() not in FileBlacklist.get_files()
+                        and str(f) not in mod2.file_conflicts
+                        and f not in redirects2
+                        and f not in redirects1,
+                        mod2.files,
+                    )
                 )
 
     def assert_tools_equal(

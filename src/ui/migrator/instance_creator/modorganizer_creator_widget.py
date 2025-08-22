@@ -5,6 +5,8 @@ Copyright (c) Cutleast
 from pathlib import Path
 from typing import override
 
+from cutleast_core_lib.core.utilities.env_resolver import resolve
+from cutleast_core_lib.ui.widgets.browse_edit import BrowseLineEdit
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QCheckBox,
@@ -19,8 +21,6 @@ from PySide6.QtWidgets import (
 from core.game.game import Game
 from core.mod_manager.modorganizer.mo2_instance_info import MO2InstanceInfo
 from core.mod_manager.modorganizer.modorganizer import ModOrganizer
-from core.utilities.env_resolver import resolve
-from ui.widgets.browse_edit import BrowseLineEdit
 
 from .base_creator_widget import BaseCreatorWidget
 
@@ -88,7 +88,7 @@ class ModOrganizerCreatorWidget(BaseCreatorWidget[MO2InstanceInfo]):
             self.tr("eg. C:\\Modding\\My Migrated Instance")
         )
         self.__instance_path_entry.setFileMode(QFileDialog.FileMode.Directory)
-        self.__instance_path_entry.textChanged.connect(
+        self.__instance_path_entry.pathChanged.connect(
             lambda _: self.valid.emit(self.validate())
         )
         self.__instance_path_entry.pathChanged.connect(self.__on_path_change)
@@ -101,7 +101,7 @@ class ModOrganizerCreatorWidget(BaseCreatorWidget[MO2InstanceInfo]):
             self.tr("eg. C:\\Modding\\My Migrated Instance\\mods")
         )
         self.__mods_path_entry.setFileMode(QFileDialog.FileMode.Directory)
-        self.__mods_path_entry.textChanged.connect(
+        self.__mods_path_entry.pathChanged.connect(
             lambda _: self.valid.emit(self.validate())
         )
         self.__glayout.addWidget(self.__mods_path_entry, 2, 1)
@@ -137,53 +137,45 @@ class ModOrganizerCreatorWidget(BaseCreatorWidget[MO2InstanceInfo]):
             instance_path = Path(self.__instance_path_entry.text())
 
             try:
-                self.__instance_path_entry.setText(str(instance_path.parent / new_name))
+                self.__instance_path_entry.setPath(instance_path.parent / new_name)
             except Exception as ex:
                 self.log.warning("Failed to update instance path!", exc_info=ex)
 
         elif self.__use_global.isChecked():
-            self.__instance_path_entry.setText(
-                resolve("%LOCALAPPDATA%\\ModOrganizer\\") + new_name
+            self.__instance_path_entry.setPath(
+                resolve(Path("%LOCALAPPDATA%")) / "ModOrganizer" / new_name
             )
 
-    def __on_path_change(self, old_path_text: str, new_path_text: str) -> None:
-        if new_path_text.strip():
-            new_instance_path = Path(new_path_text)
-
+    def __on_path_change(self, old_path: Path, new_path: Path) -> None:
+        if new_path != Path():
             if not self.__use_global.isChecked():
-                self.__instance_name_entry.setText(new_instance_path.name)
+                self.__instance_name_entry.setText(new_path.name)
 
-            if old_path_text.strip() and self.__mods_path_entry.text().strip():
-                old_instance_path = Path(old_path_text)
+            if old_path != Path() and self.__mods_path_entry.getPath() != Path():
+                old_instance_path = Path(old_path)
                 mods_path = Path(self.__mods_path_entry.text())
 
                 if mods_path.is_relative_to(old_instance_path):
                     try:
-                        self.__mods_path_entry.setText(
-                            str(
-                                new_instance_path
-                                / mods_path.relative_to(old_instance_path)
-                            )
+                        self.__mods_path_entry.setPath(
+                            new_path / mods_path.relative_to(old_instance_path)
                         )
                     except Exception as ex:
                         self.log.warning("Failed to update mods path!", exc_info=ex)
 
-            elif not self.__mods_path_entry.text().strip():
-                self.__mods_path_entry.setText(str(new_instance_path / "mods"))
+            elif self.__mods_path_entry.getPath() == Path():
+                self.__mods_path_entry.setPath(new_path / "mods")
 
     def __on_global_toggled(self, checked: bool) -> None:
         if checked:
             self.__instance_path_entry.setDisabled(True)
-            self.__instance_path_entry.setText(
-                resolve("%LOCALAPPDATA%\\ModOrganizer\\")
-                + self.__instance_name_entry.text()
+            instance_path: Path = (
+                resolve(Path("%LOCALAPPDATA%"))
+                / "ModOrganizer"
+                / self.__instance_name_entry.text()
             )
-
-            self.__mods_path_entry.setText(
-                resolve("%LOCALAPPDATA%\\ModOrganizer\\")
-                + self.__instance_name_entry.text()
-                + "\\mods"
-            )
+            self.__instance_path_entry.setPath(instance_path)
+            self.__mods_path_entry.setPath(instance_path / "mods")
 
             self.__install_mo2.setChecked(False)
         else:
@@ -200,16 +192,17 @@ class ModOrganizerCreatorWidget(BaseCreatorWidget[MO2InstanceInfo]):
         if not self.__instance_name_entry.text().strip():
             valid = False
 
-        instance_path = Path(self.__instance_path_entry.text())
-        if (
-            not self.__instance_path_entry.text().strip()
-            or not instance_path.parent.is_dir()
+        instance_path = self.__instance_path_entry.getPath()
+        if instance_path == Path() or (
+            # Only check for parent path for portable instances
+            not instance_path.parent.is_dir() and not self.__use_global.isChecked()
         ):
             valid = False
 
-        mods_path = Path(self.__mods_path_entry.text())
-        if not self.__mods_path_entry.text().strip() or (
-            not mods_path.parent.is_dir()
+        mods_path = self.__mods_path_entry.getPath()
+        if mods_path == Path() or (
+            # Only check for parent path for portable instances
+            (not mods_path.parent.is_dir() and not self.__use_global.isChecked())
             and not mods_path.is_relative_to(instance_path)
         ):
             valid = False
@@ -226,8 +219,8 @@ class ModOrganizerCreatorWidget(BaseCreatorWidget[MO2InstanceInfo]):
             game=game,
             profile="Default",
             is_global=self.__use_global.isChecked(),
-            base_folder=Path(self.__instance_path_entry.text()),
-            mods_folder=Path(self.__mods_path_entry.text()),
+            base_folder=self.__instance_path_entry.getPath(),
+            mods_folder=self.__mods_path_entry.getPath(),
             profiles_folder=Path(self.__instance_path_entry.text()) / "profiles",
             install_mo2=self.__install_mo2.isChecked(),
             use_root_builder=self.__use_root_builder.isChecked(),

@@ -5,15 +5,13 @@ Copyright (c) Cutleast
 from typing import Optional
 
 import qtawesome as qta
+from cutleast_core_lib.core.utilities.logger import Logger
+from cutleast_core_lib.core.utilities.truncate import raw_string
+from cutleast_core_lib.ui.widgets.link_button import LinkButton
+from cutleast_core_lib.ui.widgets.log_window import LogWindow
 from PySide6.QtCore import QSize, Qt, Signal
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QLabel, QPushButton, QStatusBar
-
-from app_context import AppContext
-from core.utilities.logger import Logger
-from core.utilities.trim import trim_string
-from ui.widgets.link_button import LinkButton
-from ui.widgets.log_window import LogWindow
 
 
 class StatusBar(QStatusBar):
@@ -24,12 +22,15 @@ class StatusBar(QStatusBar):
     log_signal: Signal = Signal(str)
     logger: Logger
 
+    KOFI_URL: str = "https://ko-fi.com/cutleast"
+    """URL to Ko-fi page."""
+
     __log_window: Optional[LogWindow] = None
 
-    def __init__(self) -> None:
+    def __init__(self, log_visible: bool) -> None:
         super().__init__()
 
-        self.logger = AppContext.get_app().logger
+        self.logger = Logger.get()
         self.logger.set_callback(self.log_signal.emit)
 
         self.status_label = QLabel()
@@ -37,15 +38,16 @@ class StatusBar(QStatusBar):
         self.status_label.setTextFormat(Qt.TextFormat.PlainText)
         self.log_signal.connect(
             lambda text: self.status_label.setText(
-                trim_string(text.removesuffix("\n"), max_length=200)
+                raw_string(text.removesuffix("\n"), max_length=200)
             ),
             Qt.ConnectionType.QueuedConnection,
         )
         self.status_label.setMinimumWidth(100)
+        self.status_label.setVisible(log_visible)
         self.insertPermanentWidget(0, self.status_label, stretch=1)
 
         kofi_button = LinkButton(
-            "https://ko-fi.com/cutleast",
+            StatusBar.KOFI_URL,
             self.tr("Support me on Ko-fi"),
             QIcon(":/icons/ko-fi.png"),
         )
@@ -62,6 +64,7 @@ class StatusBar(QStatusBar):
             lambda: QApplication.clipboard().setText(self.logger.get_content())
         )
         copy_log_button.setToolTip(self.tr("Copy log to clipboard"))
+        copy_log_button.setVisible(log_visible)
         self.addPermanentWidget(copy_log_button)
 
         open_log_button = QPushButton()
@@ -72,6 +75,7 @@ class StatusBar(QStatusBar):
         open_log_button.setIconSize(QSize(16, 16))
         open_log_button.clicked.connect(self.__open_log_window)
         open_log_button.setToolTip(self.tr("View log"))
+        open_log_button.setVisible(log_visible)
         self.addPermanentWidget(open_log_button)
 
     def __open_log_window(self) -> None:

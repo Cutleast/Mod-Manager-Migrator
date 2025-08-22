@@ -12,6 +12,8 @@ from pathlib import Path
 from typing import Any, Optional, override
 
 import plyvel
+from cutleast_core_lib.core.utilities.env_resolver import resolve
+from cutleast_core_lib.ui.widgets.loading_dialog import LoadingDialog
 
 from core.game.exceptions import GameNotFoundError
 from core.game.game import Game
@@ -19,10 +21,8 @@ from core.instance.instance import Instance
 from core.instance.metadata import Metadata
 from core.instance.mod import Mod
 from core.instance.tool import Tool
-from core.utilities.env_resolver import resolve
 from core.utilities.filesystem import clean_fs_string
 from core.utilities.leveldb import LevelDB
-from ui.widgets.loading_dialog import LoadingDialog
 
 from ..exceptions import InstanceNotFoundError
 from ..mod_manager import ModManager

@@ -8,7 +8,11 @@ from copy import copy
 from pathlib import Path
 from typing import Any, Optional, override
 
-from core.archive.archive import Archive
+from cutleast_core_lib.core.archive.archive import Archive
+from cutleast_core_lib.core.utilities.env_resolver import resolve
+from cutleast_core_lib.core.utilities.scale import scale_value
+from cutleast_core_lib.ui.widgets.loading_dialog import LoadingDialog
+
 from core.game.exceptions import GameNotFoundError
 from core.game.game import Game
 from core.instance.instance import Instance
@@ -21,14 +25,11 @@ from core.mod_manager.modorganizer.exceptions import (
     InvalidGlobalInstancePathError,
 )
 from core.utilities.downloader import Downloader
-from core.utilities.env_resolver import resolve
 from core.utilities.filesystem import clean_fs_string
 from core.utilities.ini_file import INIFile
 from core.utilities.progress_update import ProgressUpdate
 from core.utilities.reverse_dict import reverse_dict
-from core.utilities.scale import scale_value
 from core.utilities.unique import unique
-from ui.widgets.loading_dialog import LoadingDialog
 
 from ..mod_manager import ModManager
 from .mo2_instance_info import MO2InstanceInfo

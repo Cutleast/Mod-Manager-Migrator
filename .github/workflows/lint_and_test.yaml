@@ -7,8 +7,10 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repository and submodules
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -19,8 +21,15 @@ jobs:
         uses: astral-sh/setup-uv@v6
 
       - name: Set up virtual environment with uv
+        run: uv sync
+
+      - name: Generate Qt resources
+        shell: cmd
         run: |
-          uv sync
+          call update_lupdate_file.bat
+          call update_qts.bat
+          call compile_qts.bat
+          call compile_qrc.bat
 
       - name: Run Ruff
         run: |
@@ -29,13 +38,8 @@ jobs:
 
       - name: Run Pyright
         run: |
-          uv run pyright src
-          uv run pyright tests
+          uv run pyright --warnings src
+          uv run pyright --warnings tests
 
       - name: Run Pytest
-        run: |
-          cmd /c update_lupdate_file.bat
-          cmd /c update_qts.bat
-          cmd /c compile_qts.bat
-          cmd /c compile_qrc.bat
-          uv run pytest
+        run: uv run pytest

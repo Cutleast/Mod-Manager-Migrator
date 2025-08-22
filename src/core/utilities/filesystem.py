@@ -5,29 +5,16 @@ Copyright (c) Cutleast
 import ctypes
 import ctypes.wintypes
 import logging
-import os
 from os import makedirs
 from pathlib import Path
 from shutil import copyfile, disk_usage
 from typing import Optional
 
+from cutleast_core_lib.core.utilities.filesystem import create_folder_list
+
 from .progress_update import ProgressCallback, ProgressUpdate, safe_run_callback
 
 log: logging.Logger = logging.getLogger("Filesystem")
-
-
-def create_folder_list(folder: Path) -> list[Path]:
-    """
-    Creates a list of all files in all subdirectories of a folder.
-
-    Args:
-        folder (Path): Folder to get list of files of.
-
-    Returns:
-        list[Path]: List of relative file paths from folder and all subdirectories.
-    """
-
-    return [item.relative_to(folder) for item in folder.glob("**/*") if item.is_file()]
 
 
 def get_free_disk_space(disk: str) -> int:
@@ -135,19 +122,3 @@ def clean_fs_string(text: str) -> str:
     output = output.strip().rstrip(".")
 
     return output
-
-
-def open_in_explorer(path: Path) -> None:
-    """
-    Opens the specified path in the Windows Explorer.
-    Opens the parent folder and selects the item if the specified path
-    is a file otherwise it just opens the folder.
-
-    Args:
-        path (Path): The path to open.
-    """
-
-    if path.is_dir():
-        os.startfile(path)
-    else:
-        os.system(f'explorer.exe /select,"{path}"')

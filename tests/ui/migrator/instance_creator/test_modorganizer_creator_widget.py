@@ -2,23 +2,23 @@
 Copyright (c) Cutleast
 """
 
-import os
+from pathlib import Path
 
 import pytest
+from cutleast_core_lib.core.utilities.env_resolver import resolve
+from cutleast_core_lib.test.utils import Utils
+from cutleast_core_lib.ui.widgets.browse_edit import BrowseLineEdit
+from pyfakefs.fake_filesystem import FakeFilesystem
 from PySide6.QtWidgets import QCheckBox, QLineEdit, QRadioButton
 from pytestqt.qtbot import QtBot
-from utils import Utils
 
-from core.utilities.env_resolver import resolve
-from tests.ui.ui_test import UiTest
+from tests.base_test import BaseTest
 from ui.migrator.instance_creator.modorganizer_creator_widget import (
     ModOrganizerCreatorWidget,
 )
 
-os.environ["QT_QPA_PLATFORM"] = "offscreen"  # render widgets off-screen
 
-
-class TestModOrganizerCreatorWidget(UiTest):
+class TestModOrganizerCreatorWidget(BaseTest):
     """
     Tests `ModOrganizerCreatorWidget`.
     """
@@ -26,13 +26,16 @@ class TestModOrganizerCreatorWidget(UiTest):
     NAME_ENTRY: tuple[str, type[QLineEdit]] = ("instance_name_entry", QLineEdit)
     """Identifier for accessing the private instance_name_entry field."""
 
-    INSTANCE_PATH_ENTRY: tuple[str, type[QLineEdit]] = (
+    INSTANCE_PATH_ENTRY: tuple[str, type[BrowseLineEdit]] = (
         "instance_path_entry",
-        QLineEdit,
+        BrowseLineEdit,
     )
     """Identifier for accessing the private instance_path_entry field."""
 
-    MODS_PATH_ENTRY: tuple[str, type[QLineEdit]] = ("mods_path_entry", QLineEdit)
+    MODS_PATH_ENTRY: tuple[str, type[BrowseLineEdit]] = (
+        "mods_path_entry",
+        BrowseLineEdit,
+    )
     """Identifier for accessing the private mods_path_entry field."""
 
     USE_PORTABLE: tuple[str, type[QRadioButton]] = ("use_portable", QRadioButton)
@@ -66,10 +69,10 @@ class TestModOrganizerCreatorWidget(UiTest):
         name_entry: QLineEdit = Utils.get_private_field(
             widget, *TestModOrganizerCreatorWidget.NAME_ENTRY
         )
-        instance_path_entry: QLineEdit = Utils.get_private_field(
+        instance_path_entry: BrowseLineEdit = Utils.get_private_field(
             widget, *TestModOrganizerCreatorWidget.INSTANCE_PATH_ENTRY
         )
-        mods_path_entry: QLineEdit = Utils.get_private_field(
+        mods_path_entry: BrowseLineEdit = Utils.get_private_field(
             widget, *TestModOrganizerCreatorWidget.MODS_PATH_ENTRY
         )
         use_portable: QRadioButton = Utils.get_private_field(
@@ -81,9 +84,15 @@ class TestModOrganizerCreatorWidget(UiTest):
 
         assert name_entry.text() == ""
         assert name_entry.isEnabled()
-        assert instance_path_entry.text() == resolve("%LOCALAPPDATA%\\ModOrganizer\\")
+        assert (
+            instance_path_entry.getPath()
+            == resolve(Path("%LOCALAPPDATA%")) / "ModOrganizer"
+        )
         assert not instance_path_entry.isEnabled()
-        assert mods_path_entry.text() == resolve("%LOCALAPPDATA%\\ModOrganizer\\\\mods")
+        assert (
+            mods_path_entry.getPath()
+            == resolve(Path("%LOCALAPPDATA%")) / "ModOrganizer" / "mods"
+        )
         assert mods_path_entry.isEnabled()
         assert not use_portable.isChecked()
         assert use_global.isChecked()
@@ -96,10 +105,10 @@ class TestModOrganizerCreatorWidget(UiTest):
         name_entry: QLineEdit = Utils.get_private_field(
             widget, *TestModOrganizerCreatorWidget.NAME_ENTRY
         )
-        instance_path_entry: QLineEdit = Utils.get_private_field(
+        instance_path_entry: BrowseLineEdit = Utils.get_private_field(
             widget, *TestModOrganizerCreatorWidget.INSTANCE_PATH_ENTRY
         )
-        mods_path_entry: QLineEdit = Utils.get_private_field(
+        mods_path_entry: BrowseLineEdit = Utils.get_private_field(
             widget, *TestModOrganizerCreatorWidget.MODS_PATH_ENTRY
         )
         use_portable: QRadioButton = Utils.get_private_field(
@@ -110,13 +119,15 @@ class TestModOrganizerCreatorWidget(UiTest):
         )
 
         assert (
-            instance_path_entry.text()
-            == resolve("%LOCALAPPDATA%\\ModOrganizer\\") + name_entry.text()
+            instance_path_entry.getPath()
+            == resolve(Path("%LOCALAPPDATA%")) / "ModOrganizer" / name_entry.text()
         )
         assert not instance_path_entry.isEnabled()
-        assert (
-            mods_path_entry.text()
-            == resolve("%LOCALAPPDATA%\\ModOrganizer\\") + name_entry.text() + "\\mods"
+        assert mods_path_entry.getPath() == (
+            resolve(Path("%LOCALAPPDATA%"))
+            / "ModOrganizer"
+            / name_entry.text()
+            / "mods"
         )
         assert mods_path_entry.isEnabled()
         assert not use_portable.isChecked()
@@ -127,10 +138,10 @@ class TestModOrganizerCreatorWidget(UiTest):
         Asserts state right after the portable radiobutton was checked.
         """
 
-        instance_path_entry: QLineEdit = Utils.get_private_field(
+        instance_path_entry: BrowseLineEdit = Utils.get_private_field(
             widget, *TestModOrganizerCreatorWidget.INSTANCE_PATH_ENTRY
         )
-        mods_path_entry: QLineEdit = Utils.get_private_field(
+        mods_path_entry: BrowseLineEdit = Utils.get_private_field(
             widget, *TestModOrganizerCreatorWidget.MODS_PATH_ENTRY
         )
         use_portable: QRadioButton = Utils.get_private_field(
@@ -140,9 +151,9 @@ class TestModOrganizerCreatorWidget(UiTest):
             widget, *TestModOrganizerCreatorWidget.USE_GLOBAL
         )
 
-        assert instance_path_entry.text() == ""
+        assert instance_path_entry.getPath() == Path()
         assert instance_path_entry.isEnabled()
-        assert mods_path_entry.text() == ""
+        assert mods_path_entry.getPath() == Path()
         assert mods_path_entry.isEnabled()
         assert use_portable.isChecked()
         assert not use_global.isChecked()
@@ -163,10 +174,10 @@ class TestModOrganizerCreatorWidget(UiTest):
         name_entry: QLineEdit = Utils.get_private_field(
             widget, *TestModOrganizerCreatorWidget.NAME_ENTRY
         )
-        instance_path_entry: QLineEdit = Utils.get_private_field(
+        instance_path_entry: BrowseLineEdit = Utils.get_private_field(
             widget, *TestModOrganizerCreatorWidget.INSTANCE_PATH_ENTRY
         )
-        mods_path_entry: QLineEdit = Utils.get_private_field(
+        mods_path_entry: BrowseLineEdit = Utils.get_private_field(
             widget, *TestModOrganizerCreatorWidget.MODS_PATH_ENTRY
         )
         new_name: str = "New Name"
@@ -177,12 +188,11 @@ class TestModOrganizerCreatorWidget(UiTest):
 
         # then
         assert (
-            instance_path_entry.text()
-            == resolve("%LOCALAPPDATA%\\ModOrganizer\\") + new_name
+            instance_path_entry.getPath()
+            == resolve(Path("%LOCALAPPDATA%")) / "ModOrganizer" / new_name
         )
-        assert (
-            mods_path_entry.text()
-            == resolve("%LOCALAPPDATA%\\ModOrganizer\\") + new_name + "\\mods"
+        assert mods_path_entry.getPath() == (
+            resolve(Path("%LOCALAPPDATA%")) / "ModOrganizer" / new_name / "mods"
         )
 
     def test_on_path_change(self, widget: ModOrganizerCreatorWidget) -> None:
@@ -191,25 +201,29 @@ class TestModOrganizerCreatorWidget(UiTest):
         """
 
         # given
-        instance_path_entry: QLineEdit = Utils.get_private_field(
+        name_entry: QLineEdit = Utils.get_private_field(
+            widget, *TestModOrganizerCreatorWidget.NAME_ENTRY
+        )
+        instance_path_entry: BrowseLineEdit = Utils.get_private_field(
             widget, *TestModOrganizerCreatorWidget.INSTANCE_PATH_ENTRY
         )
-        mods_path_entry: QLineEdit = Utils.get_private_field(
+        mods_path_entry: BrowseLineEdit = Utils.get_private_field(
             widget, *TestModOrganizerCreatorWidget.MODS_PATH_ENTRY
         )
         use_portable: QRadioButton = Utils.get_private_field(
             widget, *TestModOrganizerCreatorWidget.USE_PORTABLE
         )
-        new_path: str = "New Path"
+        new_path = Path("New Path")
 
         # when
         use_portable.setChecked(True)
         self.assert_portable_state(widget)
-        instance_path_entry.setText(new_path)
+        instance_path_entry.setPath(new_path)
 
         # then
-        assert instance_path_entry.text() == new_path
-        assert mods_path_entry.text() == new_path + "\\mods"
+        assert name_entry.text() == new_path.name
+        assert instance_path_entry.getPath() == new_path
+        assert mods_path_entry.getPath() == new_path / "mods"
 
     def test_on_path_change_relative(self, widget: ModOrganizerCreatorWidget) -> None:
         """
@@ -218,28 +232,28 @@ class TestModOrganizerCreatorWidget(UiTest):
         """
 
         # given
-        instance_path_entry: QLineEdit = Utils.get_private_field(
+        instance_path_entry: BrowseLineEdit = Utils.get_private_field(
             widget, *TestModOrganizerCreatorWidget.INSTANCE_PATH_ENTRY
         )
-        mods_path_entry: QLineEdit = Utils.get_private_field(
+        mods_path_entry: BrowseLineEdit = Utils.get_private_field(
             widget, *TestModOrganizerCreatorWidget.MODS_PATH_ENTRY
         )
         use_portable: QRadioButton = Utils.get_private_field(
             widget, *TestModOrganizerCreatorWidget.USE_PORTABLE
         )
-        old_path: str = "Old Path"
-        new_path: str = "New Path"
+        old_path = Path("Old Path")
+        new_path = Path("New Path")
 
         # when
         use_portable.setChecked(True)
         self.assert_portable_state(widget)
-        instance_path_entry.setText(old_path)
-        mods_path_entry.setText(old_path + "\\mods")
-        instance_path_entry.setText(new_path)
+        instance_path_entry.setPath(old_path)
+        mods_path_entry.setPath(old_path / "mods")
+        instance_path_entry.setPath(new_path)
 
         # then
-        assert instance_path_entry.text() == new_path
-        assert mods_path_entry.text() == new_path + "\\mods"
+        assert instance_path_entry.getPath() == new_path
+        assert mods_path_entry.getPath() == new_path / "mods"
 
     def test_on_path_change_independent(
         self, widget: ModOrganizerCreatorWidget
@@ -250,28 +264,28 @@ class TestModOrganizerCreatorWidget(UiTest):
         """
 
         # given
-        instance_path_entry: QLineEdit = Utils.get_private_field(
+        instance_path_entry: BrowseLineEdit = Utils.get_private_field(
             widget, *TestModOrganizerCreatorWidget.INSTANCE_PATH_ENTRY
         )
-        mods_path_entry: QLineEdit = Utils.get_private_field(
+        mods_path_entry: BrowseLineEdit = Utils.get_private_field(
             widget, *TestModOrganizerCreatorWidget.MODS_PATH_ENTRY
         )
         use_portable: QRadioButton = Utils.get_private_field(
             widget, *TestModOrganizerCreatorWidget.USE_PORTABLE
         )
-        old_path: str = "Old Path"
-        new_path: str = "New Path"
+        old_path = Path("Old Path")
+        new_path = Path("New Path")
 
         # when
         use_portable.setChecked(True)
         self.assert_portable_state(widget)
-        instance_path_entry.setText(old_path)
-        mods_path_entry.setText("mods")
-        instance_path_entry.setText(new_path)
+        instance_path_entry.setPath(old_path)
+        mods_path_entry.setPath(Path("mods"))
+        instance_path_entry.setPath(new_path)
 
         # then
-        assert instance_path_entry.text() == new_path
-        assert mods_path_entry.text() == "mods"
+        assert instance_path_entry.getPath() == new_path
+        assert mods_path_entry.getPath() == Path("mods")
 
     def test_on_global_toggled(self, widget: ModOrganizerCreatorWidget) -> None:
         """
@@ -301,3 +315,42 @@ class TestModOrganizerCreatorWidget(UiTest):
 
         # then
         self.assert_global_state(widget)
+
+    def test_validate(
+        self, test_fs: FakeFilesystem, widget: ModOrganizerCreatorWidget
+    ) -> None:
+        """
+        Tests the validation of the user input.
+        """
+
+        # given
+        name_entry: QLineEdit = Utils.get_private_field(
+            widget, *TestModOrganizerCreatorWidget.NAME_ENTRY
+        )
+        instance_path_entry: BrowseLineEdit = Utils.get_private_field(
+            widget, *TestModOrganizerCreatorWidget.INSTANCE_PATH_ENTRY
+        )
+        mods_path_entry: BrowseLineEdit = Utils.get_private_field(
+            widget, *TestModOrganizerCreatorWidget.MODS_PATH_ENTRY
+        )
+        use_portable: QRadioButton = Utils.get_private_field(
+            widget, *TestModOrganizerCreatorWidget.USE_PORTABLE
+        )
+        use_global: QRadioButton = Utils.get_private_field(
+            widget, *TestModOrganizerCreatorWidget.USE_GLOBAL
+        )
+
+        # when
+        use_portable.setChecked(True)
+        instance_path_entry.setPath(Path("Instance Path"))
+        mods_path_entry.setPath(Path("Mods Path"))
+
+        # then
+        assert widget.validate()
+
+        # when
+        use_global.setChecked(True)
+        name_entry.setText("Test")
+
+        # then
+        assert widget.validate()

@@ -9,7 +9,7 @@ from enum import Enum, auto
 from pathlib import Path
 from typing import Optional, override
 
-from core.utilities.cache import cache
+from cutleast_core_lib.core.cache.function_cache import FunctionCache
 
 from .metadata import Metadata
 
@@ -97,7 +97,7 @@ class Mod:
         return Mod.__get_files(self.path)
 
     @staticmethod
-    @cache
+    @FunctionCache.cache
     def __get_files(path: Path) -> list[Path]:
         return [file.relative_to(path) for file in path.rglob("*") if file.is_file()]
 
@@ -135,11 +135,10 @@ class Mod:
         return Mod.__get_size(self.path)
 
     @staticmethod
-    @cache
+    @FunctionCache.cache
     def __get_size(path: Path) -> int:
         return sum((path / file).stat().st_size for file in Mod.__get_files(path))
 
-    @cache
     def get_modpage_url(self, direct: bool = False) -> Optional[str]:
         """
         Gets the modpage URL of the mod if it has one.

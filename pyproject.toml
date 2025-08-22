@@ -7,20 +7,9 @@ requires-python = ">=3.12"
 authors = [{ name = "Cutleast", email = "cutleast@gmail.com" }]
 license = { file = "LICENSE" }
 dependencies = [
-    "comtypes",
-    "darkdetect",
-    "jstyleson",
+    "cutleast-core-lib",
     "plyvel-ci",
-    "py7zr",
-    "pydantic",
-    "pyside6",
     "pyuac",
-    "pywin32",
-    "qtawesome",
-    "rarfile",
-    "requests",
-    "semantic-version",
-    "virtual-glob",
 ]
 
 [dependency-groups]
@@ -35,6 +24,14 @@ dev = [
     "pytest-qt",
     "ruff",
 ]
+
+[tool.uv.workspace]
+members = [
+    "core-lib",
+]
+
+[tool.uv.sources]
+cutleast-core-lib = { workspace = true }
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

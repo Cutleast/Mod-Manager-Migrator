@@ -11,11 +11,12 @@ from typing import Generator, Optional, override
 from unittest.mock import MagicMock
 
 import pytest
+from cutleast_core_lib.core.utilities.env_resolver import resolve
+from cutleast_core_lib.test.base_test import BaseTest as CoreBaseTest
 from pyfakefs.fake_filesystem import FakeFilesystem
 from pytest_mock import MockerFixture
 from setup.mock_plyvel import MockPlyvelDB
 
-import resources_rc  # type: ignore # noqa: F401
 from core.config.app_config import AppConfig
 from core.game.game import Game
 from core.instance.instance import Instance
@@ -26,11 +27,11 @@ from core.migrator.file_blacklist import FileBlacklist
 from core.mod_manager.modorganizer.mo2_instance_info import MO2InstanceInfo
 from core.mod_manager.modorganizer.modorganizer import ModOrganizer
 from core.mod_manager.vortex.profile_info import ProfileInfo
-from core.utilities.env_resolver import resolve
 from core.utilities.leveldb import LevelDB
+from resources_rc import qt_resource_data as qt_resource_data
 
 
-class BaseTest:
+class BaseTest(CoreBaseTest):
     """
     Base class for all tests.
     """
@@ -51,26 +52,6 @@ class BaseTest:
             yield Path(tmp_dir)
 
     @pytest.fixture
-    def real_cwd(self) -> Path:
-        """
-        Returns:
-            Path: The real current working directory.
-        """
-
-        return Path.cwd()
-
-    @pytest.fixture
-    def data_folder(self) -> Path:
-        """
-        Returns the path to the test data folder.
-
-        Returns:
-            Path: The path to the test data folder.
-        """
-
-        return Path("tests") / "data"
-
-    @pytest.fixture
     def app_config(self, data_folder: Path) -> AppConfig:
         """
         Returns the application config for the tests.
@@ -82,7 +63,7 @@ class BaseTest:
         return AppConfig.load(data_folder / "config")
 
     @pytest.fixture
-    def test_fs(self, data_folder: Path, fs: FakeFilesystem) -> FakeFilesystem:
+    def test_fs(self, data_folder: Path, test_fs: FakeFilesystem) -> FakeFilesystem:
         """
         Creates a fake filesystem for testing.
 
@@ -90,7 +71,8 @@ class BaseTest:
             FakeFilesystem: The fake filesystem.
         """
 
-        fs.add_real_directory(data_folder)
+        fs: FakeFilesystem = test_fs
+
         os.chdir(data_folder.parent.parent)
 
         fs.add_real_directory(

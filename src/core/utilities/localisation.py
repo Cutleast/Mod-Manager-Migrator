@@ -7,8 +7,7 @@ import logging
 from typing import Optional
 
 import win32api
-
-from .base_enum import BaseEnum
+from cutleast_core_lib.core.utilities.base_enum import BaseEnum
 
 log: logging.Logger = logging.getLogger("Utilities.Localisation")
 
@@ -22,6 +21,7 @@ class Language(BaseEnum):
     German = "de_DE"
     English = "en_US"
     Portuguese = "pt_BR"
+
 
 def detect_system_locale() -> Optional[str]:
     """

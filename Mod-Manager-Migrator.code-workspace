@@ -160,7 +160,6 @@
 		},
 		"files.associations": {
 			"*.ts": "xml",
-			"*.qrc": "xml"
 		},
 		"python.testing.pytestArgs": [
 			"--ignore-glob=experiments/**/*.py",
