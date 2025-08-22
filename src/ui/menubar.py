@@ -105,6 +105,7 @@ class MenuBar(QMenuBar):
         about_action.triggered.connect(self.about_signal.emit)
 
         about_qt_action = help_menu.addAction(self.tr("About Qt"))
+        about_qt_action.setIcon(IconProvider.get_icon("qt"))
         about_qt_action.triggered.connect(self.about_qt_signal.emit)
 
     def setUpdateActionVisible(self, visible: bool) -> None:
