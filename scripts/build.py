@@ -77,6 +77,7 @@ if __name__ == "__main__":
             Path("lib") / "PySide6" / "QtOpenGL.pyd",
             Path("lib") / "PySide6" / "QtOpenGLWidgets.pyd",
             Path("lib") / "libcrypto-3.dll",
+            Path("lib") / "mfc140u.dll",
         ],
     )
     backend = Backend()
