@@ -4,11 +4,10 @@ Copyright (c) Cutleast
 
 import webbrowser
 
-from cutleast_core_lib.core.utilities.updater import Updater
 from cutleast_core_lib.ui.utilities.icon_provider import IconProvider
 from cutleast_core_lib.ui.widgets.menu import Menu
 from PySide6.QtCore import Signal
-from PySide6.QtGui import QIcon
+from PySide6.QtGui import QAction, QIcon
 from PySide6.QtWidgets import QMenuBar
 
 
@@ -44,6 +43,8 @@ class MenuBar(QMenuBar):
     GITHUB_URL: str = "https://github.com/Cutleast/Mod-Manager-Migrator"
     """URL to the GitHub repository."""
 
+    __update_action: QAction
+
     def __init__(self) -> None:
         super().__init__()
 
@@ -68,10 +69,9 @@ class MenuBar(QMenuBar):
         help_menu = Menu(title=self.tr("Help"))
         self.addMenu(help_menu)
 
-        update_action = help_menu.addAction(self.tr("Check for updates..."))
-        update_action.setIcon(IconProvider.get_qta_icon("mdi6.refresh"))
-        update_action.triggered.connect(self.updater_signal.emit)
-        update_action.setVisible(Updater.has_instance())
+        self.__update_action = help_menu.addAction(self.tr("Check for updates..."))
+        self.__update_action.setIcon(IconProvider.get_qta_icon("mdi6.refresh"))
+        self.__update_action.triggered.connect(self.updater_signal.emit)
 
         help_menu.addSeparator()
 
@@ -106,3 +106,13 @@ class MenuBar(QMenuBar):
 
         about_qt_action = help_menu.addAction(self.tr("About Qt"))
         about_qt_action.triggered.connect(self.about_qt_signal.emit)
+
+    def setUpdateActionVisible(self, visible: bool) -> None:
+        """
+        Sets the visibility of the update action.
+
+        Args:
+            visible (bool): Whether the action should be visible.
+        """
+
+        self.__update_action.setVisible(visible)

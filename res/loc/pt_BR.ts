@@ -251,27 +251,27 @@ Continue at your own risk!</source>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="src/ui/main_window.py" line="84"/>
+        <location filename="src/ui/main_window.py" line="85"/>
         <source>No Updates Available</source>
         <translation type="unfinished">Sem Atualização Disponível</translation>
     </message>
     <message>
-        <location filename="src/ui/main_window.py" line="85"/>
+        <location filename="src/ui/main_window.py" line="86"/>
         <source>There are no updates available.</source>
         <translation type="unfinished">Não há atualizações disponíveis.</translation>
     </message>
     <message>
-        <location filename="src/ui/main_window.py" line="103"/>
+        <location filename="src/ui/main_window.py" line="104"/>
         <source>About Qt</source>
         <translation type="unfinished">Sobre Qt</translation>
     </message>
     <message>
-        <location filename="src/ui/main_window.py" line="117"/>
+        <location filename="src/ui/main_window.py" line="118"/>
         <source>Path Limit Enabled</source>
         <translation type="unfinished">Limite de Caminho Ativado</translation>
     </message>
     <message>
-        <location filename="src/ui/main_window.py" line="123"/>
+        <location filename="src/ui/main_window.py" line="124"/>
         <source>The NTFS path length limit is enabled and paths longer than 255 characters will cause issues. Would you like to disable it (admin rights may be required)? A reboot is required for this to take effect.</source>
         <translation type="unfinished">O limite de comprimento de caminho do NTFS está ativado e caminhos com mais de 255 caracteres causarão problemas. Deseja desativá-lo? (pode ser necessário acesso de administrador). É necessário reiniciar o sistema para que a mudança tenha efeito.</translation>
     </message>
@@ -279,27 +279,27 @@ Continue at your own risk!</source>
 <context>
     <name>MenuBar</name>
     <message>
-        <location filename="src/ui/menubar.py" line="54"/>
+        <location filename="src/ui/menubar.py" line="55"/>
         <source>File</source>
         <translation>Arquivo</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="57"/>
+        <location filename="src/ui/menubar.py" line="58"/>
         <source>Settings</source>
         <translation>Conifgs</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="63"/>
+        <location filename="src/ui/menubar.py" line="64"/>
         <source>Exit</source>
         <translation>Sair</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="68"/>
+        <location filename="src/ui/menubar.py" line="69"/>
         <source>Help</source>
         <translation>Ajuda</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="71"/>
+        <location filename="src/ui/menubar.py" line="72"/>
         <source>Check for updates...</source>
         <translation>Verificar por atualização...</translation>
     </message>

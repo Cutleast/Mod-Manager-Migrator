@@ -71,6 +71,7 @@ class MainWindow(QMainWindow):
         super().show()
 
         self.__detect_path_limit()
+        self.__menu_bar.setUpdateActionVisible(Updater.has_instance())
 
     def __open_settings(self) -> None:
         SettingsDialog(self.__app_config).exec()

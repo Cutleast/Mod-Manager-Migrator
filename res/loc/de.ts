@@ -253,27 +253,27 @@ Fortfahren auf eigene Gefahr!</translation>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="src/ui/main_window.py" line="84"/>
+        <location filename="src/ui/main_window.py" line="85"/>
         <source>No Updates Available</source>
         <translation>Keine Updates verfügbar</translation>
     </message>
     <message>
-        <location filename="src/ui/main_window.py" line="85"/>
+        <location filename="src/ui/main_window.py" line="86"/>
         <source>There are no updates available.</source>
         <translation>Es sind keine Updates verfügbar.</translation>
     </message>
     <message>
-        <location filename="src/ui/main_window.py" line="103"/>
+        <location filename="src/ui/main_window.py" line="104"/>
         <source>About Qt</source>
         <translation>Über Qt</translation>
     </message>
     <message>
-        <location filename="src/ui/main_window.py" line="117"/>
+        <location filename="src/ui/main_window.py" line="118"/>
         <source>Path Limit Enabled</source>
         <translation>Pfadlängenbegrenzung ist aktiviert</translation>
     </message>
     <message>
-        <location filename="src/ui/main_window.py" line="123"/>
+        <location filename="src/ui/main_window.py" line="124"/>
         <source>The NTFS path length limit is enabled and paths longer than 255 characters will cause issues. Would you like to disable it (admin rights may be required)? A reboot is required for this to take effect.</source>
         <translation>Die NTFS Pfadlängenbegrenzung ist aktiviert und Pfade mit mehr als 255 Zeichen werden Fehler verursachen. Soll die Begrenzung deaktiviert werden (Administratorrechte könnten erforderlich sein)? Ein anschließender Neustart des Computers ist notwendig, damit die Begrenzung vollständig deaktiviert ist.</translation>
     </message>
@@ -281,27 +281,27 @@ Fortfahren auf eigene Gefahr!</translation>
 <context>
     <name>MenuBar</name>
     <message>
-        <location filename="src/ui/menubar.py" line="54"/>
+        <location filename="src/ui/menubar.py" line="55"/>
         <source>File</source>
         <translation>Datei</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="63"/>
+        <location filename="src/ui/menubar.py" line="64"/>
         <source>Exit</source>
         <translation>Beenden</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="57"/>
+        <location filename="src/ui/menubar.py" line="58"/>
         <source>Settings</source>
         <translation>Einstellungen</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="68"/>
+        <location filename="src/ui/menubar.py" line="69"/>
         <source>Help</source>
         <translation>Hilfe</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="71"/>
+        <location filename="src/ui/menubar.py" line="72"/>
         <source>Check for updates...</source>
         <translation>Nach Updates suchen...</translation>
     </message>
