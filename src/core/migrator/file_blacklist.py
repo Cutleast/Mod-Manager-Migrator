@@ -4,7 +4,7 @@ Copyright (c) Cutleast
 
 from typing import Optional
 
-from core.utilities.qt_res_provider import read_resource
+from cutleast_core_lib.core.utilities.qt_res_provider import read_resource
 
 
 class FileBlacklist:

@@ -7,12 +7,12 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Annotated, Any, override
 
+from cutleast_core_lib.core.cache.function_cache import FunctionCache
+from cutleast_core_lib.core.utilities.env_resolver import resolve
+from cutleast_core_lib.core.utilities.qt_res_provider import load_json_resource
 from pydantic import AfterValidator, BaseModel, Field
 
-from core.utilities.cache import cache
-from core.utilities.env_resolver import resolve
 from core.utilities.filesystem import get_documents_folder
-from core.utilities.qt_res_provider import load_json_resource
 
 
 class Game(BaseModel):
@@ -72,7 +72,7 @@ class Game(BaseModel):
     """
 
     @staticmethod
-    @cache
+    @FunctionCache.cache
     def get_supported_games() -> list[Game]:
         """
         Gets a list of supported games from the JSON resource.
@@ -86,7 +86,7 @@ class Game(BaseModel):
         return [Game.model_validate(game) for game in data]
 
     @staticmethod
-    @cache
+    @FunctionCache.cache
     def get_game_by_id(game_id: str) -> Game:
         """
         Gets a game by its id.
@@ -109,7 +109,7 @@ class Game(BaseModel):
         raise ValueError(f"Game '{game_id}' not found!")
 
     @staticmethod
-    @cache
+    @FunctionCache.cache
     def get_game_by_short_name(short_name: str) -> Game:
         """
         Gets a game by its short name.
@@ -134,7 +134,7 @@ class Game(BaseModel):
         raise ValueError(f"Game '{short_name}' not found!")
 
     @staticmethod
-    @cache
+    @FunctionCache.cache
     def get_game_by_nexus_id(nexus_id: str) -> Game:
         """
         Gets a game by its nexus id.

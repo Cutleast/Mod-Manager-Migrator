@@ -6,6 +6,8 @@ from pathlib import Path
 from typing import Optional, override
 
 import qtawesome as qta
+from cutleast_core_lib.ui.widgets.loading_dialog import LoadingDialog
+from cutleast_core_lib.ui.widgets.smooth_scroll_area import SmoothScrollArea
 from PySide6.QtCore import QEvent, QObject, QSize, Qt, Signal
 from PySide6.QtGui import QIcon, QWheelEvent
 from PySide6.QtWidgets import (
@@ -31,8 +33,6 @@ from core.instance.instance import Instance
 from core.migrator.file_blacklist import FileBlacklist
 from core.mod_manager.instance_info import InstanceInfo
 from core.mod_manager.mod_manager import ModManager
-from ui.widgets.loading_dialog import LoadingDialog
-from ui.widgets.smooth_scroll_area import SmoothScrollArea
 
 from .instance_creator.instance_creator_widget import InstanceCreatorWidget
 from .instance_selector.instance_selector_widget import InstanceSelectorWidget
@@ -255,13 +255,14 @@ class MigratorWidget(SmoothScrollArea):
         mod_instance: Instance
         try:
             mod_instance = LoadingDialog.run_callable(
+                QApplication.activeModalWidget(),
                 lambda ldialog: mod_manager.load_instance(
                     instance_data=instance_data,
                     modname_limit=self.app_config.modname_limit,
                     file_blacklist=FileBlacklist.get_files(),
                     game_folder=self.__game_folders.get(game),
                     ldialog=ldialog,
-                )
+                ),
             )
         except GameNotFoundError:
             QMessageBox.warning(

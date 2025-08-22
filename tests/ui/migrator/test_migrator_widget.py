@@ -6,11 +6,12 @@ from pathlib import Path
 from typing import Any, Optional
 
 import pytest
+from cutleast_core_lib.test.utils import Utils
+from cutleast_core_lib.ui.widgets.browse_edit import BrowseLineEdit
 from pyfakefs.fake_filesystem import FakeFilesystem
 from PySide6.QtWidgets import QComboBox, QLineEdit, QPushButton, QTabWidget
 from pytestqt.qtbot import QtBot
 from setup.mock_plyvel import MockPlyvelDB
-from utils import Utils
 
 from core.config.app_config import AppConfig
 from core.game.game import Game
@@ -21,6 +22,7 @@ from core.mod_manager.modorganizer.mo2_instance_info import MO2InstanceInfo
 from core.mod_manager.modorganizer.modorganizer import ModOrganizer
 from core.mod_manager.vortex.profile_info import ProfileInfo
 from core.mod_manager.vortex.vortex import Vortex
+from tests.base_test import BaseTest
 from ui.migrator.instance_creator.base_creator_widget import BaseCreatorWidget
 from ui.migrator.instance_creator.instance_creator_widget import InstanceCreatorWidget
 from ui.migrator.instance_creator.vortex_creator_widget import VortexCreatorWidget
@@ -33,12 +35,9 @@ from ui.migrator.instance_selector.modorganizer_selector_widget import (
     ModOrganizerSelectorWidget,
 )
 from ui.migrator.migrator_widget import MigratorWidget
-from ui.widgets.browse_edit import BrowseLineEdit
-
-from ..ui_test import UiTest
 
 
-class TestMigratorWidget(UiTest):
+class TestMigratorWidget(BaseTest):
     """
     Tests `ui.migrator.migrator_widget.MigratorWidget`.
     """
@@ -148,7 +147,7 @@ class TestMigratorWidget(UiTest):
     def test_select_src_instance(
         self,
         widget: MigratorWidget,
-        ui_test_fs: FakeFilesystem,
+        test_fs: FakeFilesystem,
         instance: Instance,
         qtbot: QtBot,
     ) -> None:
@@ -246,7 +245,7 @@ class TestMigratorWidget(UiTest):
     def test_change_src_instance(
         self,
         widget: MigratorWidget,
-        ui_test_fs: FakeFilesystem,
+        test_fs: FakeFilesystem,
         full_vortex_db: MockPlyvelDB,
         vortex_profile_info: ProfileInfo,
         instance: Instance,
@@ -256,7 +255,7 @@ class TestMigratorWidget(UiTest):
         Tests the selection of another instance after loading the first one.
         """
 
-        self.test_select_src_instance(widget, ui_test_fs, instance, qtbot)
+        self.test_select_src_instance(widget, test_fs, instance, qtbot)
 
         # given
         skyrimse: Game = Game.get_game_by_id("skyrimse")
@@ -348,7 +347,7 @@ class TestMigratorWidget(UiTest):
     def test_create_dst_instance(
         self,
         widget: MigratorWidget,
-        ui_test_fs: FakeFilesystem,
+        test_fs: FakeFilesystem,
         ready_vortex_db: MockPlyvelDB,
         instance: Instance,
         qtbot: QtBot,
@@ -357,7 +356,7 @@ class TestMigratorWidget(UiTest):
         Tests the creation of the destination instance after loading the source instance.
         """
 
-        self.test_select_src_instance(widget, ui_test_fs, instance, qtbot)
+        self.test_select_src_instance(widget, test_fs, instance, qtbot)
 
         # given
         dst_instance_tab: QTabWidget = Utils.get_private_field(
@@ -419,7 +418,7 @@ class TestMigratorWidget(UiTest):
     def test_dst_instance_tab(
         self,
         widget: MigratorWidget,
-        ui_test_fs: FakeFilesystem,
+        test_fs: FakeFilesystem,
         full_vortex_db: MockPlyvelDB,
         instance: Instance,
         qtbot: QtBot,
@@ -428,7 +427,7 @@ class TestMigratorWidget(UiTest):
         Tests the switching between the destination instance creator and selector.
         """
 
-        self.test_select_src_instance(widget, ui_test_fs, instance, qtbot)
+        self.test_select_src_instance(widget, test_fs, instance, qtbot)
 
         # given
         skyrimse: Game = Game.get_game_by_id("skyrimse")

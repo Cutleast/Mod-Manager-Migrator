@@ -8,6 +8,7 @@ from typing import Any
 
 import pytest
 from base_test import BaseTest
+from cutleast_core_lib.test.utils import Utils
 from pyfakefs.fake_filesystem import FakeFilesystem
 from setup.mock_plyvel import MockPlyvelDB
 
@@ -21,7 +22,6 @@ from core.mod_manager.vortex.exceptions import VortexNotFullySetupError
 from core.mod_manager.vortex.profile_info import ProfileInfo
 from core.mod_manager.vortex.vortex import Vortex
 from core.utilities.leveldb import LevelDB
-from tests.utils import Utils
 
 
 class TestVortex(BaseTest):

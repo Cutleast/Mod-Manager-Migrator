@@ -9,15 +9,15 @@ from abc import abstractmethod
 from pathlib import Path
 from typing import Optional, override
 
+from cutleast_core_lib.core.utilities.logger import Logger
+from cutleast_core_lib.core.utilities.scale import scale_value
+from cutleast_core_lib.ui.widgets.loading_dialog import LoadingDialog
 from PySide6.QtCore import QObject
 
 from core.game.game import Game
 from core.instance.instance import Instance
 from core.instance.mod import Mod
 from core.instance.tool import Tool
-from core.utilities.logger import Logger
-from core.utilities.scale import scale_value
-from ui.widgets.loading_dialog import LoadingDialog
 
 from .instance_info import InstanceInfo
 

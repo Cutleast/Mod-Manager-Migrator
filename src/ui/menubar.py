@@ -4,18 +4,12 @@ Copyright (c) Cutleast
 
 import webbrowser
 
-import qtawesome as qta
-from PySide6.QtCore import Qt
+from cutleast_core_lib.core.utilities.updater import Updater
+from cutleast_core_lib.ui.utilities.icon_provider import IconProvider
+from cutleast_core_lib.ui.widgets.menu import Menu
+from PySide6.QtCore import Signal
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QApplication, QMenuBar, QMessageBox
-
-from app_context import AppContext
-from core.utilities.path_limit_fixer import PathLimitFixer
-from core.utilities.updater import Updater
-from ui.settings.settings_dialog import SettingsDialog
-from ui.utilities.ui_mode import UIMode
-from ui.widgets.about_dialog import AboutDialog
-from ui.widgets.menu import Menu
+from PySide6.QtWidgets import QMenuBar
 
 
 class MenuBar(QMenuBar):
@@ -23,11 +17,32 @@ class MenuBar(QMenuBar):
     Menu bar for main window.
     """
 
+    settings_signal = Signal()
+    """Signal emitted when the user clicks on the settings button."""
+
+    updater_signal = Signal()
+    """Signal emitted when the user clicks on the updater button."""
+
+    fix_path_limit_signal = Signal()
+    """Signal emitted when the user clicks on the fix path limit button."""
+
+    about_signal = Signal()
+    """Signal emitted when the user clicks on the about button."""
+
+    about_qt_signal = Signal()
+    """Signal emitted when the user clicks on the about Qt button."""
+
+    exit_signal = Signal()
+    """Signal emitted when the user clicks on the exit button."""
+
     DISCORD_URL: str = "https://discord.gg/pqEHdWDf8z"
     """URL to our Discord server."""
 
     NEXUSMODS_URL: str = "https://www.nexusmods.com/site/mods/545/"
     """URL to MMM's Nexus Mods page."""
+
+    GITHUB_URL: str = "https://github.com/Cutleast/Mod-Manager-Migrator"
+    """URL to the GitHub repository."""
 
     def __init__(self) -> None:
         super().__init__()
@@ -40,42 +55,29 @@ class MenuBar(QMenuBar):
         self.addMenu(file_menu)
 
         settings_action = file_menu.addAction(self.tr("Settings"))
-        settings_action.setIcon(
-            qta.icon("mdi6.cog", color=self.palette().text().color())
-        )
-        settings_action.triggered.connect(self.__open_settings)
+        settings_action.setIcon(IconProvider.get_qta_icon("mdi6.cog"))
+        settings_action.triggered.connect(self.settings_signal.emit)
 
         file_menu.addSeparator()
 
         exit_action = file_menu.addAction(self.tr("Exit"))
-        exit_action.setIcon(
-            QIcon(":/icons/exit_dark.svg")
-            if AppContext.get_app().stylesheet_processor.ui_mode == UIMode.Light
-            else QIcon(":/icons/exit_light.svg")
-        )
-        exit_action.triggered.connect(QApplication.exit)
+        exit_action.setIcon(IconProvider.get_icon("exit"))
+        exit_action.triggered.connect(self.exit_signal.emit)
 
     def __init_help_menu(self) -> None:
         help_menu = Menu(title=self.tr("Help"))
         self.addMenu(help_menu)
 
         update_action = help_menu.addAction(self.tr("Check for updates..."))
-        update_action.setIcon(
-            qta.icon("mdi6.refresh", color=self.palette().text().color())
-        )
-        update_action.triggered.connect(self.__check_for_updates)
+        update_action.setIcon(IconProvider.get_qta_icon("mdi6.refresh"))
+        update_action.triggered.connect(self.updater_signal.emit)
+        update_action.setVisible(Updater.has_instance())
 
         help_menu.addSeparator()
 
         path_limit_action = help_menu.addAction(self.tr("Fix Windows Path Limit..."))
-        path_limit_action.setIcon(
-            qta.icon(
-                "mdi6.bug-check", color=self.palette().text().color(), scale_factor=1.3
-            )
-        )
-        path_limit_action.triggered.connect(
-            lambda: PathLimitFixer.disable_path_limit(AppContext.get_app().res_path)
-        )
+        path_limit_action.setIcon(IconProvider.get_qta_icon("mdi6.bug-check"))
+        path_limit_action.triggered.connect(self.fix_path_limit_signal.emit)
 
         help_menu.addSeparator()
 
@@ -91,34 +93,16 @@ class MenuBar(QMenuBar):
         nm_action.setToolTip(MenuBar.NEXUSMODS_URL)
         nm_action.triggered.connect(lambda: webbrowser.open(MenuBar.NEXUSMODS_URL))
 
+        github_action = help_menu.addAction(self.tr("View source code on GitHub..."))
+        github_action.setIcon(IconProvider.get_qta_icon("mdi6.github"))
+        github_action.setToolTip(MenuBar.GITHUB_URL)
+        github_action.triggered.connect(lambda: webbrowser.open(MenuBar.GITHUB_URL))
+
         help_menu.addSeparator()
 
         about_action = help_menu.addAction(self.tr("About"))
-        about_action.setIcon(
-            qta.icon("fa5s.info-circle", color=self.palette().text().color())
-        )
-        about_action.triggered.connect(self.__show_about)
+        about_action.setIcon(IconProvider.get_qta_icon("fa5s.info-circle"))
+        about_action.triggered.connect(self.about_signal.emit)
 
         about_qt_action = help_menu.addAction(self.tr("About Qt"))
-        about_qt_action.triggered.connect(self.__show_about_qt)
-
-    def __open_settings(self) -> None:
-        SettingsDialog(AppContext.get_app().app_config).exec()
-
-    def __check_for_updates(self) -> None:
-        upd = Updater(AppContext.get_app().APP_VERSION)
-        if upd.update_available():
-            upd.run()
-        else:
-            messagebox = QMessageBox(AppContext.get_app().main_window)
-            messagebox.setWindowTitle(self.tr("No Updates Available"))
-            messagebox.setText(self.tr("There are no updates available."))
-            messagebox.setTextFormat(Qt.TextFormat.RichText)
-            messagebox.setIcon(QMessageBox.Icon.Information)
-            messagebox.exec()
-
-    def __show_about(self) -> None:
-        AboutDialog(AppContext.get_app().main_window).exec()
-
-    def __show_about_qt(self) -> None:
-        QMessageBox.aboutQt(AppContext.get_app().main_window, self.tr("About Qt"))
+        about_qt_action.triggered.connect(self.about_qt_signal.emit)

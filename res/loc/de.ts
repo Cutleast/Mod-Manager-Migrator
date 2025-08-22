@@ -4,60 +4,107 @@
 <context>
     <name>AboutDialog</name>
     <message>
-        <location filename="src/ui/widgets/about_dialog.py" line="38"/>
-        <location filename="src/ui/widgets/about_dialog.py" line="51"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/about_dialog.py" line="52"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/about_dialog.py" line="65"/>
         <source>About</source>
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="src/ui/widgets/about_dialog.py" line="87"/>
+        <location filename="src/ui/widgets/about_dialog.py" line="35"/>
         <source>Created by Cutleast (&lt;a href=&apos;https://www.nexusmods.com/users/65733731&apos;&gt;NexusMods&lt;/a&gt; | &lt;a href=&apos;https://github.com/cutleast&apos;&gt;GitHub&lt;/a&gt; | &lt;a href=&apos;https://ko-fi.com/cutleast&apos;&gt;Ko-Fi&lt;/a&gt;)&lt;br&gt;&lt;br&gt;Icon by Wuerfelhusten (&lt;a href=&apos;https://www.nexusmods.com/users/122160268&apos;&gt;NexusMods&lt;/a&gt;)&lt;br&gt;&lt;br&gt;Licensed under Attribution-NonCommercial-NoDerivatives 4.0 International</source>
         <translation>Erstellt von Cutleast (&lt;a href=&apos;https://www.nexusmods.com/users/65733731&apos;&gt;NexusMods&lt;/a&gt; | &lt;a href=&apos;https://github.com/cutleast&apos;&gt;GitHub&lt;/a&gt; | &lt;a href=&apos;https://ko-fi.com/cutleast&apos;&gt;Ko-Fi&lt;/a&gt;)&lt;br&gt;&lt;br&gt;Logo von Wuerfelhusten (&lt;a href=&apos;https://www.nexusmods.com/users/122160268&apos;&gt;NexusMods&lt;/a&gt;)&lt;br&gt;&lt;br&gt;Lizensiert unter Attribution-NonCommercial-NoDerivatives 4.0 International</translation>
     </message>
     <message>
-        <location filename="src/ui/widgets/about_dialog.py" line="88"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/about_dialog.py" line="95"/>
+        <source>Created by Cutleast (&lt;a href=&apos;https://www.nexusmods.com/users/65733731&apos;&gt;NexusMods&lt;/a&gt; | &lt;a href=&apos;https://github.com/cutleast&apos;&gt;GitHub&lt;/a&gt; | &lt;a href=&apos;https://ko-fi.com/cutleast&apos;&gt;Ko-Fi&lt;/a&gt;)&lt;br&gt;&lt;br&gt;Licensed under </source>
+        <translation>Erstellt von Cutleast (&lt;a href=&apos;https://www.nexusmods.com/users/65733731&apos;&gt;NexusMods&lt;/a&gt; | &lt;a href=&apos;https://github.com/cutleast&apos;&gt;GitHub&lt;/a&gt; | &lt;a href=&apos;https://ko-fi.com/cutleast&apos;&gt;Ko-Fi&lt;/a&gt;)&lt;br&gt;&lt;br&gt;Lizensiert unter </translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/about_dialog.py" line="99"/>
+        <location filename="src/ui/widgets/about_dialog.py" line="38"/>
         <source>&lt;&lt;Put your translator information here.&gt;&gt;</source>
         <translation>&lt;&lt;Put your translator information here.&gt;&gt;</translation>
     </message>
     <message>
-        <location filename="src/ui/widgets/about_dialog.py" line="99"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/about_dialog.py" line="110"/>
         <source>Used Software</source>
         <translation>Verwendete Software</translation>
     </message>
 </context>
 <context>
-    <name>App</name>
+    <name>AppSettings</name>
     <message>
-        <location filename="src/app.py" line="183"/>
-        <source>Path Limit Enabled</source>
-        <translation>Pfadlängenbegrenzung ist aktiviert</translation>
+        <location filename="core-lib/src/cutleast_core_lib/ui/settings/app_settings.py" line="97"/>
+        <source>Basic App Settings</source>
+        <translation>Grundlegende Appeinstellungen</translation>
     </message>
     <message>
-        <location filename="src/app.py" line="189"/>
-        <source>The NTFS path length limit is enabled and paths longer than 255 characters will cause issues. Would you like to disable it (admin rights may be required)? A reboot is required for this to take effect.</source>
-        <translation>Die NTFS Pfadlängenbegrenzung ist aktiviert und Pfade mit mehr als 255 Zeichen werden Fehler verursachen. Soll die Begrenzung deaktiviert werden (Administratorrechte könnten erforderlich sein)? Ein anschließender Neustart des Computers ist notwendig, damit die Begrenzung vollständig deaktiviert ist.</translation>
+        <location filename="core-lib/src/cutleast_core_lib/ui/settings/app_settings.py" line="106"/>
+        <source>Number of newest log files to keep</source>
+        <translation>Anzahl der neuesten zu behaltenden Logdateien</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/settings/app_settings.py" line="112"/>
+        <source>Log Level</source>
+        <translation>Loglevel</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/settings/app_settings.py" line="117"/>
+        <source>Display log at the bottom of the main window</source>
+        <translation>Log am unteren Ende des Hauptfensters anzeigen</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/settings/app_settings.py" line="126"/>
+        <source>Accent Color</source>
+        <translation>Akzentfarbe</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/settings/app_settings.py" line="130"/>
+        <source>UI Mode</source>
+        <translation>UI-Modus</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/settings/app_settings.py" line="132"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/settings/app_settings.py" line="148"/>
+        <source>Clear Cache</source>
+        <translation>Cache leeren</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/settings/app_settings.py" line="158"/>
+        <source>Accent color must be a valid hexadecimal color code!</source>
+        <translation>Die Akzentfarbe muss ein gültiger hexadezimaler Farbcode sein!</translation>
     </message>
 </context>
 <context>
     <name>ErrorDialog</name>
     <message>
-        <location filename="src/ui/widgets/error_dialog.py" line="47"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="98"/>
         <source>Continue</source>
         <translation>Fortsetzen</translation>
     </message>
     <message>
-        <location filename="src/ui/widgets/error_dialog.py" line="48"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="103"/>
         <source>Exit</source>
         <translation>Beenden</translation>
     </message>
     <message>
-        <location filename="src/ui/widgets/error_dialog.py" line="57"/>
-        <location filename="src/ui/widgets/error_dialog.py" line="96"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="107"/>
+        <source>Ok</source>
+        <translation>Ok</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="113"/>
+        <source>Copy error details...</source>
+        <translation>Fehlerdetails kopieren...</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="122"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="141"/>
         <source>Show details...</source>
         <translation>Details anzeigen...</translation>
     </message>
     <message>
-        <location filename="src/ui/widgets/error_dialog.py" line="82"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="135"/>
         <source>Hide details...</source>
         <translation>Details ausblenden...</translation>
     </message>
@@ -65,12 +112,12 @@
 <context>
     <name>ExceptionHandler</name>
     <message>
-        <location filename="src/core/utilities/exception_handler.py" line="80"/>
+        <location filename="core-lib/src/cutleast_core_lib/core/utilities/exception_handler.py" line="79"/>
         <source>An unexpected error occured: </source>
         <translation>Ein unerwarteter Fehler ist aufgetreten: </translation>
     </message>
     <message>
-        <location filename="src/core/utilities/exception_handler.py" line="85"/>
+        <location filename="core-lib/src/cutleast_core_lib/core/utilities/exception_handler.py" line="84"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
@@ -115,29 +162,37 @@
     </message>
 </context>
 <context>
+    <name>KeyLineEdit</name>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/key_edit.py" line="50"/>
+        <source>Toggle password visibility</source>
+        <translation>Passwortsichtbarkeit umschalten</translation>
+    </message>
+</context>
+<context>
     <name>LoadingDialog</name>
     <message>
-        <location filename="src/ui/widgets/loading_dialog.py" line="275"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="266"/>
         <source>Elapsed time:</source>
         <translation>Vergangene Zeit:</translation>
     </message>
     <message>
-        <location filename="src/ui/widgets/loading_dialog.py" line="363"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="354"/>
         <source>Cancel?</source>
         <translation>Abbrechen?</translation>
     </message>
     <message>
-        <location filename="src/ui/widgets/loading_dialog.py" line="369"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="360"/>
         <source>Are you sure you want to cancel? This may have unwanted consequences, depending on the current running process!</source>
         <translation>Bist du sicher, dass du abbrechen möchtest? Je nach laufendem Vorgang kann das unbeabsichtigte Konsequenzen haben!</translation>
     </message>
     <message>
-        <location filename="src/ui/widgets/loading_dialog.py" line="374"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="365"/>
         <source>No</source>
         <translation>Nein</translation>
     </message>
     <message>
-        <location filename="src/ui/widgets/loading_dialog.py" line="375"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="366"/>
         <source>Yes</source>
         <translation>Ja</translation>
     </message>
@@ -145,7 +200,7 @@
 <context>
     <name>LogWindow</name>
     <message>
-        <location filename="src/ui/widgets/log_window.py" line="18"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/log_window.py" line="18"/>
         <source>Log</source>
         <translation>Log</translation>
     </message>
@@ -153,12 +208,12 @@
 <context>
     <name>MainWidget</name>
     <message>
-        <location filename="src/ui/main_widget.py" line="99"/>
+        <location filename="src/ui/main_widget.py" line="98"/>
         <source>Destination instance already exists!</source>
         <translation>Zielinstanz existiert bereits!</translation>
     </message>
     <message>
-        <location filename="src/ui/main_widget.py" line="104"/>
+        <location filename="src/ui/main_widget.py" line="103"/>
         <source>Are you sure you want to migrate to the existing destination instance?
 This feature is considered experimental and could cause issues.
 Continue at your own risk!</source>
@@ -167,12 +222,12 @@ Diese Funktion ist experimentell und könnte Probleme verursachen.
 Fortfahren auf eigene Gefahr!</translation>
     </message>
     <message>
-        <location filename="src/ui/main_widget.py" line="138"/>
+        <location filename="src/ui/main_widget.py" line="135"/>
         <source>Migration completed with errors!</source>
         <translation>Migration mit Fehlern abgeschlossen!</translation>
     </message>
     <message>
-        <location filename="src/ui/main_widget.py" line="143"/>
+        <location filename="src/ui/main_widget.py" line="140"/>
         <source>Migration completed with errors! Click &apos;Ok&apos; to open the report.
 
 </source>
@@ -181,12 +236,12 @@ Fortfahren auf eigene Gefahr!</translation>
 </translation>
     </message>
     <message>
-        <location filename="src/ui/main_widget.py" line="152"/>
+        <location filename="src/ui/main_widget.py" line="149"/>
         <source>Migration Complete</source>
         <translation>Migration abgeschlossen</translation>
     </message>
     <message>
-        <location filename="src/ui/main_widget.py" line="155"/>
+        <location filename="src/ui/main_widget.py" line="152"/>
         <source>Migration completed successfully!
 
 </source>
@@ -196,67 +251,89 @@ Fortfahren auf eigene Gefahr!</translation>
     </message>
 </context>
 <context>
+    <name>MainWindow</name>
+    <message>
+        <location filename="src/ui/main_window.py" line="84"/>
+        <source>No Updates Available</source>
+        <translation>Keine Updates verfügbar</translation>
+    </message>
+    <message>
+        <location filename="src/ui/main_window.py" line="85"/>
+        <source>There are no updates available.</source>
+        <translation>Es sind keine Updates verfügbar.</translation>
+    </message>
+    <message>
+        <location filename="src/ui/main_window.py" line="103"/>
+        <source>About Qt</source>
+        <translation>Über Qt</translation>
+    </message>
+    <message>
+        <location filename="src/ui/main_window.py" line="117"/>
+        <source>Path Limit Enabled</source>
+        <translation>Pfadlängenbegrenzung ist aktiviert</translation>
+    </message>
+    <message>
+        <location filename="src/ui/main_window.py" line="123"/>
+        <source>The NTFS path length limit is enabled and paths longer than 255 characters will cause issues. Would you like to disable it (admin rights may be required)? A reboot is required for this to take effect.</source>
+        <translation>Die NTFS Pfadlängenbegrenzung ist aktiviert und Pfade mit mehr als 255 Zeichen werden Fehler verursachen. Soll die Begrenzung deaktiviert werden (Administratorrechte könnten erforderlich sein)? Ein anschließender Neustart des Computers ist notwendig, damit die Begrenzung vollständig deaktiviert ist.</translation>
+    </message>
+</context>
+<context>
     <name>MenuBar</name>
     <message>
-        <location filename="src/ui/menubar.py" line="39"/>
+        <location filename="src/ui/menubar.py" line="54"/>
         <source>File</source>
         <translation>Datei</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="50"/>
+        <location filename="src/ui/menubar.py" line="63"/>
         <source>Exit</source>
         <translation>Beenden</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="42"/>
+        <location filename="src/ui/menubar.py" line="57"/>
         <source>Settings</source>
         <translation>Einstellungen</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="59"/>
+        <location filename="src/ui/menubar.py" line="68"/>
         <source>Help</source>
         <translation>Hilfe</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="62"/>
+        <location filename="src/ui/menubar.py" line="71"/>
         <source>Check for updates...</source>
         <translation>Nach Updates suchen...</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="70"/>
+        <location filename="src/ui/menubar.py" line="78"/>
         <source>Fix Windows Path Limit...</source>
-        <translation>Windows-Pfadlängenbegrenzung deaktivieren...</translation>
+        <translation>Windows-Pfadbegrenzung beheben...</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="84"/>
+        <location filename="src/ui/menubar.py" line="86"/>
         <source>Get support on our Discord server...</source>
         <translation>Erhalte Unterstützung auf unserem Discord Server...</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="89"/>
+        <location filename="src/ui/menubar.py" line="91"/>
         <source>Open mod page on Nexus Mods...</source>
         <translation>Modseite auf Nexus Mods öffnen...</translation>
     </message>
     <message>
         <location filename="src/ui/menubar.py" line="96"/>
+        <source>View source code on GitHub...</source>
+        <translation>Quellcode auf GitHub ansehen...</translation>
+    </message>
+    <message>
+        <location filename="src/ui/menubar.py" line="103"/>
         <source>About</source>
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="102"/>
-        <location filename="src/ui/menubar.py" line="124"/>
+        <location filename="src/ui/menubar.py" line="107"/>
         <source>About Qt</source>
         <translation>Über Qt</translation>
-    </message>
-    <message>
-        <location filename="src/ui/menubar.py" line="114"/>
-        <source>No Updates Available</source>
-        <translation>Keine Updates verfügbar</translation>
-    </message>
-    <message>
-        <location filename="src/ui/menubar.py" line="115"/>
-        <source>There are no updates available.</source>
-        <translation>Es sind keine Updates verfügbar.</translation>
     </message>
 </context>
 <context>
@@ -364,22 +441,22 @@ Fortfahren auf eigene Gefahr!</translation>
         <translation>Migration starten...</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="269"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="270"/>
         <source>Could not find game directory!</source>
         <translation>Spielverzeichnis konnte nicht gefunden werden!</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="270"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="271"/>
         <source>Unable to find game directory. Please select it manually.</source>
         <translation>Das Spielverzeichnis konnte nicht gefunden werden. Bitte manuell auswählen.</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="276"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="277"/>
         <source>Select game directory</source>
         <translation>Spielverzeichnis auswählen</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="290"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="291"/>
         <source>Instance loaded.</source>
         <translation>Instanz geladen.</translation>
     </message>
@@ -387,60 +464,60 @@ Fortfahren auf eigene Gefahr!</translation>
 <context>
     <name>ModOrganizer</name>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="144"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="194"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="223"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="145"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="195"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="224"/>
         <source>Loading mods from {0} &gt; {1}...</source>
         <translation>Mods von {0} &gt; {1} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="286"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="399"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="287"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="400"/>
         <source>Processing mod conflicts...</source>
         <translation>Modkonflikte werden verarbeitet...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="155"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="445"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="156"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="446"/>
         <source>Loading tools from {0} &gt; {1}...</source>
         <translation>Tools von {0} &gt; {1} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="414"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="415"/>
         <source>Processing single file conflicts...</source>
         <translation>Einzelkonflikte werden verarbeitet...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="624"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="625"/>
         <source>Downloading and installing ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen und installiert...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="644"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="645"/>
         <source>Downloading ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="666"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="667"/>
         <source>Extracting archive...</source>
         <translation>Archiv wird entpackt...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1058"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1059"/>
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of your MO2 installation if not already installed.</source>
         <translation>Die Nutzung von Root Builder wurde aktiviert.
 Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von Nexus Mods heruntergeladen und in den &quot;plugins&quot;-Ordner deiner MO2 Installation entpackt werden, wenn nicht bereits installiert.</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1068"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1069"/>
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of the new MO2 installation.</source>
         <translation>Die Nutzung von Root Builder wurde aktiviert.
 Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von Nexus Mods heruntergeladen und in den &quot;plugins&quot;-Ordner der neuen MO2 Installation entpackt werden.</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1076"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1077"/>
         <source>At least one global instance was detected.
 Global instances cause issues with portable instances and it is recommended to delete (or rename) the following folder:
 {0}</source>
@@ -574,40 +651,83 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
 <context>
     <name>ModlistWidget</name>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="68"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="71"/>
         <source>Active Mods:</source>
         <translation>Aktive Mods:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="93"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="96"/>
         <source>Name</source>
         <translation>Name</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="94"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="97"/>
         <source>Version</source>
         <translation>Version</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="95"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="98"/>
         <source>Size</source>
         <translation>Größe</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="96"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="99"/>
         <source>Priority</source>
         <translation>Priorität</translation>
     </message>
 </context>
 <context>
+    <name>Position</name>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/toast.py" line="69"/>
+        <source>Top</source>
+        <translation>Oben</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/toast.py" line="70"/>
+        <source>Bottom</source>
+        <translation>Unten</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/toast.py" line="71"/>
+        <source>Left</source>
+        <translation>Links</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/toast.py" line="72"/>
+        <source>Right</source>
+        <translation>Rechts</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/toast.py" line="73"/>
+        <source>Top Left</source>
+        <translation>Oben Links</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/toast.py" line="76"/>
+        <source>Top Right</source>
+        <translation>Oben Rechts</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/toast.py" line="79"/>
+        <source>Bottom Left</source>
+        <translation>Unten Links</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/toast.py" line="82"/>
+        <source>Bottom Right</source>
+        <translation>Unten Rechts</translation>
+    </message>
+</context>
+<context>
     <name>SearchBar</name>
     <message>
-        <location filename="src/ui/widgets/search_bar.py" line="36"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/search_bar.py" line="38"/>
         <source>Search...</source>
         <translation>Suchen...</translation>
     </message>
     <message>
-        <location filename="src/ui/widgets/search_bar.py" line="56"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/search_bar.py" line="52"/>
         <source>Toggle case sensitivity</source>
         <translation>Groß-/Kleinschreibung beachten</translation>
     </message>
@@ -615,39 +735,44 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
 <context>
     <name>SettingsDialog</name>
     <message>
-        <location filename="src/ui/settings/settings_dialog.py" line="42"/>
-        <location filename="src/ui/settings/settings_dialog.py" line="66"/>
-        <location filename="src/ui/settings/settings_dialog.py" line="97"/>
+        <location filename="src/ui/settings/settings_dialog.py" line="45"/>
+        <location filename="src/ui/settings/settings_dialog.py" line="72"/>
+        <location filename="src/ui/settings/settings_dialog.py" line="102"/>
         <source>Settings</source>
         <translation>Einstellungen</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_dialog.py" line="84"/>
+        <location filename="src/ui/settings/settings_dialog.py" line="78"/>
+        <source>Settings marked with * require a restart to take effect.</source>
+        <translation>Mit * markierte Einstellungen erfordern einen Neustart, um wirksam zu werden.</translation>
+    </message>
+    <message>
+        <location filename="src/ui/settings/settings_dialog.py" line="89"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_dialog.py" line="90"/>
+        <location filename="src/ui/settings/settings_dialog.py" line="95"/>
         <source>Save</source>
         <translation>Speichern</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_dialog.py" line="111"/>
+        <location filename="src/ui/settings/settings_dialog.py" line="116"/>
         <source>Restart required</source>
         <translation>Neustart erforderlich</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_dialog.py" line="116"/>
+        <location filename="src/ui/settings/settings_dialog.py" line="121"/>
         <source>The app must be restarted for the changes to take effect! Restart now?</source>
         <translation>Die App muss neugestartet werden, damit die Änderungen wirksam werden! Jetzt neustarten?</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_dialog.py" line="120"/>
+        <location filename="src/ui/settings/settings_dialog.py" line="125"/>
         <source>No</source>
         <translation>Nein</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_dialog.py" line="121"/>
+        <location filename="src/ui/settings/settings_dialog.py" line="126"/>
         <source>Yes</source>
         <translation>Ja</translation>
     </message>
@@ -655,57 +780,37 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
 <context>
     <name>SettingsWidget</name>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="83"/>
-        <source>App settings</source>
-        <translation>Appeinstellungen</translation>
+        <location filename="src/ui/settings/settings_widget.py" line="79"/>
+        <source>App language:</source>
+        <translation>Sprache der App:</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="90"/>
-        <source>Log level:</source>
-        <translation>Log Level:</translation>
-    </message>
-    <message>
-        <location filename="src/ui/settings/settings_widget.py" line="108"/>
-        <source>Number of newest log files to keep:</source>
-        <translation>Anzahl der zu behaltenden Logdateien:</translation>
-    </message>
-    <message>
-        <location filename="src/ui/settings/settings_widget.py" line="121"/>
-        <source>Language:</source>
-        <translation>Sprache:</translation>
-    </message>
-    <message>
-        <location filename="src/ui/settings/settings_widget.py" line="135"/>
-        <source>UI mode:</source>
-        <translation>UI Modus:</translation>
-    </message>
-    <message>
-        <location filename="src/ui/settings/settings_widget.py" line="150"/>
+        <location filename="src/ui/settings/settings_widget.py" line="85"/>
         <source>Migration settings</source>
         <translation>Migrationseinstellungen</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="157"/>
+        <location filename="src/ui/settings/settings_widget.py" line="92"/>
         <source>Use hardlinks if possible:</source>
         <translation>Hardlinks, wenn möglich, verwenden:</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="171"/>
+        <location filename="src/ui/settings/settings_widget.py" line="105"/>
         <source>What are hardlinks?</source>
         <translation>Was sind Hardlinks?</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="178"/>
+        <location filename="src/ui/settings/settings_widget.py" line="112"/>
         <source>Replace existing files when merging instances:</source>
         <translation>Bestehende Dateien beim Zusammenführen von Instanzen ersetzen:</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="193"/>
+        <location filename="src/ui/settings/settings_widget.py" line="124"/>
         <source>Activate destination instance after migration if supported by the destination mod manager:</source>
         <translation>Zielinstanz nach der Migration, wenn vom Ziel-Mod Manager unterstützt, aktivieren:</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="210"/>
+        <location filename="src/ui/settings/settings_widget.py" line="136"/>
         <source>Character limit for mod names (strongly recommended when migrating to MO2):</source>
         <translation>Zeichenbegrenzung für Modnamen (dringend empfohlen, wenn zu MO2 migriert wird):</translation>
     </message>
@@ -713,17 +818,17 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
 <context>
     <name>StatusBar</name>
     <message>
-        <location filename="src/ui/statusbar.py" line="49"/>
+        <location filename="src/ui/statusbar.py" line="51"/>
         <source>Support me on Ko-fi</source>
         <translation>Unterstütze mich auf Ko-fi</translation>
     </message>
     <message>
-        <location filename="src/ui/statusbar.py" line="64"/>
+        <location filename="src/ui/statusbar.py" line="66"/>
         <source>Copy log to clipboard</source>
         <translation>Log in Zwischenablage kopieren</translation>
     </message>
     <message>
-        <location filename="src/ui/statusbar.py" line="74"/>
+        <location filename="src/ui/statusbar.py" line="77"/>
         <source>View log</source>
         <translation>Log anzeigen</translation>
     </message>
@@ -795,21 +900,62 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
     </message>
 </context>
 <context>
+    <name>UIMode</name>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/utilities/ui_mode.py" line="24"/>
+        <source>Dark</source>
+        <translation>Dunkel</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/utilities/ui_mode.py" line="25"/>
+        <source>Light</source>
+        <translation>Hell</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/utilities/ui_mode.py" line="26"/>
+        <source>System</source>
+        <translation>System</translation>
+    </message>
+</context>
+<context>
     <name>UpdaterDialog</name>
     <message>
-        <location filename="src/ui/widgets/updater_dialog.py" line="37"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/updater_dialog.py" line="37"/>
         <source>An Update is available to download!</source>
         <translation>Ein Update ist zum Herunterladen verfügbar!</translation>
     </message>
     <message>
-        <location filename="src/ui/widgets/updater_dialog.py" line="57"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/updater_dialog.py" line="43"/>
+        <source>Installed version</source>
+        <translation>Installierte Version</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/updater_dialog.py" line="46"/>
+        <source>Latest version</source>
+        <translation>Neueste Version</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/updater_dialog.py" line="57"/>
+        <source>What&apos;s new?</source>
+        <translation>Was ist neu?</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/updater_dialog.py" line="70"/>
         <source>Ignore Update</source>
         <translation>Update ignorieren</translation>
     </message>
     <message>
-        <location filename="src/ui/widgets/updater_dialog.py" line="65"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/updater_dialog.py" line="78"/>
         <source>Download Update</source>
         <translation>Update herunterladen</translation>
+    </message>
+</context>
+<context>
+    <name>UrlEdit</name>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/url_edit.py" line="31"/>
+        <source>Open URL in default browser...</source>
+        <translation>URL im Standardbrowser öffnen...</translation>
     </message>
 </context>
 <context>
@@ -930,6 +1076,16 @@ Bitte eine separate Mod aus dem Overwrite-Ordner erstellen und die Migration ern
         <location filename="src/core/mod_manager/modorganizer/exceptions.py" line="40"/>
         <source>Cannot install MO2 when a global instance is selected as destination!</source>
         <translation>MO2 kann nicht installiert werden, wenn eine globale Instanz als Ziel gewählt ist!</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/core/utilities/exceptions.py" line="92"/>
+        <source>Request to &apos;{0}&apos; failed!</source>
+        <translation>Anfrage an &apos;{0}&apos; fehlgeschlagen!</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/core/utilities/exceptions.py" line="105"/>
+        <source>Request to &apos;{0}&apos; failed with status code {1}!</source>
+        <translation>Anfrage an &apos;{0}&apos; mit Status Code {1} fehlgeschlagen!</translation>
     </message>
 </context>
 </TS>

@@ -5,10 +5,10 @@ Copyright (c) Cutleast
 from typing import Optional
 
 import qtawesome as qta
+from cutleast_core_lib.ui.widgets.menu import Menu
 from PySide6.QtGui import QAction, QCursor, QIcon
 
 from core.instance.tool import Tool
-from ui.widgets.menu import Menu
 
 
 class ToolsMenu(Menu):

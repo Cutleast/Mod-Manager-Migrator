@@ -1,0 +1,9 @@
+#h1, #h2, #h3
+{
+    font-family: 'Bebas Neue Book';
+}
+
+QGroupBox
+{
+    font-family: 'Bebas Neue Book';
+}

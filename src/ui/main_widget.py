@@ -4,10 +4,10 @@ Copyright (c) Cutleast
 
 from typing import Optional
 
+from cutleast_core_lib.ui.widgets.loading_dialog import LoadingDialog
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QMessageBox, QSplitter
+from PySide6.QtWidgets import QApplication, QMessageBox, QSplitter
 
-from app_context import AppContext
 from core.config.app_config import AppConfig
 from core.game.game import Game
 from core.instance.instance import Instance
@@ -19,7 +19,6 @@ from core.mod_manager.mod_manager import ModManager
 from ui.instance.instance_widget import InstanceWidget
 from ui.migrator.migration_report_dialog import MigrationReportDialog
 from ui.migrator.migrator_widget import MigratorWidget
-from ui.widgets.loading_dialog import LoadingDialog
 
 
 class MainWidget(QSplitter):
@@ -95,7 +94,7 @@ class MainWidget(QSplitter):
 
         if dst_mod_manager.is_instance_existing(dst_info):
             reply = QMessageBox.question(
-                AppContext.get_app().main_window,
+                QApplication.activeModalWidget(),
                 self.tr("Destination instance already exists!"),
                 self.tr(
                     "Are you sure you want to migrate to the existing destination "
@@ -113,28 +112,26 @@ class MainWidget(QSplitter):
             src_instance, self.__instance_widget.checked_mods
         )
 
-        app_config: AppConfig = AppContext.get_app().app_config
-
         report: MigrationReport = LoadingDialog.run_callable(
+            QApplication.activeModalWidget(),
             lambda ldialog: Migrator().migrate(
                 src_instance=src_instance,
                 src_info=src_info,
                 dst_info=dst_info,
                 src_mod_manager=src_mod_manager,
                 dst_mod_manager=dst_mod_manager,
-                use_hardlinks=app_config.use_hardlinks,
-                replace=app_config.replace_when_merge,
-                modname_limit=app_config.modname_limit,
-                activate_new_instance=app_config.activate_new_instance,
+                use_hardlinks=self.app_config.use_hardlinks,
+                replace=self.app_config.replace_when_merge,
+                modname_limit=self.app_config.modname_limit,
+                activate_new_instance=self.app_config.activate_new_instance,
                 included_tools=self.__instance_widget.checked_tools,
                 ldialog=ldialog,
             ),
-            parent=AppContext.get_app().main_window,
         )
 
         if report.has_errors:
             QMessageBox.warning(
-                AppContext.get_app().main_window,
+                QApplication.activeModalWidget(),
                 self.tr("Migration completed with errors!"),
                 (
                     self.tr(
@@ -148,7 +145,7 @@ class MainWidget(QSplitter):
             MigrationReportDialog(report).exec()
         else:
             QMessageBox.information(
-                AppContext.get_app().main_window,
+                QApplication.activeModalWidget(),
                 self.tr("Migration Complete"),
                 (
                     self.tr("Migration completed successfully!\n\n")

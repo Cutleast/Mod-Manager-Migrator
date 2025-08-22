@@ -5,14 +5,14 @@ Copyright (c) Cutleast
 from pathlib import Path
 from typing import override
 
+from cutleast_core_lib.core.utilities.env_resolver import resolve
+from cutleast_core_lib.ui.widgets.browse_edit import BrowseLineEdit
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QComboBox, QFileDialog, QGridLayout, QLabel
 
 from core.game.game import Game
 from core.mod_manager.modorganizer.mo2_instance_info import MO2InstanceInfo
 from core.mod_manager.modorganizer.modorganizer import ModOrganizer
-from core.utilities.env_resolver import resolve
-from ui.widgets.browse_edit import BrowseLineEdit
 
 from .base_selector_widget import BaseSelectorWidget
 

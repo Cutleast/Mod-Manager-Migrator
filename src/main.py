@@ -6,7 +6,7 @@ import sys
 from argparse import ArgumentParser, Namespace
 
 from app import App
-from app_context import AppContext
+from resources_rc import qt_resource_data as qt_resource_data
 
 
 def __init_argparser() -> ArgumentParser:
@@ -28,9 +28,5 @@ if __name__ == "__main__":
     arg_namespace: Namespace = parser.parse_args()
 
     app = App(arg_namespace)
-    AppContext.set_app(app)
-    app.init()
 
-    retcode: int = app.exec()
-
-    sys.exit(retcode)
+    sys.exit(app.exec())

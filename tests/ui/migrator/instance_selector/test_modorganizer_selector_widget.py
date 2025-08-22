@@ -3,21 +3,21 @@ Copyright (c) Cutleast
 """
 
 import pytest
+from cutleast_core_lib.test.utils import Utils
+from cutleast_core_lib.ui.widgets.browse_edit import BrowseLineEdit
 from pyfakefs.fake_filesystem import FakeFilesystem
 from PySide6.QtWidgets import QComboBox
 from pytestqt.qtbot import QtBot
 
 from core.game.game import Game
 from core.mod_manager.modorganizer.modorganizer import ModOrganizer
-from tests.ui.ui_test import UiTest
-from tests.utils import Utils
+from tests.base_test import BaseTest
 from ui.migrator.instance_selector.modorganizer_selector_widget import (
     ModOrganizerSelectorWidget,
 )
-from ui.widgets.browse_edit import BrowseLineEdit
 
 
-class TestModOrganizerSelectorWidget(UiTest):
+class TestModOrganizerSelectorWidget(BaseTest):
     """
     Tests `ModOrganizerSelectorWidget`.
     """
@@ -36,7 +36,7 @@ class TestModOrganizerSelectorWidget(UiTest):
 
     @pytest.fixture
     def widget(
-        self, ui_test_fs: FakeFilesystem, qtbot: QtBot
+        self, test_fs: FakeFilesystem, qtbot: QtBot
     ) -> ModOrganizerSelectorWidget:
         """
         Fixture to create and provide a ModOrganizerSelectorWidget instance for tests.
@@ -80,7 +80,7 @@ class TestModOrganizerSelectorWidget(UiTest):
         self.assert_initial_state(widget)
 
     def test_select_global_instance(
-        self, ui_test_fs: FakeFilesystem, widget: ModOrganizerSelectorWidget
+        self, test_fs: FakeFilesystem, widget: ModOrganizerSelectorWidget
     ) -> None:
         """
         Tests the selection of a global instance.

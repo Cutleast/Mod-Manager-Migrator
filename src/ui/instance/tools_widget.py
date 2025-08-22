@@ -6,6 +6,9 @@ import webbrowser
 from pathlib import Path
 from typing import Optional
 
+from cutleast_core_lib.core.utilities.filesystem import open_in_explorer
+from cutleast_core_lib.ui.utilities.tree_widget import iter_toplevel_items
+from cutleast_core_lib.ui.widgets.search_bar import SearchBar
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
@@ -21,10 +24,7 @@ from PySide6.QtWidgets import (
 
 from core.instance.instance import Instance
 from core.instance.tool import Tool
-from core.utilities.filesystem import open_in_explorer
 from core.utilities.filter import matches_filter
-from ui.utilities.tree_widget import iter_toplevel_items
-from ui.widgets.search_bar import SearchBar
 
 from .tools_menu import ToolsMenu
 

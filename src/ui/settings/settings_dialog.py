@@ -2,7 +2,11 @@
 Copyright (c) Cutleast
 """
 
-import qtawesome as qta
+import os
+import subprocess
+
+from cutleast_core_lib.core.utilities.exe_info import get_execution_info
+from cutleast_core_lib.ui.utilities.icon_provider import IconProvider
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QDialog,
@@ -13,7 +17,6 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
 )
 
-from app_context import AppContext
 from core.config.app_config import AppConfig
 
 from .settings_widget import SettingsWidget
@@ -40,8 +43,13 @@ class SettingsDialog(QDialog):
 
         self.__init_ui()
         self.setWindowTitle(self.tr("Settings"))
-        self.setMinimumSize(800, 585)
-        self.resize(800, 585)
+        self.setMinimumSize(800, 620)
+        self.resize(800, 620)
+
+        self.__settings_widget.changed_signal.connect(self.__on_change)
+        self.__settings_widget.restart_required_signal.connect(
+            self.__on_restart_required
+        )
 
     def __init_ui(self) -> None:
         self.__vlayout = QVBoxLayout()
@@ -58,24 +66,21 @@ class SettingsDialog(QDialog):
         self.__vlayout.addLayout(hlayout)
 
         icon_label = QLabel()
-        icon_label.setPixmap(
-            qta.icon("mdi6.cog", color=self.palette().text().color()).pixmap(42, 42)
-        )
+        icon_label.setPixmap(IconProvider.get_qta_icon("mdi6.cog").pixmap(42, 42))
         hlayout.addWidget(icon_label)
 
         title_label = QLabel(self.tr("Settings"))
         title_label.setObjectName("h2")
         hlayout.addWidget(title_label)
 
-        self.__vlayout.addSpacing(15)
+        restart_hint_label = QLabel(
+            self.tr("Settings marked with * require a restart to take effect.")
+        )
+        self.__vlayout.addWidget(restart_hint_label)
 
     def __init_settings_widget(self) -> None:
         self.__settings_widget = SettingsWidget(self.__app_config)
-        self.__settings_widget.changed.connect(self.__on_change)
-        self.__settings_widget.restart_required.connect(self.__on_restart_required)
         self.__vlayout.addWidget(self.__settings_widget)
-
-        self.__vlayout.addSpacing(15)
 
     def __init_footer(self) -> None:
         hlayout = QHBoxLayout()
@@ -88,7 +93,7 @@ class SettingsDialog(QDialog):
         hlayout.addStretch()
 
         self.__save_button = QPushButton(self.tr("Save"))
-        self.__save_button.setObjectName("primary")
+        self.__save_button.setDefault(True)
         self.__save_button.clicked.connect(self.__save)
         self.__save_button.setDisabled(True)
         hlayout.addWidget(self.__save_button)
@@ -101,7 +106,7 @@ class SettingsDialog(QDialog):
         self.__restart_required = True
 
     def __save(self) -> None:
-        self.__settings_widget.apply_settings()
+        self.__settings_widget.apply(self.__app_config)
         self.__app_config.save()
 
         self.accept()
@@ -122,4 +127,7 @@ class SettingsDialog(QDialog):
             choice = messagebox.exec()
 
             if choice == QMessageBox.StandardButton.Yes:
-                AppContext.get_app().restart_application()
+                from app import App
+
+                if App.get().main_window.close():
+                    os.startfile(subprocess.list2cmdline(get_execution_info()[0]))

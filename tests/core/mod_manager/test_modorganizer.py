@@ -7,6 +7,7 @@ from typing import Any
 
 import pytest
 from base_test import BaseTest
+from cutleast_core_lib.test.utils import Utils
 from pyfakefs.fake_filesystem import FakeFilesystem
 
 from core.config.app_config import AppConfig
@@ -19,7 +20,6 @@ from core.migrator.file_blacklist import FileBlacklist
 from core.mod_manager.modorganizer.mo2_instance_info import MO2InstanceInfo
 from core.mod_manager.modorganizer.modorganizer import ModOrganizer
 from core.utilities.ini_file import INIFile
-from tests.utils import Utils
 
 
 class TestModOrganizer(BaseTest):
@@ -345,12 +345,8 @@ class TestModOrganizer(BaseTest):
         assert dst_instance.loadorder.index(
             migrated_overwritten_mod
         ) < dst_instance.loadorder.index(migrated_overwriting_mod)
-        assert Utils.compare_path_list(
-            migrated_overwritten_mod.files, overwritten_mod.files
-        )
-        assert Utils.compare_path_list(
-            migrated_overwriting_mod.files, overwriting_mod.files
-        )
+        assert migrated_overwritten_mod.files == overwritten_mod.files
+        assert migrated_overwriting_mod.files == overwriting_mod.files
 
     def test_install_mod_with_separator(
         self, app_config: AppConfig, test_fs: FakeFilesystem, instance: Instance

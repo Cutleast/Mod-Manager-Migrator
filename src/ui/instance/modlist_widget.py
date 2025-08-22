@@ -5,6 +5,12 @@ Copyright (c) Cutleast
 import os
 from typing import Optional
 
+from cutleast_core_lib.core.utilities.scale import scale_value
+from cutleast_core_lib.ui.utilities.tree_widget import (
+    iter_children,
+    iter_toplevel_items,
+)
+from cutleast_core_lib.ui.widgets.search_bar import SearchBar
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
@@ -22,10 +28,7 @@ from PySide6.QtWidgets import (
 from core.instance.instance import Instance
 from core.instance.mod import Mod
 from core.utilities.filter import matches_filter
-from core.utilities.scale import scale_value
 from ui.instance.modlist_menu import ModlistMenu
-from ui.utilities.tree_widget import iter_children, iter_toplevel_items
-from ui.widgets.search_bar import SearchBar
 
 
 class ModlistWidget(QWidget):
