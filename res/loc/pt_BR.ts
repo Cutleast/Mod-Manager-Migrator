@@ -649,27 +649,27 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
 <context>
     <name>ModlistWidget</name>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="71"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="72"/>
         <source>Active Mods:</source>
         <translation>Mods Ativos:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="96"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="98"/>
         <source>Name</source>
         <translation>Nome:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="97"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="99"/>
         <source>Version</source>
         <translation>Versão:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="98"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="100"/>
         <source>Size</source>
         <translation>Tamanho:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="99"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="101"/>
         <source>Priority</source>
         <translation>Prioridade</translation>
     </message>
@@ -872,27 +872,27 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
         <translation>Ferramentas Incluídas:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/tools_widget.py" line="87"/>
+        <location filename="src/ui/instance/tools_widget.py" line="88"/>
         <source>Name</source>
         <translation>Nome</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/tools_widget.py" line="88"/>
+        <location filename="src/ui/instance/tools_widget.py" line="89"/>
         <source>Mod</source>
         <translation>Mod</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/tools_widget.py" line="89"/>
+        <location filename="src/ui/instance/tools_widget.py" line="90"/>
         <source>Executable Path</source>
         <translation>Caminho do executável</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/tools_widget.py" line="90"/>
+        <location filename="src/ui/instance/tools_widget.py" line="91"/>
         <source>Arguments</source>
         <translation>Argumentos</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/tools_widget.py" line="91"/>
+        <location filename="src/ui/instance/tools_widget.py" line="92"/>
         <source>Working Directory</source>
         <translation>Diretório de trabalho</translation>
     </message>
