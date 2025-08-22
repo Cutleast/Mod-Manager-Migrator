@@ -80,6 +80,7 @@ class ToolsWidget(QWidget):
         self.__tree_widget.itemChanged.connect(
             lambda _: self.__update_num_label(), Qt.ConnectionType.QueuedConnection
         )
+        self.__tree_widget.itemActivated.connect(self.__item_activated)
         self.__vlayout.addWidget(self.__tree_widget, stretch=1)
 
         self.__tree_widget.setHeaderLabels(
@@ -123,6 +124,14 @@ class ToolsWidget(QWidget):
             )
 
         self.__update_num_label()
+
+    def __item_activated(self, item: QTreeWidgetItem, column: int) -> None:
+        current_item: Optional[Tool] = self.get_current_item()
+
+        if current_item is not None:
+            open_in_explorer(
+                current_item.get_full_executable_path(self.__instance.game_folder)
+            )
 
     def display_modinstance(self, instance: Instance) -> None:
         """

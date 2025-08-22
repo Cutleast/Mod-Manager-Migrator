@@ -5,6 +5,7 @@ Copyright (c) Cutleast
 import os
 from typing import Optional
 
+from cutleast_core_lib.core.utilities.filesystem import open_in_explorer
 from cutleast_core_lib.core.utilities.scale import scale_value
 from cutleast_core_lib.ui.utilities.tree_widget import (
     iter_children,
@@ -89,6 +90,7 @@ class ModlistWidget(QWidget):
         self.__tree_widget.itemChanged.connect(
             lambda _: self.__update_num_label(), Qt.ConnectionType.QueuedConnection
         )
+        self.__tree_widget.itemActivated.connect(self.__item_activated)
         self.__vlayout.addWidget(self.__tree_widget, stretch=1)
 
         self.__tree_widget.setHeaderLabels(
@@ -124,6 +126,15 @@ class ModlistWidget(QWidget):
             )
 
         self.__update_num_label()
+
+    def __item_activated(self, item: QTreeWidgetItem, column: int) -> None:
+        current_item: Optional[Mod] = self.get_current_item()
+
+        if (
+            isinstance(current_item, Mod)
+            and current_item.mod_type != Mod.Type.Separator
+        ):
+            open_in_explorer(current_item.path)
 
     @property
     def checked_mods(self) -> list[Mod]:
