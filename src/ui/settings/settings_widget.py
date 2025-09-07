@@ -42,7 +42,7 @@ class SettingsWidget(AppSettings):
     def __init__(self, initial_config: AppConfig) -> None:
         super().__init__(initial_config)
 
-        self._basic_flayout.removeRow(3)  # Remove accent color field
+        self._basic_flayout.setRowVisible(3, False)  # Hide accent color field
 
         self.__language_box.currentValueChanged.connect(
             lambda _: self.changed_signal.emit()
