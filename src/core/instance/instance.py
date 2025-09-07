@@ -144,8 +144,9 @@ class Instance:
                 overwriting_mods = [
                     new_loadorder.index(self.get_installed_mod(overwriting_mod))
                     for overwriting_mod in mod.mod_conflicts
+                    if self.is_mod_installed(overwriting_mod)
                 ]
-                index = min(overwriting_mods)
+                index = min(overwriting_mods, default=old_index)
 
                 if old_index > index:
                     new_loadorder.insert(index, new_loadorder.pop(old_index))

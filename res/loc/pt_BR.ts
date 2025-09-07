@@ -172,27 +172,27 @@
 <context>
     <name>LoadingDialog</name>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="266"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="263"/>
         <source>Elapsed time:</source>
         <translation>Tempo decorrido:</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="354"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="351"/>
         <source>Cancel?</source>
         <translation>Cancelar?</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="360"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="357"/>
         <source>Are you sure you want to cancel? This may have unwanted consequences, depending on the current running process!</source>
         <translation>Deseja mesmo cancelar? Isso pode ter consequências indesejadas, dependendo do processo em execução no momento!</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="365"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="362"/>
         <source>No</source>
         <translation>Não</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="366"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="363"/>
         <source>Yes</source>
         <translation>Sim</translation>
     </message>
