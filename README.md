@@ -111,11 +111,12 @@ If you encountered an issue/error or have a suggestion, open an issue with suffi
 
 ### 1. Install requirements
 
-1. Install [Python 3.12](https://www.python.org/downloads/) (Make sure that you add it to PATH!)
-2. Install [uv](https://github.com/astral-sh/uv#installation)
-3. Clone repository
-4. Open a terminal in the cloned repository folder
-5. Run the following command to init your local environment and to install all dependencies
+1. Install [uv](https://github.com/astral-sh/uv#installation)
+    * Python is not required to be installed as uv will download and install it for you
+2. Clone repository and its submodules by running the following command
+   `git clone https://github.com/Cutleast/Mod-Manager-Migrator --recurse-submodule`
+3. Open a terminal in the cloned repository folder
+4. Run the following command to init your local environment and to install all dependencies
    `uv sync`
 
 ### 2. Execute from source
