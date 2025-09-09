@@ -77,3 +77,18 @@ class SameSourceDestinationError(ExceptionBase):
         return QApplication.translate(
             "exceptions", "Source and destination must not be the same!"
         )
+
+
+class SameModsLocationDiffManagerError(ExceptionBase):
+    """
+    Exception when the source and destination have the same mods location but different
+    mod managers.
+    """
+
+    @override
+    def getLocalizedMessage(self) -> str:
+        return QApplication.translate(
+            "exceptions",
+            "Source and destination have the same mods location but different mod "
+            "managers!\nChoose another location for the mods folder and try again.",
+        )

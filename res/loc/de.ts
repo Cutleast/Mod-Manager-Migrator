@@ -1024,9 +1024,16 @@ Required space: {1}</source>
 Benötigter Speicherplatz: {1}</translation>
     </message>
     <message>
-        <location filename="src/core/utilities/exceptions.py" line="80"/>
+        <location filename="src/core/utilities/exceptions.py" line="82"/>
         <source>Source and destination must not be the same!</source>
         <translation>Quelle und Ziel dürfen nicht übereinstimmen!</translation>
+    </message>
+    <message>
+        <location filename="src/core/utilities/exceptions.py" line="95"/>
+        <source>Source and destination have the same mods location but different mod managers!
+Choose another location for the mods folder and try again.</source>
+        <translation>Quelle und Ziel haben denselben Speicherort für Mods, aber unterschiedliche Mod-Manager!
+Bitte einen anderen Speicherort für den Mods-Ordner wählen und erneut versuchen.</translation>
     </message>
     <message>
         <location filename="src/core/game/exceptions.py" line="23"/>

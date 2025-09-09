@@ -1071,9 +1071,15 @@ Espaço insuficiente ({2}) no disco de destino ({0})!
 Espaço necessário: {1}</translation>
     </message>
     <message>
-        <location filename="src/core/utilities/exceptions.py" line="80"/>
+        <location filename="src/core/utilities/exceptions.py" line="82"/>
         <source>Source and destination must not be the same!</source>
         <translation>A origem e o destino não podem ser os mesmos!</translation>
+    </message>
+    <message>
+        <location filename="src/core/utilities/exceptions.py" line="95"/>
+        <source>Source and destination have the same mods location but different mod managers!
+Choose another location for the mods folder and try again.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="core-lib/src/cutleast_core_lib/core/utilities/exceptions.py" line="92"/>
