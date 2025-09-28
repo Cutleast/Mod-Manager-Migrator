@@ -78,33 +78,33 @@
 <context>
     <name>ErrorDialog</name>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="98"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="109"/>
         <source>Continue</source>
         <translation>Fortsetzen</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="103"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="114"/>
         <source>Exit</source>
         <translation>Beenden</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="107"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="118"/>
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="113"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="124"/>
         <source>Copy error details...</source>
         <translation>Fehlerdetails kopieren...</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="122"/>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="141"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="132"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="151"/>
         <source>Show details...</source>
         <translation>Details anzeigen...</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="135"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="145"/>
         <source>Hide details...</source>
         <translation>Details ausblenden...</translation>
     </message>
@@ -172,27 +172,27 @@
 <context>
     <name>LoadingDialog</name>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="263"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="267"/>
         <source>Elapsed time:</source>
         <translation>Vergangene Zeit:</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="351"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="355"/>
         <source>Cancel?</source>
         <translation>Abbrechen?</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="357"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="361"/>
         <source>Are you sure you want to cancel? This may have unwanted consequences, depending on the current running process!</source>
         <translation>Bist du sicher, dass du abbrechen möchtest? Je nach laufendem Vorgang kann das unbeabsichtigte Konsequenzen haben!</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="362"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="366"/>
         <source>No</source>
         <translation>Nein</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="363"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="367"/>
         <source>Yes</source>
         <translation>Ja</translation>
     </message>
@@ -367,27 +367,27 @@ Fortfahren auf eigene Gefahr!</translation>
 <context>
     <name>Migrator</name>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="126"/>
+        <location filename="src/core/migrator/migrator.py" line="138"/>
         <source>Migrating instance {0}...</source>
         <translation>Instanz {0} wird migriert...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="149"/>
+        <location filename="src/core/migrator/migrator.py" line="161"/>
         <source>Migrating mods...</source>
         <translation>Mods werden migriert...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="182"/>
+        <location filename="src/core/migrator/migrator.py" line="194"/>
         <source>Migrating tools...</source>
         <translation>Tools werden migriert...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="222"/>
+        <location filename="src/core/migrator/migrator.py" line="234"/>
         <source>Failed to migrate INI files.</source>
         <translation>Migration der INI-Dateien fehlgeschlagen.</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="236"/>
+        <location filename="src/core/migrator/migrator.py" line="248"/>
         <source>Failed to migrate additional files.</source>
         <translation>Migration der zusätzlichen Dateien fehlgeschlagen.</translation>
     </message>
