@@ -45,6 +45,7 @@ include = ["src", "tests"]
 typeCheckingMode = "standard"
 exclude = ["**/__pycache__"]
 stubPath = "./stubs"
+extraPaths = ["src"]
 
 # Check here for a full list of options: https://github.com/microsoft/pyright/blob/main/docs/configuration.md#diagnostic-settings-defaults
 deprecateTypingAliases = false

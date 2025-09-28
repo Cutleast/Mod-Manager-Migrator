@@ -16,7 +16,11 @@ from core.instance.tool import Tool
 from core.mod_manager.exceptions import InstanceNotFoundError
 from core.mod_manager.instance_info import InstanceInfo
 from core.mod_manager.mod_manager import ModManager
-from core.utilities.exceptions import NotEnoughSpaceError, SameSourceDestinationError
+from core.utilities.exceptions import (
+    NotEnoughSpaceError,
+    SameModsLocationDiffManagerError,
+    SameSourceDestinationError,
+)
 from core.utilities.filesystem import get_free_disk_space
 
 from .file_blacklist import FileBlacklist
@@ -104,10 +108,18 @@ class Migrator(QObject):
         blacklist: list[str] = FileBlacklist.get_files()
         self.log.info(f"File blacklist: {', '.join(blacklist)}")
 
-        src_drive: str = src_mod_manager.get_mods_path(src_info).drive
-        dst_drive: str = dst_mod_manager.get_mods_path(dst_info).drive
+        src_mods_path: Path = src_mod_manager.get_mods_path(src_info)
+        dst_mods_path: Path = dst_mod_manager.get_mods_path(dst_info)
+        src_drive: str = src_mods_path.drive
+        dst_drive: str = dst_mods_path.drive
 
-        if src_drive != dst_drive or not use_hardlinks:
+        if (
+            src_mods_path == dst_mods_path
+            and src_mod_manager.get_id() != dst_mod_manager.get_id()
+        ):
+            raise SameModsLocationDiffManagerError
+
+        elif src_drive != dst_drive or not use_hardlinks:
             available_space: int = get_free_disk_space(dst_drive)
             self.log.debug(
                 f"Available space on '{dst_drive}': {scale_value(available_space)}"

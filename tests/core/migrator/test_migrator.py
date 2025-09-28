@@ -8,6 +8,7 @@ import pytest
 from base_test import BaseTest
 from cutleast_core_lib.core.utilities.env_resolver import resolve
 from cutleast_core_lib.core.utilities.scale import scale_value
+from cutleast_core_lib.test.utils import Utils
 from pyfakefs.fake_filesystem import FakeFilesystem
 from setup.mock_plyvel import MockPlyvelDB
 
@@ -25,8 +26,12 @@ from core.mod_manager.modorganizer.modorganizer import ModOrganizer
 from core.mod_manager.vortex.exceptions import OverwriteModNotSupportedError
 from core.mod_manager.vortex.profile_info import ProfileInfo
 from core.mod_manager.vortex.vortex import Vortex
-from core.utilities.exceptions import NotEnoughSpaceError
+from core.utilities.exceptions import (
+    NotEnoughSpaceError,
+    SameModsLocationDiffManagerError,
+)
 from core.utilities.filesystem import get_free_disk_space
+from tests.core.mod_manager.test_vortex import TestVortex
 
 
 class TestMigrator(BaseTest):
@@ -518,6 +523,56 @@ class TestMigrator(BaseTest):
         # self.assert_tools_equal(
         #     migrated_instance.tools, instance.tools, compare_display_names=False
         # )
+
+    def test_vortex_to_mo2_same_mods_folder(
+        self,
+        app_config: AppConfig,
+        full_vortex_db: MockPlyvelDB,
+        test_fs: FakeFilesystem,
+        vortex_profile_info: ProfileInfo,
+    ) -> None:
+        """
+        Tests that an exception is raised when the destination mods folder is Vortex'
+        staging folder.
+        """
+
+        # given
+        vortex = Vortex()
+        vortex.db_path.mkdir(parents=True, exist_ok=True)
+        mo2 = ModOrganizer()
+        migrator = Migrator()
+        dst_path = Path("E:\\Modding\\Test Instance")
+        staging_folder: Path = Utils.get_private_method(
+            vortex, "get_staging_folder", TestVortex.get_staging_folder_stub
+        )(vortex_profile_info.game)
+        dst_info = MO2InstanceInfo(
+            display_name="Test Instance",
+            game=vortex_profile_info.game,
+            profile="Default",
+            is_global=False,
+            base_folder=dst_path,
+            mods_folder=staging_folder,
+            profiles_folder=dst_path / "profiles",
+            install_mo2=False,  # This is important for now as the download is not mocked, yet
+        )
+        src_instance: Instance = vortex.load_instance(
+            vortex_profile_info, app_config.modname_limit, FileBlacklist.get_files()
+        )
+
+        # when/then
+        with pytest.raises(SameModsLocationDiffManagerError):
+            migrator.migrate(
+                src_instance=src_instance,
+                src_info=vortex_profile_info,
+                dst_info=dst_info,
+                src_mod_manager=vortex,
+                dst_mod_manager=mo2,
+                use_hardlinks=True,
+                replace=False,
+                modname_limit=app_config.modname_limit,
+                activate_new_instance=app_config.activate_new_instance,
+                included_tools=src_instance.tools,
+            )
 
     def assert_modlists_equal(
         self,
