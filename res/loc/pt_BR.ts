@@ -365,27 +365,27 @@ Continue at your own risk!</source>
 <context>
     <name>Migrator</name>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="138"/>
+        <location filename="src/core/migrator/migrator.py" line="141"/>
         <source>Migrating instance {0}...</source>
         <translation>Migrando instância {0}...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="161"/>
+        <location filename="src/core/migrator/migrator.py" line="168"/>
         <source>Migrating mods...</source>
         <translation>Migrando mods...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="194"/>
+        <location filename="src/core/migrator/migrator.py" line="201"/>
         <source>Migrating tools...</source>
         <translation>Migrando ferramentas...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="234"/>
+        <location filename="src/core/migrator/migrator.py" line="241"/>
         <source>Failed to migrate INI files.</source>
         <translation>Falha em migrar os arquivos INI.</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="248"/>
+        <location filename="src/core/migrator/migrator.py" line="255"/>
         <source>Failed to migrate additional files.</source>
         <translation>Falha ao migrar arquivos adicionais.</translation>
     </message>
@@ -470,52 +470,52 @@ Continue at your own risk!</source>
     </message>
     <message>
         <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="156"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="446"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="453"/>
         <source>Loading tools from {0} &gt; {1}...</source>
         <translation>Carregando ferramentes de {0} &gt; {1}...</translation>
     </message>
     <message>
         <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="287"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="400"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="407"/>
         <source>Processing mod conflicts...</source>
         <translation>Processando conflitos de mods...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="415"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="422"/>
         <source>Processing single file conflicts...</source>
         <translation>Processando conflitos de arquivo único...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="625"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="632"/>
         <source>Downloading and installing ModOrganizer...</source>
         <translation>Baixando e instalando ModOrganizer...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="645"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="652"/>
         <source>Downloading ModOrganizer...</source>
         <translation>Baixando ModOrganizer...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="667"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="674"/>
         <source>Extracting archive...</source>
         <translation>Extraindo arquivo...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1059"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1066"/>
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of your MO2 installation if not already installed.</source>
         <translation>O uso do root builder foi ativado.
 Para implantar corretamente os arquivos root, você deve baixar e extrair o plugin root builder do Nexus Mods para a pasta &quot;plugins&quot; da sua instalação do MO2, caso ainda não esteja instalado.</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1069"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1076"/>
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of the new MO2 installation.</source>
         <translation>O uso do root builder foi ativado.
 Para implantar corretamente os arquivos root, você deve baixar e extrair o plugin root builder do Nexus Mods para a pasta &quot;plugins&quot; da nova instalação do MO2.</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1077"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1084"/>
         <source>At least one global instance was detected.
 Global instances cause issues with portable instances and it is recommended to delete (or rename) the following folder:
 {0}</source>
@@ -626,22 +626,22 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
         <translation>Recolher tudo</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_menu.py" line="51"/>
-        <source>Disable selected mod(s)</source>
-        <translation>Desativar mods seleciona(s)</translation>
+        <location filename="src/ui/instance/modlist_menu.py" line="53"/>
+        <source>Exclude selected mod(s) from migration</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_menu.py" line="57"/>
-        <source>Enable selected mod(s)</source>
-        <translation>Ativar mods selecionado(s)</translation>
+        <location filename="src/ui/instance/modlist_menu.py" line="59"/>
+        <source>Include selected mod(s) in migration</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_menu.py" line="66"/>
+        <location filename="src/ui/instance/modlist_menu.py" line="68"/>
         <source>Open mod page on Nexus Mods...</source>
         <translation>Abrir pagina do mod no Nexus Mods...</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_menu.py" line="72"/>
+        <location filename="src/ui/instance/modlist_menu.py" line="74"/>
         <source>Open in Explorer...</source>
         <translation>Abrir no Explorador...</translation>
     </message>
@@ -649,29 +649,34 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
 <context>
     <name>ModlistWidget</name>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="72"/>
-        <source>Active Mods:</source>
-        <translation>Mods Ativos:</translation>
+        <location filename="src/ui/instance/modlist_widget.py" line="77"/>
+        <source>Included Mods:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="98"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="101"/>
         <source>Name</source>
         <translation>Nome:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="99"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="102"/>
         <source>Version</source>
         <translation>Versão:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="100"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="103"/>
         <source>Size</source>
         <translation>Tamanho:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="101"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="104"/>
         <source>Priority</source>
         <translation>Prioridade</translation>
+    </message>
+    <message>
+        <location filename="src/ui/instance/modlist_widget.py" line="136"/>
+        <source>The checkboxes indicate whether a mod is migrated to the destination or not.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
