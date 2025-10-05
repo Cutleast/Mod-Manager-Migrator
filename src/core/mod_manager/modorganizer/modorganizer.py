@@ -371,16 +371,23 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
 
     @staticmethod
     def __dump_modlist_txt(modlist_txt_path: Path, mods: list[Mod]) -> None:
-        lines: list[str] = [
-            (
-                ("+" if mod.enabled and not mod.mod_type == Mod.Type.Separator else "-")
-                + clean_fs_string(mod.display_name)
-                + ("_separator" if mod.mod_type == Mod.Type.Separator else "")
-                + "\n"
-            )
-            for mod in reversed(mods)
-            if mod.mod_type != Mod.Type.Overwrite
-        ]
+        lines: list[str] = unique(
+            [
+                (
+                    (
+                        "+"
+                        if mod.enabled and not mod.mod_type == Mod.Type.Separator
+                        else "-"
+                    )
+                    + clean_fs_string(mod.display_name)
+                    + ("_separator" if mod.mod_type == Mod.Type.Separator else "")
+                    + "\n"
+                )
+                for mod in reversed(mods)
+                if mod.mod_type != Mod.Type.Overwrite
+            ],
+            key=lambda line: line.lower(),  # ensure that there are no duplicates
+        )
         with open(modlist_txt_path, "w", encoding="utf8") as modlist_file:
             modlist_file.writelines(lines)
 

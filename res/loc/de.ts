@@ -367,27 +367,27 @@ Fortfahren auf eigene Gefahr!</translation>
 <context>
     <name>Migrator</name>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="138"/>
+        <location filename="src/core/migrator/migrator.py" line="141"/>
         <source>Migrating instance {0}...</source>
         <translation>Instanz {0} wird migriert...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="161"/>
+        <location filename="src/core/migrator/migrator.py" line="168"/>
         <source>Migrating mods...</source>
         <translation>Mods werden migriert...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="194"/>
+        <location filename="src/core/migrator/migrator.py" line="201"/>
         <source>Migrating tools...</source>
         <translation>Tools werden migriert...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="234"/>
+        <location filename="src/core/migrator/migrator.py" line="241"/>
         <source>Failed to migrate INI files.</source>
         <translation>Migration der INI-Dateien fehlgeschlagen.</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="248"/>
+        <location filename="src/core/migrator/migrator.py" line="255"/>
         <source>Failed to migrate additional files.</source>
         <translation>Migration der zusätzlichen Dateien fehlgeschlagen.</translation>
     </message>
@@ -472,52 +472,52 @@ Fortfahren auf eigene Gefahr!</translation>
     </message>
     <message>
         <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="287"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="400"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="407"/>
         <source>Processing mod conflicts...</source>
         <translation>Modkonflikte werden verarbeitet...</translation>
     </message>
     <message>
         <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="156"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="446"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="453"/>
         <source>Loading tools from {0} &gt; {1}...</source>
         <translation>Tools von {0} &gt; {1} werden geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="415"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="422"/>
         <source>Processing single file conflicts...</source>
         <translation>Einzelkonflikte werden verarbeitet...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="625"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="632"/>
         <source>Downloading and installing ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen und installiert...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="645"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="652"/>
         <source>Downloading ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="667"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="674"/>
         <source>Extracting archive...</source>
         <translation>Archiv wird entpackt...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1059"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1066"/>
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of your MO2 installation if not already installed.</source>
         <translation>Die Nutzung von Root Builder wurde aktiviert.
 Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von Nexus Mods heruntergeladen und in den &quot;plugins&quot;-Ordner deiner MO2 Installation entpackt werden, wenn nicht bereits installiert.</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1069"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1076"/>
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of the new MO2 installation.</source>
         <translation>Die Nutzung von Root Builder wurde aktiviert.
 Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von Nexus Mods heruntergeladen und in den &quot;plugins&quot;-Ordner der neuen MO2 Installation entpackt werden.</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1077"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1084"/>
         <source>At least one global instance was detected.
 Global instances cause issues with portable instances and it is recommended to delete (or rename) the following folder:
 {0}</source>
@@ -628,22 +628,22 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
         <translation>Alle einklappen</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_menu.py" line="51"/>
-        <source>Disable selected mod(s)</source>
-        <translation>Ausgewählte Mod(s) deaktivieren</translation>
+        <location filename="src/ui/instance/modlist_menu.py" line="53"/>
+        <source>Exclude selected mod(s) from migration</source>
+        <translation>Ausgewählte Mod(s) von der Migration ausschließen</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_menu.py" line="57"/>
-        <source>Enable selected mod(s)</source>
-        <translation>Ausgewählte Mod(s) aktivieren</translation>
+        <location filename="src/ui/instance/modlist_menu.py" line="59"/>
+        <source>Include selected mod(s) in migration</source>
+        <translation>Ausgewählte Mod(s) in die Migration einschließen</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_menu.py" line="66"/>
+        <location filename="src/ui/instance/modlist_menu.py" line="68"/>
         <source>Open mod page on Nexus Mods...</source>
         <translation>Modseite auf Nexus Mods öffnen...</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_menu.py" line="72"/>
+        <location filename="src/ui/instance/modlist_menu.py" line="74"/>
         <source>Open in Explorer...</source>
         <translation>Im Explorer öffnen...</translation>
     </message>
@@ -651,29 +651,34 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
 <context>
     <name>ModlistWidget</name>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="72"/>
-        <source>Active Mods:</source>
-        <translation>Aktive Mods:</translation>
+        <location filename="src/ui/instance/modlist_widget.py" line="77"/>
+        <source>Included Mods:</source>
+        <translation>Einbezogene Mods:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="98"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="101"/>
         <source>Name</source>
         <translation>Name</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="99"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="102"/>
         <source>Version</source>
         <translation>Version</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="100"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="103"/>
         <source>Size</source>
         <translation>Größe</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="101"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="104"/>
         <source>Priority</source>
         <translation>Priorität</translation>
+    </message>
+    <message>
+        <location filename="src/ui/instance/modlist_widget.py" line="136"/>
+        <source>The checkboxes indicate whether a mod is migrated to the destination or not.</source>
+        <translation>Die Häkchen markieren die Mods, die zum Ziel migriert werden.</translation>
     </message>
 </context>
 <context>
@@ -871,7 +876,7 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
     <message>
         <location filename="src/ui/instance/tools_widget.py" line="67"/>
         <source>Included Tools:</source>
-        <translation>Zur Migration ausgewählte Tools:</translation>
+        <translation>Einbezogene Tools:</translation>
     </message>
     <message>
         <location filename="src/ui/instance/tools_widget.py" line="88"/>

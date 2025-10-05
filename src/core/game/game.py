@@ -89,7 +89,7 @@ class Game(BaseModel):
     @FunctionCache.cache
     def get_game_by_id(game_id: str) -> Game:
         """
-        Gets a game by its id.
+        Gets a game by its id. This method works case-insensitive.
 
         Args:
             game_id (str): Game id
@@ -101,10 +101,12 @@ class Game(BaseModel):
             Game: Game with specified id
         """
 
-        games: dict[str, Game] = {game.id: game for game in Game.get_supported_games()}
+        games: dict[str, Game] = {
+            game.id.lower(): game for game in Game.get_supported_games()
+        }
 
-        if game_id in games:
-            return games[game_id]
+        if game_id.lower() in games:
+            return games[game_id.lower()]
 
         raise ValueError(f"Game '{game_id}' not found!")
 
@@ -112,7 +114,7 @@ class Game(BaseModel):
     @FunctionCache.cache
     def get_game_by_short_name(short_name: str) -> Game:
         """
-        Gets a game by its short name.
+        Gets a game by its short name. This method works case-insensitive.
 
         Args:
             short_name (str): Game short name
@@ -125,11 +127,11 @@ class Game(BaseModel):
         """
 
         games: dict[str, Game] = {
-            game.short_name: game for game in Game.get_supported_games()
+            game.short_name.lower(): game for game in Game.get_supported_games()
         }
 
-        if short_name in games:
-            return games[short_name]
+        if short_name.lower() in games:
+            return games[short_name.lower()]
 
         raise ValueError(f"Game '{short_name}' not found!")
 

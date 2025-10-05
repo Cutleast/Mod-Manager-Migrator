@@ -11,7 +11,7 @@ from cutleast_core_lib.core.utilities.scale import scale_value
 from cutleast_core_lib.ui.widgets.loading_dialog import LoadingDialog
 from PySide6.QtCore import QObject
 
-from core.instance.instance import Instance
+from core.instance.instance import Instance, Mod
 from core.instance.tool import Tool
 from core.mod_manager.exceptions import InstanceNotFoundError
 from core.mod_manager.instance_info import InstanceInfo
@@ -113,6 +113,9 @@ class Migrator(QObject):
         src_drive: str = src_mods_path.drive
         dst_drive: str = dst_mods_path.drive
 
+        self.log.info(f"Source mods path: {src_mods_path}")
+        self.log.info(f"Destination mods path: {dst_mods_path}")
+
         if (
             src_mods_path == dst_mods_path
             and src_mod_manager.get_id() != dst_mod_manager.get_id()
@@ -154,13 +157,17 @@ class Migrator(QObject):
 
         self.log.info(f"Destination order matters: {dst_instance.order_matters}")
 
-        for m, mod in enumerate(src_instance.loadorder):
+        included_mods: list[Mod] = list(
+            filter(lambda m: m.installed, src_instance.loadorder)
+        )
+        self.log.info(f"Included mods: {len(included_mods)}")
+
+        for m, mod in enumerate(included_mods):
             if ldialog is not None:
                 ldialog.updateProgress(
-                    text1=self.tr("Migrating mods...")
-                    + f" ({m}/{len(src_instance.mods)})",
+                    text1=self.tr("Migrating mods...") + f" ({m}/{len(included_mods)})",
                     value1=m,
-                    max1=len(src_instance.mods),
+                    max1=len(included_mods),
                     show2=True,
                     text2=mod.display_name,
                 )
