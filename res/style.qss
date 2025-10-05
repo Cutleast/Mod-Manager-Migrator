@@ -7,3 +7,8 @@ QGroupBox
 {
     font-family: 'Bebas Neue Book';
 }
+
+QTreeView::item:selected
+{
+    color: <text_color>;
+}
