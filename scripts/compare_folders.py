@@ -8,6 +8,8 @@ Script to calculate differences between two folders. This includes:
 
 The script calculates the SHA256 hash of each file to determine if files are identical.
 
+TODO: Optimize this by implementing concurrent hashing
+
 Usage:
     python compare_folders.py <folder1> <folder2> [--out-file differences.json]
 """
@@ -70,8 +72,8 @@ def run(args: argparse.Namespace) -> None:
     hashes1: set[str] = set(map1.keys())
     hashes2: set[str] = set(map2.keys())
 
-    new_files = [str(map2[h]) for h in hashes2 - hashes1]
-    deleted_files = [str(map1[h]) for h in hashes1 - hashes2]
+    new_files: list[str] = [str(map2[h]) for h in hashes2 - hashes1]
+    deleted_files: list[str] = [str(map1[h]) for h in hashes1 - hashes2]
     moved_files: list[dict[str, str]] = [
         {"from": str(map1[h]), "to": str(map2[h])}
         for h in hashes1 & hashes2
@@ -88,20 +90,20 @@ def run(args: argparse.Namespace) -> None:
         "moved_or_renamed_files": moved_files,
     }
 
-    if out_file:
-        with out_file.open("w", encoding="utf-8") as f:
-            f.write(json.dumps(result, indent=4))
+    if out_file is not None:
+        with out_file.open("w", encoding="utf-8") as file_stream:
+            file_stream.write(json.dumps(result, indent=4))
 
         print(f"\nResults written to '{out_file}'")
 
     else:
         print("\nNew files:")
-        for f in new_files:
-            print(f"  {f}")
+        for new_file in new_files:
+            print(f"  {new_file}")
 
         print("\nDeleted files:")
-        for f in deleted_files:
-            print(f"  {f}")
+        for deleted_file in deleted_files:
+            print(f"  {deleted_file}")
 
         print("\nMoved/Renamed files:")
         for entry in moved_files:
