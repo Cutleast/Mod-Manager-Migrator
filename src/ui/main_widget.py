@@ -157,4 +157,4 @@ class MainWidget(QSplitter):
     @staticmethod
     def _apply_checked_mods(instance: Instance, checked_mods: list[Mod]) -> None:
         for mod in instance.mods:
-            mod.enabled = mod in checked_mods
+            mod.installed = mod in checked_mods

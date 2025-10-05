@@ -18,8 +18,8 @@ class ModlistMenu(Menu):
 
     __parent: "ModlistWidget"
 
-    __uncheck_action: QAction
-    __check_action: QAction
+    __exclude_action: QAction
+    __include_action: QAction
     __open_modpage_action: QAction
     __open_in_explorer_action: QAction
 
@@ -46,17 +46,19 @@ class ModlistMenu(Menu):
         )
         collapse_all_action.triggered.connect(self.__parent.collapseAll)
 
-        self.__uncheck_action = self.addAction(
-            qta.icon("mdi6.close", color=self.palette().text().color()),
-            self.tr("Disable selected mod(s)"),
-        )
-        self.__uncheck_action.triggered.connect(self.__parent.uncheck_selected)
+        self.addSeparator()
 
-        self.__check_action = self.addAction(
-            qta.icon("mdi6.check", color=self.palette().text().color()),
-            self.tr("Enable selected mod(s)"),
+        self.__exclude_action = self.addAction(
+            qta.icon("mdi6.close", color=self.palette().text().color()),
+            self.tr("Exclude selected mod(s) from migration"),
         )
-        self.__check_action.triggered.connect(self.__parent.check_selected)
+        self.__exclude_action.triggered.connect(self.__parent.exclude_selected)
+
+        self.__include_action = self.addAction(
+            qta.icon("mdi6.check", color=self.palette().text().color()),
+            self.tr("Include selected mod(s) in migration"),
+        )
+        self.__include_action.triggered.connect(self.__parent.include_selected)
 
         self.addSeparator()
 
@@ -81,16 +83,14 @@ class ModlistMenu(Menu):
         current_item: Optional[Mod] = self.__parent.get_current_item()
 
         if current_item is not None:
-            self.__uncheck_action.setVisible(current_item.mod_type == Mod.Type.Regular)
-            self.__check_action.setVisible(current_item.mod_type == Mod.Type.Regular)
             self.__open_modpage_action.setVisible(
                 current_item.get_modpage_url() is not None
             )
         else:
-            self.__uncheck_action.setVisible(False)
-            self.__check_action.setVisible(False)
             self.__open_modpage_action.setVisible(False)
 
+        self.__exclude_action.setVisible(current_item is not None)
+        self.__include_action.setVisible(current_item is not None)
         self.__open_in_explorer_action.setVisible(current_item is not None)
 
         self.exec(QCursor.pos())

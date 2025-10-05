@@ -574,6 +574,74 @@ class TestMigrator(BaseTest):
                 included_tools=src_instance.tools,
             )
 
+    def test_partial_migration(
+        self,
+        app_config: AppConfig,
+        test_fs: FakeFilesystem,
+        mo2_instance_info: MO2InstanceInfo,
+        instance: Instance,
+    ) -> None:
+        """
+        Tests a partial migration of some selected mods.
+        """
+
+        # given
+        mo2 = ModOrganizer()
+        migrator = Migrator()
+        dst_path = Path("E:\\Modding\\Test Instance")
+        dst_info = MO2InstanceInfo(
+            display_name="Test Instance",
+            game=mo2_instance_info.game,
+            profile="Default",
+            is_global=False,
+            base_folder=dst_path,
+            mods_folder=dst_path / "mods",
+            profiles_folder=dst_path / "profiles",
+            install_mo2=False,  # This is important for now as the download is not mocked, yet
+        )
+
+        # deselect all mods and reselect some
+        for mod in instance.mods:
+            mod.installed = False
+
+        instance.mods[0].installed = True  # Test Mods separator
+        instance.mods[1].installed = True  # Engine Fixes
+        instance.mods[-3].installed = True  # DIP separator
+        instance.mods[-2].installed = True  # DIP
+        instance.mods[-1].installed = True  # Overwrite mod
+
+        # when
+        report: MigrationReport = migrator.migrate(
+            src_instance=instance,
+            src_info=mo2_instance_info,
+            dst_info=dst_info,
+            src_mod_manager=mo2,
+            dst_mod_manager=mo2,
+            use_hardlinks=True,
+            replace=True,
+            modname_limit=app_config.modname_limit,
+            activate_new_instance=app_config.activate_new_instance,
+            included_tools=instance.tools,
+        )
+
+        # then
+        assert not report.has_errors
+
+        # when
+        migrated_instance: Instance = mo2.load_instance(
+            dst_info, app_config.modname_limit, FileBlacklist.get_files()
+        )
+
+        # then
+        assert len(migrated_instance.mods) == 5
+        assert list(map(lambda m: m.display_name, migrated_instance.mods)) == [
+            "Test Mods",
+            "(Part 2) Engine Fixes - skse64 Preloader and TBB Lib",
+            "DIP",
+            "Dynamic Interface Patcher - DIP",
+            "Overwrite",
+        ]
+
     def assert_modlists_equal(
         self,
         modlist1: list[Mod],

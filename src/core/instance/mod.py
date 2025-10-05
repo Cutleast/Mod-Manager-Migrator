@@ -43,7 +43,8 @@ class Mod:
 
     installed: bool
     """
-    If the mod is installed.
+    If the mod is installed. When migrating, this also indicates whether the mod is
+    included in it.
     """
 
     enabled: bool

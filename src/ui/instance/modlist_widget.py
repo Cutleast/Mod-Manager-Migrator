@@ -7,13 +7,14 @@ from typing import Optional
 
 from cutleast_core_lib.core.utilities.filesystem import open_in_explorer
 from cutleast_core_lib.core.utilities.scale import scale_value
+from cutleast_core_lib.ui.utilities.icon_provider import IconProvider
 from cutleast_core_lib.ui.utilities.tree_widget import (
     iter_children,
     iter_toplevel_items,
 )
 from cutleast_core_lib.ui.widgets.search_bar import SearchBar
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont
+from PySide6.QtGui import QColor, QFont
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QHBoxLayout,
@@ -42,8 +43,11 @@ class ModlistWidget(QWidget):
     __mods_num_label: QLCDNumber
     __search_bar: SearchBar
     __tree_widget: QTreeWidget
-    __modlist_tree_items: dict[Mod, QTreeWidgetItem]
+    __modlist_tree_items: dict[Mod, QTreeWidgetItem] = {}
     __modlist_menu: ModlistMenu
+
+    __batch_changing: bool = False
+    """Whether multiple items are being changed at once."""
 
     def __init__(self) -> None:
         super().__init__()
@@ -58,6 +62,7 @@ class ModlistWidget(QWidget):
         self.__init_search_bar()
         self.__init_tree_widget()
         self.__init_context_menu()
+        self.__init_footer()
 
     def __init_header(self) -> None:
         hlayout = QHBoxLayout()
@@ -69,7 +74,7 @@ class ModlistWidget(QWidget):
 
         hlayout.addStretch()
 
-        num_label = QLabel(self.tr("Active Mods:"))
+        num_label = QLabel(self.tr("Included Mods:"))
         num_label.setObjectName("h3")
         hlayout.addWidget(num_label)
 
@@ -87,9 +92,7 @@ class ModlistWidget(QWidget):
         self.__tree_widget = QTreeWidget()
         self.__tree_widget.setUniformRowHeights(True)
         self.__tree_widget.setAlternatingRowColors(True)
-        self.__tree_widget.itemChanged.connect(
-            lambda _: self.__update_num_label(), Qt.ConnectionType.QueuedConnection
-        )
+        self.__tree_widget.itemChanged.connect(self.__item_changed)
         self.__tree_widget.itemActivated.connect(self.__item_activated)
         self.__vlayout.addWidget(self.__tree_widget, stretch=1)
 
@@ -115,6 +118,25 @@ class ModlistWidget(QWidget):
         self.__tree_widget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.__tree_widget.customContextMenuRequested.connect(self.__modlist_menu.open)
 
+    def __init_footer(self) -> None:
+        hlayout = QHBoxLayout()
+        self.__vlayout.addLayout(hlayout)
+
+        icon_label = QLabel()
+        icon_label.setPixmap(
+            IconProvider.get_qta_icon("mdi6.information").pixmap(16, 16)
+        )
+        hlayout.addWidget(icon_label, stretch=0)
+
+        hint_label = QLabel(
+            self.tr(
+                "The checkboxes indicate whether a mod is migrated to the destination or"
+                " not."
+            )
+        )
+        hint_label.setWordWrap(True)
+        hlayout.addWidget(hint_label, stretch=1)
+
     def __on_search(self, text: str, case_sensitive: bool) -> None:
         for item in iter_toplevel_items(self.__tree_widget):
             for child in iter_children(item):
@@ -135,6 +157,24 @@ class ModlistWidget(QWidget):
             and current_item.mod_type != Mod.Type.Separator
         ):
             open_in_explorer(current_item.path)
+
+    def __item_changed(self, item: QTreeWidgetItem, column: int) -> None:
+        if column != 0:
+            # this method is called for every column of an item, we only care about the
+            # first one
+            return
+
+        text_color: QColor
+        if item.checkState(0) == Qt.CheckState.Checked:
+            text_color = self.palette().text().color()
+        else:
+            text_color = QColor("#666666")
+
+        for c in range(item.columnCount()):
+            item.setForeground(c, text_color)
+
+        if not self.__batch_changing:
+            self.__update_num_label()
 
     @property
     def checked_mods(self) -> list[Mod]:
@@ -168,18 +208,9 @@ class ModlistWidget(QWidget):
         """
 
         self.__instance_name_label.setText(instance.display_name)
-        self.__mods_num_label.display(
-            len(
-                [
-                    m
-                    for m in instance.mods
-                    if m.enabled and not m.mod_type == Mod.Type.Separator
-                ]
-            )
-        )
 
         self.__tree_widget.clear()
-        self.__modlist_tree_items = {}
+        self.__modlist_tree_items.clear()
 
         cur_separator: Optional[QTreeWidgetItem] = None
         for i, mod in enumerate(instance.loadorder):
@@ -206,6 +237,8 @@ class ModlistWidget(QWidget):
                     else:
                         self.__tree_widget.addTopLevelItem(mod_item)
 
+        self.__update_num_label()
+
     @staticmethod
     def _create_separator_item(separator: Mod, index: int) -> QTreeWidgetItem:
         separator_item = QTreeWidgetItem(
@@ -222,7 +255,13 @@ class ModlistWidget(QWidget):
         font.setBold(True)
         font.setItalic(True)
         separator_item.setFont(0, font)
-        separator_item.setFlags(Qt.ItemFlag.ItemIsSelectable)
+        separator_item.setFlags(
+            separator_item.flags() | Qt.ItemFlag.ItemIsUserCheckable
+        )
+        if separator.installed:
+            separator_item.setCheckState(0, Qt.CheckState.Checked)
+        else:
+            separator_item.setCheckState(0, Qt.CheckState.Unchecked)
         separator_item.setToolTip(0, separator_item.text(0))
         separator_item.setDisabled(False)
 
@@ -239,14 +278,15 @@ class ModlistWidget(QWidget):
             ]
         )
         mod_item.setToolTip(0, mod_item.text(0))
-        mod_item.setDisabled(False)
+        mod_item.setDisabled(not mod.installed)
         mod_item.setTextAlignment(1, Qt.AlignmentFlag.AlignCenter)
         mod_item.setTextAlignment(2, Qt.AlignmentFlag.AlignCenter)
         mod_item.setTextAlignment(3, Qt.AlignmentFlag.AlignCenter)
         mod_item.setFlags(mod_item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
-        mod_item.setCheckState(
-            0, Qt.CheckState.Checked if mod.enabled else Qt.CheckState.Unchecked
-        )
+        if mod.installed:
+            mod_item.setCheckState(0, Qt.CheckState.Checked)
+        else:
+            mod_item.setCheckState(0, Qt.CheckState.Unchecked)
 
         return mod_item
 
@@ -264,6 +304,8 @@ class ModlistWidget(QWidget):
         mod_item.setDisabled(False)
         mod_item.setTextAlignment(0, Qt.AlignmentFlag.AlignCenter)
         mod_item.setTextAlignment(2, Qt.AlignmentFlag.AlignCenter)
+        mod_item.setFlags(mod_item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
+        mod_item.setCheckState(0, Qt.CheckState.Checked)
 
         return mod_item
 
@@ -273,15 +315,25 @@ class ModlistWidget(QWidget):
     def collapseAll(self) -> None:
         self.__tree_widget.collapseAll()
 
-    def check_selected(self) -> None:
+    def include_selected(self) -> None:
+        self.__batch_changing = True
+
         for item in self.__tree_widget.selectedItems():
             if Qt.ItemFlag.ItemIsUserCheckable in item.flags():
                 item.setCheckState(0, Qt.CheckState.Checked)
 
-    def uncheck_selected(self) -> None:
+        self.__batch_changing = False
+        self.__update_num_label()
+
+    def exclude_selected(self) -> None:
+        self.__batch_changing = True
+
         for item in self.__tree_widget.selectedItems():
             if Qt.ItemFlag.ItemIsUserCheckable in item.flags():
                 item.setCheckState(0, Qt.CheckState.Unchecked)
+
+        self.__batch_changing = False
+        self.__update_num_label()
 
     def open_modpage(self) -> None:
         current_item: Optional[Mod] = self.get_current_item()
