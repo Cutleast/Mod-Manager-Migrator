@@ -1,5 +1,6 @@
 /data
 /dist
+/experiments
 /qt_lupdate.json
 /src/resources_rc.py
 /.pytest_cache
