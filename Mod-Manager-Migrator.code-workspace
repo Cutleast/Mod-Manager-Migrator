@@ -181,6 +181,7 @@
 		"github-actions.workflows.pinned.workflows": [
 			".github/workflows/lint_and_test.yaml"
 		],
+		"autoDocstring.startOnNewLine": true
 	},
 	"launch": {
 		"version": "0.2.0",
