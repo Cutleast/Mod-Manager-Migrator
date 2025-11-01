@@ -574,7 +574,6 @@ class ModManager[I: InstanceInfo](QObject):
         self,
         migrated_instance: Instance,
         migrated_instance_data: I,
-        order_matters: bool,
         activate_new_instance: bool,
     ) -> None:
         """
@@ -583,8 +582,6 @@ class ModManager[I: InstanceInfo](QObject):
         Args:
             migrated_instance (Instance): The migrated instance.
             migrated_instance_data (I): The data of the migrated instance.
-            order_matters (bool):
-                Whether the mods of the source instance have a fixed order.
             activate_new_instance (bool):
                 Whether to activate the new instance (if supported by the mod manager).
         """

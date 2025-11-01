@@ -889,7 +889,6 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
         self,
         migrated_instance: Instance,
         migrated_instance_data: MO2InstanceInfo,
-        order_matters: bool,
         activate_new_instance: bool,
     ) -> None:
         modlist_txt_path: Path = (
@@ -897,9 +896,7 @@ class ModOrganizer(ModManager[MO2InstanceInfo]):
             / migrated_instance_data.profile
             / "modlist.txt"
         )
-        self.__dump_modlist_txt(
-            modlist_txt_path, migrated_instance.get_loadorder(order_matters)
-        )
+        self.__dump_modlist_txt(modlist_txt_path, migrated_instance.get_loadorder())
         self.log.debug(f"Dumped modlist to {str(modlist_txt_path)!r}.")
 
         settings_ini_path: Path = (

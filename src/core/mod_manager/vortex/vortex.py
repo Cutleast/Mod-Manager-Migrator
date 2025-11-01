@@ -811,7 +811,6 @@ class Vortex(ModManager[ProfileInfo]):
         self,
         migrated_instance: Instance,
         migrated_instance_data: ProfileInfo,
-        order_matters: bool,
         activate_new_instance: bool,
     ) -> None:
         profile_data: dict[str, Any] = self.__level_db.load(
