@@ -324,9 +324,7 @@ class TestModOrganizer(BaseTest):
                 replace=True,
                 blacklist=FileBlacklist.get_files(),
             )
-        mo2.finalize_migration(
-            dst_instance, instance_data, order_matters=True, activate_new_instance=True
-        )
+        mo2.finalize_migration(dst_instance, instance_data, activate_new_instance=True)
 
         dst_instance = mo2.load_instance(
             instance_data, app_config.modname_limit, FileBlacklist.get_files()
@@ -386,9 +384,7 @@ class TestModOrganizer(BaseTest):
             replace=True,
             blacklist=FileBlacklist.get_files(),
         )
-        mo2.finalize_migration(
-            dst_instance, instance_data, order_matters=True, activate_new_instance=True
-        )
+        mo2.finalize_migration(dst_instance, instance_data, activate_new_instance=True)
 
         dst_instance = mo2.load_instance(
             instance_data, app_config.modname_limit, FileBlacklist.get_files()
@@ -437,9 +433,7 @@ class TestModOrganizer(BaseTest):
             replace=True,
             blacklist=FileBlacklist.get_files(),
         )
-        mo2.finalize_migration(
-            dst_instance, instance_data, order_matters=True, activate_new_instance=True
-        )
+        mo2.finalize_migration(dst_instance, instance_data, activate_new_instance=True)
 
         dst_instance = mo2.load_instance(
             instance_data, app_config.modname_limit, FileBlacklist.get_files()
