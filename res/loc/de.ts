@@ -10,18 +10,18 @@
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="src/ui/widgets/about_dialog.py" line="35"/>
+        <location filename="src/ui/widgets/about_dialog.py" line="24"/>
         <source>Created by Cutleast (&lt;a href=&apos;https://www.nexusmods.com/users/65733731&apos;&gt;NexusMods&lt;/a&gt; | &lt;a href=&apos;https://github.com/cutleast&apos;&gt;GitHub&lt;/a&gt; | &lt;a href=&apos;https://ko-fi.com/cutleast&apos;&gt;Ko-Fi&lt;/a&gt;)&lt;br&gt;&lt;br&gt;Icon by Wuerfelhusten (&lt;a href=&apos;https://www.nexusmods.com/users/122160268&apos;&gt;NexusMods&lt;/a&gt;)&lt;br&gt;&lt;br&gt;Licensed under Attribution-NonCommercial-NoDerivatives 4.0 International</source>
         <translation>Erstellt von Cutleast (&lt;a href=&apos;https://www.nexusmods.com/users/65733731&apos;&gt;NexusMods&lt;/a&gt; | &lt;a href=&apos;https://github.com/cutleast&apos;&gt;GitHub&lt;/a&gt; | &lt;a href=&apos;https://ko-fi.com/cutleast&apos;&gt;Ko-Fi&lt;/a&gt;)&lt;br&gt;&lt;br&gt;Logo von Wuerfelhusten (&lt;a href=&apos;https://www.nexusmods.com/users/122160268&apos;&gt;NexusMods&lt;/a&gt;)&lt;br&gt;&lt;br&gt;Lizensiert unter Attribution-NonCommercial-NoDerivatives 4.0 International</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/about_dialog.py" line="95"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/about_dialog.py" line="91"/>
         <source>Created by Cutleast (&lt;a href=&apos;https://www.nexusmods.com/users/65733731&apos;&gt;NexusMods&lt;/a&gt; | &lt;a href=&apos;https://github.com/cutleast&apos;&gt;GitHub&lt;/a&gt; | &lt;a href=&apos;https://ko-fi.com/cutleast&apos;&gt;Ko-Fi&lt;/a&gt;)&lt;br&gt;&lt;br&gt;Licensed under </source>
         <translation>Erstellt von Cutleast (&lt;a href=&apos;https://www.nexusmods.com/users/65733731&apos;&gt;NexusMods&lt;/a&gt; | &lt;a href=&apos;https://github.com/cutleast&apos;&gt;GitHub&lt;/a&gt; | &lt;a href=&apos;https://ko-fi.com/cutleast&apos;&gt;Ko-Fi&lt;/a&gt;)&lt;br&gt;&lt;br&gt;Lizensiert unter </translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/about_dialog.py" line="99"/>
-        <location filename="src/ui/widgets/about_dialog.py" line="38"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/about_dialog.py" line="98"/>
+        <location filename="src/ui/widgets/about_dialog.py" line="35"/>
         <source>&lt;&lt;Put your translator information here.&gt;&gt;</source>
         <translation>&lt;&lt;Put your translator information here.&gt;&gt;</translation>
     </message>
@@ -70,7 +70,7 @@
         <translation>Cache leeren</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/settings/app_settings.py" line="158"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/settings/app_settings.py" line="157"/>
         <source>Accent color must be a valid hexadecimal color code!</source>
         <translation>Die Akzentfarbe muss ein gültiger hexadezimaler Farbcode sein!</translation>
     </message>
@@ -172,27 +172,27 @@
 <context>
     <name>LoadingDialog</name>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="267"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="268"/>
         <source>Elapsed time:</source>
         <translation>Vergangene Zeit:</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="355"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="357"/>
         <source>Cancel?</source>
         <translation>Abbrechen?</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="361"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="360"/>
         <source>Are you sure you want to cancel? This may have unwanted consequences, depending on the current running process!</source>
         <translation>Bist du sicher, dass du abbrechen möchtest? Je nach laufendem Vorgang kann das unbeabsichtigte Konsequenzen haben!</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="366"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="368"/>
         <source>No</source>
         <translation>Nein</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="367"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="369"/>
         <source>Yes</source>
         <translation>Ja</translation>
     </message>
@@ -213,7 +213,7 @@
         <translation>Zielinstanz existiert bereits!</translation>
     </message>
     <message>
-        <location filename="src/ui/main_widget.py" line="103"/>
+        <location filename="src/ui/main_widget.py" line="100"/>
         <source>Are you sure you want to migrate to the existing destination instance?
 This feature is considered experimental and could cause issues.
 Continue at your own risk!</source>
@@ -227,7 +227,7 @@ Fortfahren auf eigene Gefahr!</translation>
         <translation>Migration mit Fehlern abgeschlossen!</translation>
     </message>
     <message>
-        <location filename="src/ui/main_widget.py" line="140"/>
+        <location filename="src/ui/main_widget.py" line="138"/>
         <source>Migration completed with errors! Click &apos;Ok&apos; to open the report.
 
 </source>
@@ -241,7 +241,7 @@ Fortfahren auf eigene Gefahr!</translation>
         <translation>Migration abgeschlossen</translation>
     </message>
     <message>
-        <location filename="src/ui/main_widget.py" line="152"/>
+        <location filename="src/ui/main_widget.py" line="151"/>
         <source>Migration completed successfully!
 
 </source>
@@ -273,7 +273,7 @@ Fortfahren auf eigene Gefahr!</translation>
         <translation>Pfadlängenbegrenzung ist aktiviert</translation>
     </message>
     <message>
-        <location filename="src/ui/main_window.py" line="124"/>
+        <location filename="src/ui/main_window.py" line="120"/>
         <source>The NTFS path length limit is enabled and paths longer than 255 characters will cause issues. Would you like to disable it (admin rights may be required)? A reboot is required for this to take effect.</source>
         <translation>Die NTFS Pfadlängenbegrenzung ist aktiviert und Pfade mit mehr als 255 Zeichen werden Fehler verursachen. Soll die Begrenzung deaktiviert werden (Administratorrechte könnten erforderlich sein)? Ein anschließender Neustart des Computers ist notwendig, damit die Begrenzung vollständig deaktiviert ist.</translation>
     </message>
@@ -311,7 +311,7 @@ Fortfahren auf eigene Gefahr!</translation>
         <translation>Windows-Pfadbegrenzung beheben...</translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="86"/>
+        <location filename="src/ui/menubar.py" line="85"/>
         <source>Get support on our Discord server...</source>
         <translation>Erhalte Unterstützung auf unserem Discord Server...</translation>
     </message>
@@ -377,7 +377,7 @@ Fortfahren auf eigene Gefahr!</translation>
         <translation>Mods werden migriert...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="201"/>
+        <location filename="src/core/migrator/migrator.py" line="200"/>
         <source>Migrating tools...</source>
         <translation>Tools werden migriert...</translation>
     </message>
@@ -421,7 +421,7 @@ Fortfahren auf eigene Gefahr!</translation>
         <translation>Zielinstanz konfigurieren:</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="205"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="204"/>
         <source>Create new instance</source>
         <translation>Neue Instanz erstellen</translation>
     </message>
@@ -488,12 +488,12 @@ Fortfahren auf eigene Gefahr!</translation>
         <translation>Einzelkonflikte werden verarbeitet...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="632"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="631"/>
         <source>Downloading and installing ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen und installiert...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="652"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="651"/>
         <source>Downloading ModOrganizer...</source>
         <translation>ModOrganizer wird heruntergeladen...</translation>
     </message>
@@ -503,21 +503,21 @@ Fortfahren auf eigene Gefahr!</translation>
         <translation>Archiv wird entpackt...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1066"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1057"/>
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of your MO2 installation if not already installed.</source>
         <translation>Die Nutzung von Root Builder wurde aktiviert.
 Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von Nexus Mods heruntergeladen und in den &quot;plugins&quot;-Ordner deiner MO2 Installation entpackt werden, wenn nicht bereits installiert.</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1076"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1068"/>
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of the new MO2 installation.</source>
         <translation>Die Nutzung von Root Builder wurde aktiviert.
 Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von Nexus Mods heruntergeladen und in den &quot;plugins&quot;-Ordner der neuen MO2 Installation entpackt werden.</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1084"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1078"/>
         <source>At least one global instance was detected.
 Global instances cause issues with portable instances and it is recommended to delete (or rename) the following folder:
 {0}</source>
@@ -534,7 +534,7 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
         <translation>Name der Instanz:</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="61"/>
+        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="60"/>
         <source>eg. My Migrated Instance</source>
         <translation>z.B. Meine Migrierte Instanz</translation>
     </message>
@@ -559,7 +559,7 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
         <translation>Pfad zur Instanz:</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="89"/>
+        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="88"/>
         <source>eg. C:\Modding\My Migrated Instance</source>
         <translation>z.B. C:\Modding\Meine Migrierte Instanz</translation>
     </message>
@@ -569,7 +569,7 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
         <translation>Pfad zu den Mods:</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="102"/>
+        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="101"/>
         <source>eg. C:\Modding\My Migrated Instance\mods</source>
         <translation>z.B. C:\Modding\Meine Migrierte Instanz\mods</translation>
     </message>
@@ -584,7 +584,7 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
         <translation>Verwende Root Builder Plugin:</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="124"/>
+        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="121"/>
         <source>If enabled, mod files for the game&apos;s root folder will be moved to a &quot;Root&quot; subfolder in their mod instead of copied to the game&apos;s root folder.</source>
         <translation>Wenn aktiviert, werden Moddateien für das Rootverzeichnis des Spiels in einen &quot;Root&quot;-Unterordner innerhalb ihrer Mod verschoben, statt in das Spielverzeichnis kopiert zu werden.</translation>
     </message>
@@ -676,7 +676,7 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
         <translation>Priorität</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="136"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="133"/>
         <source>The checkboxes indicate whether a mod is migrated to the destination or not.</source>
         <translation>Die Häkchen markieren die Mods, die zum Ziel migriert werden.</translation>
     </message>
@@ -709,19 +709,47 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
         <translation>Oben Links</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/toast.py" line="76"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/toast.py" line="74"/>
         <source>Top Right</source>
         <translation>Oben Rechts</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/toast.py" line="79"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/toast.py" line="77"/>
         <source>Bottom Left</source>
         <translation>Unten Links</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/toast.py" line="82"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/toast.py" line="80"/>
         <source>Bottom Right</source>
         <translation>Unten Rechts</translation>
+    </message>
+</context>
+<context>
+    <name>ProgressDialog</name>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="298"/>
+        <source>Elapsed time:</source>
+        <translation>Vergangene Zeit:</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="351"/>
+        <source>Cancel?</source>
+        <translation>Abbrechen?</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="354"/>
+        <source>Are you sure you want to cancel? This may have unwanted consequences, depending on the current running process!</source>
+        <translation>Bist du sicher, dass du abbrechen möchtest? Je nach laufendem Vorgang kann das unbeabsichtigte Konsequenzen haben!</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="362"/>
+        <source>No</source>
+        <translation>Nein</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="363"/>
+        <source>Yes</source>
+        <translation>Ja</translation>
     </message>
 </context>
 <context>
@@ -747,7 +775,7 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
         <translation>Einstellungen</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_dialog.py" line="78"/>
+        <location filename="src/ui/settings/settings_dialog.py" line="77"/>
         <source>Settings marked with * require a restart to take effect.</source>
         <translation>Mit * markierte Einstellungen erfordern einen Neustart, um wirksam zu werden.</translation>
     </message>
@@ -767,7 +795,7 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
         <translation>Neustart erforderlich</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_dialog.py" line="121"/>
+        <location filename="src/ui/settings/settings_dialog.py" line="119"/>
         <source>The app must be restarted for the changes to take effect! Restart now?</source>
         <translation>Die App muss neugestartet werden, damit die Änderungen wirksam werden! Jetzt neustarten?</translation>
     </message>
@@ -805,17 +833,17 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
         <translation>Was sind Hardlinks?</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="112"/>
+        <location filename="src/ui/settings/settings_widget.py" line="111"/>
         <source>Replace existing files when merging instances:</source>
         <translation>Bestehende Dateien beim Zusammenführen von Instanzen ersetzen:</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="124"/>
+        <location filename="src/ui/settings/settings_widget.py" line="121"/>
         <source>Activate destination instance after migration if supported by the destination mod manager:</source>
         <translation>Zielinstanz nach der Migration, wenn vom Ziel-Mod Manager unterstützt, aktivieren:</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="136"/>
+        <location filename="src/ui/settings/settings_widget.py" line="134"/>
         <source>Character limit for mod names (strongly recommended when migrating to MO2):</source>
         <translation>Zeichenbegrenzung für Modnamen (dringend empfohlen, wenn zu MO2 migriert wird):</translation>
     </message>
@@ -930,12 +958,12 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
         <translation>Ein Update ist zum Herunterladen verfügbar!</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/updater_dialog.py" line="43"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/updater_dialog.py" line="42"/>
         <source>Installed version</source>
         <translation>Installierte Version</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/updater_dialog.py" line="46"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/updater_dialog.py" line="45"/>
         <source>Latest version</source>
         <translation>Neueste Version</translation>
     </message>
@@ -950,7 +978,7 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
         <translation>Update ignorieren</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/updater_dialog.py" line="78"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/updater_dialog.py" line="77"/>
         <source>Download Update</source>
         <translation>Update herunterladen</translation>
     </message>
@@ -982,7 +1010,7 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
         <translation>Tools werden von Vortex geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="856"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="850"/>
         <source>Vortex is currently deployed to the game folder. It is strongly recommended to purge the game directory before using the migrated instance.</source>
         <translation>Vortex ist zurzeit in das Spielverzeichnis deployed. Es wird empfohlen, das Spielverzeichnis vor der Nutzung der migrierten Instanz zu säubern.</translation>
     </message>
@@ -1012,46 +1040,46 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
 <context>
     <name>exceptions</name>
     <message>
-        <location filename="src/core/mod_manager/exceptions.py" line="22"/>
+        <location filename="src/core/mod_manager/exceptions.py" line="19"/>
         <source>A mod manager error occured!</source>
         <translation>Ein Mod Manager-Fehler ist aufgetreten!</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/exceptions.py" line="37"/>
+        <location filename="src/core/mod_manager/exceptions.py" line="32"/>
         <source>The mod instance {0} could not be found!</source>
         <translation>Die Modinstanz {0} konnte nicht gefunden werden!</translation>
     </message>
     <message>
-        <location filename="src/core/utilities/exceptions.py" line="67"/>
+        <location filename="src/core/utilities/exceptions.py" line="61"/>
         <source>Not enough space ({2}) on the destination disk ({0})!
 Required space: {1}</source>
         <translation>Nicht genug Speicher ({2}) auf dem Zieldatenträger ({0}) vorhanden!
 Benötigter Speicherplatz: {1}</translation>
     </message>
     <message>
-        <location filename="src/core/utilities/exceptions.py" line="82"/>
+        <location filename="src/core/utilities/exceptions.py" line="77"/>
         <source>Source and destination must not be the same!</source>
         <translation>Quelle und Ziel dürfen nicht übereinstimmen!</translation>
     </message>
     <message>
-        <location filename="src/core/utilities/exceptions.py" line="95"/>
+        <location filename="src/core/utilities/exceptions.py" line="90"/>
         <source>Source and destination have the same mods location but different mod managers!
 Choose another location for the mods folder and try again.</source>
         <translation>Quelle und Ziel haben denselben Speicherort für Mods, aber unterschiedliche Mod-Manager!
 Bitte einen anderen Speicherort für den Mods-Ordner wählen und erneut versuchen.</translation>
     </message>
     <message>
-        <location filename="src/core/game/exceptions.py" line="23"/>
+        <location filename="src/core/game/exceptions.py" line="19"/>
         <source>The installation folder for the selected game could not be found!</source>
         <translation>Das Installationsverzeichnis des ausgewählten Spiels konnte nicht gefunden werden!</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/exceptions.py" line="25"/>
+        <location filename="src/core/mod_manager/vortex/exceptions.py" line="19"/>
         <source>Vortex is running and blocking its database. Close Vortex and try again!</source>
         <translation>Vortex ist offen und blockiert seine Datenbank. Vortex schließen und erneut versuchen!</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/exceptions.py" line="41"/>
+        <location filename="src/core/mod_manager/vortex/exceptions.py" line="33"/>
         <source>Migration cannot continue while Vortex is deployed!
 Open Vortex and purge the game directory.
 Then click &apos;Continue&apos; to complete the migration process.</source>
@@ -1060,7 +1088,7 @@ Bitte Vortex öffnen und das Spielverzeichnis bereinigen.
 Dann auf &quot;Fortfahren&quot; klicken, um die Migration abzuschließen.</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/exceptions.py" line="56"/>
+        <location filename="src/core/mod_manager/vortex/exceptions.py" line="48"/>
         <source>Vortex is not installed or fully setup.
 Follow these steps and try again:
 1. Install Vortex
@@ -1073,31 +1101,36 @@ Bitte diesen Schritten folgen und erneut versuchen:
 3. Profilverwaltung in den Vortex Einstellungen aktivieren.</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/exceptions.py" line="70"/>
+        <location filename="src/core/mod_manager/vortex/exceptions.py" line="64"/>
         <source>The overwrite folder of MO2 is not supported by Vortex!
 Please create a separate mod from the overwrite folder and restart the migration.</source>
         <translation>Der Overwrite-Ordner von MO2 wird nicht von Vortex unterstützt!
 Bitte eine separate Mod aus dem Overwrite-Ordner erstellen und die Migration erneut ausführen.</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/exceptions.py" line="28"/>
+        <location filename="src/core/mod_manager/modorganizer/exceptions.py" line="20"/>
         <source>Invalid global instance path! The path must not be outside of the %LOCALAPPDATA%\ModOrganizer folder when choosing the global instance type!</source>
         <translation>Ungültiger Pfad für eine global Instanz! Der Pfad darf nicht außerhalb von %LOCALAPPDATA%\ModOrganizer liegen, wenn &quot;Global&quot; als Instanztyp gewählt wird!</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/exceptions.py" line="40"/>
+        <location filename="src/core/mod_manager/modorganizer/exceptions.py" line="36"/>
         <source>Cannot install MO2 when a global instance is selected as destination!</source>
         <translation>MO2 kann nicht installiert werden, wenn eine globale Instanz als Ziel gewählt ist!</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/core/utilities/exceptions.py" line="92"/>
+        <location filename="core-lib/src/cutleast_core_lib/core/utilities/exceptions.py" line="89"/>
         <source>Request to &apos;{0}&apos; failed!</source>
         <translation>Anfrage an &apos;{0}&apos; fehlgeschlagen!</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/core/utilities/exceptions.py" line="105"/>
+        <location filename="core-lib/src/cutleast_core_lib/core/utilities/exceptions.py" line="102"/>
         <source>Request to &apos;{0}&apos; failed with status code {1}!</source>
         <translation>Anfrage an &apos;{0}&apos; mit Status Code {1} fehlgeschlagen!</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/core/utilities/exceptions.py" line="115"/>
+        <source>The process is incomplete and has no result!</source>
+        <translation>Der Vorgang ist unvollständig und hat kein Ergebnis!</translation>
     </message>
 </context>
 </TS>

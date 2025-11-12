@@ -10,18 +10,18 @@
         <translation>Sobre</translation>
     </message>
     <message>
-        <location filename="src/ui/widgets/about_dialog.py" line="35"/>
+        <location filename="src/ui/widgets/about_dialog.py" line="24"/>
         <source>Created by Cutleast (&lt;a href=&apos;https://www.nexusmods.com/users/65733731&apos;&gt;NexusMods&lt;/a&gt; | &lt;a href=&apos;https://github.com/cutleast&apos;&gt;GitHub&lt;/a&gt; | &lt;a href=&apos;https://ko-fi.com/cutleast&apos;&gt;Ko-Fi&lt;/a&gt;)&lt;br&gt;&lt;br&gt;Icon by Wuerfelhusten (&lt;a href=&apos;https://www.nexusmods.com/users/122160268&apos;&gt;NexusMods&lt;/a&gt;)&lt;br&gt;&lt;br&gt;Licensed under Attribution-NonCommercial-NoDerivatives 4.0 International</source>
         <translation>Criado por Cutleast (&lt;a href=&apos;https://www.nexusmods.com/users/65733731&apos;&gt;NexusMods&lt;/a&gt; | &lt;a href=&apos;https://github.com/cutleast&apos;&gt;GitHub&lt;/a&gt; | &lt;a href=&apos;https://ko-fi.com/cutleast&apos;&gt;Ko-Fi&lt;/a&gt;)&lt;br&gt;&lt;br&gt;Icon by Wuerfelhusten (&lt;a href=&apos;https://www.nexusmods.com/users/122160268&apos;&gt;NexusMods&lt;/a&gt;)&lt;br&gt;&lt;br&gt;Licensed under Attribution-NonCommercial-NoDerivatives 4.0 International</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/about_dialog.py" line="95"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/about_dialog.py" line="91"/>
         <source>Created by Cutleast (&lt;a href=&apos;https://www.nexusmods.com/users/65733731&apos;&gt;NexusMods&lt;/a&gt; | &lt;a href=&apos;https://github.com/cutleast&apos;&gt;GitHub&lt;/a&gt; | &lt;a href=&apos;https://ko-fi.com/cutleast&apos;&gt;Ko-Fi&lt;/a&gt;)&lt;br&gt;&lt;br&gt;Licensed under </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/about_dialog.py" line="99"/>
-        <location filename="src/ui/widgets/about_dialog.py" line="38"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/about_dialog.py" line="98"/>
+        <location filename="src/ui/widgets/about_dialog.py" line="35"/>
         <source>&lt;&lt;Put your translator information here.&gt;&gt;</source>
         <translation>Tradução para Português Brasileiro por Kyo--</translation>
     </message>
@@ -70,7 +70,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/settings/app_settings.py" line="158"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/settings/app_settings.py" line="157"/>
         <source>Accent color must be a valid hexadecimal color code!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -172,27 +172,27 @@
 <context>
     <name>LoadingDialog</name>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="267"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="268"/>
         <source>Elapsed time:</source>
         <translation>Tempo decorrido:</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="355"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="357"/>
         <source>Cancel?</source>
         <translation>Cancelar?</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="361"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="360"/>
         <source>Are you sure you want to cancel? This may have unwanted consequences, depending on the current running process!</source>
         <translation>Deseja mesmo cancelar? Isso pode ter consequências indesejadas, dependendo do processo em execução no momento!</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="366"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="368"/>
         <source>No</source>
         <translation>Não</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="367"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/loading_dialog.py" line="369"/>
         <source>Yes</source>
         <translation>Sim</translation>
     </message>
@@ -213,7 +213,7 @@
         <translation>O destino da instância já existe!</translation>
     </message>
     <message>
-        <location filename="src/ui/main_widget.py" line="103"/>
+        <location filename="src/ui/main_widget.py" line="100"/>
         <source>Are you sure you want to migrate to the existing destination instance?
 This feature is considered experimental and could cause issues.
 Continue at your own risk!</source>
@@ -225,7 +225,7 @@ Continue at your own risk!</source>
         <translation>Migração finalizou com erros!</translation>
     </message>
     <message>
-        <location filename="src/ui/main_widget.py" line="140"/>
+        <location filename="src/ui/main_widget.py" line="138"/>
         <source>Migration completed with errors! Click &apos;Ok&apos; to open the report.
 
 </source>
@@ -239,7 +239,7 @@ Continue at your own risk!</source>
         <translation>Migração Finalizada</translation>
     </message>
     <message>
-        <location filename="src/ui/main_widget.py" line="152"/>
+        <location filename="src/ui/main_widget.py" line="151"/>
         <source>Migration completed successfully!
 
 </source>
@@ -271,7 +271,7 @@ Continue at your own risk!</source>
         <translation type="unfinished">Limite de Caminho Ativado</translation>
     </message>
     <message>
-        <location filename="src/ui/main_window.py" line="124"/>
+        <location filename="src/ui/main_window.py" line="120"/>
         <source>The NTFS path length limit is enabled and paths longer than 255 characters will cause issues. Would you like to disable it (admin rights may be required)? A reboot is required for this to take effect.</source>
         <translation type="unfinished">O limite de comprimento de caminho do NTFS está ativado e caminhos com mais de 255 caracteres causarão problemas. Deseja desativá-lo? (pode ser necessário acesso de administrador). É necessário reiniciar o sistema para que a mudança tenha efeito.</translation>
     </message>
@@ -309,7 +309,7 @@ Continue at your own risk!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/ui/menubar.py" line="86"/>
+        <location filename="src/ui/menubar.py" line="85"/>
         <source>Get support on our Discord server...</source>
         <translation>Obtenha suporte no nosso servidor do Discord...</translation>
     </message>
@@ -375,7 +375,7 @@ Continue at your own risk!</source>
         <translation>Migrando mods...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="201"/>
+        <location filename="src/core/migrator/migrator.py" line="200"/>
         <source>Migrating tools...</source>
         <translation>Migrando ferramentas...</translation>
     </message>
@@ -419,7 +419,7 @@ Continue at your own risk!</source>
         <translation>Confihurar o destino da instância:</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="205"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="204"/>
         <source>Create new instance</source>
         <translation>Criar nova instância</translation>
     </message>
@@ -486,12 +486,12 @@ Continue at your own risk!</source>
         <translation>Processando conflitos de arquivo único...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="632"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="631"/>
         <source>Downloading and installing ModOrganizer...</source>
         <translation>Baixando e instalando ModOrganizer...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="652"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="651"/>
         <source>Downloading ModOrganizer...</source>
         <translation>Baixando ModOrganizer...</translation>
     </message>
@@ -501,21 +501,21 @@ Continue at your own risk!</source>
         <translation>Extraindo arquivo...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1066"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1057"/>
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of your MO2 installation if not already installed.</source>
         <translation>O uso do root builder foi ativado.
 Para implantar corretamente os arquivos root, você deve baixar e extrair o plugin root builder do Nexus Mods para a pasta &quot;plugins&quot; da sua instalação do MO2, caso ainda não esteja instalado.</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1076"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1068"/>
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of the new MO2 installation.</source>
         <translation>O uso do root builder foi ativado.
 Para implantar corretamente os arquivos root, você deve baixar e extrair o plugin root builder do Nexus Mods para a pasta &quot;plugins&quot; da nova instalação do MO2.</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1084"/>
+        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1078"/>
         <source>At least one global instance was detected.
 Global instances cause issues with portable instances and it is recommended to delete (or rename) the following folder:
 {0}</source>
@@ -532,7 +532,7 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
         <translation>Nome da instância:</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="61"/>
+        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="60"/>
         <source>eg. My Migrated Instance</source>
         <translation>ex. Minha Migração de Instância</translation>
     </message>
@@ -557,7 +557,7 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
         <translation>Caminho da instância:</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="89"/>
+        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="88"/>
         <source>eg. C:\Modding\My Migrated Instance</source>
         <translation>ex. C:\Modding\Minha Instância Migrada</translation>
     </message>
@@ -567,7 +567,7 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
         <translation>Pasta dos Mods:</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="102"/>
+        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="101"/>
         <source>eg. C:\Modding\My Migrated Instance\mods</source>
         <translation>ex. C:\Modding\Minha Instância Migrada\mods</translation>
     </message>
@@ -582,7 +582,7 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
         <translation>Usar plugin Root Builder:</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="124"/>
+        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="121"/>
         <source>If enabled, mod files for the game&apos;s root folder will be moved to a &quot;Root&quot; subfolder in their mod instead of copied to the game&apos;s root folder.</source>
         <translation>Se ativado, os arquivos de mod destinados à pasta raiz do jogo serão movidos para uma subpasta &quot;Root&quot; dentro do mod, em vez de serem copiados diretamente para a pasta raiz do jogo.</translation>
     </message>
@@ -674,7 +674,7 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
         <translation>Prioridade</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="136"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="133"/>
         <source>The checkboxes indicate whether a mod is migrated to the destination or not.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -707,19 +707,47 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/toast.py" line="76"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/toast.py" line="74"/>
         <source>Top Right</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/toast.py" line="79"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/toast.py" line="77"/>
         <source>Bottom Left</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/toast.py" line="82"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/toast.py" line="80"/>
         <source>Bottom Right</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ProgressDialog</name>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="298"/>
+        <source>Elapsed time:</source>
+        <translation type="unfinished">Tempo decorrido:</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="351"/>
+        <source>Cancel?</source>
+        <translation type="unfinished">Cancelar?</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="354"/>
+        <source>Are you sure you want to cancel? This may have unwanted consequences, depending on the current running process!</source>
+        <translation type="unfinished">Deseja mesmo cancelar? Isso pode ter consequências indesejadas, dependendo do processo em execução no momento!</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="362"/>
+        <source>No</source>
+        <translation type="unfinished">Não</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="363"/>
+        <source>Yes</source>
+        <translation type="unfinished">Sim</translation>
     </message>
 </context>
 <context>
@@ -745,7 +773,7 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
         <translation>Configs</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_dialog.py" line="78"/>
+        <location filename="src/ui/settings/settings_dialog.py" line="77"/>
         <source>Settings marked with * require a restart to take effect.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -765,7 +793,7 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
         <translation>Requer reinicialização</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_dialog.py" line="121"/>
+        <location filename="src/ui/settings/settings_dialog.py" line="119"/>
         <source>The app must be restarted for the changes to take effect! Restart now?</source>
         <translation>O aplicativo deve ser reiniciado para que as alterações tenham efeito! Reiniciar agora?</translation>
     </message>
@@ -803,17 +831,17 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
         <translation>O que são hardlinks?</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="112"/>
+        <location filename="src/ui/settings/settings_widget.py" line="111"/>
         <source>Replace existing files when merging instances:</source>
         <translation>Substituir arquivos existentes ao mesclar instâncias:</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="124"/>
+        <location filename="src/ui/settings/settings_widget.py" line="121"/>
         <source>Activate destination instance after migration if supported by the destination mod manager:</source>
         <translation>Ativar a instância de destino após a migração, se for compatível com o gerenciador de mods de destino:</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="136"/>
+        <location filename="src/ui/settings/settings_widget.py" line="134"/>
         <source>Character limit for mod names (strongly recommended when migrating to MO2):</source>
         <translation>Limite de caracteres para nomes de mods (altamente recomendado ao migrar para o MO2):</translation>
     </message>
@@ -928,12 +956,12 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
         <translation>Uma atualização está disponível para baixar!</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/updater_dialog.py" line="43"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/updater_dialog.py" line="42"/>
         <source>Installed version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/updater_dialog.py" line="46"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/updater_dialog.py" line="45"/>
         <source>Latest version</source>
         <translation type="unfinished"></translation>
     </message>
@@ -948,7 +976,7 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
         <translation>Ignorar Atualização</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/updater_dialog.py" line="78"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/updater_dialog.py" line="77"/>
         <source>Download Update</source>
         <translation>Baixar Atualização</translation>
     </message>
@@ -980,7 +1008,7 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
         <translation>Carregando ferramentas do Vortex...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="856"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="850"/>
         <source>Vortex is currently deployed to the game folder. It is strongly recommended to purge the game directory before using the migrated instance.</source>
         <translation>O Vortex está atualmente instalado na pasta do jogo. É altamente recomendável limpar o diretório do jogo antes de usar a instância migrada.</translation>
     </message>
@@ -1010,37 +1038,37 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
 <context>
     <name>exceptions</name>
     <message>
-        <location filename="src/core/game/exceptions.py" line="23"/>
+        <location filename="src/core/game/exceptions.py" line="19"/>
         <source>The installation folder for the selected game could not be found!</source>
         <translation>A pasta de instalação do jogo selecionado não pôde ser localizada!</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/exceptions.py" line="22"/>
+        <location filename="src/core/mod_manager/exceptions.py" line="19"/>
         <source>A mod manager error occured!</source>
         <translation>Ocorreu um erro no gerenciador de mods!</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/exceptions.py" line="37"/>
+        <location filename="src/core/mod_manager/exceptions.py" line="32"/>
         <source>The mod instance {0} could not be found!</source>
         <translation>A instância de mod {0} não pôde ser localizada!</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/exceptions.py" line="28"/>
+        <location filename="src/core/mod_manager/modorganizer/exceptions.py" line="20"/>
         <source>Invalid global instance path! The path must not be outside of the %LOCALAPPDATA%\ModOrganizer folder when choosing the global instance type!</source>
         <translation>Caminho de instância global inválido! O caminho não pode estar fora da pasta %LOCALAPPDATA%\ModOrganizer ao escolher o tipo de instância global!</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/exceptions.py" line="40"/>
+        <location filename="src/core/mod_manager/modorganizer/exceptions.py" line="36"/>
         <source>Cannot install MO2 when a global instance is selected as destination!</source>
         <translation>Não é possível instalar o MO2 quando uma instância global está selecionada como destino!</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/exceptions.py" line="25"/>
+        <location filename="src/core/mod_manager/vortex/exceptions.py" line="19"/>
         <source>Vortex is running and blocking its database. Close Vortex and try again!</source>
         <translation>O Vortex está em execução e bloqueando seu banco de dados. Feche o Vortex e tente novamente!</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/exceptions.py" line="41"/>
+        <location filename="src/core/mod_manager/vortex/exceptions.py" line="33"/>
         <source>Migration cannot continue while Vortex is deployed!
 Open Vortex and purge the game directory.
 Then click &apos;Continue&apos; to complete the migration process.</source>
@@ -1049,7 +1077,7 @@ Abra o Vortex e limpe o diretório do jogo.
 Depois clique em &apos;Continuar&apos; para finalizar o processo de migração.</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/exceptions.py" line="56"/>
+        <location filename="src/core/mod_manager/vortex/exceptions.py" line="48"/>
         <source>Vortex is not installed or fully setup.
 Follow these steps and try again:
 1. Install Vortex
@@ -1062,13 +1090,13 @@ Siga estas etapas e tente novamente:
 3. Ative o gerenciamento de perfis nas configurações do Vortex.</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/exceptions.py" line="70"/>
+        <location filename="src/core/mod_manager/vortex/exceptions.py" line="64"/>
         <source>The overwrite folder of MO2 is not supported by Vortex!
 Please create a separate mod from the overwrite folder and restart the migration.</source>
         <translation>A pasta overwrite do MO2 não é compatível com o Vortex!</translation>
     </message>
     <message>
-        <location filename="src/core/utilities/exceptions.py" line="67"/>
+        <location filename="src/core/utilities/exceptions.py" line="61"/>
         <source>Not enough space ({2}) on the destination disk ({0})!
 Required space: {1}</source>
         <translation>Crie um mod separado a partir da pasta overwrite e reinicie a migração.
@@ -1076,24 +1104,29 @@ Espaço insuficiente ({2}) no disco de destino ({0})!
 Espaço necessário: {1}</translation>
     </message>
     <message>
-        <location filename="src/core/utilities/exceptions.py" line="82"/>
+        <location filename="src/core/utilities/exceptions.py" line="77"/>
         <source>Source and destination must not be the same!</source>
         <translation>A origem e o destino não podem ser os mesmos!</translation>
     </message>
     <message>
-        <location filename="src/core/utilities/exceptions.py" line="95"/>
+        <location filename="src/core/utilities/exceptions.py" line="90"/>
         <source>Source and destination have the same mods location but different mod managers!
 Choose another location for the mods folder and try again.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/core/utilities/exceptions.py" line="92"/>
+        <location filename="core-lib/src/cutleast_core_lib/core/utilities/exceptions.py" line="89"/>
         <source>Request to &apos;{0}&apos; failed!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/core/utilities/exceptions.py" line="105"/>
+        <location filename="core-lib/src/cutleast_core_lib/core/utilities/exceptions.py" line="102"/>
         <source>Request to &apos;{0}&apos; failed with status code {1}!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/core/utilities/exceptions.py" line="115"/>
+        <source>The process is incomplete and has no result!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
