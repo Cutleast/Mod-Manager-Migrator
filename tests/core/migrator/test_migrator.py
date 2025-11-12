@@ -31,7 +31,7 @@ from core.utilities.exceptions import (
     SameModsLocationDiffManagerError,
 )
 from core.utilities.filesystem import get_free_disk_space
-from tests.core.mod_manager.test_vortex import TestVortex
+from tests.core.mod_manager.test_vortex import get_staging_folder_stub
 
 
 class TestMigrator(BaseTest):
@@ -543,7 +543,7 @@ class TestMigrator(BaseTest):
         migrator = Migrator()
         dst_path = Path("E:\\Modding\\Test Instance")
         staging_folder: Path = Utils.get_private_method(
-            vortex, "get_staging_folder", TestVortex.get_staging_folder_stub
+            vortex, "get_staging_folder", get_staging_folder_stub
         )(vortex_profile_info.game)
         dst_info = MO2InstanceInfo(
             display_name="Test Instance",
