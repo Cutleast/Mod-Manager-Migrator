@@ -544,17 +544,19 @@ class Vortex(ModManager[ProfileInfo]):
 
         game_id: str = instance_data.game.id.lower()
         staging_folder: Path = self.__get_staging_folder(instance_data.game)
-        mods_data: dict[str, Any] = (
-            self.__level_db.load(f"persistent###mods###{game_id}###")
-            .setdefault("persistence", {})
-            .setdefault("mods", {})
-            .setdefault(game_id, {})
-        )
 
         file_name: str = self.__get_unique_file_name(mod).rsplit(".", 1)[0]
         mod_folder: Path = staging_folder / file_name
+        db_prefix: str = f"persistent###mods###{game_id}###{file_name}###"
+        db_mod_data: dict[str, Any] = (
+            self.__level_db.load(db_prefix)
+            .get("persistent", {})
+            .get("mods", {})
+            .get(game_id, {})
+            .get(file_name, {})
+        )
 
-        if file_name not in mods_data:
+        if not db_mod_data:
             logical_file_name: str = Vortex.get_logical_file_name(
                 self.__get_unique_file_name(mod), mod.metadata.mod_id or 0
             )
@@ -588,7 +590,7 @@ class Vortex(ModManager[ProfileInfo]):
                 "state": "installed",
                 "type": modtype,
             }
-            mods_data[file_name] = moddata
+            db_mod_data = moddata
 
             self._migrate_mod_files(
                 mod,
@@ -602,7 +604,7 @@ class Vortex(ModManager[ProfileInfo]):
         else:
             self.log.info(f"Mod {mod.display_name!r} already installed.")
 
-        rules: list[dict[str, Any]] = mods_data[file_name].get("rules", [])
+        rules: list[dict[str, Any]] = db_mod_data.get("rules", [])
         # Check for rules
         for overwriting_mod in mod.mod_conflicts:
             overwriting_mod_filename: str = self.__get_unique_file_name(
@@ -633,15 +635,15 @@ class Vortex(ModManager[ProfileInfo]):
             )
 
         if rules:
-            mods_data[file_name]["rules"] = rules
+            db_mod_data["rules"] = rules
 
-        self.__level_db.dump(mods_data, prefix=f"persistent###mods###{game_id}###")
+        self.__level_db.dump(db_mod_data, prefix=db_prefix)
 
         # Add mod to profile
         profiles_data: dict[str, Any] = (
             self.__level_db.load("persistent###profiles###")
-            .setdefault("persistent", {})
-            .setdefault("profiles", {})
+            .get("persistent", {})
+            .get("profiles", {})
         )
         profile_mods: dict[str, Any] = profiles_data.setdefault(
             instance_data.id, {}

@@ -129,29 +129,26 @@ class LevelDB:
 
         return parsed
 
-    def dump(self, data: dict, prefix: Optional[str | bytes] = None) -> None:
+    def dump(self, data: dict, prefix: Optional[str] = None) -> None:
         """
         Dumps the given data to the database.
 
         Args:
             data (dict): The data to dump.
-            prefix (str | bytes, optional):
+            prefix (str, optional):
                 The prefix for the flattened keys. Defaults to the database's root.
         """
 
         db_path = self.get_symlink_path()
 
-        flat_dict: dict[str, str] = LevelDB.flatten_nested_dict(data)
-
-        if isinstance(prefix, str):
-            prefix = prefix.encode()
+        flat_dict: dict[str, str] = LevelDB.flatten_nested_dict(data, prefix)
 
         self.log.info(f"Saving keys to {str(db_path)!r}...")
 
         with ldb.DB(str(db_path)) as database:
             with database.write_batch() as batch:
                 for key, value in flat_dict.items():
-                    batch.put(((prefix or b"") + key.encode()), value.encode())
+                    batch.put(key.encode(), value.encode())
 
         self.log.info("Saved keys to database.")
 
@@ -204,7 +201,9 @@ class LevelDB:
         return data
 
     @staticmethod
-    def flatten_nested_dict(nested_dict: dict) -> dict[str, str]:
+    def flatten_nested_dict(
+        nested_dict: dict, prefix: Optional[str] = None
+    ) -> dict[str, str]:
         """
         This function takes a nested dictionary
         and converts it back to a flat dictionary in this format:
@@ -214,6 +213,8 @@ class LevelDB:
 
         Args:
             nested_dict (dict): The nested dictionary to flatten.
+            prefix (str, optional):
+                An optional prefix to add to each key. Defaults to None.
 
         Returns:
             dict[str, str]: The flattened dictionary.
@@ -221,12 +222,14 @@ class LevelDB:
 
         flat_dict: dict[str, str] = {}
 
-        def flatten_dict_helper(dictionary: dict, prefix: str = "") -> None:
+        def flatten_dict_helper(dictionary: dict, _prefix: str = "") -> None:
             for key, value in dictionary.items():
                 if isinstance(value, dict):
-                    flatten_dict_helper(value, prefix + key + "###")
+                    flatten_dict_helper(value, _prefix + key + "###")
                 else:
-                    flat_dict[prefix + key] = json.dumps(value, separators=(",", ":"))
+                    flat_dict[(prefix or "") + _prefix + key] = json.dumps(
+                        value, separators=(",", ":")
+                    )
 
         flatten_dict_helper(nested_dict)
 

@@ -100,6 +100,28 @@ class TestLevelDB(BaseTest):
         # then
         assert result == expected
 
+    def test_flatten_nested_dict_with_prefix(self) -> None:
+        """
+        Tests `core.utilities.leveldb.LevelDB.flatten_nested_dict()` with a prefix.
+        """
+
+        # given
+        data: dict[str, Any] = {
+            "key1": {"subkey1": {"subsubkey1": {"subsubsubkey1": "subsubsubvalue1"}}},
+            "key2": "value2",
+        }
+        prefix = "prefix###"
+        expected: dict[str, str] = {
+            "prefix###key1###subkey1###subsubkey1###subsubsubkey1": '"subsubsubvalue1"',
+            "prefix###key2": '"value2"',
+        }
+
+        # when
+        result: dict[str, str] = LevelDB.flatten_nested_dict(data, prefix=prefix)
+
+        # then
+        assert result == expected
+
     def test_parse_flat_dict(self) -> None:
         """
         Tests `core.utilities.leveldb.LevelDB.parse_flat_dict()`.
