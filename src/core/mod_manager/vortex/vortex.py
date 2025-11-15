@@ -609,12 +609,8 @@ class Vortex(ModManager[ProfileInfo]):
                 overwriting_mod
             ).rsplit(".", 1)[0]
 
-            # Skip mod if both mods already exist in database
-            # since rule is very likely to exist, too
-            # if overwriting_mod_filename in installed_mods:
-            if instance.is_mod_installed(mod) and instance.is_mod_installed(
-                overwriting_mod
-            ):
+            # Check if a rule already exists
+            if overwriting_mod_filename in self.__parse_mod_conflict_rules(rules):
                 continue
 
             # Merge rules
@@ -656,6 +652,39 @@ class Vortex(ModManager[ProfileInfo]):
             new_mod: Mod = Mod.copy(mod)
             new_mod.path = mod_folder
             instance.mods.append(new_mod)
+
+    def __parse_mod_conflict_rules(
+        self, conflict_rules: list[dict[str, Any]]
+    ) -> list[str]:
+        """
+        Parses the conflict rules from a mod from the Vortex database.
+
+        Args:
+            conflict_rules (list[dict[str, Any]]): The conflict rules to parse.
+
+        Returns:
+            list[str]: A list of all mods that are set to overwrite this mod.
+        """
+
+        overwriting_mods: list[str] = []
+        for rule in conflict_rules:
+            reference: dict[str, str] = rule["reference"]
+            ref_modname: Optional[str] = reference.get("id") or reference.get(
+                "fileExpression"
+            )
+
+            if ref_modname is None:
+                self.log.warning(
+                    "Failed to process mod conflict rule: Reference mod name is empty!"
+                )
+                continue
+
+            ruletype: str = rule["type"]
+
+            if ruletype == "before":
+                overwriting_mods.append(ref_modname)
+
+        return overwriting_mods
 
     def __get_staging_folder(self, game: Game) -> Path:
         appdata_path: Path = resolve(Path("%APPDATA%") / "Vortex")

@@ -164,10 +164,10 @@ class TestMigrator(BaseTest):
 
         # then
         self.assert_modlists_equal(
-            migrated_instance.mods,
-            instance.mods,
-            self.__get_file_redirects(migrated_instance.mods, vortex),
-            self.__get_file_redirects(instance.mods, mo2),
+            migrated_instance.loadorder,
+            instance.get_loadorder(False),
+            self.__get_file_redirects(migrated_instance.loadorder, vortex),
+            self.__get_file_redirects(instance.get_loadorder(False), mo2),
             exclude_separators=True,  # Vortex doesn't support separators and ignores them when migrating
             exclude_overwrite=True,  # Vortex doesn't support the overwrite mod type
         )
@@ -291,10 +291,10 @@ class TestMigrator(BaseTest):
 
         # then
         self.assert_modlists_equal(
-            migrated_instance.mods,
+            migrated_instance.loadorder,
             src_instance.loadorder,
-            self.__get_file_redirects(migrated_instance.mods, mo2),
-            self.__get_file_redirects(src_instance.mods, vortex),
+            self.__get_file_redirects(migrated_instance.loadorder, mo2),
+            self.__get_file_redirects(src_instance.loadorder, vortex),
         )
         self.assert_tools_equal(migrated_instance.tools, src_instance.tools)
         assert migrated_instance.game_folder == src_instance.game_folder
