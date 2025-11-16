@@ -47,8 +47,6 @@ class Vortex(ModManager[ProfileInfo]):
     db_path: Path
     __level_db: LevelDB
 
-    __conflict_rules: Optional[dict[Mod, list[dict]]] = None
-
     def __init__(self) -> None:
         super().__init__()
 
@@ -90,7 +88,7 @@ class Vortex(ModManager[ProfileInfo]):
             return []
 
         try:
-            data = self.__level_db.load("persistent###profiles###")
+            data = self.__level_db.get_section("persistent###profiles###")
         except plyvel.IOError as ex:
             raise VortexIsRunningError from ex
 
@@ -179,7 +177,7 @@ class Vortex(ModManager[ProfileInfo]):
 
         game_id: str = game.id.lower()
 
-        profiles_data: dict = self.__level_db.load("persistent###profiles###")
+        profiles_data: dict = self.__level_db.get_section("persistent###profiles###")
         mod_state_data: dict[str, dict] = profiles_data["persistent"]["profiles"][
             profile_id
         ].get("modState", {})
@@ -190,7 +188,9 @@ class Vortex(ModManager[ProfileInfo]):
         #         modnames.append(modname)
         modnames: list[str] = [m for m in mod_state_data]
 
-        mods_data: dict = self.__level_db.load(f"persistent###mods###{game_id}###")
+        mods_data: dict = self.__level_db.get_section(
+            f"persistent###mods###{game_id}###"
+        )
 
         if not mods_data:
             return []
@@ -421,8 +421,8 @@ class Vortex(ModManager[ProfileInfo]):
         mods_by_folders: dict[Path, Mod] = {m.path: m for m in mods}
         game_id: str = instance_data.game.id.lower()
         tools_data: dict[str, Any] = (
-            self.__level_db.load(
-                f"settings###gameMode###discovered###{game_id}###tools"
+            self.__level_db.get_section(
+                f"settings###gameMode###discovered###{game_id}###tools###"
             )
             .get("settings", {})
             .get("gameMode", {})
@@ -500,12 +500,10 @@ class Vortex(ModManager[ProfileInfo]):
             "lastActivated": Vortex.format_unix_timestamp(time.time()),
             "name": profile_name,
         }
-
-        profiles_data: dict = self.__level_db.load("persistent###profiles###")
-        profiles_data.setdefault("persistent", {}).setdefault("profiles", {})[
-            profile_id
-        ] = profile_data
-        self.__level_db.dump(profiles_data)
+        self.__level_db.set_section(
+            f"persistent###profiles###{profile_id}###", profile_data
+        )
+        self.__level_db.save()
 
         # Create profile folder
         app_path: Path = resolve(Path("%APPDATA%") / "Vortex")
@@ -549,7 +547,7 @@ class Vortex(ModManager[ProfileInfo]):
         mod_folder: Path = staging_folder / file_name
         db_prefix: str = f"persistent###mods###{game_id}###{file_name}###"
         db_mod_data: dict[str, Any] = (
-            self.__level_db.load(db_prefix)
+            self.__level_db.get_section(db_prefix)
             .get("persistent", {})
             .get("mods", {})
             .get(game_id, {})
@@ -637,22 +635,23 @@ class Vortex(ModManager[ProfileInfo]):
         if rules:
             db_mod_data["rules"] = rules
 
-        self.__level_db.dump(db_mod_data, prefix=db_prefix)
+        self.__level_db.set_section(db_prefix, db_mod_data)
 
         # Add mod to profile
-        profiles_data: dict[str, Any] = (
-            self.__level_db.load("persistent###profiles###")
+        profile_db_prefix: str = (
+            f"persistent###profiles###{instance_data.id}###modState###{file_name}###"
+        )
+        profile_mod_data: dict[str, Any] = (
+            self.__level_db.get_section(profile_db_prefix)
             .get("persistent", {})
             .get("profiles", {})
+            .get(instance_data.id, {})
+            .get("modState", {})
+            .get(file_name, {})
         )
-        profile_mods: dict[str, Any] = profiles_data.setdefault(
-            instance_data.id, {}
-        ).setdefault("modState", {})
-        profile_mods[file_name] = {
-            "enabled": mod.enabled,
-            "enabledTime": Vortex.format_unix_timestamp(time.time()),
-        }
-        self.__level_db.dump(profiles_data, prefix="persistent###profiles###")
+        profile_mod_data["enabled"] = mod.enabled
+        profile_mod_data["enabledTime"] = Vortex.format_unix_timestamp(time.time())
+        self.__level_db.set_section(profile_db_prefix, profile_mod_data)
 
         if not instance.is_mod_installed(mod):
             new_mod: Mod = Mod.copy(mod)
@@ -726,7 +725,7 @@ class Vortex(ModManager[ProfileInfo]):
         tool_prefix: str = (
             f"settings###gameMode###discovered###{game_id}###tools###{tool_id}###"
         )
-        self.__level_db.dump(tool_data, prefix=tool_prefix)
+        self.__level_db.set_section(tool_prefix, tool_data)
         instance.tools.append(new_tool)
 
     @override
@@ -798,15 +797,15 @@ class Vortex(ModManager[ProfileInfo]):
 
             self.log.info(f"Setting file overrides for {mod.display_name!r}...")
             full_mod_name: str = self.__get_unique_file_name(mod).rsplit(".", 1)[0]
-            prefix: str = f"persistent###mods###{game.id.lower()}###{full_mod_name}"
-            mod_data: dict[str, Any] = self.__level_db.load(prefix)["persistent"][
-                "mods"
-            ][game.id.lower()][full_mod_name]
+            prefix: str = f"persistent###mods###{game.id.lower()}###{full_mod_name}###"
+            mod_data: dict[str, Any] = self.__level_db.get_section(prefix)[
+                "persistent"
+            ]["mods"][game.id.lower()][full_mod_name]
             mod_data["fileOverrides"] = [
                 str(game_folder / game.mods_folder / file)
                 for file in mod.file_conflicts
             ]
-            self.__level_db.dump(mod_data, prefix + "###")
+            self.__level_db.set_section(prefix, mod_data)
 
     @override
     def finalize_migration(
@@ -815,14 +814,15 @@ class Vortex(ModManager[ProfileInfo]):
         migrated_instance_data: ProfileInfo,
         activate_new_instance: bool,
     ) -> None:
-        profile_data: dict[str, Any] = self.__level_db.load(
-            f"persistent###profiles###{migrated_instance_data.id}"
+        profile_db_prefix: str = (
+            f"persistent###profiles###{migrated_instance_data.id}###"
         )
+        profile_data: dict[str, Any] = self.__level_db.get_section(profile_db_prefix)
         profile_data.setdefault("features", {})["local_game_settings"] = (
             migrated_instance.separate_ini_files
         )
         profile_data["features"]["local_saves"] = migrated_instance.separate_save_games
-        self.__level_db.dump(profile_data)
+        self.__level_db.set_section(profile_db_prefix, profile_data)
 
         # Set file overrides
         self.__set_file_overrides(
@@ -841,6 +841,7 @@ class Vortex(ModManager[ProfileInfo]):
             key += migrated_instance_data.game.id.lower()
             self.__level_db.set_key(key, migrated_instance_data.id)
 
+        self.__level_db.save()
         self.__level_db.del_symlink_path()
 
     @override

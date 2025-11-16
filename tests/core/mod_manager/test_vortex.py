@@ -184,7 +184,6 @@ class TestVortex(BaseTest):
 
         # given
         vortex = Vortex()
-        Utils.get_private_field(vortex, *TestVortex.DATABASE).use_symlink = False
         profile_info = ProfileInfo(
             display_name="Test profile",
             game=Game.get_game_by_id("skyrimse"),
@@ -250,8 +249,6 @@ class TestVortex(BaseTest):
 
         # given
         vortex = Vortex()
-        database: LevelDB = Utils.get_private_field(vortex, *TestVortex.DATABASE)
-        database.path.mkdir(parents=True, exist_ok=True)
         profile_info = ProfileInfo(
             display_name="Test profile (5e6f7g8h9j)",
             game=Game.get_game_by_id("skyrimse"),

@@ -992,12 +992,12 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
 <context>
     <name>Vortex</name>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="141"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="139"/>
         <source>Loading profile {0}...</source>
         <translation>Carregando perfil{0}...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="177"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="175"/>
         <location filename="src/core/mod_manager/vortex/vortex.py" line="213"/>
         <source>Loading mods from profile {0}...</source>
         <translation>Carregando mods do perfil {0}...</translation>
@@ -1008,7 +1008,7 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
         <translation>Carregando ferramentas do Vortex...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="850"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="853"/>
         <source>Vortex is currently deployed to the game folder. It is strongly recommended to purge the game directory before using the migrated instance.</source>
         <translation>O Vortex está atualmente instalado na pasta do jogo. É altamente recomendável limpar o diretório do jogo antes de usar a instância migrada.</translation>
     </message>
