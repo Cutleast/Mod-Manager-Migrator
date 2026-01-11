@@ -1,0 +1,71 @@
+= Introduction
+
+image::header_transparent.png[]
+
+[.text-center]
+image:get_it_on_nexus_mods.png[width=193,height=60,link=https://www.nexusmods.com/site/mods/545]
+image:view_source_code_on_github.png[width=193,height=60,link=https://github.com/Cutleast/Mod-Manager-Migrator]
+image:support_me_on_kofi.png[width=193,height=60,link=https://ko-fi.com/Cutleast]
+
+== Description
+
+This is a tool for migrating modding instances between mod managers. Originally planned as a tool to import Vortex Collections into Mod Organizer 2, it got expanded to a general migration tool for mod instances with a lot more features than that.
+
+*Only Windows is supported!*
+
+== Features
+
+* Fully automated migration
+* Automatic detection of used game folder
+* New instance is customizable
+* Migrate to existing instances to merge two instances into one (experimental)
+* Support for global and portable MO2 instances
+** Automatically download and install MO2 for portable MO2 instances
+* Automatically converts Vortex conflict rules to a MO2 loadorder and vice versa
+** Also supports separate file conflicts and .mohidden files
+* Uses hardlinks by default when source and destination are on the same disk to save on space
+** Can be disabled in _File_ > _Settings_ > _Use hardlinks [...]_
+** xref:glossary.adoc#_hardlinks[What are hardlinks?]
+* Automatic detection of Windows path length limit
+** Windows paths are limited to 255 characters which can cause issues for mods with long paths
+** MMM will ask at the start to disable that limit when not already disabled
+
+=== What gets migrated and what not
+
+[width="100%",cols="61%,39%",options="header",]
+|===
+|Migrated |Not Migrated
+|Mods including basic metadata required for the link to Nexus Mods: version, file name, mod id, file id, game id |Advanced metadata not required for link to Nexus Mods: author, description, category
+|Tools/Executables (eg. xEdit, Bodyslide, SSE-AT, etc.) including link to installed mod (if any), working directory, start arguments |Custom tool icons
+|Conflict rules |Overwrite folder (MO2 -> Vortex)
+|Separate file conflict rules |LOOT rules (Vortex -> MO2 and vice versa)
+|Plugin loadorder: plugins.txt and loadorder.txt |Downloads and link to download folder
+|===
+
+=== Supported Games
+
+* Enderal (+ Special Edition)
+* Fallout 3
+* Fallout 4
+* Fallout: New Vegas
+* Oblivion (not the Remastered version)
+* Skyrim (all versions incl. VR and GOG)
+
+=== Supported Mod Managers
+
+* Vortex
+* Mod Organizer 2
+
+=== Known Issues/Limitations
+
+* Cannot migrate from/to Vortex if it is used in "`Shared`" mode (link:https://imgur.com/fyKAgK7[Vortex ++>++ Settings ++>++ Vortex])
+
+== About this documentation
+
+This documentation is meant to give you all information you need to efficiently create and edit FOMOD installers.
+
+* If you are here to migrate a mod instance, read xref:quick_start.adoc[].
+* If you encountered an unfamiliar term in this documentation, read xref:glossary.adoc[].
+* If you have a question, read xref:faqs.adoc[].
+
+TIP: If you have further questions regarding MMM or this documentation, please do not hesitate to ask them on the link:https://discord.gg/pqEHdWDf8z[Official Modding Forge Discord server].

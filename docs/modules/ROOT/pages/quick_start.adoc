@@ -1,0 +1,15 @@
+= Quick Start & Basic Usage
+
+To migrate an instance from mod manager to another, follow these steps.
+
+TIP: If you encounter an issue or have a question, please do not hesitate to ask for help on the link:https://discord.gg/pqEHdWDf8z[Official Modding Forge Discord server].
+
+. Select the game of the instance you want to migrate.
+. Select the source mod manager.
+. Enter the required information for the respective mod manager.
+. Click on _Load instance..._ to load and display the source instance.
+. Select whether you want to create a new instance or want to migrate to an existing one (experimental).
+. Select the destination mod manager (may be the source mod manager to duplicate an instance).
+. Either customize the destination instance as desired or select one similar to the source.
+. Click on _Migrate_ and wait for it to finish.
+. If there are errors, check them carefully and (where appropiate) follow their recommendations and instructions.

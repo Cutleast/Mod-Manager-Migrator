@@ -1,0 +1,5 @@
+name: mmm
+title: Mod Manager Migrator
+version: ~
+nav:
+  - modules/ROOT/nav.adoc

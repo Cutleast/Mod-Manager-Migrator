@@ -1,0 +1,26 @@
+= Frequently Asked Questions (FAQs)
+
+These are some frequently asked questions and often encountered issues.
+
+TIP: If you have a question regarding MMM that is not answered here, please do not hesitate to ask it on the link:https://discord.gg/pqEHdWDf8z[Official Modding Forge Discord server].
+
+== Can I delete the old instance after the migration is complete?
+
+Yes, but before deleting the old instance make sure that the migrated instance works fine and that there were no errors during the migration.
+
+*I take no responsibility for modlists that get deleted without verifying that the destination instance works!*
+
+== I got an OverwriteModNotSupportedError for a mod called "Overwrite" when migrating an MO2 instance
+
+This is fully intentional and expected when migrating a MO2 instance with a non-empty overwrite folder to Vortex, as Vortex does not have anything similar (generated files stay in the game folder).
+As suggested in the error message, to solve this, create a mod from the files in the overwrite folder and rerun the migration.
+Do this by right-click > _Create mod from overwrite_ on the mod "Overwrite" at the very bottom of your modlist in MO2.
+
+== I got a FileNotFoundError for one or multiple mods
+
+Please check the length of the mentioned file path: If it is longer than 255 characters, you didn't fix the path limit when prompted after starting MMM.
+If the path is shorter than 255 characters, please create an issue or create a post in #support on our link:https://discord.gg/pqEHdWDf8z[Discord server].
+
+== Are my LOOT rules migrated from Vortex to MO2 or vice versa?
+
+No, not at the moment. Please see xref:index.adoc#_what_gets_migrated_and_what_not[Introduction > What gets migrated and what not] for a full up-to-date list.
