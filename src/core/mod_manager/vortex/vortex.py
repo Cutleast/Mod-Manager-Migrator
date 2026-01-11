@@ -817,7 +817,12 @@ class Vortex(ModManager[ProfileInfo]):
         profile_db_prefix: str = (
             f"persistent###profiles###{migrated_instance_data.id}###"
         )
-        profile_data: dict[str, Any] = self.__level_db.get_section(profile_db_prefix)
+        profile_data: dict[str, Any] = (
+            self.__level_db.get_section(profile_db_prefix)
+            .setdefault("persistent", {})
+            .setdefault("profiles", {})
+            .setdefault(migrated_instance_data.id, {})
+        )
         profile_data.setdefault("features", {})["local_game_settings"] = (
             migrated_instance.separate_ini_files
         )

@@ -1010,7 +1010,7 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
         <translation>Tools werden von Vortex geladen...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="853"/>
+        <location filename="src/core/mod_manager/vortex/vortex.py" line="858"/>
         <source>Vortex is currently deployed to the game folder. It is strongly recommended to purge the game directory before using the migrated instance.</source>
         <translation>Vortex ist zurzeit in das Spielverzeichnis deployed. Es wird empfohlen, das Spielverzeichnis vor der Nutzung der migrierten Instanz zu säubern.</translation>
     </message>
