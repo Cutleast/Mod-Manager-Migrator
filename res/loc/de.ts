@@ -655,32 +655,32 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
 <context>
     <name>ModlistWidget</name>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="77"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="79"/>
         <source>Included Mods:</source>
         <translation>Einbezogene Mods:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="101"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="103"/>
         <source>Name</source>
         <translation>Name</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="102"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="104"/>
         <source>Version</source>
         <translation>Version</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="103"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="105"/>
         <source>Size</source>
         <translation>Größe</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="104"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="106"/>
         <source>Priority</source>
         <translation>Priorität</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="133"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="135"/>
         <source>The checkboxes indicate whether a mod is migrated to the destination or not.</source>
         <translation>Die Häkchen markieren die Mods, die zum Ziel migriert werden.</translation>
     </message>

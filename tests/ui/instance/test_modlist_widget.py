@@ -137,7 +137,6 @@ class TestModlistWidget(BaseTest):
 
         # then
         assert test_item.checkState(0) == Qt.CheckState.Unchecked
-        assert test_item.foreground(0).color().name() == "#666666"
 
         # when
         with qtbot.waitSignal(tree_widget.itemChanged):
@@ -145,4 +144,3 @@ class TestModlistWidget(BaseTest):
 
         # then
         assert test_item.checkState(0) == Qt.CheckState.Checked
-        assert test_item.foreground(0).color().name() == "#000000"

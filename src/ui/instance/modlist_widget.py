@@ -12,6 +12,7 @@ from cutleast_core_lib.ui.utilities.icon_provider import IconProvider
 from cutleast_core_lib.ui.utilities.tree_widget import (
     iter_children,
     iter_toplevel_items,
+    set_item_foreground,
 )
 from cutleast_core_lib.ui.widgets.search_bar import SearchBar
 from mod_manager_lib.core.instance.instance import Instance
@@ -31,6 +32,7 @@ from PySide6.QtWidgets import (
 )
 
 from ui.instance.modlist_menu import ModlistMenu
+from ui.utilities.theme_manager import ThemeManager
 
 
 class ModlistWidget(QWidget):
@@ -164,15 +166,6 @@ class ModlistWidget(QWidget):
             # first one
             return
 
-        text_color: QColor
-        if item.checkState(0) == Qt.CheckState.Checked:
-            text_color = self.palette().text().color()
-        else:
-            text_color = QColor("#666666")
-
-        for c in range(item.columnCount()):
-            item.setForeground(c, text_color)
-
         if not self.__batch_changing:
             self.__update_num_label()
 
@@ -285,8 +278,18 @@ class ModlistWidget(QWidget):
         mod_item.setFlags(mod_item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
         if mod.installed:
             mod_item.setCheckState(0, Qt.CheckState.Checked)
+
+            # render disabled mods with a muted color
+            if not mod.enabled and ThemeManager.has_instance():
+                set_item_foreground(
+                    mod_item, QColor(ThemeManager.get().get_theme().disabled_fg_color)
+                )
         else:
             mod_item.setCheckState(0, Qt.CheckState.Unchecked)
+
+            font = QFont()
+            font.setStrikeOut(True)
+            mod_item.setFont(0, font)
 
         return mod_item
 

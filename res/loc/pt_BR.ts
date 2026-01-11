@@ -653,32 +653,32 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
 <context>
     <name>ModlistWidget</name>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="77"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="79"/>
         <source>Included Mods:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="101"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="103"/>
         <source>Name</source>
         <translation>Nome:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="102"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="104"/>
         <source>Version</source>
         <translation>Versão:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="103"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="105"/>
         <source>Size</source>
         <translation>Tamanho:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="104"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="106"/>
         <source>Priority</source>
         <translation>Prioridade</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_widget.py" line="133"/>
+        <location filename="src/ui/instance/modlist_widget.py" line="135"/>
         <source>The checkboxes indicate whether a mod is migrated to the destination or not.</source>
         <translation type="unfinished"></translation>
     </message>
