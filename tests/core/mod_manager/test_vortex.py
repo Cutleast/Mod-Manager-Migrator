@@ -24,6 +24,14 @@ from core.mod_manager.vortex.vortex import Vortex
 from core.utilities.leveldb import LevelDB
 
 
+def get_staging_folder_stub(game: Game) -> Path:
+    """
+    Stub for the private `Vortex.get_staging_folder` method.
+    """
+
+    raise NotImplementedError
+
+
 class TestVortex(BaseTest):
     """
     Tests `core.mod_manager.vortex.Vortex`.
@@ -31,14 +39,6 @@ class TestVortex(BaseTest):
 
     DATABASE: tuple[str, type[LevelDB]] = ("level_db", LevelDB)
     RAW_DATA: tuple[str, type[dict[bytes, bytes]]] = ("data", dict)
-
-    @staticmethod
-    def get_staging_folder_stub(game: Game) -> Path:
-        """
-        Stub for the private `Vortex.get_staging_folder` method.
-        """
-
-        raise NotImplementedError
 
     def test_load_instance(
         self,
