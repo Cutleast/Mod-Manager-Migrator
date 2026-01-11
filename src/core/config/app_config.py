@@ -38,3 +38,13 @@ class AppConfig(BaseAppConfig):
     @classmethod
     def _show_log(cls) -> bool:
         return True
+
+    @default_factory("accent_color")
+    @classmethod
+    def get_default_accent_color(cls) -> str:
+        """
+        Returns:
+            str: Default accent color.
+        """
+
+        return "#da8836"

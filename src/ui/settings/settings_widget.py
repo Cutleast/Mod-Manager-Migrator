@@ -86,7 +86,6 @@ class SettingsWidget(AppSettings):
         self._vlayout.addWidget(migration_settings_group)
 
         migration_settings_glayout = QGridLayout()
-        migration_settings_glayout.setContentsMargins(0, 0, 0, 0)
         migration_settings_group.setLayout(migration_settings_glayout)
 
         use_hardlinks_label = QLabel(self.tr("Use hardlinks if possible:"))

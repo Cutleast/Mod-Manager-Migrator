@@ -43,8 +43,8 @@ class SettingsDialog(QDialog):
 
         self.__init_ui()
         self.setWindowTitle(self.tr("Settings"))
-        self.setMinimumSize(800, 620)
-        self.resize(800, 620)
+        self.setMinimumSize(800, 635)
+        self.resize(800, 635)
 
         self.__settings_widget.changed_signal.connect(self.__on_change)
         self.__settings_widget.restart_required_signal.connect(

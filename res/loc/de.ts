@@ -836,27 +836,27 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
         <translation>Migrationseinstellungen</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="92"/>
+        <location filename="src/ui/settings/settings_widget.py" line="91"/>
         <source>Use hardlinks if possible:</source>
         <translation>Hardlinks, wenn möglich, verwenden:</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="105"/>
+        <location filename="src/ui/settings/settings_widget.py" line="104"/>
         <source>What are hardlinks?</source>
         <translation>Was sind Hardlinks?</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="111"/>
+        <location filename="src/ui/settings/settings_widget.py" line="110"/>
         <source>Replace existing files when merging instances:</source>
         <translation>Bestehende Dateien beim Zusammenführen von Instanzen ersetzen:</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="121"/>
+        <location filename="src/ui/settings/settings_widget.py" line="120"/>
         <source>Activate destination instance after migration if supported by the destination mod manager:</source>
         <translation>Zielinstanz nach der Migration, wenn vom Ziel-Mod Manager unterstützt, aktivieren:</translation>
     </message>
     <message>
-        <location filename="src/ui/settings/settings_widget.py" line="134"/>
+        <location filename="src/ui/settings/settings_widget.py" line="133"/>
         <source>Character limit for mod names (strongly recommended when migrating to MO2):</source>
         <translation>Zeichenbegrenzung für Modnamen (dringend empfohlen, wenn zu MO2 migriert wird):</translation>
     </message>

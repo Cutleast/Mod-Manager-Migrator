@@ -1,14 +1,12 @@
-#h1, #h2, #h3
-{
+/* Headings */
+#h1,
+#h2,
+#h3,
+#title,
+QGroupBox {
     font-family: 'Bebas Neue Book';
 }
 
-QGroupBox
-{
-    font-family: 'Bebas Neue Book';
-}
-
-QTreeView::item:selected
-{
-    color: <text_color>;
+QTreeView::item:selected {
+    color: @primary_fg_color;
 }
