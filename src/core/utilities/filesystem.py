@@ -10,7 +10,7 @@ from pathlib import Path
 from shutil import copyfile, disk_usage
 from typing import Optional
 
-from cutleast_core_lib.core.utilities.filesystem import create_folder_list
+from cutleast_core_lib.core.filesystem.scanner import DirectoryScanner
 
 from .progress_update import ProgressCallback, ProgressUpdate, safe_run_callback
 
@@ -44,7 +44,9 @@ def copy_folder(
         progress_callback (Optional[ProgressCallback]): Progress callback
     """
 
-    files: list[Path] = [file.relative_to(src) for file in create_folder_list(src)]
+    files: list[Path] = [
+        file.path.relative_to(src) for file in DirectoryScanner.scan_folder(src)
+    ]
 
     log.info(f"Copying {len(files)} files from {str(src)!r} to {str(dst)!r}...")
 

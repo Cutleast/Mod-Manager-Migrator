@@ -682,6 +682,14 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
     </message>
 </context>
 <context>
+    <name>PlaceholderDropdown</name>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/placeholder_dropdown.py" line="28"/>
+        <source>Please select...</source>
+        <translation>Bitte auswählen...</translation>
+    </message>
+</context>
+<context>
     <name>Position</name>
     <message>
         <location filename="core-lib/src/cutleast_core_lib/ui/widgets/toast.py" line="69"/>
@@ -727,27 +735,27 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
 <context>
     <name>ProgressDialog</name>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="298"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="260"/>
         <source>Elapsed time:</source>
         <translation>Vergangene Zeit:</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="351"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="313"/>
         <source>Cancel?</source>
         <translation>Abbrechen?</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="354"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="316"/>
         <source>Are you sure you want to cancel? This may have unwanted consequences, depending on the current running process!</source>
         <translation>Bist du sicher, dass du abbrechen möchtest? Je nach laufendem Vorgang kann das unbeabsichtigte Konsequenzen haben!</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="362"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="324"/>
         <source>No</source>
         <translation>Nein</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="363"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="325"/>
         <source>Yes</source>
         <translation>Ja</translation>
     </message>
@@ -755,12 +763,17 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
 <context>
     <name>SearchBar</name>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/search_bar.py" line="38"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/search_bar.py" line="39"/>
         <source>Search...</source>
         <translation>Suchen...</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/search_bar.py" line="52"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/search_bar.py" line="53"/>
+        <source>Live search disabled. Press Enter to search.</source>
+        <translation>Echtzeitsuche deaktiviert. Drücke Enter, um zu suchen.</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/search_bar.py" line="64"/>
         <source>Toggle case sensitivity</source>
         <translation>Groß-/Kleinschreibung beachten</translation>
     </message>
@@ -851,17 +864,17 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
 <context>
     <name>StatusBar</name>
     <message>
-        <location filename="src/ui/statusbar.py" line="51"/>
+        <location filename="src/ui/statusbar.py" line="52"/>
         <source>Support me on Ko-fi</source>
         <translation>Unterstütze mich auf Ko-fi</translation>
     </message>
     <message>
-        <location filename="src/ui/statusbar.py" line="66"/>
+        <location filename="src/ui/statusbar.py" line="64"/>
         <source>Copy log to clipboard</source>
         <translation>Log in Zwischenablage kopieren</translation>
     </message>
     <message>
-        <location filename="src/ui/statusbar.py" line="77"/>
+        <location filename="src/ui/statusbar.py" line="75"/>
         <source>View log</source>
         <translation>Log anzeigen</translation>
     </message>
