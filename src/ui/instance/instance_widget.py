@@ -3,12 +3,11 @@ Copyright (c) Cutleast
 """
 
 import qtawesome as qta
+from mod_manager_lib.core.instance.instance import Instance
+from mod_manager_lib.core.instance.mod import Mod
+from mod_manager_lib.core.instance.tool import Tool
 from PySide6.QtCore import QSize
 from PySide6.QtWidgets import QTabWidget
-
-from core.instance.instance import Instance
-from core.instance.mod import Mod
-from core.instance.tool import Tool
 
 from .modlist_widget import ModlistWidget
 from .tools_widget import ToolsWidget

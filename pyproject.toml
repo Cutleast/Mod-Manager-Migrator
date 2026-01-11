@@ -8,8 +8,7 @@ authors = [{ name = "Cutleast", email = "cutleast@gmail.com" }]
 license = { file = "LICENSE" }
 dependencies = [
     "cutleast-core-lib",
-    "plyvel-ci",
-    "pyuac",
+    "mod-manager-lib",
 ]
 
 [dependency-groups]
@@ -28,10 +27,12 @@ dev = [
 [tool.uv.workspace]
 members = [
     "core-lib",
+    "mod-manager-lib",
 ]
 
 [tool.uv.sources]
 cutleast-core-lib = { workspace = true }
+mod-manager-lib = { workspace = true, editable = true }
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

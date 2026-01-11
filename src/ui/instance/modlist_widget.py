@@ -13,6 +13,8 @@ from cutleast_core_lib.ui.utilities.tree_widget import (
     iter_toplevel_items,
 )
 from cutleast_core_lib.ui.widgets.search_bar import SearchBar
+from mod_manager_lib.core.instance.instance import Instance
+from mod_manager_lib.core.instance.mod import Mod
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QColor, QFont
 from PySide6.QtWidgets import (
@@ -27,8 +29,6 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from core.instance.instance import Instance
-from core.instance.mod import Mod
 from core.utilities.filter import matches_filter
 from ui.instance.modlist_menu import ModlistMenu
 

@@ -8,6 +8,19 @@ from typing import Optional, override
 import qtawesome as qta
 from cutleast_core_lib.ui.widgets.loading_dialog import LoadingDialog
 from cutleast_core_lib.ui.widgets.smooth_scroll_area import SmoothScrollArea
+from mod_manager_lib.core.exceptions import GameNotFoundError
+from mod_manager_lib.core.game import Game
+from mod_manager_lib.core.game_service import GameService
+from mod_manager_lib.core.instance.instance import Instance
+from mod_manager_lib.core.mod_manager.instance_info import InstanceInfo
+from mod_manager_lib.core.mod_manager.mod_manager import ModManager
+from mod_manager_lib.core.mod_manager.mod_manager_api import ModManagerApi
+from mod_manager_lib.ui.instance_creator.instance_creator_widget import (
+    InstanceCreatorWidget,
+)
+from mod_manager_lib.ui.instance_selector.instance_selector_widget import (
+    InstanceSelectorWidget,
+)
 from PySide6.QtCore import QEvent, QObject, QSize, Qt, Signal
 from PySide6.QtGui import QIcon, QWheelEvent
 from PySide6.QtWidgets import (
@@ -27,15 +40,7 @@ from PySide6.QtWidgets import (
 )
 
 from core.config.app_config import AppConfig
-from core.game.exceptions import GameNotFoundError
-from core.game.game import Game
-from core.instance.instance import Instance
 from core.migrator.file_blacklist import FileBlacklist
-from core.mod_manager.instance_info import InstanceInfo
-from core.mod_manager.mod_manager import ModManager
-
-from .instance_creator.instance_creator_widget import InstanceCreatorWidget
-from .instance_selector.instance_selector_widget import InstanceSelectorWidget
 
 
 class MigratorWidget(SmoothScrollArea):
@@ -60,6 +65,9 @@ class MigratorWidget(SmoothScrollArea):
     __cur_game: Optional[Game] = None
     """Currently selected game."""
 
+    __cur_mod_manager: Optional[ModManager] = None
+    """Mod manager of the currently loaded source instance."""
+
     __cur_instance: Optional[Instance] = None
     """Currently loaded source instance."""
 
@@ -78,7 +86,9 @@ class MigratorWidget(SmoothScrollArea):
         super().__init__()
 
         self.app_config = app_config
-        self.__games = {game.display_name: game for game in Game.get_supported_games()}
+        self.__games = {
+            game.display_name: game for game in GameService.get_supported_games()
+        }
 
         self.__init_ui()
 
@@ -121,7 +131,6 @@ class MigratorWidget(SmoothScrollArea):
 
     def __init_game_dropdown(self) -> None:
         hlayout = QHBoxLayout()
-        hlayout.addSpacing(9)
         self.__vlayout.addLayout(hlayout)
 
         game_label = QLabel(self.tr("Game:"))
@@ -139,7 +148,6 @@ class MigratorWidget(SmoothScrollArea):
         self.__game_dropdown.currentTextChanged.connect(self.__on_game_select)
         self.__game_dropdown.setFixedWidth(250)
         hlayout.addWidget(self.__game_dropdown)
-        hlayout.addSpacing(9)
 
     def __init_src_selector(self) -> None:
         hlayout = QHBoxLayout()
@@ -241,27 +249,30 @@ class MigratorWidget(SmoothScrollArea):
         self.__cur_instance = None
 
     def __load_src_instance(self) -> None:
-        mod_manager: Optional[ModManager] = (
-            self.__src_selector.get_selected_mod_manager()
-        )
-        if mod_manager is None:
-            raise ValueError("No mod manager selected.")
-
         game: Optional[Game] = self.__cur_game
         if game is None:
             raise ValueError("No game selected.")
 
-        instance_data: InstanceInfo = self.__src_selector.get_cur_instance_data()
+        instance_data: Optional[InstanceInfo] = (
+            self.__src_selector.get_cur_instance_data()
+        )
+
+        if instance_data is None:
+            raise ValueError("No instance selected.")
+
+        self.__cur_mod_manager = instance_data.get_mod_manager()
+        mod_manager_api: ModManagerApi = self.__cur_mod_manager.get_api()
+
         mod_instance: Instance
         try:
             mod_instance = LoadingDialog.run_callable(
                 QApplication.activeModalWidget(),
-                lambda ldialog: mod_manager.load_instance(
+                lambda ldialog: mod_manager_api.load_instance(
                     instance_data=instance_data,
                     modname_limit=self.app_config.modname_limit,
                     file_blacklist=FileBlacklist.get_files(),
                     game_folder=self.__game_folders.get(game),
-                    ldialog=ldialog,
+                    # ldialog=ldialog,
                 ),
             )
         except GameNotFoundError:
@@ -314,7 +325,7 @@ class MigratorWidget(SmoothScrollArea):
             Optional[ModManager]: The mod manager
         """
 
-        return self.__src_selector.get_selected_mod_manager()
+        return self.__cur_mod_manager
 
     def get_src_instance_info(self) -> Optional[InstanceInfo]:
         """
@@ -347,7 +358,7 @@ class MigratorWidget(SmoothScrollArea):
         if self.__dst_instance_tab.currentWidget() is self.__dst_creator:
             return self.__dst_creator.get_selected_mod_manager()
         else:
-            return self.__dst_selector.get_selected_mod_manager()
+            return self.__dst_selector.get_cur_mod_manager()
 
     def get_dst_instance_info(self, game: Game) -> InstanceInfo:
         """
@@ -366,7 +377,14 @@ class MigratorWidget(SmoothScrollArea):
         if self.__dst_instance_tab.currentWidget() is self.__dst_creator:
             return self.__dst_creator.get_instance_data(game)
         else:
-            return self.__dst_selector.get_cur_instance_data()
+            dst_instance: Optional[InstanceInfo] = (
+                self.__dst_selector.get_cur_instance_data()
+            )
+
+            if dst_instance is None:
+                raise ValueError("No destination instance selected.")
+
+            return dst_instance
 
     @override
     def eventFilter(self, source: QObject, event: QEvent) -> bool:

@@ -4,18 +4,25 @@ Copyright (c) Cutleast
 
 import logging
 from pathlib import Path
-from typing import Optional
+from typing import Optional, cast
 
 from cutleast_core_lib.core.utilities.logger import Logger
 from cutleast_core_lib.core.utilities.scale import scale_value
 from cutleast_core_lib.ui.widgets.loading_dialog import LoadingDialog
+from mod_manager_lib.core.instance.instance import Instance
+from mod_manager_lib.core.instance.mod import Mod
+from mod_manager_lib.core.instance.tool import Tool
+from mod_manager_lib.core.mod_manager.exceptions import InstanceNotFoundError
+from mod_manager_lib.core.mod_manager.instance_info import InstanceInfo
+from mod_manager_lib.core.mod_manager.mod_manager import ModManager
+from mod_manager_lib.core.mod_manager.mod_manager_api import ModManagerApi
+from mod_manager_lib.core.mod_manager.modorganizer.mo2_instance_info import (
+    MO2InstanceInfo,
+)
+from mod_manager_lib.core.mod_manager.modorganizer.modorganizer import ModOrganizer
+from mod_manager_lib.core.mod_manager.vortex.vortex import Vortex
 from PySide6.QtCore import QObject
 
-from core.instance.instance import Instance, Mod
-from core.instance.tool import Tool
-from core.mod_manager.exceptions import InstanceNotFoundError
-from core.mod_manager.instance_info import InstanceInfo
-from core.mod_manager.mod_manager import ModManager
 from core.utilities.exceptions import (
     NotEnoughSpaceError,
     SameModsLocationDiffManagerError,
@@ -39,8 +46,8 @@ class Migrator(QObject):
         src_instance: Instance,
         src_info: S,
         dst_info: D,
-        src_mod_manager: ModManager[S],
-        dst_mod_manager: ModManager[D],
+        src_mod_manager: ModManagerApi[S],
+        dst_mod_manager: ModManagerApi[D],
         use_hardlinks: bool,
         replace: bool,
         modname_limit: int,
@@ -134,7 +141,7 @@ class Migrator(QObject):
                     scale_value(available_space),
                 )
 
-        dst_mod_manager.prepare_migration(dst_info)
+        # dst_mod_manager.prepare_migration(dst_info)
 
         if ldialog is not None:
             ldialog.updateProgress(
@@ -147,12 +154,15 @@ class Migrator(QObject):
         dst_instance: Instance
         try:
             dst_instance = dst_mod_manager.load_instance(
-                dst_info, modname_limit, blacklist, ldialog=ldialog
+                dst_info,
+                modname_limit,
+                blacklist,  # , ldialog=ldialog
             )
             self.log.warning("Migrating into existing instance...")
         except InstanceNotFoundError:
             dst_instance = dst_mod_manager.create_instance(
-                dst_info, src_instance.game_folder, ldialog
+                dst_info,
+                src_instance.game_folder,  # , ldialog
             )
 
         self.log.info(f"Destination order matters: {dst_instance.order_matters}")
@@ -182,7 +192,7 @@ class Migrator(QObject):
                         use_hardlinks,
                         replace,
                         blacklist,
-                        ldialog,
+                        # ldialog,
                     )
                 else:
                     self.log.info(
@@ -213,7 +223,7 @@ class Migrator(QObject):
                     use_hardlinks,
                     replace,
                     blacklist,
-                    ldialog,
+                    # ldialog,
                 )
             except Exception as ex:
                 self.log.error(
@@ -225,13 +235,13 @@ class Migrator(QObject):
             ini_files: list[Path] = src_mod_manager.get_ini_files(
                 src_instance, src_info
             )
-            dst_mod_manager.migrate_ini_files(
+            dst_mod_manager.import_ini_files(
                 ini_files,
                 dst_info,
                 src_instance.separate_ini_files,
                 use_hardlinks,
                 replace,
-                ldialog,
+                # ldialog,
             )
         except Exception as ex:
             self.log.error(
@@ -244,8 +254,11 @@ class Migrator(QObject):
             additional_files: list[Path] = src_mod_manager.get_additional_files(
                 src_info
             )
-            dst_mod_manager.migrate_additional_files(
-                additional_files, dst_info, use_hardlinks, replace, ldialog
+            dst_mod_manager.import_additional_files(
+                additional_files,
+                dst_info,
+                use_hardlinks,
+                replace,  # , ldialog
             )
         except Exception as ex:
             self.log.error(
@@ -254,8 +267,77 @@ class Migrator(QObject):
             )
             report.other_errors[self.tr("Failed to migrate additional files.")] = ex
 
-        dst_mod_manager.finalize_migration(
-            dst_instance, dst_info, activate_new_instance
-        )
+        dst_mod_manager.finalize_instance(dst_instance, dst_info, activate_new_instance)
         self.log.info("Migration completed.")
         return report
+
+    def get_completed_message(
+        self, src_instance_data: InstanceInfo, dst_instance_data: InstanceInfo
+    ) -> str:
+        """
+        Generates a localized message with additional notes for the user to be shown
+        after the migration.
+
+        Args:
+            src_instance_data (InstanceInfo): Information about the source mod instance.
+            dst_instance_data (InstanceInfo):
+                Information about the destination mod instance.
+
+        Returns:
+            str: Localized message.
+        """
+
+        text: str = ""
+
+        if dst_instance_data.get_mod_manager() == ModManager.ModOrganizer:
+            migrated_instance_data: MO2InstanceInfo = cast(
+                MO2InstanceInfo, dst_instance_data
+            )
+            mo2: ModOrganizer = cast(ModOrganizer, ModManager.ModOrganizer.get_api())
+
+            if migrated_instance_data.use_root_builder:
+                if migrated_instance_data.is_global:
+                    text += (
+                        self.tr(
+                            "The usage of root builder was enabled.\n"
+                            "In order to correctly deploy the root files, you have to "
+                            "download and extract the root builder plugin from Nexus "
+                            'Mods to the "plugins" folder of your MO2 installation if '
+                            "not already installed."
+                        )
+                        + "\n\n"
+                    )
+                else:
+                    text += (
+                        self.tr(
+                            "The usage of root builder was enabled.\n"
+                            "In order to correctly deploy the root files, you have to "
+                            "download and extract the root builder plugin from Nexus "
+                            'Mods to the "plugins" folder of the new MO2 installation.'
+                        )
+                        + "\n\n"
+                    )
+
+            if not migrated_instance_data.is_global and mo2.detect_global_instances():
+                text += (
+                    self.tr(
+                        "At least one global instance was detected.\n"
+                        "Global instances cause issues with portable instances and it is "
+                        "recommended to delete (or rename) the following folder:\n{0}"
+                    ).format(str(mo2.appdata_path))
+                    + "\n\n"
+                )
+
+        if (
+            dst_instance_data.get_mod_manager() != src_instance_data.get_mod_manager()
+            and src_instance_data.get_mod_manager() == ModManager.Vortex
+        ):
+            vortex: Vortex = cast(Vortex, ModManager.Vortex.get_api())
+            if vortex.is_deployed(src_instance_data.game):
+                text += self.tr(
+                    "Vortex is currently deployed to the game folder. It is strongly "
+                    "recommended to purge the game directory before using the migrated "
+                    "instance."
+                )
+
+        return text

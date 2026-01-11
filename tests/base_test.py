@@ -3,6 +3,7 @@ Copyright (c) Cutleast
 """
 
 import json
+import logging
 import os
 import shutil
 import tempfile
@@ -12,21 +13,25 @@ from unittest.mock import MagicMock
 
 import pytest
 from cutleast_core_lib.core.utilities.env_resolver import resolve
+from cutleast_core_lib.core.utilities.qt_res_provider import read_resource
 from cutleast_core_lib.test.base_test import BaseTest as CoreBaseTest
+from cutleast_core_lib.test.utils import Utils
+from mod_manager_lib.core.game_service import GameService
+from mod_manager_lib.core.instance.instance import Instance
+from mod_manager_lib.core.instance.metadata import Metadata
+from mod_manager_lib.core.instance.mod import Mod
+from mod_manager_lib.core.instance.tool import Tool
+from mod_manager_lib.core.mod_manager.modorganizer.mo2_instance_info import (
+    MO2InstanceInfo,
+)
+from mod_manager_lib.core.mod_manager.modorganizer.modorganizer import ModOrganizer
+from mod_manager_lib.core.mod_manager.vortex.profile_info import ProfileInfo
 from pyfakefs.fake_filesystem import FakeFilesystem
 from pytest_mock import MockerFixture
 from setup.mock_plyvel import MockPlyvelDB
 
 from core.config.app_config import AppConfig
-from core.game.game import Game
-from core.instance.instance import Instance
-from core.instance.metadata import Metadata
-from core.instance.mod import Mod
-from core.instance.tool import Tool
 from core.migrator.file_blacklist import FileBlacklist
-from core.mod_manager.modorganizer.mo2_instance_info import MO2InstanceInfo
-from core.mod_manager.modorganizer.modorganizer import ModOrganizer
-from core.mod_manager.vortex.profile_info import ProfileInfo
 from core.utilities.leveldb import LevelDB
 from resources_rc import qt_resource_data as qt_resource_data
 
@@ -61,6 +66,20 @@ class BaseTest(CoreBaseTest):
         """
 
         return AppConfig.load(data_folder / "config")
+
+    @pytest.fixture(autouse=True)
+    def game_service(self) -> Generator[GameService, None, None]:
+        """
+        Returns a game service instance for testing.
+
+        Yields:
+            GameService: The game service instance
+        """
+
+        yield GameService(read_resource(":/games.json"))
+
+        Utils.reset_singleton(GameService)
+        logging.debug("GameService singleton reset.")
 
     @pytest.fixture
     def test_fs(self, data_folder: Path, test_fs: FakeFilesystem) -> FakeFilesystem:
@@ -136,7 +155,7 @@ class BaseTest(CoreBaseTest):
 
         return MO2InstanceInfo(
             display_name="Test Instance",
-            game=Game.get_game_by_id("skyrimse"),
+            game=GameService.get_game_by_id("skyrimse"),
             profile="Default",
             is_global=False,
             base_folder=base_dir_path,
@@ -155,7 +174,7 @@ class BaseTest(CoreBaseTest):
 
         return ProfileInfo(
             display_name="Test Instance (1a2b3c4d)",
-            game=Game.get_game_by_id("skyrimse"),
+            game=GameService.get_game_by_id("skyrimse"),
             id="1a2b3c4d",
         )
 

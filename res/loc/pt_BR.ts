@@ -125,38 +125,28 @@
 <context>
     <name>InstanceCreatorWidget</name>
     <message>
-        <location filename="src/ui/migrator/instance_creator/instance_creator_widget.py" line="75"/>
-        <source>Mod Manager:</source>
-        <translation>Gerenciador de Mod:</translation>
-    </message>
-    <message>
-        <location filename="src/ui/migrator/instance_creator/instance_creator_widget.py" line="81"/>
-        <source>Please select...</source>
-        <translation>Por favor selecione...</translation>
+        <location filename="mod-manager-lib/src/mod_manager_lib/ui/instance_creator/instance_creator_widget.py" line="81"/>
+        <source>Mod manager:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>InstanceSelectorWidget</name>
     <message>
-        <location filename="src/ui/migrator/instance_selector/instance_selector_widget.py" line="90"/>
-        <source>Mod Manager:</source>
-        <translation>Gerenciador de Mod:</translation>
-    </message>
-    <message>
-        <location filename="src/ui/migrator/instance_selector/instance_selector_widget.py" line="96"/>
-        <source>Please select...</source>
-        <translation>Por favor selecione...</translation>
+        <location filename="mod-manager-lib/src/mod_manager_lib/ui/instance_selector/instance_selector_widget.py" line="99"/>
+        <source>Mod manager:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>InstanceWidget</name>
     <message>
-        <location filename="src/ui/instance/instance_widget.py" line="33"/>
+        <location filename="src/ui/instance/instance_widget.py" line="32"/>
         <source>Modlist</source>
         <translation>Modlist</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/instance_widget.py" line="38"/>
+        <location filename="src/ui/instance/instance_widget.py" line="37"/>
         <source>Tools</source>
         <translation>Ferramentas</translation>
     </message>
@@ -208,24 +198,24 @@
 <context>
     <name>MainWidget</name>
     <message>
-        <location filename="src/ui/main_widget.py" line="98"/>
+        <location filename="src/ui/main_widget.py" line="102"/>
         <source>Destination instance already exists!</source>
         <translation>O destino da instância já existe!</translation>
     </message>
     <message>
-        <location filename="src/ui/main_widget.py" line="100"/>
+        <location filename="src/ui/main_widget.py" line="104"/>
         <source>Are you sure you want to migrate to the existing destination instance?
 This feature is considered experimental and could cause issues.
 Continue at your own risk!</source>
         <translation>Tem certeza de que deseja migrar para a instância de destino já existente?</translation>
     </message>
     <message>
-        <location filename="src/ui/main_widget.py" line="135"/>
+        <location filename="src/ui/main_widget.py" line="141"/>
         <source>Migration completed with errors!</source>
         <translation>Migração finalizou com erros!</translation>
     </message>
     <message>
-        <location filename="src/ui/main_widget.py" line="138"/>
+        <location filename="src/ui/main_widget.py" line="144"/>
         <source>Migration completed with errors! Click &apos;Ok&apos; to open the report.
 
 </source>
@@ -234,12 +224,12 @@ Continue at your own risk!</source>
 </translation>
     </message>
     <message>
-        <location filename="src/ui/main_widget.py" line="149"/>
+        <location filename="src/ui/main_widget.py" line="155"/>
         <source>Migration Complete</source>
         <translation>Migração Finalizada</translation>
     </message>
     <message>
-        <location filename="src/ui/main_widget.py" line="151"/>
+        <location filename="src/ui/main_widget.py" line="157"/>
         <source>Migration completed successfully!
 
 </source>
@@ -365,96 +355,124 @@ Continue at your own risk!</source>
 <context>
     <name>Migrator</name>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="141"/>
+        <location filename="src/core/migrator/migrator.py" line="148"/>
         <source>Migrating instance {0}...</source>
         <translation>Migrando instância {0}...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="168"/>
+        <location filename="src/core/migrator/migrator.py" line="178"/>
         <source>Migrating mods...</source>
         <translation>Migrando mods...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="200"/>
+        <location filename="src/core/migrator/migrator.py" line="210"/>
         <source>Migrating tools...</source>
         <translation>Migrando ferramentas...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="241"/>
+        <location filename="src/core/migrator/migrator.py" line="251"/>
         <source>Failed to migrate INI files.</source>
         <translation>Falha em migrar os arquivos INI.</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="255"/>
+        <location filename="src/core/migrator/migrator.py" line="268"/>
         <source>Failed to migrate additional files.</source>
         <translation>Falha ao migrar arquivos adicionais.</translation>
+    </message>
+    <message>
+        <location filename="src/core/migrator/migrator.py" line="302"/>
+        <source>The usage of root builder was enabled.
+In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of your MO2 installation if not already installed.</source>
+        <translation type="unfinished">O uso do root builder foi ativado.
+Para implantar corretamente os arquivos root, você deve baixar e extrair o plugin root builder do Nexus Mods para a pasta &quot;plugins&quot; da sua instalação do MO2, caso ainda não esteja instalado.</translation>
+    </message>
+    <message>
+        <location filename="src/core/migrator/migrator.py" line="313"/>
+        <source>The usage of root builder was enabled.
+In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of the new MO2 installation.</source>
+        <translation type="unfinished">O uso do root builder foi ativado.
+Para implantar corretamente os arquivos root, você deve baixar e extrair o plugin root builder do Nexus Mods para a pasta &quot;plugins&quot; da nova instalação do MO2.</translation>
+    </message>
+    <message>
+        <location filename="src/core/migrator/migrator.py" line="324"/>
+        <source>At least one global instance was detected.
+Global instances cause issues with portable instances and it is recommended to delete (or rename) the following folder:
+{0}</source>
+        <translation type="unfinished">Pelo menos uma instância global foi detectada.
+Instâncias globais causam problemas com instâncias portáteis, e é recomendável excluir (ou renomear) a seguinte pasta:
+{0}</translation>
+    </message>
+    <message>
+        <location filename="src/core/migrator/migrator.py" line="338"/>
+        <source>Vortex is currently deployed to the game folder. It is strongly recommended to purge the game directory before using the migrated instance.</source>
+        <translation type="unfinished">O Vortex está atualmente instalado na pasta do jogo. É altamente recomendável limpar o diretório do jogo antes de usar a instância migrada.</translation>
     </message>
 </context>
 <context>
     <name>MigratorWidget</name>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="87"/>
-        <location filename="src/ui/migrator/migrator_widget.py" line="169"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="97"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="177"/>
         <source>Load selected instance...</source>
         <translation>Carregando instância selecionada...</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="127"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="136"/>
         <source>Game:</source>
         <translation>Jogo:</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="135"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="144"/>
         <source>Please select...</source>
         <translation>Por favor selecione...</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="157"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="165"/>
         <source>Choose the source instance:</source>
         <translation>Escolha a fonte da instância:</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="188"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="196"/>
         <source>Configure the destination instance:</source>
         <translation>Confihurar o destino da instância:</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="204"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="212"/>
         <source>Create new instance</source>
         <translation>Criar nova instância</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="214"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="222"/>
         <source>Select existing instance</source>
         <translation>Selecione isntância existente</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="214"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="222"/>
         <source>(Experimental)</source>
         <translation>(Experimental)</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="230"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="238"/>
         <source>Migrate...</source>
         <translation>Migrar...</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="270"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="281"/>
         <source>Could not find game directory!</source>
         <translation>Não foi possível encontrar o diretório do jogo!</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="271"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="282"/>
         <source>Unable to find game directory. Please select it manually.</source>
         <translation>Não foi possível encontrar o diretório do jogo. Por favor, selecione-o manualmente.</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="277"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="288"/>
         <source>Select game directory</source>
         <translation>Selecione o diretório do jogo</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/migrator_widget.py" line="291"/>
+        <location filename="src/ui/migrator/migrator_widget.py" line="302"/>
         <source>Instance loaded.</source>
         <translation>Instância carregada.</translation>
     </message>
@@ -462,127 +480,103 @@ Continue at your own risk!</source>
 <context>
     <name>ModOrganizer</name>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="145"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="195"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="224"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="152"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="208"/>
         <source>Loading mods from {0} &gt; {1}...</source>
         <translation>Carregando mods de {0} &gt; {1}...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="156"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="453"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="165"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="471"/>
         <source>Loading tools from {0} &gt; {1}...</source>
         <translation>Carregando ferramentes de {0} &gt; {1}...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="287"/>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="407"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="239"/>
+        <source>Loading mods from {0} &gt; {1}: {2}...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="302"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="422"/>
         <source>Processing mod conflicts...</source>
         <translation>Processando conflitos de mods...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="422"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="437"/>
         <source>Processing single file conflicts...</source>
         <translation>Processando conflitos de arquivo único...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="631"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="658"/>
         <source>Downloading and installing ModOrganizer...</source>
         <translation>Baixando e instalando ModOrganizer...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="651"/>
-        <source>Downloading ModOrganizer...</source>
-        <translation>Baixando ModOrganizer...</translation>
-    </message>
-    <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="674"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="691"/>
         <source>Extracting archive...</source>
         <translation>Extraindo arquivo...</translation>
-    </message>
-    <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1057"/>
-        <source>The usage of root builder was enabled.
-In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of your MO2 installation if not already installed.</source>
-        <translation>O uso do root builder foi ativado.
-Para implantar corretamente os arquivos root, você deve baixar e extrair o plugin root builder do Nexus Mods para a pasta &quot;plugins&quot; da sua instalação do MO2, caso ainda não esteja instalado.</translation>
-    </message>
-    <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1068"/>
-        <source>The usage of root builder was enabled.
-In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of the new MO2 installation.</source>
-        <translation>O uso do root builder foi ativado.
-Para implantar corretamente os arquivos root, você deve baixar e extrair o plugin root builder do Nexus Mods para a pasta &quot;plugins&quot; da nova instalação do MO2.</translation>
-    </message>
-    <message>
-        <location filename="src/core/mod_manager/modorganizer/modorganizer.py" line="1078"/>
-        <source>At least one global instance was detected.
-Global instances cause issues with portable instances and it is recommended to delete (or rename) the following folder:
-{0}</source>
-        <translation>Pelo menos uma instância global foi detectada.
-Instâncias globais causam problemas com instâncias portáteis, e é recomendável excluir (ou renomear) a seguinte pasta:
-{0}</translation>
     </message>
 </context>
 <context>
     <name>ModOrganizerCreatorWidget</name>
     <message>
-        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="56"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/ui/instance_creator/modorganizer_creator_widget.py" line="58"/>
         <source>Instance name:</source>
         <translation>Nome da instância:</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="60"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/ui/instance_creator/modorganizer_creator_widget.py" line="62"/>
         <source>eg. My Migrated Instance</source>
         <translation>ex. Minha Migração de Instância</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="68"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/ui/instance_creator/modorganizer_creator_widget.py" line="70"/>
         <source>Instance type:</source>
         <translation>Tipo de instância:</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="75"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/ui/instance_creator/modorganizer_creator_widget.py" line="77"/>
         <source>Portable instance</source>
         <translation>Instáncia Portátil</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="79"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/ui/instance_creator/modorganizer_creator_widget.py" line="81"/>
         <source>Global instance</source>
         <translation>Instância Global</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="84"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/ui/instance_creator/modorganizer_creator_widget.py" line="86"/>
         <source>Instance path:</source>
         <translation>Caminho da instância:</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="88"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/ui/instance_creator/modorganizer_creator_widget.py" line="90"/>
         <source>eg. C:\Modding\My Migrated Instance</source>
         <translation>ex. C:\Modding\Minha Instância Migrada</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="97"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/ui/instance_creator/modorganizer_creator_widget.py" line="99"/>
         <source>Mods path:</source>
         <translation>Pasta dos Mods:</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="101"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/ui/instance_creator/modorganizer_creator_widget.py" line="103"/>
         <source>eg. C:\Modding\My Migrated Instance\mods</source>
         <translation>ex. C:\Modding\Minha Instância Migrada\mods</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="109"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/ui/instance_creator/modorganizer_creator_widget.py" line="111"/>
         <source>Install Mod Organizer 2:</source>
         <translation>Instalar Mod Organizer 2:</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="116"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/ui/instance_creator/modorganizer_creator_widget.py" line="118"/>
         <source>Use Root Builder plugin:</source>
         <translation>Usar plugin Root Builder:</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/instance_creator/modorganizer_creator_widget.py" line="121"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/ui/instance_creator/modorganizer_creator_widget.py" line="123"/>
         <source>If enabled, mod files for the game&apos;s root folder will be moved to a &quot;Root&quot; subfolder in their mod instead of copied to the game&apos;s root folder.</source>
         <translation>Se ativado, os arquivos de mod destinados à pasta raiz do jogo serão movidos para uma subpasta &quot;Root&quot; dentro do mod, em vez de serem copiados diretamente para a pasta raiz do jogo.</translation>
     </message>
@@ -590,25 +584,22 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
 <context>
     <name>ModOrganizerSelectorWidget</name>
     <message>
-        <location filename="src/ui/migrator/instance_selector/modorganizer_selector_widget.py" line="44"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/ui/instance_selector/modorganizer_selector_widget.py" line="48"/>
         <source>Instance:</source>
         <translation>Instância:</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/instance_selector/modorganizer_selector_widget.py" line="49"/>
-        <location filename="src/ui/migrator/instance_selector/modorganizer_selector_widget.py" line="77"/>
-        <location filename="src/ui/migrator/instance_selector/modorganizer_selector_widget.py" line="87"/>
-        <location filename="src/ui/migrator/instance_selector/modorganizer_selector_widget.py" line="109"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/ui/instance_selector/modorganizer_selector_widget.py" line="89"/>
         <source>Please select...</source>
         <translation>Por favor selecione...</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/instance_selector/modorganizer_selector_widget.py" line="60"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/ui/instance_selector/modorganizer_selector_widget.py" line="63"/>
         <source>Portable path:</source>
         <translation>Pasta do portátil:</translation>
     </message>
     <message>
-        <location filename="src/ui/migrator/instance_selector/modorganizer_selector_widget.py" line="72"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/ui/instance_selector/modorganizer_selector_widget.py" line="75"/>
         <source>Profile:</source>
         <translation>Perfil:</translation>
     </message>
@@ -616,32 +607,32 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
 <context>
     <name>ModlistMenu</name>
     <message>
-        <location filename="src/ui/instance/modlist_menu.py" line="37"/>
+        <location filename="src/ui/instance/modlist_menu.py" line="36"/>
         <source>Expand all</source>
         <translation>Expandir tudo</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_menu.py" line="45"/>
+        <location filename="src/ui/instance/modlist_menu.py" line="44"/>
         <source>Collapse all</source>
         <translation>Recolher tudo</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_menu.py" line="53"/>
+        <location filename="src/ui/instance/modlist_menu.py" line="52"/>
         <source>Exclude selected mod(s) from migration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_menu.py" line="59"/>
+        <location filename="src/ui/instance/modlist_menu.py" line="58"/>
         <source>Include selected mod(s) in migration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_menu.py" line="68"/>
+        <location filename="src/ui/instance/modlist_menu.py" line="67"/>
         <source>Open mod page on Nexus Mods...</source>
         <translation>Abrir pagina do mod no Nexus Mods...</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/modlist_menu.py" line="74"/>
+        <location filename="src/ui/instance/modlist_menu.py" line="73"/>
         <source>Open in Explorer...</source>
         <translation>Abrir no Explorador...</translation>
     </message>
@@ -880,32 +871,32 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
 <context>
     <name>ToolsMenu</name>
     <message>
-        <location filename="src/ui/instance/tools_menu.py" line="37"/>
+        <location filename="src/ui/instance/tools_menu.py" line="36"/>
         <source>Expand all</source>
         <translation>Expandir tudo</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/tools_menu.py" line="45"/>
+        <location filename="src/ui/instance/tools_menu.py" line="44"/>
         <source>Collapse all</source>
         <translation>Recolher tudo</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/tools_menu.py" line="51"/>
+        <location filename="src/ui/instance/tools_menu.py" line="50"/>
         <source>Exclude selected tool(s)</source>
         <translation>Excluir ferramenta(s) selecionada(s)</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/tools_menu.py" line="57"/>
+        <location filename="src/ui/instance/tools_menu.py" line="56"/>
         <source>Include selected tool(s)</source>
         <translation>Incluir ferramentas seleciona(s)</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/tools_menu.py" line="66"/>
+        <location filename="src/ui/instance/tools_menu.py" line="65"/>
         <source>Open mod page on Nexus Mods...</source>
         <translation>Abrir pagina do mod no Nexus Mods...</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/tools_menu.py" line="72"/>
+        <location filename="src/ui/instance/tools_menu.py" line="71"/>
         <source>Open in Explorer...</source>
         <translation>Abrir o Explorador...</translation>
     </message>
@@ -1005,31 +996,30 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
 <context>
     <name>Vortex</name>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="139"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/vortex/vortex.py" line="145"/>
         <source>Loading profile {0}...</source>
         <translation>Carregando perfil{0}...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="175"/>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="213"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/vortex/vortex.py" line="184"/>
         <source>Loading mods from profile {0}...</source>
         <translation>Carregando mods do perfil {0}...</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="419"/>
-        <source>Loading tools from Vortex...</source>
-        <translation>Carregando ferramentas do Vortex...</translation>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/vortex/vortex.py" line="226"/>
+        <source>Loading mods from profile {0}: {1}...</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/vortex.py" line="892"/>
-        <source>Vortex is currently deployed to the game folder. It is strongly recommended to purge the game directory before using the migrated instance.</source>
-        <translation>O Vortex está atualmente instalado na pasta do jogo. É altamente recomendável limpar o diretório do jogo antes de usar a instância migrada.</translation>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/vortex/vortex.py" line="433"/>
+        <source>Loading tools from Vortex...</source>
+        <translation>Carregando ferramentas do Vortex...</translation>
     </message>
 </context>
 <context>
     <name>VortexCreatorWidget</name>
     <message>
-        <location filename="src/ui/migrator/instance_creator/vortex_creator_widget.py" line="39"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/ui/instance_creator/vortex_creator_widget.py" line="40"/>
         <source>Profile name:</source>
         <translation>Nome do perfil:</translation>
     </message>
@@ -1037,51 +1027,50 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
 <context>
     <name>VortexSelectorWidget</name>
     <message>
-        <location filename="src/ui/migrator/instance_selector/vortex_selector_widget.py" line="40"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/ui/instance_selector/vortex_selector_widget.py" line="42"/>
         <source>Profile:</source>
         <translation>Perfil:</translation>
-    </message>
-    <message>
-        <location filename="src/ui/migrator/instance_selector/vortex_selector_widget.py" line="45"/>
-        <location filename="src/ui/migrator/instance_selector/vortex_selector_widget.py" line="55"/>
-        <source>Please select...</source>
-        <translation>Por favor selecione...</translation>
     </message>
 </context>
 <context>
     <name>exceptions</name>
     <message>
-        <location filename="src/core/game/exceptions.py" line="19"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/exceptions.py" line="18"/>
         <source>The installation folder for the selected game could not be found!</source>
         <translation>A pasta de instalação do jogo selecionado não pôde ser localizada!</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/exceptions.py" line="19"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/exceptions.py" line="18"/>
         <source>A mod manager error occured!</source>
         <translation>Ocorreu um erro no gerenciador de mods!</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/exceptions.py" line="32"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/exceptions.py" line="31"/>
         <source>The mod instance {0} could not be found!</source>
         <translation>A instância de mod {0} não pôde ser localizada!</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/exceptions.py" line="20"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/exceptions.py" line="43"/>
+        <source>The mod instance could not be created!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/exceptions.py" line="20"/>
         <source>Invalid global instance path! The path must not be outside of the %LOCALAPPDATA%\ModOrganizer folder when choosing the global instance type!</source>
         <translation>Caminho de instância global inválido! O caminho não pode estar fora da pasta %LOCALAPPDATA%\ModOrganizer ao escolher o tipo de instância global!</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/modorganizer/exceptions.py" line="36"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/exceptions.py" line="36"/>
         <source>Cannot install MO2 when a global instance is selected as destination!</source>
         <translation>Não é possível instalar o MO2 quando uma instância global está selecionada como destino!</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/exceptions.py" line="19"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/vortex/exceptions.py" line="19"/>
         <source>Vortex is running and blocking its database. Close Vortex and try again!</source>
         <translation>O Vortex está em execução e bloqueando seu banco de dados. Feche o Vortex e tente novamente!</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/exceptions.py" line="33"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/vortex/exceptions.py" line="33"/>
         <source>Migration cannot continue while Vortex is deployed!
 Open Vortex and purge the game directory.
 Then click &apos;Continue&apos; to complete the migration process.</source>
@@ -1090,7 +1079,7 @@ Abra o Vortex e limpe o diretório do jogo.
 Depois clique em &apos;Continuar&apos; para finalizar o processo de migração.</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/exceptions.py" line="48"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/vortex/exceptions.py" line="48"/>
         <source>Vortex is not installed or fully setup.
 Follow these steps and try again:
 1. Install Vortex
@@ -1103,7 +1092,7 @@ Siga estas etapas e tente novamente:
 3. Ative o gerenciamento de perfis nas configurações do Vortex.</translation>
     </message>
     <message>
-        <location filename="src/core/mod_manager/vortex/exceptions.py" line="64"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/vortex/exceptions.py" line="64"/>
         <source>The overwrite folder of MO2 is not supported by Vortex!
 Please create a separate mod from the overwrite folder and restart the migration.</source>
         <translation>A pasta overwrite do MO2 não é compatível com o Vortex!</translation>
