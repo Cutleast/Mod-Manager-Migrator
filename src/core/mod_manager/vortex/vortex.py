@@ -609,6 +609,11 @@ class Vortex(ModManager[ProfileInfo]):
                 overwriting_mod
             ).rsplit(".", 1)[0]
 
+            if overwriting_mod_filename == file_name:
+                raise ValueError(
+                    f"Cyclic dependency detected in '{mod.display_name}': Mod conflicts with itself!"
+                )
+
             # Check if a rule already exists
             if overwriting_mod_filename in self.__parse_mod_conflict_rules(rules):
                 continue
