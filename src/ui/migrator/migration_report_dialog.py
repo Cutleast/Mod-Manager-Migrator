@@ -66,7 +66,7 @@ class MigrationReportDialog(QDialog):
         def __init_error_text_box(self) -> None:
             self.__error_text_box = QPlainTextEdit()
             self.__error_text_box.setReadOnly(True)
-            self.__error_text_box.setObjectName("protocol")
+            self.__error_text_box.setObjectName("monospace")
             self.addWidget(self.__error_text_box)
 
         def __init_errors(self) -> None:
