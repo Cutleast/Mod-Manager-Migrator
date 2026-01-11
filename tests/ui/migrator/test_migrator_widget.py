@@ -3,37 +3,49 @@ Copyright (c) Cutleast
 """
 
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Optional, cast
 
 import pytest
 from cutleast_core_lib.test.utils import Utils
 from cutleast_core_lib.ui.widgets.browse_edit import BrowseLineEdit
+from cutleast_core_lib.ui.widgets.enum_placeholder_dropdown import (
+    EnumPlaceholderDropdown,
+)
+from cutleast_core_lib.ui.widgets.placeholder_dropdown import PlaceholderDropdown
+from mod_manager_lib.core.game import Game
+from mod_manager_lib.core.game_service import GameService
+from mod_manager_lib.core.instance.instance import Instance
+from mod_manager_lib.core.mod_manager.instance_info import InstanceInfo
+from mod_manager_lib.core.mod_manager.mod_manager import ModManager
+from mod_manager_lib.core.mod_manager.modorganizer.mo2_instance_info import (
+    MO2InstanceInfo,
+)
+from mod_manager_lib.core.mod_manager.vortex.profile_info import ProfileInfo
+from mod_manager_lib.core.mod_manager.vortex.vortex import Vortex
+from mod_manager_lib.ui.instance_creator.base_creator_widget import BaseCreatorWidget
+from mod_manager_lib.ui.instance_creator.instance_creator_widget import (
+    InstanceCreatorWidget,
+)
+from mod_manager_lib.ui.instance_creator.vortex_creator_widget import (
+    VortexCreatorWidget,
+)
+from mod_manager_lib.ui.instance_selector.base_selector_widget import BaseSelectorWidget
+from mod_manager_lib.ui.instance_selector.instance_selector_widget import (
+    InstanceSelectorWidget,
+)
+from mod_manager_lib.ui.instance_selector.modorganizer_selector_widget import (
+    ModOrganizerSelectorWidget,
+)
+from mod_manager_lib.ui.instance_selector.vortex_selector_widget import (
+    VortexSelectorWidget,
+)
 from pyfakefs.fake_filesystem import FakeFilesystem
 from PySide6.QtWidgets import QComboBox, QLineEdit, QPushButton, QTabWidget
 from pytestqt.qtbot import QtBot
 from setup.mock_plyvel import MockPlyvelDB
 
 from core.config.app_config import AppConfig
-from core.game.game import Game
-from core.instance.instance import Instance
-from core.mod_manager.instance_info import InstanceInfo
-from core.mod_manager.mod_manager import ModManager
-from core.mod_manager.modorganizer.mo2_instance_info import MO2InstanceInfo
-from core.mod_manager.modorganizer.modorganizer import ModOrganizer
-from core.mod_manager.vortex.profile_info import ProfileInfo
-from core.mod_manager.vortex.vortex import Vortex
 from tests.base_test import BaseTest
-from ui.migrator.instance_creator.base_creator_widget import BaseCreatorWidget
-from ui.migrator.instance_creator.instance_creator_widget import InstanceCreatorWidget
-from ui.migrator.instance_creator.vortex_creator_widget import VortexCreatorWidget
-from ui.migrator.instance_selector import VortexSelectorWidget
-from ui.migrator.instance_selector.base_selector_widget import BaseSelectorWidget
-from ui.migrator.instance_selector.instance_selector_widget import (
-    InstanceSelectorWidget,
-)
-from ui.migrator.instance_selector.modorganizer_selector_widget import (
-    ModOrganizerSelectorWidget,
-)
 from ui.migrator.migrator_widget import MigratorWidget
 
 
@@ -51,9 +63,9 @@ class TestMigratorWidget(BaseTest):
     )
     """Identifier for accessing the private src_selector field."""
 
-    MOD_MANAGER_DROPDOWN: tuple[str, type[QComboBox]] = (
+    MOD_MANAGER_DROPDOWN: tuple[str, type[EnumPlaceholderDropdown[ModManager]]] = (
         "mod_manager_dropdown",
-        QComboBox,
+        EnumPlaceholderDropdown[ModManager],
     )
     """
     Identifier for accessing the private mod_manager_dropdown field of InstanceSelector
@@ -132,12 +144,11 @@ class TestMigratorWidget(BaseTest):
         # then
         assert game_dropdown.currentIndex() == 0
         assert game_dropdown.isEnabled()
-        assert game_dropdown.count() == len(Game.get_supported_games()) + 1
+        assert game_dropdown.count() == len(GameService.get_supported_games()) + 1
         assert widget.get_selected_game() is None
         assert not src_selector.isEnabled()
-        assert src_selector.get_selected_mod_manager() is None
-        with pytest.raises(ValueError, match="No instance data selected."):
-            src_selector.get_cur_instance_data()
+        assert src_selector.get_cur_mod_manager() is None
+        assert src_selector.get_cur_instance_data() is None
         assert not load_src_button.isEnabled()
 
         assert not dst_instance_tab.isEnabled()
@@ -156,15 +167,17 @@ class TestMigratorWidget(BaseTest):
         """
 
         # given
-        skyrimse: Game = Game.get_game_by_id("skyrimse")
+        skyrimse: Game = GameService.get_game_by_id("skyrimse")
         game_dropdown: QComboBox = Utils.get_private_field(
             widget, *TestMigratorWidget.GAME_DROPDOWN
         )
         src_selector: InstanceSelectorWidget = Utils.get_private_field(
             widget, *TestMigratorWidget.SRC_SELECTOR
         )
-        src_mod_manager_dropdown: QComboBox = Utils.get_private_field(
-            src_selector, *TestMigratorWidget.MOD_MANAGER_DROPDOWN
+        src_mod_manager_dropdown: EnumPlaceholderDropdown[ModManager] = (
+            Utils.get_private_field(
+                src_selector, *TestMigratorWidget.MOD_MANAGER_DROPDOWN
+            )
         )
         src_mod_managers: dict[ModManager, BaseSelectorWidget] = (
             Utils.get_private_field(
@@ -187,11 +200,11 @@ class TestMigratorWidget(BaseTest):
         assert not dst_creator.isEnabled()
 
         # when
-        src_mod_manager_dropdown.setCurrentText(ModOrganizer.get_display_name())
+        src_mod_manager_dropdown.setCurrentValue(ModManager.ModOrganizer)
 
         # then
-        cur_mod_manager: Optional[ModManager] = src_selector.get_selected_mod_manager()
-        assert isinstance(cur_mod_manager, ModOrganizer)
+        cur_mod_manager: Optional[ModManager] = src_selector.get_cur_mod_manager()
+        assert cur_mod_manager == ModManager.ModOrganizer
 
         # when
         mo2_selector_widget: BaseSelectorWidget = src_mod_managers[cur_mod_manager]
@@ -258,7 +271,7 @@ class TestMigratorWidget(BaseTest):
         self.test_select_src_instance(widget, test_fs, instance, qtbot)
 
         # given
-        skyrimse: Game = Game.get_game_by_id("skyrimse")
+        skyrimse: Game = GameService.get_game_by_id("skyrimse")
         game_dropdown: QComboBox = Utils.get_private_field(
             widget, *TestMigratorWidget.GAME_DROPDOWN
         )
@@ -273,7 +286,7 @@ class TestMigratorWidget(BaseTest):
                 src_selector, *TestMigratorWidget.MOD_MANAGER_SELECTORS
             )
         )
-        vortex: Vortex = {m.get_id(): m for m in src_mod_managers}[Vortex.get_id()]  # type: ignore
+        vortex: Vortex = cast(Vortex, ModManager.Vortex.get_api())
         vortex.db_path.mkdir(parents=True, exist_ok=True)
         load_src_button: QPushButton = Utils.get_private_field(
             widget, *TestMigratorWidget.LOAD_SRC_BUTTON
@@ -285,10 +298,9 @@ class TestMigratorWidget(BaseTest):
         # then
         assert widget.get_selected_game() is None
         assert widget.get_src_instance() is None
-        with pytest.raises(ValueError):
-            widget.get_src_instance_info()
+        assert widget.get_src_instance_info() is None
         assert not src_mod_manager_dropdown.isEnabled()
-        assert src_mod_manager_dropdown.currentIndex() == 0
+        assert src_mod_manager_dropdown.currentIndex() == -1
         assert not src_selector.isEnabled()
         assert not load_src_button.isEnabled()
 
@@ -302,8 +314,8 @@ class TestMigratorWidget(BaseTest):
         src_mod_manager_dropdown.setCurrentText(Vortex.get_display_name())
 
         # then
-        cur_mod_manager: Optional[ModManager] = src_selector.get_selected_mod_manager()
-        assert isinstance(cur_mod_manager, Vortex)
+        cur_mod_manager: Optional[ModManager] = src_selector.get_cur_mod_manager()
+        assert cur_mod_manager == ModManager.Vortex
 
         # when
         vortex_selector_widget: BaseSelectorWidget = src_mod_managers[cur_mod_manager]
@@ -312,16 +324,16 @@ class TestMigratorWidget(BaseTest):
         assert isinstance(vortex_selector_widget, VortexSelectorWidget)
 
         # when
-        profile_dropdown: QComboBox = Utils.get_private_field(
-            vortex_selector_widget, "profile_dropdown", QComboBox
+        profile_dropdown: PlaceholderDropdown = Utils.get_private_field(
+            vortex_selector_widget, "profile_dropdown", PlaceholderDropdown
         )
 
         # then
-        assert profile_dropdown.count() == 3
-        assert profile_dropdown.itemText(2) == vortex_profile_info.display_name
+        assert profile_dropdown.count() == 2
+        assert profile_dropdown.itemText(1) == vortex_profile_info.display_name
 
         # when
-        profile_dropdown.setCurrentIndex(2)
+        profile_dropdown.setCurrentIndex(1)
 
         # then
         assert load_src_button.isEnabled()
@@ -365,13 +377,15 @@ class TestMigratorWidget(BaseTest):
         dst_creator: InstanceCreatorWidget = Utils.get_private_field(
             widget, *TestMigratorWidget.DST_CREATOR
         )
-        dst_mod_manager_dropdown: QComboBox = Utils.get_private_field(
-            dst_creator, *TestMigratorWidget.MOD_MANAGER_DROPDOWN
+        dst_mod_manager_dropdown: EnumPlaceholderDropdown[ModManager] = (
+            Utils.get_private_field(
+                dst_creator, *TestMigratorWidget.MOD_MANAGER_DROPDOWN
+            )
         )
         dst_mod_managers: dict[ModManager, BaseCreatorWidget] = Utils.get_private_field(
             dst_creator, *TestMigratorWidget.MOD_MANAGER_CREATORS
         )
-        vortex: Vortex = {m.get_id(): m for m in dst_mod_managers}[Vortex.get_id()]  # type: ignore
+        vortex: Vortex = cast(Vortex, ModManager.Vortex.get_api())
         vortex.db_path.mkdir(parents=True, exist_ok=True)
         migrate_button: QPushButton = Utils.get_private_field(
             widget, *TestMigratorWidget.MIGRATE_BUTTON
@@ -383,13 +397,13 @@ class TestMigratorWidget(BaseTest):
         assert not migrate_button.isEnabled()
 
         # when
-        dst_mod_manager_dropdown.setCurrentText(Vortex.get_display_name())
+        dst_mod_manager_dropdown.setCurrentValue(ModManager.Vortex)
 
         # then
-        assert dst_creator.get_selected_mod_manager() is vortex
+        assert dst_creator.get_selected_mod_manager() == ModManager.Vortex
 
         # when
-        vortex_creator_widget: BaseCreatorWidget = dst_mod_managers[vortex]
+        vortex_creator_widget: BaseCreatorWidget = dst_mod_managers[ModManager.Vortex]
 
         # then
         assert isinstance(vortex_creator_widget, VortexCreatorWidget)
@@ -405,7 +419,7 @@ class TestMigratorWidget(BaseTest):
 
         # when
         profile: ProfileInfo = vortex_creator_widget.get_instance(
-            Game.get_game_by_id("skyrimse")
+            GameService.get_game_by_id("skyrimse")
         )
 
         # then
@@ -430,7 +444,7 @@ class TestMigratorWidget(BaseTest):
         self.test_select_src_instance(widget, test_fs, instance, qtbot)
 
         # given
-        skyrimse: Game = Game.get_game_by_id("skyrimse")
+        skyrimse: Game = GameService.get_game_by_id("skyrimse")
         dst_instance_tab: QTabWidget = Utils.get_private_field(
             widget, *TestMigratorWidget.DST_INSTANCE_TAB
         )
@@ -440,30 +454,28 @@ class TestMigratorWidget(BaseTest):
         dst_selector: InstanceSelectorWidget = Utils.get_private_field(
             widget, *TestMigratorWidget.DST_SELECTOR
         )
-        creator_mod_manager_dropdown: QComboBox = Utils.get_private_field(
-            dst_creator, *TestMigratorWidget.MOD_MANAGER_DROPDOWN
+        creator_mod_manager_dropdown: EnumPlaceholderDropdown[ModManager] = (
+            Utils.get_private_field(
+                dst_creator, *TestMigratorWidget.MOD_MANAGER_DROPDOWN
+            )
         )
         mod_manager_creators: dict[ModManager, BaseCreatorWidget] = (
             Utils.get_private_field(
                 dst_creator, *TestMigratorWidget.MOD_MANAGER_CREATORS
             )
         )
-        creator_vortex: Vortex = {m.get_id(): m for m in mod_manager_creators}[
-            Vortex.get_id()
-        ]  # type: ignore
-        creator_vortex.db_path.mkdir(parents=True, exist_ok=True)
-        selector_mod_manager_dropdown: QComboBox = Utils.get_private_field(
-            dst_selector, *TestMigratorWidget.MOD_MANAGER_DROPDOWN
+        vortex: Vortex = cast(Vortex, ModManager.Vortex.get_api())
+        vortex.db_path.mkdir(parents=True, exist_ok=True)
+        selector_mod_manager_dropdown: EnumPlaceholderDropdown[ModManager] = (
+            Utils.get_private_field(
+                dst_selector, *TestMigratorWidget.MOD_MANAGER_DROPDOWN
+            )
         )
         mod_manager_selectors: dict[ModManager, BaseSelectorWidget] = (
             Utils.get_private_field(
                 dst_selector, *TestMigratorWidget.MOD_MANAGER_SELECTORS
             )
         )
-        selector_vortex: Vortex = {m.get_id(): m for m in mod_manager_selectors}[
-            Vortex.get_id()
-        ]  # type: ignore
-        selector_vortex.db_path.mkdir(parents=True, exist_ok=True)
         migrate_button: QPushButton = Utils.get_private_field(
             widget, *TestMigratorWidget.MIGRATE_BUTTON
         )
@@ -484,26 +496,26 @@ class TestMigratorWidget(BaseTest):
         assert not migrate_button.isEnabled()
 
         # when
-        selector_mod_manager_dropdown.setCurrentText(Vortex.get_display_name())
+        selector_mod_manager_dropdown.setCurrentValue(ModManager.Vortex)
         vortex_selector_widget: BaseSelectorWidget = mod_manager_selectors[
-            selector_vortex
+            ModManager.Vortex
         ]
 
         # then
         assert isinstance(vortex_selector_widget, VortexSelectorWidget)
 
         # when
-        selector_profile_dropdown: QComboBox = Utils.get_private_field(
-            vortex_selector_widget, "profile_dropdown", QComboBox
+        selector_profile_dropdown: PlaceholderDropdown = Utils.get_private_field(
+            vortex_selector_widget, "profile_dropdown", PlaceholderDropdown
         )
 
         # then
         assert selector_profile_dropdown.isEnabled()
-        assert selector_profile_dropdown.count() == 3
+        assert selector_profile_dropdown.count() == 2
         assert not migrate_button.isEnabled()
 
         # when
-        selector_profile_dropdown.setCurrentIndex(1)
+        selector_profile_dropdown.setCurrentIndex(0)
 
         # then
         assert migrate_button.isEnabled()
@@ -515,7 +527,9 @@ class TestMigratorWidget(BaseTest):
         assert not migrate_button.isEnabled()
 
         # when
-        vortex_creator_widget: BaseCreatorWidget = mod_manager_creators[creator_vortex]
+        vortex_creator_widget: BaseCreatorWidget = mod_manager_creators[
+            ModManager.Vortex
+        ]
 
         # then
         assert isinstance(vortex_creator_widget, VortexCreatorWidget)

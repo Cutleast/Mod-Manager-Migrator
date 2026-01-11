@@ -4,18 +4,19 @@ Copyright (c) Cutleast
 
 from typing import Optional
 
-from cutleast_core_lib.ui.widgets.loading_dialog import LoadingDialog
+from cutleast_core_lib.ui.widgets.progress_dialog import ProgressDialog
+from mod_manager_lib.core.game import Game
+from mod_manager_lib.core.instance.instance import Instance
+from mod_manager_lib.core.instance.mod import Mod
+from mod_manager_lib.core.mod_manager.instance_info import InstanceInfo
+from mod_manager_lib.core.mod_manager.mod_manager import ModManager
+from mod_manager_lib.core.mod_manager.mod_manager_api import ModManagerApi
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication, QMessageBox, QSplitter
 
 from core.config.app_config import AppConfig
-from core.game.game import Game
-from core.instance.instance import Instance
-from core.instance.mod import Mod
 from core.migrator.migration_report import MigrationReport
 from core.migrator.migrator import Migrator
-from core.mod_manager.instance_info import InstanceInfo
-from core.mod_manager.mod_manager import ModManager
 from ui.instance.instance_widget import InstanceWidget
 from ui.migrator.migration_report_dialog import MigrationReportDialog
 from ui.migrator.migrator_widget import MigratorWidget
@@ -92,7 +93,10 @@ class MainWidget(QSplitter):
         if src_info is None or src_instance is None:
             raise ValueError("No source instance selected!")
 
-        if dst_mod_manager.is_instance_existing(dst_info):
+        src_mod_manager_api: ModManagerApi = src_mod_manager.get_api()
+        dst_mod_manager_api: ModManagerApi = dst_mod_manager.get_api()
+
+        if dst_mod_manager_api.is_instance_existing(dst_info):
             reply = QMessageBox.question(
                 QApplication.activeModalWidget(),
                 self.tr("Destination instance already exists!"),
@@ -112,22 +116,24 @@ class MainWidget(QSplitter):
             src_instance, self.__instance_widget.checked_mods
         )
 
-        report: MigrationReport = LoadingDialog.run_callable(
-            QApplication.activeModalWidget(),
-            lambda ldialog: Migrator().migrate(
+        migrator = Migrator()
+
+        report: MigrationReport = ProgressDialog(
+            lambda pdialog: migrator.migrate(
                 src_instance=src_instance,
                 src_info=src_info,
                 dst_info=dst_info,
-                src_mod_manager=src_mod_manager,
-                dst_mod_manager=dst_mod_manager,
+                src_mod_manager=src_mod_manager_api,
+                dst_mod_manager=dst_mod_manager_api,
                 use_hardlinks=self.app_config.use_hardlinks,
                 replace=self.app_config.replace_when_merge,
                 modname_limit=self.app_config.modname_limit,
                 activate_new_instance=self.app_config.activate_new_instance,
                 included_tools=self.__instance_widget.checked_tools,
-                ldialog=ldialog,
+                pdialog=pdialog,
             ),
-        )
+            QApplication.activeModalWidget(),
+        ).run()
 
         if report.has_errors:
             QMessageBox.warning(
@@ -137,7 +143,7 @@ class MainWidget(QSplitter):
                     self.tr(
                         "Migration completed with errors! Click 'Ok' to open the report.\n\n"
                     )
-                    + dst_mod_manager.get_completed_message(dst_info)
+                    + migrator.get_completed_message(src_info, dst_info)
                 ).strip(),
                 QMessageBox.StandardButton.Ok,
             )
@@ -149,7 +155,7 @@ class MainWidget(QSplitter):
                 self.tr("Migration Complete"),
                 (
                     self.tr("Migration completed successfully!\n\n")
-                    + dst_mod_manager.get_completed_message(dst_info)
+                    + migrator.get_completed_message(src_info, dst_info)
                 ).strip(),
                 QMessageBox.StandardButton.Ok,
             )

@@ -6,9 +6,8 @@ from typing import Optional
 
 import qtawesome as qta
 from cutleast_core_lib.ui.widgets.menu import Menu
+from mod_manager_lib.core.instance.mod import Mod
 from PySide6.QtGui import QAction, QCursor, QIcon
-
-from core.instance.mod import Mod
 
 
 class ModlistMenu(Menu):

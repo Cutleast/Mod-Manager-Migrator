@@ -4,8 +4,8 @@ Copyright (c) Cutleast
 
 from dataclasses import dataclass, field
 
-from core.instance.mod import Mod
-from core.instance.tool import Tool
+from mod_manager_lib.core.instance.mod import Mod
+from mod_manager_lib.core.instance.tool import Tool
 
 
 @dataclass

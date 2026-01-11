@@ -10,7 +10,9 @@ from typing import Optional, cast, override
 from cutleast_core_lib.base_app import BaseApp
 from cutleast_core_lib.core.config.app_config import AppConfig as BaseAppConfig
 from cutleast_core_lib.core.utilities.env_resolver import resolve
+from cutleast_core_lib.core.utilities.qt_res_provider import read_resource
 from cutleast_core_lib.core.utilities.singleton import Singleton
+from mod_manager_lib.core.game_service import GameService
 from PySide6.QtCore import QTranslator
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QMainWindow
@@ -48,6 +50,8 @@ class App(BaseApp, Singleton):
     @override
     def _init_main_window(self) -> QMainWindow:
         self.__load_translation()
+
+        GameService(read_resource(":/games.json"))
 
         return MainWindow(cast(AppConfig, self.app_config))
 

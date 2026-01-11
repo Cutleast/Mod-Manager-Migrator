@@ -5,12 +5,12 @@ Copyright (c) Cutleast
 import pytest
 from cutleast_core_lib.test.utils import Utils
 from cutleast_core_lib.ui.widgets.search_bar import SearchBar
+from mod_manager_lib.core.instance.instance import Instance
+from mod_manager_lib.core.instance.mod import Mod
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QLCDNumber, QTreeWidget, QTreeWidgetItem
 from pytestqt.qtbot import QtBot
 
-from core.instance.instance import Instance
-from core.instance.mod import Mod
 from tests.base_test import BaseTest
 from ui.instance.modlist_widget import ModlistWidget
 

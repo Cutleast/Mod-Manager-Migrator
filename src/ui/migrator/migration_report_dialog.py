@@ -4,6 +4,7 @@ Copyright (c) Cutleast
 
 from typing import Optional
 
+from cutleast_core_lib.core.utilities.exceptions import format_exception
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QDialog,
@@ -17,7 +18,6 @@ from PySide6.QtWidgets import (
 )
 
 from core.migrator.migration_report import MigrationReport
-from core.utilities.exceptions import format_exception
 
 
 class MigrationReportDialog(QDialog):
@@ -66,7 +66,7 @@ class MigrationReportDialog(QDialog):
         def __init_error_text_box(self) -> None:
             self.__error_text_box = QPlainTextEdit()
             self.__error_text_box.setReadOnly(True)
-            self.__error_text_box.setObjectName("protocol")
+            self.__error_text_box.setObjectName("monospace")
             self.addWidget(self.__error_text_box)
 
         def __init_errors(self) -> None:

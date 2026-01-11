@@ -9,29 +9,41 @@ from base_test import BaseTest
 from cutleast_core_lib.core.utilities.env_resolver import resolve
 from cutleast_core_lib.core.utilities.scale import scale_value
 from cutleast_core_lib.test.utils import Utils
+from mod_manager_lib.core.game import Game
+from mod_manager_lib.core.instance.instance import Instance
+from mod_manager_lib.core.instance.metadata import Metadata
+from mod_manager_lib.core.instance.mod import Mod
+from mod_manager_lib.core.instance.tool import Tool
+from mod_manager_lib.core.mod_manager.instance_info import InstanceInfo
+from mod_manager_lib.core.mod_manager.mod_manager_api import ModManagerApi
+from mod_manager_lib.core.mod_manager.modorganizer.mo2_instance_info import (
+    MO2InstanceInfo,
+)
+from mod_manager_lib.core.mod_manager.modorganizer.modorganizer import ModOrganizer
+from mod_manager_lib.core.mod_manager.vortex.exceptions import (
+    OverwriteModNotSupportedError,
+)
+from mod_manager_lib.core.mod_manager.vortex.profile_info import ProfileInfo
+from mod_manager_lib.core.mod_manager.vortex.vortex import Vortex
 from pyfakefs.fake_filesystem import FakeFilesystem
 from setup.mock_plyvel import MockPlyvelDB
 
 from core.config.app_config import AppConfig
-from core.instance.instance import Instance
-from core.instance.metadata import Metadata
-from core.instance.mod import Mod
-from core.instance.tool import Tool
-from core.migrator.migration_report import MigrationReport
-from core.migrator.migrator import FileBlacklist, Migrator
-from core.mod_manager.instance_info import InstanceInfo
-from core.mod_manager.mod_manager import ModManager
-from core.mod_manager.modorganizer.mo2_instance_info import MO2InstanceInfo
-from core.mod_manager.modorganizer.modorganizer import ModOrganizer
-from core.mod_manager.vortex.exceptions import OverwriteModNotSupportedError
-from core.mod_manager.vortex.profile_info import ProfileInfo
-from core.mod_manager.vortex.vortex import Vortex
-from core.utilities.exceptions import (
+from core.migrator.exceptions import (
     NotEnoughSpaceError,
     SameModsLocationDiffManagerError,
 )
+from core.migrator.migration_report import MigrationReport
+from core.migrator.migrator import FileBlacklist, Migrator
 from core.utilities.filesystem import get_free_disk_space
-from tests.core.mod_manager.test_vortex import get_staging_folder_stub
+
+
+def get_staging_folder_stub(game: Game) -> Path:
+    """
+    Stub for the private `Vortex.get_staging_folder` method.
+    """
+
+    raise NotImplementedError
 
 
 class TestMigrator(BaseTest):
@@ -720,7 +732,7 @@ class TestMigrator(BaseTest):
                 f: m.metadata for f, m in mod2.file_conflicts.items()
             }
             if check_files:
-                assert list(
+                assert sorted(
                     filter(  # Do not check special files
                         lambda f: str(f).lower() not in FileBlacklist.get_files()
                         and str(f) not in mod1.file_conflicts
@@ -728,7 +740,7 @@ class TestMigrator(BaseTest):
                         and f not in redirects2,
                         mod1.files,
                     )
-                ) == list(
+                ) == sorted(
                     filter(  # Do not check special files
                         lambda f: str(f).lower() not in FileBlacklist.get_files()
                         and str(f) not in mod2.file_conflicts
@@ -778,8 +790,8 @@ class TestMigrator(BaseTest):
         self,
         src_info: I1,
         dst_info: I2,
-        src_mod_manager: ModManager[I1],
-        dst_mod_manager: ModManager[I2],
+        src_mod_manager: ModManagerApi[I1],
+        dst_mod_manager: ModManagerApi[I2],
     ) -> None:
         """
         Asserts that the additional files of two instances are equal.
@@ -804,7 +816,7 @@ class TestMigrator(BaseTest):
         assert source_files == destination_files
 
     def __get_file_redirects(
-        self, mods: list[Mod], src_mod_manager: ModManager
+        self, mods: list[Mod], src_mod_manager: ModManagerApi
     ) -> dict[Mod, dict[Path, Path]]:
         file_redirects: dict[Mod, dict[Path, Path]] = {}
         for mod in mods:
