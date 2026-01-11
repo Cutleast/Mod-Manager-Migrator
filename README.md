@@ -10,6 +10,7 @@
 <br>
 <a href="https://discord.gg/pqEHdWDf8z"><img src="https://i.imgur.com/VMdA0q7.png" height="60px"/> </a>
 <a href="https://www.nexusmods.com/site/mods/545/"><img src="misc_assets/GiO_NM.png" height="60px"/> </a>
+<a href="https://docs.moddingforge.com/mmm"><img src="https://i.imgur.com/NFNG8Tb.png" height="60px"/> </a>
 <a href="https://ko-fi.com/cutleast"><img src="misc_assets/KoFi.png" height="60px"/> </a>
 <br>
 <strong>MMM - Move Mods Masterfully.</strong>
