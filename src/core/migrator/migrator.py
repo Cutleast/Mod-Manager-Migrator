@@ -6,9 +6,10 @@ import logging
 from pathlib import Path
 from typing import Optional, cast
 
+from cutleast_core_lib.core.multithreading.progress import ProgressUpdate
 from cutleast_core_lib.core.utilities.logger import Logger
 from cutleast_core_lib.core.utilities.scale import scale_value
-from cutleast_core_lib.ui.widgets.loading_dialog import LoadingDialog
+from cutleast_core_lib.ui.widgets.progress_dialog import ProgressDialog
 from mod_manager_lib.core.instance.instance import Instance
 from mod_manager_lib.core.instance.mod import Mod
 from mod_manager_lib.core.instance.tool import Tool
@@ -53,7 +54,7 @@ class Migrator(QObject):
         modname_limit: int,
         activate_new_instance: bool,
         included_tools: list[Tool],
-        ldialog: Optional[LoadingDialog] = None,
+        pdialog: Optional[ProgressDialog] = None,
     ) -> MigrationReport:
         """
         Migrates an instance from one mod manager to another.
@@ -69,8 +70,8 @@ class Migrator(QObject):
             modname_limit (int): A character limit for mod names.
             activate_new_instance (bool): Whether to activate the new instance.
             included_tools (list[Tool]): A list of tools to migrate.
-            ldialog (Optional[LoadingDialog], optional):
-                Optional loading dialog. Defaults to None.
+            pdialog (Optional[ProgressDialog], optional):
+                Optional progress dialog. Defaults to None.
 
         Raises:
             GameNotFoundError:
@@ -143,26 +144,38 @@ class Migrator(QObject):
 
         # dst_mod_manager.prepare_migration(dst_info)
 
-        if ldialog is not None:
-            ldialog.updateProgress(
-                text1=self.tr("Migrating instance {0}...").format(
-                    src_info.display_name
-                ),
+        if pdialog is not None:
+            pdialog.updateMainProgress(
+                ProgressUpdate(
+                    status_text=self.tr("Preparing destination instance..."),
+                    value=0,
+                    maximum=0,
+                )
             )
 
         # Try to load existing instance
         dst_instance: Instance
         try:
             dst_instance = dst_mod_manager.load_instance(
-                dst_info,
-                modname_limit,
-                blacklist,  # , ldialog=ldialog
+                instance_data=dst_info,
+                modname_limit=modname_limit,
+                file_blacklist=blacklist,
+                update_callback=(
+                    (lambda payload: pdialog.updateProgress(1, payload))
+                    if pdialog is not None
+                    else None
+                ),
             )
             self.log.warning("Migrating into existing instance...")
         except InstanceNotFoundError:
             dst_instance = dst_mod_manager.create_instance(
-                dst_info,
-                src_instance.game_folder,  # , ldialog
+                instance_data=dst_info,
+                game_folder=src_instance.game_folder,
+                update_callback=(
+                    (lambda payload: pdialog.updateProgress(1, payload))
+                    if pdialog is not None
+                    else None
+                ),
             )
 
         self.log.info(f"Destination order matters: {dst_instance.order_matters}")
@@ -173,26 +186,35 @@ class Migrator(QObject):
         self.log.info(f"Included mods: {len(included_mods)}")
 
         for m, mod in enumerate(included_mods):
-            if ldialog is not None:
-                ldialog.updateProgress(
-                    text1=self.tr("Migrating mods...") + f" ({m}/{len(included_mods)})",
-                    value1=m,
-                    max1=len(included_mods),
-                    show2=True,
-                    text2=mod.display_name,
+            if pdialog is not None:
+                pdialog.updateMainProgress(
+                    ProgressUpdate(
+                        status_text=(
+                            self.tr("Migrating mods...")
+                            + f" ({m + 1} / {len(included_mods)})"
+                        ),
+                        value=m,
+                        maximum=len(included_mods),
+                    )
                 )
+
+                pdialog.updateProgress(1, ProgressUpdate(status_text=mod.display_name))
 
             try:
                 if not dst_instance.is_mod_installed(mod) or replace:
                     dst_mod_manager.install_mod(
-                        mod,
-                        dst_instance,
-                        dst_info,
-                        src_mod_manager.get_actual_files(mod),
-                        use_hardlinks,
-                        replace,
-                        blacklist,
-                        # ldialog,
+                        mod=mod,
+                        instance=dst_instance,
+                        instance_data=dst_info,
+                        file_redirects=src_mod_manager.get_actual_files(mod),
+                        use_hardlinks=use_hardlinks,
+                        replace=replace,
+                        blacklist=blacklist,
+                        update_callback=(
+                            (lambda payload: pdialog.updateProgress(2, payload))
+                            if pdialog is not None
+                            else None
+                        ),
                     )
                 else:
                     self.log.info(
@@ -205,25 +227,33 @@ class Migrator(QObject):
                 report.failed_mods[mod] = ex
 
         for t, tool in enumerate(included_tools):
-            if ldialog is not None:
-                ldialog.updateProgress(
-                    text1=self.tr("Migrating tools...")
-                    + f" ({t}/{len(included_tools)})",
-                    value1=t,
-                    max1=len(included_tools),
-                    show2=True,
-                    text2=tool.display_name,
+            if pdialog is not None:
+                pdialog.updateMainProgress(
+                    ProgressUpdate(
+                        status_text=(
+                            self.tr("Migrating tools...")
+                            + f" ({t + 1} / {len(included_tools)})"
+                        ),
+                        value=t,
+                        maximum=len(included_tools),
+                    )
                 )
+
+                pdialog.updateProgress(1, ProgressUpdate(status_text=tool.display_name))
 
             try:
                 dst_mod_manager.add_tool(
-                    tool,
-                    dst_instance,
-                    dst_info,
-                    use_hardlinks,
-                    replace,
-                    blacklist,
-                    # ldialog,
+                    tool=tool,
+                    instance=dst_instance,
+                    instance_data=dst_info,
+                    use_hardlinks=use_hardlinks,
+                    replace=replace,
+                    blacklist=blacklist,
+                    update_callback=(
+                        (lambda payload: pdialog.updateProgress(2, payload))
+                        if pdialog is not None
+                        else None
+                    ),
                 )
             except Exception as ex:
                 self.log.error(
@@ -231,17 +261,29 @@ class Migrator(QObject):
                 )
                 report.failed_tools[tool] = ex
 
+        if pdialog is not None:
+            pdialog.updateMainProgress(
+                ProgressUpdate(
+                    status_text=self.tr("Migrating INI files..."), value=0, maximum=0
+                )
+            )
+            pdialog.removeProgress(2)
+
         try:
             ini_files: list[Path] = src_mod_manager.get_ini_files(
                 src_instance, src_info
             )
             dst_mod_manager.import_ini_files(
-                ini_files,
-                dst_info,
-                src_instance.separate_ini_files,
-                use_hardlinks,
-                replace,
-                # ldialog,
+                files=ini_files,
+                dst_instance_data=dst_info,
+                separate_ini_files=src_instance.separate_ini_files,
+                use_hardlinks=use_hardlinks,
+                replace=replace,
+                update_callback=(
+                    (lambda payload: pdialog.updateProgress(1, payload))
+                    if pdialog is not None
+                    else None
+                ),
             )
         except Exception as ex:
             self.log.error(
@@ -250,15 +292,29 @@ class Migrator(QObject):
             )
             report.other_errors[self.tr("Failed to migrate INI files.")] = ex
 
+        if pdialog is not None:
+            pdialog.updateMainProgress(
+                ProgressUpdate(
+                    status_text=self.tr("Migrating additional files..."),
+                    value=0,
+                    maximum=0,
+                )
+            )
+
         try:
             additional_files: list[Path] = src_mod_manager.get_additional_files(
                 src_info
             )
             dst_mod_manager.import_additional_files(
-                additional_files,
-                dst_info,
-                use_hardlinks,
-                replace,  # , ldialog
+                files=additional_files,
+                dst_instance_data=dst_info,
+                use_hardlinks=use_hardlinks,
+                replace=replace,
+                update_callback=(
+                    (lambda payload: pdialog.updateProgress(1, payload))
+                    if pdialog is not None
+                    else None
+                ),
             )
         except Exception as ex:
             self.log.error(

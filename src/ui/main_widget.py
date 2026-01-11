@@ -4,7 +4,7 @@ Copyright (c) Cutleast
 
 from typing import Optional
 
-from cutleast_core_lib.ui.widgets.loading_dialog import LoadingDialog
+from cutleast_core_lib.ui.widgets.progress_dialog import ProgressDialog
 from mod_manager_lib.core.game import Game
 from mod_manager_lib.core.instance.instance import Instance
 from mod_manager_lib.core.instance.mod import Mod
@@ -118,9 +118,8 @@ class MainWidget(QSplitter):
 
         migrator = Migrator()
 
-        report: MigrationReport = LoadingDialog.run_callable(
-            QApplication.activeModalWidget(),
-            lambda ldialog: migrator.migrate(
+        report: MigrationReport = ProgressDialog(
+            lambda pdialog: migrator.migrate(
                 src_instance=src_instance,
                 src_info=src_info,
                 dst_info=dst_info,
@@ -131,9 +130,10 @@ class MainWidget(QSplitter):
                 modname_limit=self.app_config.modname_limit,
                 activate_new_instance=self.app_config.activate_new_instance,
                 included_tools=self.__instance_widget.checked_tools,
-                ldialog=ldialog,
+                pdialog=pdialog,
             ),
-        )
+            QApplication.activeModalWidget(),
+        ).run()
 
         if report.has_errors:
             QMessageBox.warning(

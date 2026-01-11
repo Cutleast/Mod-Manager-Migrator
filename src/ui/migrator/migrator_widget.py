@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Optional, override
 
 import qtawesome as qta
-from cutleast_core_lib.ui.widgets.loading_dialog import LoadingDialog
+from cutleast_core_lib.ui.widgets.progress_dialog import ProgressDialog
 from cutleast_core_lib.ui.widgets.smooth_scroll_area import SmoothScrollArea
 from mod_manager_lib.core.exceptions import GameNotFoundError
 from mod_manager_lib.core.game import Game
@@ -265,16 +265,16 @@ class MigratorWidget(SmoothScrollArea):
 
         mod_instance: Instance
         try:
-            mod_instance = LoadingDialog.run_callable(
-                QApplication.activeModalWidget(),
-                lambda ldialog: mod_manager_api.load_instance(
+            mod_instance = ProgressDialog(
+                lambda pdialog: mod_manager_api.load_instance(
                     instance_data=instance_data,
                     modname_limit=self.app_config.modname_limit,
                     file_blacklist=FileBlacklist.get_files(),
                     game_folder=self.__game_folders.get(game),
-                    # ldialog=ldialog,
+                    update_callback=pdialog.updateMainProgress,
                 ),
-            )
+                QApplication.activeModalWidget(),
+            ).run()
         except GameNotFoundError:
             QMessageBox.warning(
                 QApplication.activeModalWidget(),
