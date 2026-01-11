@@ -76,6 +76,14 @@
     </message>
 </context>
 <context>
+    <name>Downloader</name>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/core/downloader.py" line="128"/>
+        <source>Downloading &apos;{0}&apos;...</source>
+        <translation>&apos;{0}&apos; wird heruntergeladen...</translation>
+    </message>
+</context>
+<context>
     <name>ErrorDialog</name>
     <message>
         <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="109"/>
@@ -357,46 +365,56 @@ Fortfahren auf eigene Gefahr!</translation>
 <context>
     <name>Migrator</name>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="148"/>
-        <source>Migrating instance {0}...</source>
-        <translation>Instanz {0} wird migriert...</translation>
+        <location filename="src/core/migrator/migrator.py" line="150"/>
+        <source>Preparing destination instance...</source>
+        <translation>Ziel-Instanz wird vorbereitet...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="178"/>
+        <location filename="src/core/migrator/migrator.py" line="193"/>
         <source>Migrating mods...</source>
         <translation>Mods werden migriert...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="210"/>
+        <location filename="src/core/migrator/migrator.py" line="234"/>
         <source>Migrating tools...</source>
         <translation>Tools werden migriert...</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="251"/>
+        <location filename="src/core/migrator/migrator.py" line="267"/>
+        <source>Migrating INI files...</source>
+        <translation>INI-Dateien werden migriert...</translation>
+    </message>
+    <message>
+        <location filename="src/core/migrator/migrator.py" line="293"/>
         <source>Failed to migrate INI files.</source>
         <translation>Migration der INI-Dateien fehlgeschlagen.</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="268"/>
+        <location filename="src/core/migrator/migrator.py" line="298"/>
+        <source>Migrating additional files...</source>
+        <translation>Zusätzliche Dateien werden migriert...</translation>
+    </message>
+    <message>
+        <location filename="src/core/migrator/migrator.py" line="324"/>
         <source>Failed to migrate additional files.</source>
         <translation>Migration der zusätzlichen Dateien fehlgeschlagen.</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="302"/>
+        <location filename="src/core/migrator/migrator.py" line="358"/>
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of your MO2 installation if not already installed.</source>
         <translation>Die Nutzung von Root Builder wurde aktiviert.
 Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von Nexus Mods heruntergeladen und in den &quot;plugins&quot;-Ordner deiner MO2 Installation entpackt werden, wenn nicht bereits installiert.</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="313"/>
+        <location filename="src/core/migrator/migrator.py" line="369"/>
         <source>The usage of root builder was enabled.
 In order to correctly deploy the root files, you have to download and extract the root builder plugin from Nexus Mods to the &quot;plugins&quot; folder of the new MO2 installation.</source>
         <translation>Die Nutzung von Root Builder wurde aktiviert.
 Damit die Root-Dateien korrekt deployed werden, muss das Root Builder Plugin von Nexus Mods heruntergeladen und in den &quot;plugins&quot;-Ordner der neuen MO2 Installation entpackt werden.</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="324"/>
+        <location filename="src/core/migrator/migrator.py" line="380"/>
         <source>At least one global instance was detected.
 Global instances cause issues with portable instances and it is recommended to delete (or rename) the following folder:
 {0}</source>
@@ -405,7 +423,7 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
 {0}</translation>
     </message>
     <message>
-        <location filename="src/core/migrator/migrator.py" line="338"/>
+        <location filename="src/core/migrator/migrator.py" line="394"/>
         <source>Vortex is currently deployed to the game folder. It is strongly recommended to purge the game directory before using the migrated instance.</source>
         <translation>Vortex ist zurzeit in das Spielverzeichnis deployed. Es wird empfohlen, das Spielverzeichnis vor der Nutzung der migrierten Instanz zu säubern.</translation>
     </message>
@@ -591,11 +609,6 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
         <translation>Instanz:</translation>
     </message>
     <message>
-        <location filename="mod-manager-lib/src/mod_manager_lib/ui/instance_selector/modorganizer_selector_widget.py" line="89"/>
-        <source>Please select...</source>
-        <translation>Bitte auswählen...</translation>
-    </message>
-    <message>
         <location filename="mod-manager-lib/src/mod_manager_lib/ui/instance_selector/modorganizer_selector_widget.py" line="63"/>
         <source>Portable path:</source>
         <translation>Pfad der portablen Instanz:</translation>
@@ -726,27 +739,27 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
 <context>
     <name>ProgressDialog</name>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="260"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="296"/>
         <source>Elapsed time:</source>
         <translation>Vergangene Zeit:</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="313"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="349"/>
         <source>Cancel?</source>
         <translation>Abbrechen?</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="316"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="352"/>
         <source>Are you sure you want to cancel? This may have unwanted consequences, depending on the current running process!</source>
         <translation>Bist du sicher, dass du abbrechen möchtest? Je nach laufendem Vorgang kann das unbeabsichtigte Konsequenzen haben!</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="324"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="360"/>
         <source>No</source>
         <translation>Nein</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="325"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="361"/>
         <source>Yes</source>
         <translation>Ja</translation>
     </message>
