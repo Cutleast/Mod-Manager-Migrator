@@ -904,32 +904,32 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
 <context>
     <name>ToolsWidget</name>
     <message>
-        <location filename="src/ui/instance/tools_widget.py" line="67"/>
+        <location filename="src/ui/instance/tools_widget.py" line="66"/>
         <source>Included Tools:</source>
         <translation>Ferramentas Incluídas:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/tools_widget.py" line="88"/>
+        <location filename="src/ui/instance/tools_widget.py" line="87"/>
         <source>Name</source>
         <translation>Nome</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/tools_widget.py" line="89"/>
+        <location filename="src/ui/instance/tools_widget.py" line="88"/>
         <source>Mod</source>
         <translation>Mod</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/tools_widget.py" line="90"/>
+        <location filename="src/ui/instance/tools_widget.py" line="89"/>
         <source>Executable Path</source>
         <translation>Caminho do executável</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/tools_widget.py" line="91"/>
+        <location filename="src/ui/instance/tools_widget.py" line="90"/>
         <source>Arguments</source>
         <translation>Argumentos</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/tools_widget.py" line="92"/>
+        <location filename="src/ui/instance/tools_widget.py" line="91"/>
         <source>Working Directory</source>
         <translation>Diretório de trabalho</translation>
     </message>
@@ -1098,7 +1098,7 @@ Please create a separate mod from the overwrite folder and restart the migration
         <translation>A pasta overwrite do MO2 não é compatível com o Vortex!</translation>
     </message>
     <message>
-        <location filename="src/core/utilities/exceptions.py" line="61"/>
+        <location filename="src/core/migrator/exceptions.py" line="21"/>
         <source>Not enough space ({2}) on the destination disk ({0})!
 Required space: {1}</source>
         <translation>Crie um mod separado a partir da pasta overwrite e reinicie a migração.
@@ -1106,12 +1106,12 @@ Espaço insuficiente ({2}) no disco de destino ({0})!
 Espaço necessário: {1}</translation>
     </message>
     <message>
-        <location filename="src/core/utilities/exceptions.py" line="77"/>
+        <location filename="src/core/migrator/exceptions.py" line="37"/>
         <source>Source and destination must not be the same!</source>
         <translation>A origem e o destino não podem ser os mesmos!</translation>
     </message>
     <message>
-        <location filename="src/core/utilities/exceptions.py" line="90"/>
+        <location filename="src/core/migrator/exceptions.py" line="50"/>
         <source>Source and destination have the same mods location but different mod managers!
 Choose another location for the mods folder and try again.</source>
         <translation type="unfinished"></translation>

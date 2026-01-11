@@ -23,13 +23,13 @@ from mod_manager_lib.core.mod_manager.modorganizer.modorganizer import ModOrgani
 from mod_manager_lib.core.mod_manager.vortex.vortex import Vortex
 from PySide6.QtCore import QObject
 
-from core.utilities.exceptions import (
+from core.utilities.filesystem import get_free_disk_space
+
+from .exceptions import (
     NotEnoughSpaceError,
     SameModsLocationDiffManagerError,
     SameSourceDestinationError,
 )
-from core.utilities.filesystem import get_free_disk_space
-
 from .file_blacklist import FileBlacklist
 from .migration_report import MigrationReport
 

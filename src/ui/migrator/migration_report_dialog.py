@@ -4,6 +4,7 @@ Copyright (c) Cutleast
 
 from typing import Optional
 
+from cutleast_core_lib.core.utilities.exceptions import format_exception
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QDialog,
@@ -17,7 +18,6 @@ from PySide6.QtWidgets import (
 )
 
 from core.migrator.migration_report import MigrationReport
-from core.utilities.exceptions import format_exception
 
 
 class MigrationReportDialog(QDialog):

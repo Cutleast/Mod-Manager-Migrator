@@ -6,6 +6,7 @@ import os
 from typing import Optional
 
 from cutleast_core_lib.core.filesystem.utils import open_in_explorer
+from cutleast_core_lib.core.utilities.filter import matches_filter
 from cutleast_core_lib.core.utilities.scale import scale_value
 from cutleast_core_lib.ui.utilities.icon_provider import IconProvider
 from cutleast_core_lib.ui.utilities.tree_widget import (
@@ -29,7 +30,6 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from core.utilities.filter import matches_filter
 from ui.instance.modlist_menu import ModlistMenu
 
 

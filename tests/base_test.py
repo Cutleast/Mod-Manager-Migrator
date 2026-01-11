@@ -25,6 +25,7 @@ from mod_manager_lib.core.mod_manager.modorganizer.mo2_instance_info import (
     MO2InstanceInfo,
 )
 from mod_manager_lib.core.mod_manager.modorganizer.modorganizer import ModOrganizer
+from mod_manager_lib.core.mod_manager.vortex.leveldb import LevelDB
 from mod_manager_lib.core.mod_manager.vortex.profile_info import ProfileInfo
 from pyfakefs.fake_filesystem import FakeFilesystem
 from pytest_mock import MockerFixture
@@ -32,7 +33,6 @@ from setup.mock_plyvel import MockPlyvelDB
 
 from core.config.app_config import AppConfig
 from core.migrator.file_blacklist import FileBlacklist
-from core.utilities.leveldb import LevelDB
 from resources_rc import qt_resource_data as qt_resource_data
 
 

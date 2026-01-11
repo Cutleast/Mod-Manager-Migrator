@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Optional
 
 from cutleast_core_lib.core.filesystem.utils import open_in_explorer
+from cutleast_core_lib.core.utilities.filter import matches_filter
 from cutleast_core_lib.ui.utilities.tree_widget import iter_toplevel_items
 from cutleast_core_lib.ui.widgets.search_bar import SearchBar
 from mod_manager_lib.core.instance.instance import Instance
@@ -23,8 +24,6 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
-
-from core.utilities.filter import matches_filter
 
 from .tools_menu import ToolsMenu
 

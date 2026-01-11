@@ -906,32 +906,32 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
 <context>
     <name>ToolsWidget</name>
     <message>
-        <location filename="src/ui/instance/tools_widget.py" line="67"/>
+        <location filename="src/ui/instance/tools_widget.py" line="66"/>
         <source>Included Tools:</source>
         <translation>Einbezogene Tools:</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/tools_widget.py" line="88"/>
+        <location filename="src/ui/instance/tools_widget.py" line="87"/>
         <source>Name</source>
         <translation>Name</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/tools_widget.py" line="89"/>
+        <location filename="src/ui/instance/tools_widget.py" line="88"/>
         <source>Mod</source>
         <translation>Mod</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/tools_widget.py" line="90"/>
+        <location filename="src/ui/instance/tools_widget.py" line="89"/>
         <source>Executable Path</source>
         <translation>Pfad zur Executable</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/tools_widget.py" line="91"/>
+        <location filename="src/ui/instance/tools_widget.py" line="90"/>
         <source>Arguments</source>
         <translation>Startargumente</translation>
     </message>
     <message>
-        <location filename="src/ui/instance/tools_widget.py" line="92"/>
+        <location filename="src/ui/instance/tools_widget.py" line="91"/>
         <source>Working Directory</source>
         <translation>Arbeitsverzeichnis</translation>
     </message>
@@ -1052,19 +1052,19 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
         <translation>Die Modinstanz konnte nicht erstellt werden!</translation>
     </message>
     <message>
-        <location filename="src/core/utilities/exceptions.py" line="61"/>
+        <location filename="src/core/migrator/exceptions.py" line="21"/>
         <source>Not enough space ({2}) on the destination disk ({0})!
 Required space: {1}</source>
         <translation>Nicht genug Speicher ({2}) auf dem Zieldatenträger ({0}) vorhanden!
 Benötigter Speicherplatz: {1}</translation>
     </message>
     <message>
-        <location filename="src/core/utilities/exceptions.py" line="77"/>
+        <location filename="src/core/migrator/exceptions.py" line="37"/>
         <source>Source and destination must not be the same!</source>
         <translation>Quelle und Ziel dürfen nicht übereinstimmen!</translation>
     </message>
     <message>
-        <location filename="src/core/utilities/exceptions.py" line="90"/>
+        <location filename="src/core/migrator/exceptions.py" line="50"/>
         <source>Source and destination have the same mods location but different mod managers!
 Choose another location for the mods folder and try again.</source>
         <translation>Quelle und Ziel haben denselben Speicherort für Mods, aber unterschiedliche Mod-Manager!

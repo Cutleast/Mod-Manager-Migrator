@@ -29,12 +29,12 @@ from pyfakefs.fake_filesystem import FakeFilesystem
 from setup.mock_plyvel import MockPlyvelDB
 
 from core.config.app_config import AppConfig
-from core.migrator.migration_report import MigrationReport
-from core.migrator.migrator import FileBlacklist, Migrator
-from core.utilities.exceptions import (
+from core.migrator.exceptions import (
     NotEnoughSpaceError,
     SameModsLocationDiffManagerError,
 )
+from core.migrator.migration_report import MigrationReport
+from core.migrator.migrator import FileBlacklist, Migrator
 from core.utilities.filesystem import get_free_disk_space
 
 
