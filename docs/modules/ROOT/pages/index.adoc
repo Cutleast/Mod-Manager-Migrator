@@ -62,10 +62,10 @@ This is a tool for migrating modding instances between mod managers. Originally 
 
 == About this documentation
 
-This documentation is meant to give you all information you need to efficiently create and edit FOMOD installers.
+This documentation is meant to give you all information you need to migrate mod instances between Vortex and MO2.
 
 * If you are here to migrate a mod instance, read xref:quick_start.adoc[].
-* If you encountered an unfamiliar term in this documentation, read xref:glossary.adoc[].
+* If you encountered an unfamiliar term in the app or this documentation, read xref:glossary.adoc[].
 * If you have a question, read xref:faqs.adoc[].
 
 TIP: If you have further questions regarding MMM or this documentation, please do not hesitate to ask them on the link:https://discord.gg/pqEHdWDf8z[Official Modding Forge Discord server].
