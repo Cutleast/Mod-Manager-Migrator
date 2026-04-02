@@ -51,6 +51,7 @@ This is a tool for migrating modding instances (modlists) between mod managers.
 
 ### Supported Games
 
+- Cyberpunk 2077 (new in MMM v3.1+)
 - Enderal (+ Special Edition)
 - Fallout 3
 - Fallout 4
