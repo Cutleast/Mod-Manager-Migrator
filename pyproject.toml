@@ -9,11 +9,12 @@ license = { file = "LICENSE" }
 dependencies = [
     "cutleast-core-lib",
     "mod-manager-lib",
+    "PySide6<6.11",  # 6.11 introduced a bug with hover effects
 ]
 
 [dependency-groups]
 dev = [
-    "cx-freeze",
+    "cx-freeze<8.6",
     "md2bbcode",
     "pyfakefs",
     "pyright",
