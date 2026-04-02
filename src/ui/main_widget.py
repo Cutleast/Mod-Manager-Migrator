@@ -4,7 +4,7 @@ Copyright (c) Cutleast
 
 from typing import Optional
 
-from cutleast_core_lib.ui.widgets.progress_dialog import ProgressDialog
+from cutleast_core_lib.ui.progress.dialog import ProgressDialog
 from mod_manager_lib.core.game import Game
 from mod_manager_lib.core.instance.instance import Instance
 from mod_manager_lib.core.instance.mod import Mod

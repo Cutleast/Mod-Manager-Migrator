@@ -76,9 +76,58 @@
     </message>
 </context>
 <context>
+    <name>CollapsibleLabel</name>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/collapsible_label.py" line="82"/>
+        <source>Reduce</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/collapsible_label.py" line="90"/>
+        <source>Expand</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CollapsibleTextEdit</name>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/collapsible_text_edit.py" line="66"/>
+        <source>Reduce</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/collapsible_text_edit.py" line="75"/>
+        <source>Expand</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ContextMenu</name>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/tree_widget_editor.py" line="103"/>
+        <source>Duplicate item</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/tree_widget_editor.py" line="111"/>
+        <source>Cut item</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/tree_widget_editor.py" line="117"/>
+        <source>Copy item</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/tree_widget_editor.py" line="123"/>
+        <source>Paste item</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Downloader</name>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/core/downloader.py" line="128"/>
+        <location filename="core-lib/src/cutleast_core_lib/core/downloader.py" line="135"/>
         <source>Downloading &apos;{0}&apos;...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -86,33 +135,33 @@
 <context>
     <name>ErrorDialog</name>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="109"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="111"/>
         <source>Continue</source>
         <translation>Continuar</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="114"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="116"/>
         <source>Exit</source>
         <translation>Sair</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="118"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="120"/>
         <source>Ok</source>
         <translation type="unfinished">Ok</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="124"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="126"/>
         <source>Copy error details...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="132"/>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="151"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="134"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="153"/>
         <source>Show details...</source>
         <translation>Mostrar detalhes...</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="145"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/error_dialog.py" line="147"/>
         <source>Hide details...</source>
         <translation>Esconder detalhes...</translation>
     </message>
@@ -498,40 +547,40 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
 <context>
     <name>ModOrganizer</name>
     <message>
-        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="152"/>
-        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="208"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="149"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="225"/>
         <source>Loading mods from {0} &gt; {1}...</source>
         <translation>Carregando mods de {0} &gt; {1}...</translation>
     </message>
     <message>
-        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="165"/>
-        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="471"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="167"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="518"/>
         <source>Loading tools from {0} &gt; {1}...</source>
         <translation>Carregando ferramentes de {0} &gt; {1}...</translation>
     </message>
     <message>
-        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="239"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="256"/>
         <source>Loading mods from {0} &gt; {1}: {2}...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="302"/>
-        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="422"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="318"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="469"/>
         <source>Processing mod conflicts...</source>
         <translation>Processando conflitos de mods...</translation>
     </message>
     <message>
-        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="437"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="484"/>
         <source>Processing single file conflicts...</source>
         <translation>Processando conflitos de arquivo único...</translation>
     </message>
     <message>
-        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="658"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="706"/>
         <source>Downloading and installing ModOrganizer...</source>
         <translation>Baixando e instalando ModOrganizer...</translation>
     </message>
     <message>
-        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="691"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/modorganizer/modorganizer.py" line="739"/>
         <source>Extracting archive...</source>
         <translation>Extraindo arquivo...</translation>
     </message>
@@ -737,27 +786,27 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
 <context>
     <name>ProgressDialog</name>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="296"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/progress/dialog.py" line="221"/>
         <source>Elapsed time:</source>
         <translation type="unfinished">Tempo decorrido:</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="349"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/progress/dialog.py" line="292"/>
         <source>Cancel?</source>
         <translation type="unfinished">Cancelar?</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="352"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/progress/dialog.py" line="295"/>
         <source>Are you sure you want to cancel? This may have unwanted consequences, depending on the current running process!</source>
         <translation type="unfinished">Deseja mesmo cancelar? Isso pode ter consequências indesejadas, dependendo do processo em execução no momento!</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="360"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/progress/dialog.py" line="303"/>
         <source>No</source>
         <translation type="unfinished">Não</translation>
     </message>
     <message>
-        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/progress_dialog.py" line="361"/>
+        <location filename="core-lib/src/cutleast_core_lib/ui/progress/dialog.py" line="304"/>
         <source>Yes</source>
         <translation type="unfinished">Sim</translation>
     </message>
@@ -948,6 +997,47 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
     </message>
 </context>
 <context>
+    <name>TreeMenu</name>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/tree_menu.py" line="35"/>
+        <source>Expand all</source>
+        <translation type="unfinished">Expandir tudo</translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/tree_menu.py" line="41"/>
+        <source>Collapse all</source>
+        <translation type="unfinished">Recolher tudo</translation>
+    </message>
+</context>
+<context>
+    <name>TreeWidgetEditor</name>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/tree_widget_editor.py" line="234"/>
+        <source>Add new item...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/tree_widget_editor.py" line="240"/>
+        <source>Remove selected item(s)...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/tree_widget_editor.py" line="240"/>
+        <source>Del</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/tree_widget_editor.py" line="248"/>
+        <source>Edit selected item...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/ui/widgets/tree_widget_editor.py" line="248"/>
+        <source>Double click</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>UIMode</name>
     <message>
         <location filename="core-lib/src/cutleast_core_lib/ui/utilities/ui_mode.py" line="24"/>
@@ -1009,22 +1099,22 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
 <context>
     <name>Vortex</name>
     <message>
-        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/vortex/vortex.py" line="145"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/vortex/vortex.py" line="146"/>
         <source>Loading profile {0}...</source>
         <translation>Carregando perfil{0}...</translation>
     </message>
     <message>
-        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/vortex/vortex.py" line="184"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/vortex/vortex.py" line="191"/>
         <source>Loading mods from profile {0}...</source>
         <translation>Carregando mods do perfil {0}...</translation>
     </message>
     <message>
-        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/vortex/vortex.py" line="226"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/vortex/vortex.py" line="233"/>
         <source>Loading mods from profile {0}: {1}...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/vortex/vortex.py" line="433"/>
+        <location filename="mod-manager-lib/src/mod_manager_lib/core/mod_manager/vortex/vortex.py" line="441"/>
         <source>Loading tools from Vortex...</source>
         <translation>Carregando ferramentas do Vortex...</translation>
     </message>
@@ -1142,6 +1232,11 @@ Choose another location for the mods folder and try again.</source>
     <message>
         <location filename="core-lib/src/cutleast_core_lib/core/utilities/exceptions.py" line="115"/>
         <source>The process is incomplete and has no result!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="core-lib/src/cutleast_core_lib/core/utilities/exceptions.py" line="127"/>
+        <source>The task was cancelled!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

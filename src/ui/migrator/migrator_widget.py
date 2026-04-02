@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Optional, override
 
 import qtawesome as qta
-from cutleast_core_lib.ui.widgets.progress_dialog import ProgressDialog
+from cutleast_core_lib.ui.progress.dialog import ProgressDialog
 from cutleast_core_lib.ui.widgets.smooth_scroll_area import SmoothScrollArea
 from mod_manager_lib.core.exceptions import GameNotFoundError
 from mod_manager_lib.core.game import Game

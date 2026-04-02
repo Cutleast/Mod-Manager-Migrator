@@ -4,12 +4,12 @@ Copyright (c) Cutleast
 
 import logging
 from pathlib import Path
-from typing import Optional, cast
+from typing import Any, Optional, cast
 
 from cutleast_core_lib.core.multithreading.progress import ProgressUpdate
 from cutleast_core_lib.core.utilities.logger import Logger
 from cutleast_core_lib.core.utilities.scale import scale_value
-from cutleast_core_lib.ui.widgets.progress_dialog import ProgressDialog
+from cutleast_core_lib.ui.progress.dialog import ProgressDialog
 from mod_manager_lib.core.instance.instance import Instance
 from mod_manager_lib.core.instance.mod import Mod
 from mod_manager_lib.core.instance.tool import Tool
@@ -97,12 +97,12 @@ class Migrator(QObject):
         report = MigrationReport()
 
         self.log.info("Source instance info:")
-        Logger.log_str_dict(self.log, src_info.__dict__)
+        Logger.log_str_dict(self.log, cast(dict[str, Any], src_info.__dict__))
         self.log.info(f"Source size: {scale_value(src_instance.size)}")
         self.log.info(f"Source order matters: {src_instance.order_matters}")
 
         self.log.info("Destination instance info:")
-        Logger.log_str_dict(self.log, dst_info.__dict__)
+        Logger.log_str_dict(self.log, cast(dict[str, Any], dst_info.__dict__))
 
         self.log.info(f"Mods: {len(src_instance.mods)}")
         self.log.info(f"Tools: {len(src_instance.tools)}")
