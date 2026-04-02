@@ -194,6 +194,25 @@
         "additional_files": [
             "loadorder.txt",
             "plugins.txt"
+            
         ]
+    },
+    {
+        "id": "starfield",
+        "display_name": "Starfield",
+        "short_name": "Starfield",
+        "nexus_id": "starfield",
+        "inidir": "%DOCUMENTS%\\My Games\\Starfield",
+        "inifiles": [
+            "Starfield.ini",
+            "StarfieldCustom.ini",
+            "StarfieldPrefs.ini"
+    ],
+        "mods_folder": "Data",
+        "additional_files": [
+            "loadorder.txt",
+            "plugins.txt"
+    ]
+    
     }
 ]
