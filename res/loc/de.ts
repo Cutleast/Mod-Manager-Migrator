@@ -681,8 +681,8 @@ Globale Instanzen verursachen Probleme mit portablen Instanzen und es wird empfo
     </message>
     <message>
         <location filename="src/ui/instance/modlist_widget.py" line="135"/>
-        <source>The checkboxes indicate whether a mod is migrated to the destination or not.</source>
-        <translation>Die Häkchen markieren die Mods, die zum Ziel migriert werden.</translation>
+        <source>The checkboxes indicate whether a mod is migrated to the destination or not. Mods in grey are disabled in the source instance.</source>
+        <translation>Die Häkchen geben an, ob eine Mod zum Ziel migriert wird oder nicht. Mods in grau sind in der Quellinstanz deaktiviert.</translation>
     </message>
 </context>
 <context>

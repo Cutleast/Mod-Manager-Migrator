@@ -133,7 +133,7 @@ class ModlistWidget(QWidget):
         hint_label = QLabel(
             self.tr(
                 "The checkboxes indicate whether a mod is migrated to the destination or"
-                " not."
+                " not. Mods in grey are disabled in the source instance."
             )
         )
         hint_label.setWordWrap(True)

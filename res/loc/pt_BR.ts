@@ -679,7 +679,7 @@ Instâncias globais causam problemas com instâncias portáteis, e é recomendá
     </message>
     <message>
         <location filename="src/ui/instance/modlist_widget.py" line="135"/>
-        <source>The checkboxes indicate whether a mod is migrated to the destination or not.</source>
+        <source>The checkboxes indicate whether a mod is migrated to the destination or not. Mods in grey are disabled in the source instance.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
