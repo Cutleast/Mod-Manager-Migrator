@@ -1,3 +1,16 @@
+# v3.1.0
+
+- Add support for Cyberpunk 2077
+- Add Brazilian Portuguese language (thanks to @Kyo-70)
+- Add error message when the mods folders of source and destination overlap
+- Mods can now be excluded from the migration
+- Mods that are disabled in the source instance are displayed in grey
+- Optimize migration to Vortex
+- Fix mods not being sorted correctly when migrating from Vortex to MO2
+- Partial fix for missing and duplicate conflict rules when migrating to Vortex in some rare edge cases
+- Mods and tools are now opened in Windows Explorer when doing a double click on them
+- Various smaller styling improvements
+
 # v3.0.2 (Hotfix)
 
 - Fix loadorder.txt and plugins.txt not being migrated
